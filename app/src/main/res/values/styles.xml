@@ -1,7 +1,7 @@
 <resources>
 
     <!-- Base application theme -->
-    <style name="GpgAppTheme" parent="@style/GpgTransparentActionBar">
+    <style name="GpgAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- TODO: change app colors from these defaults -->
         <item name="colorPrimary">@color/color_primary</item>
         <item name="colorPrimaryDark">@color/color_primary_dark</item>
@@ -11,17 +11,5 @@
 
         <!-- action bar overlaps content (do not use windowActionBarOverlay) -->
         <item name="android:windowTranslucentStatus">true</item>
-        <!-- support library compatibility -->
-        <item name="actionBarStyle">@style/GpgTransparentActionBar</item>
     </style>
-
-    <!-- Action bar -->
-    <style name="GpgTransparentActionBar"
-        parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="android:background">@null</item>
-        <!-- Support library compatibility -->
-        <item name="background">@null</item>
-
-    </style>
-
 </resources>

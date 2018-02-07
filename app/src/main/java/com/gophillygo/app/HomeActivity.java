@@ -1,8 +1,8 @@
 package com.gophillygo.app;
 
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -26,9 +26,9 @@ public class HomeActivity extends AppCompatActivity {
 
     LayoutInflater inflater;
 
-    ActionBar actionBar;
     CarouselView carouselView;
     GridView gridView;
+    Toolbar toolbar;
 
     // order corresponds to the image URLs below
     String[] testPlaceNames = {
@@ -51,15 +51,10 @@ public class HomeActivity extends AppCompatActivity {
 
         inflater = getLayoutInflater();
 
-        actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            // TODO: show no title or subtitle (disable defafult app name title display)
-            actionBar.setTitle("Title");
-            actionBar.setDisplayShowTitleEnabled(true);
-            actionBar.setSubtitle("Subtitle");
-        } else {
-            Log.d(LOG_LABEL, "No action bar!");
-        }
+        toolbar = findViewById(R.id.home_toolbar);
+        // disable default app name title display
+        toolbar.setTitle("");
+        setSupportActionBar(toolbar);
 
         carouselView = findViewById(R.id.home_carousel);
         carouselView.setPageCount(testPlaceNames.length);

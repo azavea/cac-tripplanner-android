@@ -15,10 +15,10 @@
     <TextView
         android:id="@+id/place_category_grid_item_name"
         style="@style/Base.TextAppearance.AppCompat.Title.Inverse"
-        android:layout_alignBaseline="@id/place_category_grid_item_image"
-        android:paddingBottom="2dp"
-        android:paddingStart="2dp"
-        android:paddingEnd="2dp"
+        android:layout_alignParentBottom="true"
+        android:paddingBottom="10dp"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
