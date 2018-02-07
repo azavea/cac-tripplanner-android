@@ -1,10 +1,13 @@
 package com.gophillygo.app;
 
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
@@ -23,6 +26,7 @@ public class HomeActivity extends AppCompatActivity {
 
     LayoutInflater inflater;
 
+    ActionBar actionBar;
     CarouselView carouselView;
     GridView gridView;
 
@@ -47,9 +51,18 @@ public class HomeActivity extends AppCompatActivity {
 
         inflater = getLayoutInflater();
 
+        actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            // TODO: show no title or subtitle (disable defafult app name title display)
+            actionBar.setTitle("Title");
+            actionBar.setDisplayShowTitleEnabled(true);
+            actionBar.setSubtitle("Subtitle");
+        } else {
+            Log.d(LOG_LABEL, "No action bar!");
+        }
+
         carouselView = findViewById(R.id.home_carousel);
         carouselView.setPageCount(testPlaceNames.length);
-        carouselView.setSlideInterval(4000);
         carouselView.setViewListener(viewListener);
         carouselView.setImageClickListener(new ImageClickListener() {
             @Override
@@ -66,6 +79,37 @@ public class HomeActivity extends AppCompatActivity {
                 Log.d(LOG_LABEL, "clicked grid view item: " + position);
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.home_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int itemId = item.getItemId();
+
+        switch (itemId) {
+            case R.id.action_search:
+                Log.d(LOG_LABEL, "Clicked search action");
+                break;
+            case R.id.action_settings:
+                Log.d(LOG_LABEL, "Clicked settings action");
+                break;
+            case R.id.action_about:
+                Log.d(LOG_LABEL, "Clicked about action");
+                break;
+            case R.id.action_logout:
+                Log.d(LOG_LABEL, "Clicked logout action");
+                break;
+            default:
+                Log.w(LOG_LABEL, "Unrecognized menu option selected: " + itemId);
+                return super.onOptionsItemSelected(item);
+        }
+
+        return true;
     }
 
     @Override
