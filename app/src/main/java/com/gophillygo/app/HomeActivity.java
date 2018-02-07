@@ -14,9 +14,12 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.gophillygo.app.adapters.PlaceCategoryGridAdapter;
 import com.synnapps.carouselview.CarouselView;
+import com.synnapps.carouselview.ImageClickListener;
 import com.synnapps.carouselview.ViewListener;
 
 public class HomeActivity extends AppCompatActivity {
+
+    private static String LOG_LABEL = "HomeActivity";
 
     LayoutInflater inflater;
 
@@ -48,13 +51,19 @@ public class HomeActivity extends AppCompatActivity {
         carouselView.setPageCount(testPlaceNames.length);
         carouselView.setSlideInterval(4000);
         carouselView.setViewListener(viewListener);
+        carouselView.setImageClickListener(new ImageClickListener() {
+            @Override
+            public void onClick(int position) {
+                Log.d(LOG_LABEL, "Clicked item: "+ position);
+            }
+        });
 
         gridView = findViewById(R.id.home_grid_view);
         gridView.setAdapter(new PlaceCategoryGridAdapter(this));
         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View v,
                                     int position, long id) {
-                Log.d("HomeActivity", "clicked grid view item: " + position);
+                Log.d(LOG_LABEL, "clicked grid view item: " + position);
             }
         });
     }
