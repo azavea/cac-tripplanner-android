@@ -59,6 +59,18 @@ public class HomeActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onPause() {
+        carouselView.pauseCarousel();
+        super.onPause();
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
+        carouselView.playCarousel();
+    }
+
     ViewListener viewListener = new ViewListener() {
         @Override
         public View setViewForPosition(int position) {
