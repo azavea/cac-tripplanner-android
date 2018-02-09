@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -17,7 +16,6 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.gophillygo.app.adapters.PlaceCategoryGridAdapter;
 import com.synnapps.carouselview.CarouselView;
-import com.synnapps.carouselview.ImageClickListener;
 import com.synnapps.carouselview.ViewListener;
 
 public class HomeActivity extends AppCompatActivity {
@@ -59,21 +57,13 @@ public class HomeActivity extends AppCompatActivity {
         carouselView = findViewById(R.id.home_carousel);
         carouselView.setPageCount(testPlaceNames.length);
         carouselView.setViewListener(viewListener);
-        carouselView.setImageClickListener(new ImageClickListener() {
-            @Override
-            public void onClick(int position) {
-                Log.d(LOG_LABEL, "Clicked item: "+ position);
-            }
-        });
+        carouselView.setImageClickListener(position ->
+                Log.d(LOG_LABEL, "Clicked item: "+ position));
 
         gridView = findViewById(R.id.home_grid_view);
         gridView.setAdapter(new PlaceCategoryGridAdapter(this));
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View v,
-                                    int position, long id) {
-                Log.d(LOG_LABEL, "clicked grid view item: " + position);
-            }
-        });
+        gridView.setOnItemClickListener((parent, v, position, id) ->
+                Log.d(LOG_LABEL, "clicked grid view item: " + position));
     }
 
     @Override
