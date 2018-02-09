@@ -1,5 +1,6 @@
 package com.gophillygo.app;
 
+import android.arch.persistence.room.Room;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -15,6 +16,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.gophillygo.app.adapters.PlaceCategoryGridAdapter;
+import com.gophillygo.app.data.GpgDatabase;
 import com.synnapps.carouselview.CarouselView;
 import com.synnapps.carouselview.ViewListener;
 
@@ -64,6 +66,9 @@ public class HomeActivity extends AppCompatActivity {
         gridView.setAdapter(new PlaceCategoryGridAdapter(this));
         gridView.setOnItemClickListener((parent, v, position, id) ->
                 Log.d(LOG_LABEL, "clicked grid view item: " + position));
+
+        GpgDatabase db = Room.databaseBuilder(getApplicationContext(),
+                GpgDatabase.class, "gpg-database").build();
     }
 
     @Override
