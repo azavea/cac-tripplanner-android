@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 
 /**
  * Mediator between Destination persistent data store and web service.

@@ -58,8 +58,13 @@ dependencies {
     implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
 
     // Dagger 2
-    implementation 'com.google.dagger:dagger:2.14.1'
-    annotationProcessor 'com.google.dagger:dagger-compiler:2.14.1'
+    def daggerVersion = '2.14.1'
+    implementation "com.google.dagger:dagger:$daggerVersion"
+    annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
+    implementation "com.google.dagger:dagger-android:$daggerVersion"
+    implementation "com.google.dagger:dagger-android-support:$daggerVersion"
+    annotationProcessor "com.google.dagger:dagger-android-processor:$daggerVersion"
+    annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.1'

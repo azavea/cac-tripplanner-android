@@ -4,11 +4,15 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Embedded;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
+
+import com.google.gson.annotations.SerializedName;
 
 
 @Entity
 public class Destination {
     @PrimaryKey
+    @NonNull
     private final int id;
 
     private final int placeID;
@@ -29,18 +33,23 @@ public class Destination {
     private final DestinationAttributes attributes;
 
     @ColumnInfo(name = "watershed_alliance")
+    @SerializedName("watershed_alliance")
     private final boolean watershedAlliance;
 
     @ColumnInfo(name = "website_url")
+    @SerializedName("website_url")
     private final String websiteUrl;
 
     @ColumnInfo(name = "wide_image")
+    @SerializedName("wide_image")
     private final String wideImage;
 
     @ColumnInfo(name = "is_event")
+    @SerializedName("is_event")
     private final boolean isEvent;
 
     @ColumnInfo(name = "zipcode")
+    @SerializedName("zipcode")
     private final String zipCode;
 
     public Destination(int id, int placeID, String name, boolean accessible, String image,
@@ -95,10 +104,6 @@ public class Destination {
 
     public boolean isCycling() {
         return cycling;
-    }
-
-    public String getZipcode() {
-        return zipCode;
     }
 
     public String getDescription() {

@@ -14,6 +14,6 @@ import retrofit2.http.GET;
  */
 
 public interface DestinationWebservice {
-    @GET("https://gophillygo.org/api/destinations/search?text=")
+    @GET("destinations/search?text=")
     LiveData<ApiResponse<List<Destination>>> getDestinations();
 }

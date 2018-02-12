@@ -1,6 +1,8 @@
 package com.gophillygo.app;
 
-import android.arch.persistence.room.Room;
+import android.arch.lifecycle.ViewModelProvider;
+import android.arch.lifecycle.ViewModelProviders;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -16,9 +18,17 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.gophillygo.app.adapters.PlaceCategoryGridAdapter;
-import com.gophillygo.app.data.GpgDatabase;
+import com.gophillygo.app.data.DestinationViewModel;
+import com.gophillygo.app.data.models.Destination;
+import com.gophillygo.app.di.GpgViewModelFactory;
 import com.synnapps.carouselview.CarouselView;
 import com.synnapps.carouselview.ViewListener;
+
+import java.util.List;
+
+import javax.inject.Inject;
+
+import dagger.android.AndroidInjection;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -29,6 +39,10 @@ public class HomeActivity extends AppCompatActivity {
     CarouselView carouselView;
     GridView gridView;
     Toolbar toolbar;
+
+    @Inject
+    GpgViewModelFactory viewModelFactory;
+    DestinationViewModel viewModel;
 
     // order corresponds to the image URLs below
     String[] testPlaceNames = {
@@ -67,8 +81,27 @@ public class HomeActivity extends AppCompatActivity {
         gridView.setOnItemClickListener((parent, v, position, id) ->
                 Log.d(LOG_LABEL, "clicked grid view item: " + position));
 
-        GpgDatabase db = Room.databaseBuilder(getApplicationContext(),
-                GpgDatabase.class, "gpg-database").build();
+        if (viewModelFactory == null) {
+            Log.d(LOG_LABEL, "viewmodel factory is null!!!!!!!!!!");
+        }
+
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(DestinationViewModel.class);
+        viewModel.getDestinations().observe(this, destinationResource -> {
+            // TODO: pass .data to provider
+            if (destinationResource == null) {
+                Log.e(LOG_LABEL, "No destinations retrieved!");
+                return;
+            }
+            List<Destination> destinations = destinationResource.data;
+            if (destinations == null) {
+                Log.e(LOG_LABEL, "Destination query returned, but found no results");
+                Log.e(LOG_LABEL, destinationResource.status.name());
+                return;
+            }
+            for (Destination dest: destinations) {
+                Log.d(LOG_LABEL, dest.getAddress());
+            }
+        });
     }
 
     @Override
@@ -132,4 +165,9 @@ public class HomeActivity extends AppCompatActivity {
             return itemView;
         }
     };
+
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
+
+    }
 }
