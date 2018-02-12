@@ -3,8 +3,10 @@ package com.gophillygo.app.data;
 import android.arch.lifecycle.LiveData;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.gophillygo.app.data.models.Destination;
+import com.gophillygo.app.data.models.DestinationQueryResponse;
 import com.gophillygo.app.data.networkresource.ApiResponse;
 import com.gophillygo.app.data.networkresource.NetworkBoundResource;
 import com.gophillygo.app.data.networkresource.RateLimiter;
@@ -14,7 +16,6 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
 
 /**
  * Mediator between Destination persistent data store and web service.
@@ -25,6 +26,8 @@ import javax.inject.Singleton;
  */
 
 public class DestinationRepository {
+    private static final String LOG_LABEL = "DestinationRepository";
+
     private final static String DESTINATIONS_KEY = "destinations";
     private DestinationWebservice webservice;
     private DestinationDao dao;
@@ -43,28 +46,31 @@ public class DestinationRepository {
     }
 
     public LiveData<Resource<List<Destination>>> loadDestinations() {
-        return new NetworkBoundResource<List<Destination>, List<Destination>>() {
+        return new NetworkBoundResource<List<Destination>, DestinationQueryResponse>() {
             @Override
-            protected void saveCallResult(@NonNull List<Destination> items) {
+            protected void saveCallResult(@NonNull DestinationQueryResponse response) {
                 // clear out existing database entries before adding new ones
                 dao.clear();
-                for (Destination item: items) {
+                for (Destination item: response.getDestinations()) {
                     dao.save(item);
                 }
             }
 
             @Override
             protected boolean shouldFetch(@Nullable List<Destination> data) {
-                return (data == null) && rateLimiter.shouldFetch(DESTINATIONS_KEY);
+                Log.d(LOG_LABEL, "shouldFetch");
+                return data == null || data.isEmpty() || rateLimiter.shouldFetch(DESTINATIONS_KEY);
             }
 
             @NonNull @Override
             protected LiveData<List<Destination>> loadFromDb() {
+                Log.d(LOG_LABEL, "loadFromDb");
                 return dao.getAll();
             }
 
             @NonNull @Override
-            protected LiveData<ApiResponse<List<Destination>>> createCall() {
+            protected LiveData<ApiResponse<DestinationQueryResponse>> createCall() {
+                Log.d(LOG_LABEL, "createCall");
                 return webservice.getDestinations();
             }
         }.getAsLiveData();

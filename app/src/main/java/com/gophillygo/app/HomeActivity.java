@@ -1,8 +1,6 @@
 package com.gophillygo.app;
 
-import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -28,7 +26,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import dagger.android.AndroidInjection;
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -81,10 +78,6 @@ public class HomeActivity extends AppCompatActivity {
         gridView.setOnItemClickListener((parent, v, position, id) ->
                 Log.d(LOG_LABEL, "clicked grid view item: " + position));
 
-        if (viewModelFactory == null) {
-            Log.d(LOG_LABEL, "viewmodel factory is null!!!!!!!!!!");
-        }
-
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(DestinationViewModel.class);
         viewModel.getDestinations().observe(this, destinationResource -> {
             // TODO: pass .data to provider
@@ -98,6 +91,8 @@ public class HomeActivity extends AppCompatActivity {
                 Log.e(LOG_LABEL, destinationResource.status.name());
                 return;
             }
+
+            Log.d(LOG_LABEL, "Found destinations!");
             for (Destination dest: destinations) {
                 Log.d(LOG_LABEL, dest.getAddress());
             }

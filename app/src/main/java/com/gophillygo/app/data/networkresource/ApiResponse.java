@@ -17,7 +17,7 @@ import retrofit2.Response;
  */
 
 public class ApiResponse<T> {
-    public final String LOG_LABEL = "ApiResponse";
+    public static final String LOG_LABEL = "ApiResponse";
 
     public final int code;
     @Nullable
@@ -26,6 +26,8 @@ public class ApiResponse<T> {
     public final String errorMessage;
 
     public ApiResponse(Throwable error) {
+        Log.e(LOG_LABEL, "API response error:");
+        Log.e(LOG_LABEL, error.getMessage());
         code = 500;
         body = null;
         errorMessage = error.getMessage();
@@ -35,9 +37,15 @@ public class ApiResponse<T> {
         code = response.code();
         if (response.isSuccessful()) {
             body = response.body();
-            errorMessage = null;
+            Log.w(LOG_LABEL, "Response is successful");
+            Log.w(LOG_LABEL, String.valueOf(response.code()));
+            Log.d(LOG_LABEL, body.toString());
+            errorMessage = "";
         } else {
-            String message = null;
+            Log.e(LOG_LABEL, "Request failed");
+            Log.e(LOG_LABEL, String.valueOf(response.code()));
+            Log.e(LOG_LABEL, response.raw().body().toString());
+            String message = "";
             if (response.errorBody() != null) {
                 try {
                     message = response.errorBody().string();
@@ -45,7 +53,7 @@ public class ApiResponse<T> {
                     Log.e(LOG_LABEL, "Error parsing API response");
                 }
             }
-            if (message == null || message.trim().length() == 0) {
+            if (message.trim().isEmpty()) {
                 message = response.message();
             }
             errorMessage = message;
