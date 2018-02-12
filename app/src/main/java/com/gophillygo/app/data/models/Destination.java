@@ -1,4 +1,4 @@
-package com.gophillygo.app.data;
+package com.gophillygo.app.data.models;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Embedded;
