@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "3052ec0a0250e25a08afa61d48f6907a",
+    "identityHash": "e6e2854572a2ce12348d195a72df0b78",
     "entities": [
       {
         "tableName": "Destination",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `placeID` INTEGER NOT NULL, `name` TEXT, `accessible` INTEGER NOT NULL, `image` TEXT, `city` TEXT, `cycling` INTEGER NOT NULL, `description` TEXT, `priority` INTEGER NOT NULL, `state` TEXT, `address` TEXT, `watershed_alliance` INTEGER NOT NULL, `website_url` TEXT, `wide_image` TEXT, `is_event` INTEGER NOT NULL, `zipcode` TEXT, `x` REAL, `y` REAL, `StAddr` TEXT, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `placeID` INTEGER NOT NULL, `name` TEXT, `accessible` INTEGER NOT NULL, `image` TEXT, `city` TEXT, `cycling` INTEGER NOT NULL, `description` TEXT, `priority` INTEGER NOT NULL, `state` TEXT, `address` TEXT, `watershed_alliance` INTEGER NOT NULL, `website_url` TEXT, `wide_image` TEXT, `is_event` INTEGER NOT NULL, `zipcode` TEXT, `timestamp` INTEGER NOT NULL, `x` REAL, `y` REAL, `street_address` TEXT, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "id",
@@ -105,6 +105,12 @@
             "notNull": false
           },
           {
+            "fieldPath": "timestamp",
+            "columnName": "timestamp",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
             "fieldPath": "location.x",
             "columnName": "x",
             "affinity": "REAL",
@@ -118,7 +124,7 @@
           },
           {
             "fieldPath": "attributes.streetAddress",
-            "columnName": "StAddr",
+            "columnName": "street_address",
             "affinity": "TEXT",
             "notNull": false
           }
@@ -135,7 +141,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"3052ec0a0250e25a08afa61d48f6907a\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"e6e2854572a2ce12348d195a72df0b78\")"
     ]
   }
 }

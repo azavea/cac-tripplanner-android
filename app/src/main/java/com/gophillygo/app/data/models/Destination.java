@@ -52,6 +52,9 @@ public class Destination {
     @SerializedName("zipcode")
     private final String zipCode;
 
+    // timestamp is not final, as it is set on database save, and not by serializer
+    private long timestamp;
+
     public Destination(int id, int placeID, String name, boolean accessible, String image,
                        String city, boolean cycling, String zipCode, String description,
                        int priority, String state, String address, DestinationLocation location,
@@ -76,6 +79,16 @@ public class Destination {
 
         this.location = location;
         this.attributes = attributes;
+    }
+
+    /**
+     * Timestamp entries. Timestamp value does not come from query result; it should be set
+     * on database save. Gson serializer will initialize value to zero.
+     *
+     * @param timestamp Time in milliseconds since Unix epoch
+     */
+    public void setTimestamp(long timestamp) {
+        this.timestamp = timestamp;
     }
 
     public int getId() {
@@ -148,5 +161,9 @@ public class Destination {
 
     public String getZipCode() {
         return zipCode;
+    }
+
+    public long getTimestamp() {
+        return timestamp;
     }
 }

@@ -2,11 +2,8 @@ package com.gophillygo.app.data;
 
 import android.arch.lifecycle.LiveData;
 
-import com.gophillygo.app.data.models.Destination;
 import com.gophillygo.app.data.models.DestinationQueryResponse;
 import com.gophillygo.app.data.networkresource.ApiResponse;
-
-import java.util.List;
 
 import retrofit2.http.GET;
 
@@ -16,6 +13,5 @@ import retrofit2.http.GET;
 
 public interface DestinationWebservice {
     @GET("api/destinations/search?text=")
-    //LiveData<ApiResponse<List<Destination>>> getDestinations();
     LiveData<ApiResponse<DestinationQueryResponse>> getDestinations();
 }

@@ -9,7 +9,6 @@ import com.gophillygo.app.data.models.Destination;
 import com.gophillygo.app.data.models.DestinationQueryResponse;
 import com.gophillygo.app.data.networkresource.ApiResponse;
 import com.gophillygo.app.data.networkresource.NetworkBoundResource;
-import com.gophillygo.app.data.networkresource.RateLimiter;
 import com.gophillygo.app.data.networkresource.Resource;
 
 import java.util.List;
@@ -28,10 +27,11 @@ import javax.inject.Inject;
 public class DestinationRepository {
     private static final String LOG_LABEL = "DestinationRepository";
 
-    private final static String DESTINATIONS_KEY = "destinations";
     private DestinationWebservice webservice;
     private DestinationDao dao;
-    private RateLimiter<String> rateLimiter = new RateLimiter<>(10, TimeUnit.MINUTES);
+
+    // maximum rate at which to refresh data from network
+    private static final long RATE_LIMIT = TimeUnit.MINUTES.toMillis(15);
 
     @Inject
     public DestinationRepository(DestinationWebservice webservice,
@@ -52,6 +52,8 @@ public class DestinationRepository {
                 // clear out existing database entries before adding new ones
                 dao.clear();
                 for (Destination item: response.getDestinations()) {
+                    Log.d(LOG_LABEL, "item timestamp: " + item.getTimestamp());
+                    item.setTimestamp(System.currentTimeMillis());
                     dao.save(item);
                 }
             }
@@ -59,7 +61,11 @@ public class DestinationRepository {
             @Override
             protected boolean shouldFetch(@Nullable List<Destination> data) {
                 Log.d(LOG_LABEL, "shouldFetch");
-                return data == null || data.isEmpty() || rateLimiter.shouldFetch(DESTINATIONS_KEY);
+                if (data == null || data.isEmpty()) {
+                    return true;
+                }
+                Destination first = data.get(0);
+                return System.currentTimeMillis() - first.getTimestamp() > RATE_LIMIT;
             }
 
             @NonNull @Override
