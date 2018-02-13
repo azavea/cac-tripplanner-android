@@ -55,6 +55,9 @@ public class Destination {
     // timestamp is not final, as it is set on database save, and not by serializer
     private long timestamp;
 
+    // convenience property to track distance to each destination
+    private float distance;
+
     public Destination(int id, int placeID, String name, boolean accessible, String image,
                        String city, boolean cycling, String zipCode, String description,
                        int priority, String state, String address, DestinationLocation location,
@@ -89,6 +92,10 @@ public class Destination {
      */
     public void setTimestamp(long timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public void setDistance(float distance) {
+        this.distance = distance;
     }
 
     public int getId() {
@@ -165,5 +172,9 @@ public class Destination {
 
     public long getTimestamp() {
         return timestamp;
+    }
+
+    public float getDistance() {
+        return distance;
     }
 }
