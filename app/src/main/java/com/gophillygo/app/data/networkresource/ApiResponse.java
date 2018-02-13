@@ -17,8 +17,9 @@ import retrofit2.Response;
  */
 
 public class ApiResponse<T> {
-    public static final String LOG_LABEL = "ApiResponse";
+    private static final String LOG_LABEL = "ApiResponse";
 
+    @SuppressWarnings("WeakerAccess")
     public final int code;
     @Nullable
     public final T body;
@@ -33,6 +34,7 @@ public class ApiResponse<T> {
         errorMessage = error.getMessage();
     }
 
+    @SuppressWarnings("ConstantConditions")
     public ApiResponse(Response<T> response) {
         code = response.code();
         if (response.isSuccessful()) {

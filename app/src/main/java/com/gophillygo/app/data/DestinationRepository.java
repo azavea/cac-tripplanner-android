@@ -24,11 +24,11 @@ import javax.inject.Inject;
  * https://developer.android.com/topic/libraries/architecture/guide.html
  */
 
-public class DestinationRepository {
+class DestinationRepository {
     private static final String LOG_LABEL = "DestinationRepository";
 
-    private DestinationWebservice webservice;
-    private DestinationDao dao;
+    private final DestinationWebservice webservice;
+    private final DestinationDao dao;
 
     // maximum rate at which to refresh data from network
     private static final long RATE_LIMIT = TimeUnit.MINUTES.toMillis(15);

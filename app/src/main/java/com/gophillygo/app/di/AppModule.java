@@ -25,7 +25,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 
 @Module(includes = ViewModelModule.class)
-public class AppModule {
+class AppModule {
     @Singleton
     @Provides
     DestinationWebservice provideDestinationWebservice() {

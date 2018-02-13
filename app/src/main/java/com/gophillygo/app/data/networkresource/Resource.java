@@ -20,6 +20,7 @@ import static com.gophillygo.app.data.networkresource.Status.SUCCESS;
 public class Resource<T> {
     @NonNull public final Status status;
     @Nullable public final T data;
+    @SuppressWarnings("unused")
     @Nullable public final String message;
     private Resource(@NonNull Status status, @Nullable T data, @Nullable String message) {
         this.status = status;

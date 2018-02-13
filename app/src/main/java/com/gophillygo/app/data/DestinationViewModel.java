@@ -12,8 +12,8 @@ import javax.inject.Inject;
 
 
 public class DestinationViewModel extends ViewModel {
-    private LiveData<Resource<List<Destination>>> destinations;
-    private DestinationRepository destinationRepository;
+    private final LiveData<Resource<List<Destination>>> destinations;
+    private final DestinationRepository destinationRepository;
 
     @Inject
     public DestinationViewModel(DestinationRepository destinationRepository) {

@@ -1,6 +1,7 @@
 package com.gophillygo.app.data.networkresource;
 
 import android.arch.lifecycle.LiveData;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import java.lang.reflect.Type;
@@ -16,9 +17,10 @@ import retrofit2.Response;
  *
  * https://github.com/googlesamples/android-architecture-components/blob/e33782ba54ebe87f7e21e03542230695bc893818/GithubBrowserSample/app/src/main/java/com/android/example/github/util/LiveDataCallAdapter.java
  *
- * A Retrofit adapterthat converts the Call into a LiveData of ApiResponse.
+ * A Retrofit adapter that converts the Call into a LiveData of ApiResponse.
  * @param <R>
  */
+@SuppressWarnings("WeakerAccess")
 public class LiveDataCallAdapter<R> implements CallAdapter<R, LiveData<ApiResponse<R>>> {
     private static final String LOG_LABEL = "LiveDataCallAdapter";
 
@@ -33,9 +35,9 @@ public class LiveDataCallAdapter<R> implements CallAdapter<R, LiveData<ApiRespon
     }
 
     @Override
-    public LiveData<ApiResponse<R>> adapt(Call<R> call) {
+    public LiveData<ApiResponse<R>> adapt(@NonNull Call<R> call) {
         return new LiveData<ApiResponse<R>>() {
-            AtomicBoolean started = new AtomicBoolean(false);
+            final AtomicBoolean started = new AtomicBoolean(false);
             @Override
             protected void onActive() {
                 Log.d(LOG_LABEL, "onActive");
@@ -43,13 +45,13 @@ public class LiveDataCallAdapter<R> implements CallAdapter<R, LiveData<ApiRespon
                 if (started.compareAndSet(false, true)) {
                     call.enqueue(new Callback<R>() {
                         @Override
-                        public void onResponse(Call<R> call, Response<R> response) {
+                        public void onResponse(@NonNull Call<R> call, @NonNull Response<R> response) {
                             Log.d(LOG_LABEL, "onResponse");
                             postValue(new ApiResponse<>(response));
                         }
 
                         @Override
-                        public void onFailure(Call<R> call, Throwable throwable) {
+                        public void onFailure(@NonNull Call<R> call, @NonNull Throwable throwable) {
                             Log.e(LOG_LABEL, "onFailure");
                             postValue(new ApiResponse<>(throwable));
                         }

@@ -49,8 +49,10 @@ public class HomeActivity extends AppCompatActivity {
     private GridView gridView;
     private Toolbar toolbar;
 
+    @SuppressWarnings("WeakerAccess")
     @Inject
     GpgViewModelFactory viewModelFactory;
+    @SuppressWarnings("WeakerAccess")
     DestinationViewModel viewModel;
 
     private List<Destination> nearestDestinations;
@@ -193,7 +195,7 @@ public class HomeActivity extends AppCompatActivity {
         carouselView.playCarousel();
     }
 
-    ViewListener viewListener = new ViewListener() {
+    private final ViewListener viewListener = new ViewListener() {
         @Override
         public View setViewForPosition(int position) {
             // root here must be null (not the carouselView) to avoid ViewPager stack overflow

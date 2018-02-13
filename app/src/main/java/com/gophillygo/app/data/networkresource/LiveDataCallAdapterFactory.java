@@ -1,6 +1,7 @@
 package com.gophillygo.app.data.networkresource;
 
 import android.arch.lifecycle.LiveData;
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import java.lang.annotation.Annotation;
@@ -14,13 +15,12 @@ import retrofit2.Retrofit;
  * Based on:
  * https://github.com/googlesamples/android-architecture-components/blob/e33782ba54ebe87f7e21e03542230695bc893818/GithubBrowserSample/app/src/main/java/com/android/example/github/util/LiveDataCallAdapterFactory.java
  */
-
 public class LiveDataCallAdapterFactory extends CallAdapter.Factory {
 
     private static final String LOG_LABEL = "LiveDataAdapterFactory";
 
     @Override
-    public CallAdapter<?, ?> get(Type returnType, Annotation[] annotations, Retrofit retrofit) {
+    public CallAdapter<?, ?> get(@NonNull Type returnType, @NonNull Annotation[] annotations, @NonNull Retrofit retrofit) {
         if (getRawType(returnType) != LiveData.class) {
             Log.e(LOG_LABEL, "Unexpected return type:");
             Log.e(LOG_LABEL, returnType.toString());

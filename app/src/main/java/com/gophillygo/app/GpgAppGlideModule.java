@@ -8,6 +8,7 @@ import com.bumptech.glide.module.AppGlideModule;
  * See: http://bumptech.github.io/glide/doc/configuration.html
  */
 
+@SuppressWarnings("WeakerAccess")
 @GlideModule
 public class GpgAppGlideModule extends AppGlideModule {
 }
