@@ -27,6 +27,7 @@ import com.gophillygo.app.di.GpgViewModelFactory;
 import com.synnapps.carouselview.CarouselView;
 import com.synnapps.carouselview.ViewListener;
 
+import java.text.NumberFormat;
 import java.util.Collections;
 import java.util.List;
 
@@ -40,18 +41,22 @@ public class HomeActivity extends AppCompatActivity {
     // maximum number of nearby destinations to show in carousel
     private static final int CAROUSEL_MAX_DESTINATION_COUNT = 8;
 
-    LayoutInflater inflater;
+    private static final float METERS_TO_MILES = 0.000621371192f;
 
-    CarouselView carouselView;
-    GridView gridView;
-    Toolbar toolbar;
+    private LayoutInflater inflater;
+
+    private CarouselView carouselView;
+    private GridView gridView;
+    private Toolbar toolbar;
 
     @Inject
     GpgViewModelFactory viewModelFactory;
     DestinationViewModel viewModel;
 
-    List<Destination> nearestDestinations;
-    Location currentLocation;
+    private List<Destination> nearestDestinations;
+    private Location currentLocation;
+
+    private static final NumberFormat numberFormatter = NumberFormat.getNumberInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +64,9 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
 
         inflater = getLayoutInflater();
+
+        numberFormatter.setMinimumFractionDigits(0);
+        numberFormatter.setMaximumFractionDigits(2);
 
         toolbar = findViewById(R.id.home_toolbar);
         // disable default app name title display
@@ -124,7 +132,8 @@ public class HomeActivity extends AppCompatActivity {
             DestinationLocation coordinates = dest.getLocation();
             location.setLatitude(coordinates.getY());
             location.setLongitude(coordinates.getX());
-            dest.setDistance(currentLocation.distanceTo(location));
+            float distanceInMeters = currentLocation.distanceTo(location);
+            dest.setDistance(distanceInMeters * METERS_TO_MILES);
         }
 
         // order by distance
@@ -191,6 +200,7 @@ public class HomeActivity extends AppCompatActivity {
             @SuppressLint("InflateParams") View itemView = inflater.inflate(R.layout.custom_carousel_item, null);
             ImageView carouselImageView = itemView.findViewById(R.id.carousel_item_image);
             TextView carouselPlaceName = itemView.findViewById(R.id.carousel_item_place_name);
+            TextView carouselDistance = itemView.findViewById(R.id.carousel_item_distance_label);
 
             Destination destination = nearestDestinations.get(position);
 
@@ -201,6 +211,10 @@ public class HomeActivity extends AppCompatActivity {
             carouselPlaceName.setText(destination.getAddress());
             carouselImageView.setContentDescription(destination.getAddress());
             carouselView.setIndicatorGravity(Gravity.CENTER_HORIZONTAL|Gravity.BOTTOM);
+
+            String distanceString = numberFormatter.format(destination.getDistance()) + " mi";
+            carouselDistance.setText(distanceString);
+
             return itemView;
         }
     };
