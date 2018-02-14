@@ -15,8 +15,8 @@ import com.gophillygo.app.R;
 
 public class PlaceCategoryGridAdapter extends BaseAdapter {
 
-    private Context context;
-    private LayoutInflater inflater;
+    private final Context context;
+    private final LayoutInflater inflater;
 
     private static class ViewHolder {
         ImageView imageView;
@@ -89,6 +89,7 @@ public class PlaceCategoryGridAdapter extends BaseAdapter {
                 .load(placeCategoryImages[position])
                 .into(viewHolder.imageView);
 
+        viewHolder.imageView.setContentDescription(placeCategoryNames[position]);
         viewHolder.categoryNameView.setText(placeCategoryNames[position]);
 
         return convertView;

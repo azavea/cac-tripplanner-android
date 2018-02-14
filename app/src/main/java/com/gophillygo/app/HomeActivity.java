@@ -1,5 +1,9 @@
 package com.gophillygo.app;
 
+import android.annotation.SuppressLint;
+import android.arch.lifecycle.ViewModelProviders;
+import android.location.Location;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -9,40 +13,52 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.gophillygo.app.adapters.PlaceCategoryGridAdapter;
+import com.gophillygo.app.data.DestinationViewModel;
+import com.gophillygo.app.data.models.Destination;
+import com.gophillygo.app.data.models.DestinationLocation;
+import com.gophillygo.app.data.networkresource.Status;
+import com.gophillygo.app.di.GpgViewModelFactory;
 import com.synnapps.carouselview.CarouselView;
-import com.synnapps.carouselview.ImageClickListener;
 import com.synnapps.carouselview.ViewListener;
+
+import java.text.NumberFormat;
+import java.util.Collections;
+import java.util.List;
+
+import javax.inject.Inject;
+
 
 public class HomeActivity extends AppCompatActivity {
 
-    private static String LOG_LABEL = "HomeActivity";
+    private static final String LOG_LABEL = "HomeActivity";
 
-    LayoutInflater inflater;
+    // maximum number of nearby destinations to show in carousel
+    private static final int CAROUSEL_MAX_DESTINATION_COUNT = 8;
 
-    CarouselView carouselView;
-    GridView gridView;
-    Toolbar toolbar;
+    private static final float METERS_TO_MILES = 0.000621371192f;
 
-    // order corresponds to the image URLs below
-    String[] testPlaceNames = {
-            "Camden County Environmental Education Center",
-            "Bartram's Garden",
-            "Cobb's Creek Trail"
-    };
+    private LayoutInflater inflater;
 
-    // destination wide images, 680x400
-    String[] testImageUrls = {
-            "https://cleanair-images-prod.s3.amazonaws.com/destinations/e6aa6bc0891247c4a4d651f22c028fe6.jpg",
-            "https://cleanair-images-prod.s3.amazonaws.com/destinations/874f2bd93b5f4bc692cf39d1aaba5ead.jpg",
-            "https://cleanair-images-prod.s3.amazonaws.com/destinations/ad72d3d20dfb4197b76c7b4d211a8eef.jpg"
-    };
+    private CarouselView carouselView;
+    private GridView gridView;
+    private Toolbar toolbar;
+
+    @SuppressWarnings("WeakerAccess")
+    @Inject
+    GpgViewModelFactory viewModelFactory;
+    @SuppressWarnings("WeakerAccess")
+    DestinationViewModel viewModel;
+
+    private List<Destination> nearestDestinations;
+    private Location currentLocation;
+
+    private static final NumberFormat numberFormatter = NumberFormat.getNumberInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,29 +67,89 @@ public class HomeActivity extends AppCompatActivity {
 
         inflater = getLayoutInflater();
 
+        numberFormatter.setMinimumFractionDigits(0);
+        numberFormatter.setMaximumFractionDigits(2);
+
         toolbar = findViewById(R.id.home_toolbar);
         // disable default app name title display
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
 
-        carouselView = findViewById(R.id.home_carousel);
-        carouselView.setPageCount(testPlaceNames.length);
-        carouselView.setViewListener(viewListener);
-        carouselView.setImageClickListener(new ImageClickListener() {
-            @Override
-            public void onClick(int position) {
-                Log.d(LOG_LABEL, "Clicked item: "+ position);
-            }
-        });
-
         gridView = findViewById(R.id.home_grid_view);
         gridView.setAdapter(new PlaceCategoryGridAdapter(this));
-        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View v,
-                                    int position, long id) {
-                Log.d(LOG_LABEL, "clicked grid view item: " + position);
+        gridView.setOnItemClickListener((parent, v, position, id) ->
+                Log.d(LOG_LABEL, "clicked grid view item: " + position));
+
+        carouselView = findViewById(R.id.home_carousel);
+        carouselView.setImageClickListener(position ->
+                Log.d(LOG_LABEL, "Clicked item: "+ position));
+
+        viewModel = ViewModelProviders.of(this, viewModelFactory)
+                .get(DestinationViewModel.class);
+        viewModel.getDestinations().observe(this, destinationResource -> {
+            // shouldn't happen
+            if (destinationResource == null) {
+                Log.e(LOG_LABEL, "No ApiResponse wrapper returned");
+                return;
             }
+
+            if (!destinationResource.status.equals(Status.SUCCESS)) {
+                Log.e(LOG_LABEL, "Destination query failed with status: " +
+                        destinationResource.status.name());
+                return;
+            }
+
+            if (destinationResource.data == null || destinationResource.data.isEmpty()) {
+                Log.e(LOG_LABEL, "Destination query returned, but found no results");
+                return;
+            }
+
+            Log.d(LOG_LABEL, "Found destinations!");
+            Log.d(LOG_LABEL, destinationResource.status.name());
+            // TODO: #9 use actual user location
+            // set to dummy location: City Hall
+            currentLocation = new Location("dummy");
+            currentLocation.setLatitude(39.954888);
+            currentLocation.setLongitude(-75.163206);
+
+            nearestDestinations = findNearestDestinations(destinationResource.data);
+
+            Log.d(LOG_LABEL, "Nearest destinations:");
+            for (Destination dest: nearestDestinations) {
+                Log.d(LOG_LABEL, dest.getAddress());
+                Log.d(LOG_LABEL, String.valueOf(dest.getDistance()));
+            }
+
+            // set up carousel
+            carouselView.setViewListener(viewListener);
+            carouselView.setPageCount(nearestDestinations.size());
         });
+    }
+
+    @NonNull
+    private List<Destination> findNearestDestinations(List<Destination> destinations) {
+        // set distance to each location
+        for (Destination dest: destinations) {
+            Location location = new Location("dummy");
+            DestinationLocation coordinates = dest.getLocation();
+            location.setLatitude(coordinates.getY());
+            location.setLongitude(coordinates.getX());
+            float distanceInMeters = currentLocation.distanceTo(location);
+            dest.setDistance(distanceInMeters * METERS_TO_MILES);
+        }
+
+        // order by distance
+        Collections.sort(destinations, (dest1, dest2) ->
+                dest1.getDistance() < dest2.getDistance() ? -1
+                : dest1.getDistance() > dest2.getDistance() ? 1
+                : 0);
+
+        // return the nearest destinations
+        int numDestinations = CAROUSEL_MAX_DESTINATION_COUNT;
+        if (destinations.size() < numDestinations) {
+            numDestinations = destinations.size();
+        }
+        return destinations.subList(0, numDestinations - 1);
     }
 
     @Override
@@ -119,22 +195,34 @@ public class HomeActivity extends AppCompatActivity {
         carouselView.playCarousel();
     }
 
-    ViewListener viewListener = new ViewListener() {
+    private final ViewListener viewListener = new ViewListener() {
         @Override
         public View setViewForPosition(int position) {
             // root here must be null (not the carouselView) to avoid ViewPager stack overflow
-            View itemView = inflater.inflate(R.layout.custom_carousel_item, null);
+            @SuppressLint("InflateParams") View itemView = inflater.inflate(R.layout.custom_carousel_item, null);
             ImageView carouselImageView = itemView.findViewById(R.id.carousel_item_image);
             TextView carouselPlaceName = itemView.findViewById(R.id.carousel_item_place_name);
+            TextView carouselDistance = itemView.findViewById(R.id.carousel_item_distance_label);
+
+            Destination destination = nearestDestinations.get(position);
 
             Glide.with(HomeActivity.this)
-                    .load(testImageUrls[position])
+                    .load(destination.getWideImage())
                     .into(carouselImageView);
 
-            carouselPlaceName.setText(testPlaceNames[position]);
-            carouselImageView.setContentDescription(testPlaceNames[position]);
+            carouselPlaceName.setText(destination.getAddress());
+            carouselImageView.setContentDescription(destination.getAddress());
             carouselView.setIndicatorGravity(Gravity.CENTER_HORIZONTAL|Gravity.BOTTOM);
+
+            String distanceString = numberFormatter.format(destination.getDistance()) + " mi";
+            carouselDistance.setText(distanceString);
+
             return itemView;
         }
     };
+
+    @Override
+    public void onPointerCaptureChanged(boolean hasCapture) {
+
+    }
 }
