@@ -7,24 +7,32 @@
     Allows Glide to monitor connectivity status and restart failed requests if users go from a
     a disconnected to a connected network state.
     -->
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
+        android:name=".GoPhillyGoApp"
         android:allowBackup="true"
+        android:fullBackupContent="@xml/backup_descriptor"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:name=".GoPhillyGoApp"
-        android:value="GlideModule"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/GpgAppTheme"
-        android:fullBackupContent="@xml/backup_descriptor">
+        android:value="GlideModule">
         <activity android:name=".HomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".PlacesListActivity"
+            android:label="@string/places_list_title"
+            android:parentActivityName=".HomeActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.gophillygo.app.HomeActivity" />
         </activity>
     </application>
 

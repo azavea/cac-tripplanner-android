@@ -2,6 +2,7 @@ package com.gophillygo.app;
 
 import android.annotation.SuppressLint;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -77,8 +78,7 @@ public class HomeActivity extends AppCompatActivity {
 
         gridView = findViewById(R.id.home_grid_view);
         gridView.setAdapter(new PlaceCategoryGridAdapter(this));
-        gridView.setOnItemClickListener((parent, v, position, id) ->
-                Log.d(LOG_LABEL, "clicked grid view item: " + position));
+        gridView.setOnItemClickListener((parent, v, position, id) -> clickedGridItem(position));
 
         carouselView = findViewById(R.id.home_carousel);
         carouselView.setImageClickListener(position ->
@@ -224,5 +224,12 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     public void onPointerCaptureChanged(boolean hasCapture) {
 
+    }
+
+    private void clickedGridItem(int position) {
+        Log.d(LOG_LABEL, "clicked grid view item: " + position);
+
+        Intent intent = new Intent(this, PlacesListActivity.class);
+        startActivity(intent);
     }
 }

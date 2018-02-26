@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_events"
+        android:orderInCategory="1"
+        app:showAsAction="ifRoom"
+        android:icon="@android:drawable/ic_menu_my_calendar"
+        android:title="@string/menu_action_events"/>
+
+    <item
+        android:id="@+id/action_map"
+        android:orderInCategory="2"
+        app:showAsAction="ifRoom"
+        android:icon="@android:drawable/ic_dialog_map"
+        android:title="@string/menu_action_map"/>
+
+    <item
+        android:id="@+id/action_search"
+        android:orderInCategory="3"
+        app:showAsAction="ifRoom"
+        android:title="@string/menu_search_action"
+        android:icon="@android:drawable/ic_menu_search"/>
+</menu>
