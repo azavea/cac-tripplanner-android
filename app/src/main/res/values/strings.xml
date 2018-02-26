@@ -12,4 +12,8 @@
     <string name="carousel_nearby_label">Nearby</string>
 
     <string name="places_list_title">Places</string>
+
+    <string name="filter_button_title">Filters</string>
+    <string name="liked_filter_button_title">Liked</string>
+    <string name="want_to_go_filter_button_title">Want to go</string>
 </resources>

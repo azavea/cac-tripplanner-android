@@ -13,11 +13,44 @@
         android:layout_alignParentTop="true"
         android:minHeight="?attr/actionBarSize"
         android:fitsSystemWindows="true"
-        android:elevation="4dp"
+        android:elevation="0dp"
         android:background="@color/color_primary"
         app:title="@string/places_list_title"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         tools:targetApi="lollipop" />
+
+    <RelativeLayout
+        android:id="@+id/places_list_filter_button_bar"
+        android:layout_below="@+id/places_list_toolbar"
+        android:background="@color/color_primary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/places_list_filter_button"
+            style="@style/FilterBarButton"
+            android:layout_alignParentStart="true"
+            android:layout_gravity="start"
+            android:drawableStart="@android:drawable/ic_menu_info_details"
+            android:text="@string/filter_button_title" />
+
+        <Button
+            android:id="@+id/places_list_liked_filter_button"
+            style="@style/FilterBarButton"
+            android:layout_gravity="end"
+            android:layout_toStartOf="@+id/places_list_want_to_go_filter_button"
+            android:drawableStart="@android:drawable/ic_menu_add"
+            android:text="@string/liked_filter_button_title" />
+
+        <Button
+            android:id="@+id/places_list_want_to_go_filter_button"
+            android:text="@string/want_to_go_filter_button_title"
+            android:drawableStart="@android:drawable/ic_menu_myplaces"
+            style="@style/FilterBarButton"
+            android:layout_gravity="end"
+            android:layout_alignParentEnd="true" />
+    </RelativeLayout>
 
 </RelativeLayout>
