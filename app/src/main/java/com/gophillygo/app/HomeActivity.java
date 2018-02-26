@@ -28,8 +28,6 @@ import com.gophillygo.app.di.GpgViewModelFactory;
 import com.synnapps.carouselview.CarouselView;
 import com.synnapps.carouselview.ViewListener;
 
-import java.text.NumberFormat;
-import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -59,17 +57,12 @@ public class HomeActivity extends AppCompatActivity {
     private List<Destination> nearestDestinations;
     private Location currentLocation;
 
-    private static final NumberFormat numberFormatter = NumberFormat.getNumberInstance();
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
         inflater = getLayoutInflater();
-
-        numberFormatter.setMinimumFractionDigits(0);
-        numberFormatter.setMaximumFractionDigits(2);
 
         toolbar = findViewById(R.id.home_toolbar);
         // disable default app name title display
@@ -104,8 +97,6 @@ public class HomeActivity extends AppCompatActivity {
                 return;
             }
 
-            Log.d(LOG_LABEL, "Found destinations!");
-            Log.d(LOG_LABEL, destinationResource.status.name());
             // TODO: #9 use actual user location
             // set to dummy location: City Hall
             currentLocation = new Location("dummy");
@@ -113,12 +104,6 @@ public class HomeActivity extends AppCompatActivity {
             currentLocation.setLongitude(-75.163206);
 
             nearestDestinations = findNearestDestinations(destinationResource.data);
-
-            Log.d(LOG_LABEL, "Nearest destinations:");
-            for (Destination dest: nearestDestinations) {
-                Log.d(LOG_LABEL, dest.getAddress());
-                Log.d(LOG_LABEL, String.valueOf(dest.getDistance()));
-            }
 
             // set up carousel
             carouselView.setViewListener(viewListener);
@@ -128,21 +113,22 @@ public class HomeActivity extends AppCompatActivity {
 
     @NonNull
     private List<Destination> findNearestDestinations(List<Destination> destinations) {
-        // set distance to each location
-        for (Destination dest: destinations) {
-            Location location = new Location("dummy");
-            DestinationLocation coordinates = dest.getLocation();
-            location.setLatitude(coordinates.getY());
-            location.setLongitude(coordinates.getX());
-            float distanceInMeters = currentLocation.distanceTo(location);
-            dest.setDistance(distanceInMeters * METERS_TO_MILES);
-        }
+        // TODO: #9 move logic to set distances once location service set up
+        // set distance to each location, if not set already
+        Destination firstDestination = destinations.get(0);
+        if (firstDestination.getDistance() == 0) {
+            for (Destination dest: destinations) {
+                Location location = new Location("dummy");
+                DestinationLocation coordinates = dest.getLocation();
+                location.setLatitude(coordinates.getY());
+                location.setLongitude(coordinates.getX());
+                float distanceInMeters = currentLocation.distanceTo(location);
+                dest.setDistance(distanceInMeters * METERS_TO_MILES);
+            }
 
-        // order by distance
-        Collections.sort(destinations, (dest1, dest2) ->
-                dest1.getDistance() < dest2.getDistance() ? -1
-                : dest1.getDistance() > dest2.getDistance() ? 1
-                : 0);
+            // update destinations all at once, so LiveData observer only triggers once
+            viewModel.updateMultipleDestinations(destinations);
+        }
 
         // return the nearest destinations
         int numDestinations = CAROUSEL_MAX_DESTINATION_COUNT;
@@ -213,9 +199,7 @@ public class HomeActivity extends AppCompatActivity {
             carouselPlaceName.setText(destination.getAddress());
             carouselImageView.setContentDescription(destination.getAddress());
             carouselView.setIndicatorGravity(Gravity.CENTER_HORIZONTAL|Gravity.BOTTOM);
-
-            String distanceString = numberFormatter.format(destination.getDistance()) + " mi";
-            carouselDistance.setText(distanceString);
+            carouselDistance.setText(destination.getFormattedDistance());
 
             return itemView;
         }

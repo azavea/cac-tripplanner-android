@@ -52,7 +52,9 @@ class AppModule {
     @Singleton
     @Provides
     GpgDatabase provideDatabase(Application app) {
-        return Room.databaseBuilder(app, GpgDatabase.class, "gpg-database").build();
+        return Room.databaseBuilder(app, GpgDatabase.class, "gpg-database")
+                .fallbackToDestructiveMigration()
+                .build();
     }
 
     @Singleton

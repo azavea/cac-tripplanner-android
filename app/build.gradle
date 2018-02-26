@@ -71,3 +71,4 @@ dependencies {
     // Test helpers for Room
     testImplementation "android.arch.persistence.room:testing:$roomVersion"
 }
+

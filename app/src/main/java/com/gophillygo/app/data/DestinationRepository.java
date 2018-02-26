@@ -1,6 +1,8 @@
 package com.gophillygo.app.data;
 
+import android.annotation.SuppressLint;
 import android.arch.lifecycle.LiveData;
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -45,6 +47,28 @@ class DestinationRepository {
         return dao.getDestination(destinationId);
     }
 
+    @SuppressLint("StaticFieldLeak")
+    public void updateDestination(Destination destination) {
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                dao.update(destination);
+                return null;
+            }
+        }.execute();
+    }
+
+    @SuppressLint("StaticFieldLeak")
+    public void updateMultipleDestinations(List<Destination> destinations) {
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                dao.bulkUpdate(destinations);
+                return null;
+            }
+        }.execute();
+    }
+
     public LiveData<Resource<List<Destination>>> loadDestinations() {
         return new NetworkBoundResource<List<Destination>, DestinationQueryResponse>() {
             @Override
@@ -60,7 +84,6 @@ class DestinationRepository {
 
             @Override
             protected boolean shouldFetch(@Nullable List<Destination> data) {
-                Log.d(LOG_LABEL, "shouldFetch");
                 if (data == null || data.isEmpty()) {
                     return true;
                 }
@@ -70,13 +93,11 @@ class DestinationRepository {
 
             @NonNull @Override
             protected LiveData<List<Destination>> loadFromDb() {
-                Log.d(LOG_LABEL, "loadFromDb");
                 return dao.getAll();
             }
 
             @NonNull @Override
             protected LiveData<ApiResponse<DestinationQueryResponse>> createCall() {
-                Log.d(LOG_LABEL, "createCall");
                 return webservice.getDestinations();
             }
         }.getAsLiveData();

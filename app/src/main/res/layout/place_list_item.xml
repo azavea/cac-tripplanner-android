@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/color_white"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <ImageView
+        android:id="@+id/place_list_item_image"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="170dp"
+        android:scaleType="centerCrop"
+        tools:ignore="ContentDescription" />
+
+    <TextView
+        android:id="@+id/place_list_item_name_label"
+        android:layout_below="@+id/place_list_item_image"
+        style="@style/Base.TextAppearance.AppCompat.Title"
+        android:padding="10dp"
+        android:gravity="start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@+id/place_list_item_distance_label"
+        style="@style/TextAppearance.AppCompat.Medium"
+        android:drawableStart="@android:drawable/ic_menu_compass"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/place_list_item_name_label"
+        android:paddingBottom="2dp"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        android:gravity="start"
+        android:layout_alignParentBottom="true" />
+
+</RelativeLayout>
