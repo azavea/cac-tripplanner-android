@@ -35,6 +35,8 @@ public class PlacesListAdapter extends RecyclerView.Adapter {
         TextView placeNameView;
         TextView distanceView;
         ImageButton placeOptionsButton;
+        ImageView cyclingMarker;
+        ImageView watershedAllianceMarker;
 
         private ViewHolder(View parentView) {
             super(parentView);
@@ -51,10 +53,14 @@ public class PlacesListAdapter extends RecyclerView.Adapter {
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View parentView = inflater.inflate(R.layout.place_list_item, parent, false);
         ViewHolder viewHolder = new ViewHolder(parentView);
+
         viewHolder.imageView = parentView.findViewById(R.id.place_list_item_image);
         viewHolder.placeNameView = parentView.findViewById(R.id.place_list_item_name_label);
         viewHolder.distanceView = parentView.findViewById(R.id.place_list_item_distance_label);
         viewHolder.placeOptionsButton = parentView.findViewById(R.id.place_list_item_options_button);
+        viewHolder.watershedAllianceMarker = parentView.findViewById(R.id.place_list_watershed_alliance_marker);
+        viewHolder.cyclingMarker = parentView.findViewById(R.id.place_list_cycling_activity_marker);
+
         parentView.setTag(viewHolder);
         return viewHolder;
     }
@@ -67,9 +73,22 @@ public class PlacesListAdapter extends RecyclerView.Adapter {
 
         viewHolder.placeNameView.setText(destination.getName());
         viewHolder.distanceView.setText(destination.getFormattedDistance());
+        viewHolder.imageView.setContentDescription(destination.getName());
         Glide.with(context)
                 .load(destination.getWideImage())
                 .into(viewHolder.imageView);
+
+        if (destination.isCycling()) {
+            viewHolder.cyclingMarker.setVisibility(View.VISIBLE);
+        } else {
+            viewHolder.cyclingMarker.setVisibility(View.GONE);
+        }
+
+        if (destination.isWatershedAlliance()) {
+            viewHolder.watershedAllianceMarker.setVisibility(View.VISIBLE);
+        } else {
+            viewHolder.watershedAllianceMarker.setVisibility(View.GONE);
+        }
 
         viewHolder.placeOptionsButton.setOnClickListener(v -> {
             Log.d(LOG_LABEL, "Clicked place options button for place #" + destination.getId());

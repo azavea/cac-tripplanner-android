@@ -16,6 +16,31 @@
         android:scaleType="centerCrop"
         tools:ignore="ContentDescription" />
 
+    <ImageView
+        android:id="@+id/place_list_cycling_activity_marker"
+        android:padding="5dp"
+        android:scaleType="centerInside"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_toStartOf="@id/place_list_watershed_alliance_marker"
+        android:src="@drawable/ic_directions_bike_white_24px"
+        android:contentDescription="@string/bicycle_activity_label"
+        android:visibility="gone"
+        android:layout_width="32dp"
+        android:layout_height="32dp" />
+
+    <ImageView
+        android:id="@+id/place_list_watershed_alliance_marker"
+        android:padding="5dp"
+        android:scaleType="centerInside"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:visibility="gone"
+        android:src="@drawable/ic_watershed_alliance"
+        android:contentDescription="@string/watershed_alliance_label"
+        android:layout_width="32dp"
+        android:layout_height="32dp" />
+
     <TextView
         android:id="@+id/place_list_item_name_label"
         android:layout_below="@+id/place_list_item_image"
