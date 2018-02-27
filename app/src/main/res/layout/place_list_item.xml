@@ -25,7 +25,7 @@
     <TextView
         android:id="@+id/place_list_item_distance_label"
         style="@style/TextAppearance.AppCompat.Medium"
-        android:drawableStart="@android:drawable/ic_menu_compass"
+        android:drawableStart="@drawable/ic_place_black_24dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/place_list_item_name_label"

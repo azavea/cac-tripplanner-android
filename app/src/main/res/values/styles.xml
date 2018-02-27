@@ -16,10 +16,10 @@
     <style name="FilterBarButton" parent="Base.TextAppearance.AppCompat.Widget.Button.Borderless.Colored">
         <item name="android:textColor">@color/color_white</item>
         <item name="android:color">@color/color_white</item>
-        <item name="android:layout_margin">6dp</item>
+        <item name="android:layout_margin">2dp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
-        <item name="android:paddingEnd">6dp</item>
+        <item name="android:padding">6dp</item>
         <item name="android:background">@color/color_primary_light</item>
     </style>
 </resources>

@@ -32,7 +32,7 @@
             style="@style/FilterBarButton"
             android:layout_alignParentStart="true"
             android:layout_gravity="start"
-            android:drawableStart="@android:drawable/ic_menu_info_details"
+            android:drawableStart="@drawable/ic_filter_list_white_24px"
             android:text="@string/filter_button_title" />
 
         <Button
@@ -40,13 +40,13 @@
             style="@style/FilterBarButton"
             android:layout_gravity="end"
             android:layout_toStartOf="@+id/places_list_want_to_go_filter_button"
-            android:drawableStart="@android:drawable/ic_menu_add"
+            android:drawableStart="@drawable/ic_thumb_up_white_24px"
             android:text="@string/liked_filter_button_title" />
 
         <Button
             android:id="@+id/places_list_want_to_go_filter_button"
             android:text="@string/want_to_go_filter_button_title"
-            android:drawableStart="@android:drawable/ic_menu_myplaces"
+            android:drawableStart="@drawable/ic_flag_white_24px"
             style="@style/FilterBarButton"
             android:layout_gravity="end"
             android:layout_alignParentEnd="true" />
