@@ -9,6 +9,12 @@
     <string name="menu_action_events">Go to events</string>
     <string name="menu_action_map">See map</string>
 
+    <!-- place option menu items -->
+    <string name="place_not_interested_option">Not interested</string>
+    <string name="place_liked_option">Liked</string>
+    <string name="place_been_option">Been</string>
+    <string name="place_want_to_go_option">Want to go</string>
+
     <string name="carousel_nearby_label">Nearby</string>
 
     <string name="places_list_title">Places</string>

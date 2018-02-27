@@ -1,12 +1,16 @@
 package com.gophillygo.app.adapters;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.support.v7.view.menu.MenuBuilder;
+import android.support.v7.view.menu.MenuPopupHelper;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -14,7 +18,6 @@ import com.bumptech.glide.Glide;
 import com.gophillygo.app.R;
 import com.gophillygo.app.data.models.Destination;
 
-import java.util.Collections;
 import java.util.List;
 
 
@@ -31,6 +34,7 @@ public class PlacesListAdapter extends RecyclerView.Adapter {
         ImageView imageView;
         TextView placeNameView;
         TextView distanceView;
+        ImageButton placeOptionsButton;
 
         private ViewHolder(View parentView) {
             super(parentView);
@@ -50,10 +54,12 @@ public class PlacesListAdapter extends RecyclerView.Adapter {
         viewHolder.imageView = parentView.findViewById(R.id.place_list_item_image);
         viewHolder.placeNameView = parentView.findViewById(R.id.place_list_item_name_label);
         viewHolder.distanceView = parentView.findViewById(R.id.place_list_item_distance_label);
+        viewHolder.placeOptionsButton = parentView.findViewById(R.id.place_list_item_options_button);
         parentView.setTag(viewHolder);
         return viewHolder;
     }
 
+    @SuppressLint("RestrictedApi")
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         Destination destination = destinationList.get(position);
@@ -64,6 +70,24 @@ public class PlacesListAdapter extends RecyclerView.Adapter {
         Glide.with(context)
                 .load(destination.getWideImage())
                 .into(viewHolder.imageView);
+
+        viewHolder.placeOptionsButton.setOnClickListener(v -> {
+            Log.d(LOG_LABEL, "Clicked place options button for place #" + destination.getId());
+            PopupMenu menu = new PopupMenu(context, viewHolder.placeOptionsButton);
+            menu.getMenuInflater().inflate(R.menu.place_options_menu, menu.getMenu());
+            menu.setOnMenuItemClickListener(item -> {
+                Log.d(LOG_LABEL, "Clicked " + item.toString());
+                return true;
+            });
+
+            // Force icons to show in the popup menu via the support library API
+            // https://stackoverflow.com/questions/6805756/is-it-possible-to-display-icons-in-a-popupmenu
+            MenuPopupHelper popupHelper = new MenuPopupHelper(context,
+                    (MenuBuilder)menu.getMenu(),
+                    viewHolder.placeOptionsButton);
+            popupHelper.setForceShowIcon(true);
+            popupHelper.show();
+        });
     }
 
     @Override

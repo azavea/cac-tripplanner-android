@@ -2,7 +2,10 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/color_white"
+    android:paddingBottom="10dp"
+    android:layout_margin="10dp"
     xmlns:tools="http://schemas.android.com/tools">
 
     <ImageView
@@ -34,5 +37,14 @@
         android:paddingEnd="10dp"
         android:gravity="start"
         android:layout_alignParentBottom="true" />
+
+    <android.support.v7.widget.AppCompatImageButton
+        app:backgroundTint="@color/color_white"
+        android:id="@+id/place_list_item_options_button"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:src="@drawable/ic_beenhere_black_24dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
 </RelativeLayout>
