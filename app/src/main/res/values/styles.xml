@@ -33,9 +33,7 @@
     </style>
 
     <style name="ToggleFilterButton" parent="Base.Widget.AppCompat.Button.Borderless.Colored">
-        <item name="backgroundTint">@color/color_white</item>
-        <item name="android:textColor">@color/color_text_dark_grey</item>
-        <item name="android:background">@color/color_white</item>
+        <item name="android:textColor">@drawable/toggle_button_text_selector</item>
         <item name="android:layout_margin">1dp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">0dp</item>
