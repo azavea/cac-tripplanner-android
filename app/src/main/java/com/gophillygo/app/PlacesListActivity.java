@@ -9,6 +9,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
 import com.gophillygo.app.adapters.PlacesListAdapter;
 import com.gophillygo.app.data.DestinationViewModel;
@@ -24,6 +26,7 @@ public class PlacesListActivity extends AppCompatActivity {
     private LinearLayoutManager layoutManager;
     private RecyclerView placesListView;
     private Toolbar toolbar;
+    private Button filterButton;
 
     @SuppressWarnings("WeakerAccess")
     @Inject
@@ -55,6 +58,14 @@ public class PlacesListActivity extends AppCompatActivity {
                 PlacesListAdapter adapter = new PlacesListAdapter(this, destinationResource.data);
                 placesListView.setAdapter(adapter);
             }
+        });
+
+        // set up filter button
+        filterButton = findViewById(R.id.places_list_filter_button);
+        filterButton.setOnClickListener(v -> {
+            Log.d(LOG_LABEL, "Clicked filter button");
+            FilterDialog filterDialog = new FilterDialog();
+            filterDialog.show(getSupportFragmentManager(), filterDialog.getTag());
         });
     }
 

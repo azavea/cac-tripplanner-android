@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/color_background_grey"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:id="@+id/filter_modal_top"
+        android:background="@color/color_primary"
+        android:weightSum="3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.AppCompatButton
+            style="@style/BorderlessButton"
+            android:text="@string/reset_button"
+            android:textAllCaps="false"
+            android:layout_weight="1"
+            android:layout_width="0dp" />
+
+        <TextView
+            android:textColor="@color/color_white"
+            android:text="@string/filter_button_title"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textAllCaps="true"
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content" />
+
+        <android.support.v7.widget.AppCompatButton
+            style="@style/BorderlessButton"
+            android:text="@string/done_button"
+            android:textAllCaps="false"
+            android:layout_weight="1"
+            android:layout_width="0dp" />
+    </LinearLayout>
+
+    <android.support.v7.widget.ButtonBarLayout
+        android:id="@+id/filter_modal_category_button_bar"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:layout_below="@+id/filter_modal_top"
+        android:weightSum="3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.AppCompatButton
+            android:text="@string/nature_category_label"
+            style="@style/ToggleFilterButton" />
+
+        <android.support.v7.widget.AppCompatButton
+            android:text="@string/exercise_category_label"
+            style="@style/ToggleFilterButton" />
+
+        <android.support.v7.widget.AppCompatButton
+            android:text="@string/educational_category_label"
+            style="@style/ToggleFilterButton" />
+    </android.support.v7.widget.ButtonBarLayout>
+
+    <android.support.v7.widget.ButtonBarLayout
+        android:id="@+id/filter_modal_options_button_bar_1"
+        android:layout_marginTop="20dp"
+        android:layout_below="@+id/filter_modal_category_button_bar"
+        android:weightSum="2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.AppCompatButton
+            android:text="@string/place_been_option"
+            style="@style/ToggleFilterButton" />
+
+        <android.support.v7.widget.AppCompatButton
+            android:text="@string/place_want_to_go_option"
+            style="@style/ToggleFilterButton" />
+    </android.support.v7.widget.ButtonBarLayout>
+
+    <android.support.v7.widget.ButtonBarLayout
+        android:id="@+id/filter_modal_options_button_bar_2"
+        android:layout_marginBottom="20dp"
+        android:layout_below="@+id/filter_modal_options_button_bar_1"
+        android:weightSum="2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.AppCompatButton
+            android:text="@string/place_not_interested_option"
+            style="@style/ToggleFilterButton" />
+
+        <android.support.v7.widget.AppCompatButton
+            android:text="@string/place_liked_option"
+            style="@style/ToggleFilterButton" />
+    </android.support.v7.widget.ButtonBarLayout>
+
+    <android.support.v7.widget.ButtonBarLayout
+        android:id="@+id/filter_modal_options_accessible_bar"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:layout_below="@+id/filter_modal_options_button_bar_2"
+        android:weightSum="1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.AppCompatButton
+            android:text="@string/accessible_filter_button_title"
+            style="@style/ToggleFilterButton" />
+    </android.support.v7.widget.ButtonBarLayout>
+
+</RelativeLayout>
