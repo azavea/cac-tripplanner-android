@@ -1,6 +1,8 @@
 package com.gophillygo.app;
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.graphics.drawable.Drawable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,6 +19,8 @@ import com.gophillygo.app.data.networkresource.Status;
 import com.gophillygo.app.di.GpgViewModelFactory;
 
 import javax.inject.Inject;
+
+import cn.nekocode.badge.BadgeDrawable;
 
 public class PlacesListActivity extends AppCompatActivity implements FilterDialog.FilterChangeListener {
 
@@ -95,7 +99,22 @@ public class PlacesListActivity extends AppCompatActivity implements FilterDialo
 
     @Override
     public void filtersChanged(int setFilterCount) {
-        Log.d(LOG_LABEL, "Got filter change event: " + String.valueOf(setFilterCount));
+        // Change filter button's left drawable when filters set to either be a badge with the
+        // filter count, or the default filter icon, if no filters set.
+        Drawable filterDrawable;
+        if (setFilterCount > 0) {
+            filterDrawable = new BadgeDrawable.Builder()
+                    .type(BadgeDrawable.TYPE_ONLY_ONE_TEXT)
+                    .badgeColor(ContextCompat.getColor(this, R.color.color_white))
+                    .padding(10, 10, 10, 10, 10)
+                    .textColor(ContextCompat.getColor(this, R.color.color_primary))
+                    .text1(String.valueOf(setFilterCount))
+                    .build();
+        } else {
+            filterDrawable = ContextCompat.getDrawable(this,
+                    R.drawable.ic_filter_list_white_24px);
+        }
 
+        filterButton.setCompoundDrawablesWithIntrinsicBounds(filterDrawable, null, null, null);
     }
 }

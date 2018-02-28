@@ -46,6 +46,8 @@ dependencies {
     implementation 'com.android.support:design:27.0.2'
     // Carousel
     implementation 'com.github.flibbertigibbet:carouselview:1.0.5'
+    // Badges
+    compile 'com.github.nekocode:Badge:2.0'
     // Glide
     implementation 'com.github.bumptech.glide:glide:4.6.1'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.6.1'
