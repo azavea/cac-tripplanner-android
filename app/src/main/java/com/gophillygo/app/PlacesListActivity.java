@@ -9,7 +9,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Button;
 
 import com.gophillygo.app.adapters.PlacesListAdapter;
@@ -19,7 +18,7 @@ import com.gophillygo.app.di.GpgViewModelFactory;
 
 import javax.inject.Inject;
 
-public class PlacesListActivity extends AppCompatActivity {
+public class PlacesListActivity extends AppCompatActivity implements FilterDialog.FilterChangeListener {
 
     private static final String LOG_LABEL = "PlacesList";
 
@@ -63,7 +62,6 @@ public class PlacesListActivity extends AppCompatActivity {
         // set up filter button
         filterButton = findViewById(R.id.places_list_filter_button);
         filterButton.setOnClickListener(v -> {
-            Log.d(LOG_LABEL, "Clicked filter button");
             FilterDialog filterDialog = new FilterDialog();
             filterDialog.show(getSupportFragmentManager(), filterDialog.getTag());
         });
@@ -93,5 +91,11 @@ public class PlacesListActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
         return true;
+    }
+
+    @Override
+    public void filtersChanged(int setFilterCount) {
+        Log.d(LOG_LABEL, "Got filter change event: " + String.valueOf(setFilterCount));
+
     }
 }

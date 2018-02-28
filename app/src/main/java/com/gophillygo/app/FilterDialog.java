@@ -14,6 +14,10 @@ import java.util.ArrayList;
 
 public class FilterDialog extends BottomSheetDialogFragment {
 
+    public interface FilterChangeListener {
+        void filtersChanged(int setFilterCount);
+    }
+
     private static final String LOG_LABEL = "FilterDialog";
 
     private Button doneButton;
@@ -27,7 +31,7 @@ public class FilterDialog extends BottomSheetDialogFragment {
 
     @Override
     public void onDismiss(DialogInterface dialog) {
-        // count how many filter buttons were toggled on
+        // count how many filter buttons were toggled on and notify activity
         int selectedFilterCount = 0;
         for (GpgToggleButton button: filterButtons) {
             if (button.isChecked()) {
@@ -36,6 +40,9 @@ public class FilterDialog extends BottomSheetDialogFragment {
         }
 
         Log.d(LOG_LABEL, "Selected " + String.valueOf(selectedFilterCount) + " filters.");
+        FilterChangeListener listener = (FilterChangeListener) getActivity();
+        listener.filtersChanged(selectedFilterCount);
+
         super.onDismiss(dialog);
     }
 
