@@ -28,8 +28,7 @@
             android:layout_below="@+id/places_list_toolbar"
             android:background="@color/color_primary"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content" >
 
             <android.support.v7.widget.AppCompatButton
                 android:id="@+id/places_list_filter_button"
