@@ -78,16 +78,17 @@ public class PlacesListAdapter extends RecyclerView.Adapter {
                 .load(destination.getWideImage())
                 .into(viewHolder.imageView);
 
+        if (destination.isWatershedAlliance()) {
+            viewHolder.watershedAllianceMarker.setVisibility(View.VISIBLE);
+            viewHolder.watershedAllianceMarker.invalidate();
+        } else {
+            viewHolder.watershedAllianceMarker.setVisibility(View.GONE);
+        }
+
         if (destination.isCycling()) {
             viewHolder.cyclingMarker.setVisibility(View.VISIBLE);
         } else {
             viewHolder.cyclingMarker.setVisibility(View.GONE);
-        }
-
-        if (destination.isWatershedAlliance()) {
-            viewHolder.watershedAllianceMarker.setVisibility(View.VISIBLE);
-        } else {
-            viewHolder.watershedAllianceMarker.setVisibility(View.GONE);
         }
 
         viewHolder.placeOptionsButton.setOnClickListener(v -> {

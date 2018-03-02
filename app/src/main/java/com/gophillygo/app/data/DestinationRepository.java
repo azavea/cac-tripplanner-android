@@ -76,7 +76,6 @@ class DestinationRepository {
                 // clear out existing database entries before adding new ones
                 dao.clear();
                 for (Destination item: response.getDestinations()) {
-                    Log.d(LOG_LABEL, "item timestamp: " + item.getTimestamp());
                     item.setTimestamp(System.currentTimeMillis());
                     dao.save(item);
                 }
