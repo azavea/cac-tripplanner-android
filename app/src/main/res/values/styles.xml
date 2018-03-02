@@ -36,6 +36,8 @@
         <item name="android:paddingTop">0dp</item>
         <item name="android:paddingBottom">0dp</item>
         <item name="android:drawablePadding">2dp</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">end</item>
     </style>
 
     <style name="ToggleFilterButton" parent="Base.Widget.AppCompat.Button.Borderless.Colored">
