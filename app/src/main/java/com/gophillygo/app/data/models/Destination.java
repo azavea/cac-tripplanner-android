@@ -7,9 +7,18 @@ import android.arch.persistence.room.PrimaryKey;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.text.NumberFormat;
+
 
 @Entity
 public class Destination {
+
+    private static final NumberFormat numberFormatter = NumberFormat.getNumberInstance();
+    static {
+        numberFormatter.setMinimumFractionDigits(0);
+        numberFormatter.setMaximumFractionDigits(2);
+    }
+
     @PrimaryKey
     private final int id;
 
@@ -55,6 +64,7 @@ public class Destination {
 
     // convenience property to track distance to each destination
     private float distance;
+    private String formattedDistance;
 
     public Destination(int id, int placeID, String name, boolean accessible, String image,
                        String city, boolean cycling, String zipCode, String description,
@@ -94,6 +104,12 @@ public class Destination {
 
     public void setDistance(float distance) {
         this.distance = distance;
+        this.formattedDistance = numberFormatter.format(distance) + " mi";
+    }
+
+    // setFormattedDistance is here to please compiler; it is better to set via setDistance
+    public void setFormattedDistance(String formattedDistance) {
+        this.formattedDistance = formattedDistance;
     }
 
     public int getId() {
@@ -174,5 +190,9 @@ public class Destination {
 
     public float getDistance() {
         return distance;
+    }
+
+    public String getFormattedDistance() {
+        return formattedDistance;
     }
 }

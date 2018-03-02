@@ -25,6 +25,14 @@ public class DestinationViewModel extends ViewModel {
         return destinationRepository.getDestination(destinationId);
     }
 
+    public void updateDestination(Destination destination) {
+        destinationRepository.updateDestination(destination);
+    }
+
+    public void updateMultipleDestinations(List<Destination> destinations) {
+        destinationRepository.updateMultipleDestinations(destinations);
+    }
+
     public LiveData<Resource<List<Destination>>> getDestinations() {
         return destinations;
     }
