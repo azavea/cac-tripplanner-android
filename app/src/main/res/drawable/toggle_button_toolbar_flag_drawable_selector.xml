@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:color="@color/color_white"
+        android:drawable="@drawable/ic_flag_black_24dp"
         android:state_checked="true" />
     <item
-        android:color="@color/color_text_dark_grey"
+        android:drawable="@drawable/ic_flag_white_24px"
         android:state_checked="false" />
 
-    <item android:color="@color/color_text_dark_grey"/>
+    <item android:drawable="@drawable/ic_flag_white_24px"/>
 </selector>

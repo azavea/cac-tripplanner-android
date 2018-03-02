@@ -30,6 +30,7 @@ public class PlacesListActivity extends AppCompatActivity implements FilterDialo
     private RecyclerView placesListView;
     private Toolbar toolbar;
     private Button filterButton;
+    private Drawable filterIcon;
 
     @SuppressWarnings("WeakerAccess")
     @Inject
@@ -41,6 +42,8 @@ public class PlacesListActivity extends AppCompatActivity implements FilterDialo
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_places_list);
+
+        filterIcon = ContextCompat.getDrawable(this, R.drawable.ic_filter_list_white_24px);
 
         // set up toolbar
         toolbar = findViewById(R.id.places_list_toolbar);
@@ -101,20 +104,17 @@ public class PlacesListActivity extends AppCompatActivity implements FilterDialo
     public void filtersChanged(int setFilterCount) {
         // Change filter button's left drawable when filters set to either be a badge with the
         // filter count, or the default filter icon, if no filters set.
-        Drawable filterDrawable;
         if (setFilterCount > 0) {
-            filterDrawable = new BadgeDrawable.Builder()
+            Drawable filterDrawable = new BadgeDrawable.Builder()
                     .type(BadgeDrawable.TYPE_ONLY_ONE_TEXT)
                     .badgeColor(ContextCompat.getColor(this, R.color.color_white))
-                    .padding(10, 10, 10, 10, 10)
                     .textColor(ContextCompat.getColor(this, R.color.color_primary))
                     .text1(String.valueOf(setFilterCount))
                     .build();
+            filterButton.setCompoundDrawablesWithIntrinsicBounds(filterDrawable, null, null, null);
         } else {
-            filterDrawable = ContextCompat.getDrawable(this,
-                    R.drawable.ic_filter_list_white_24px);
+            filterButton.setCompoundDrawablesWithIntrinsicBounds(filterIcon, null, null, null);
         }
 
-        filterButton.setCompoundDrawablesWithIntrinsicBounds(filterDrawable, null, null, null);
     }
 }
