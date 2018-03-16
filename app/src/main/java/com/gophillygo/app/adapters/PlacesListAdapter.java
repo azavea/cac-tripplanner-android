@@ -2,6 +2,7 @@ package com.gophillygo.app.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.view.menu.MenuBuilder;
 import android.support.v7.view.menu.MenuPopupHelper;
 import android.support.v7.widget.PopupMenu;
@@ -49,8 +50,9 @@ public class PlacesListAdapter extends RecyclerView.Adapter {
         this.destinationList = destinations;
     }
 
+    @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View parentView = inflater.inflate(R.layout.place_list_item, parent, false);
         ViewHolder viewHolder = new ViewHolder(parentView);
 
@@ -67,7 +69,7 @@ public class PlacesListAdapter extends RecyclerView.Adapter {
 
     @SuppressLint("RestrictedApi")
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         Destination destination = destinationList.get(position);
         ViewHolder viewHolder = (ViewHolder) holder;
 
