@@ -1,9 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.gophillygo.app.PlaceDetailActivity">
+    tools:context="com.gophillygo.app.HomeActivity">
+
+    <com.synnapps.carouselview.CarouselView
+        android:id="@+id/destination_detail_carousel"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        app:fillColor="@color/color_white"
+        app:pageColor="@color/color_background_grey"
+        app:radius="3dp"
+        app:slideInterval="4000"
+        app:strokeColor="@color/color_background_grey"
+        app:indicatorGravity="bottom"
+        app:indicatorMarginVertical="10dp"
+        app:indicatorMarginHorizontal="5dp"
+        app:strokeWidth="0dp" />
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/home_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:minHeight="?attr/actionBarSize"
+        android:background="@null"
+        android:fitsSystemWindows="true"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        tools:targetApi="lollipop" />
+
 
 </android.support.constraint.ConstraintLayout>

@@ -42,7 +42,7 @@ class DestinationRepository {
         this.dao = dao;
     }
 
-    public LiveData<Destination> getDestination(String destinationId) {
+    public LiveData<Destination> getDestination(long destinationId) {
         // return a LiveData item directly from the database.
         return dao.getDestination(destinationId);
     }

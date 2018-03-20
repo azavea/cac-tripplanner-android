@@ -1,6 +1,7 @@
 package com.gophillygo.app;
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -22,7 +23,8 @@ import javax.inject.Inject;
 
 import cn.nekocode.badge.BadgeDrawable;
 
-public class PlacesListActivity extends AppCompatActivity implements FilterDialog.FilterChangeListener {
+public class PlacesListActivity extends AppCompatActivity implements FilterDialog.FilterChangeListener,
+        PlacesListAdapter.PlaceListItemClickListener {
 
     private static final String LOG_LABEL = "PlacesList";
 
@@ -38,6 +40,20 @@ public class PlacesListActivity extends AppCompatActivity implements FilterDialo
     @SuppressWarnings("WeakerAccess")
     DestinationViewModel viewModel;
 
+    /**
+     * Go to place detail view when a place in the list clicked.
+     *
+     * @param position Offset of the position of the list item clicked
+     */
+    public void clickedPlace(int position) {
+        // Get database ID for place clicked, based on positional offset, and pass it along
+        long destinationId = placesListView.getAdapter().getItemId(position);
+        Intent intent = new Intent(this, PlaceDetailActivity.class);
+        intent.putExtra(PlaceDetailActivity.DESTINATION_ID_KEY, destinationId);
+        startActivity(intent);
+    }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,17 +68,17 @@ public class PlacesListActivity extends AppCompatActivity implements FilterDialo
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // set up list of places
-        placesListView = findViewById(R.id.places_list_recycler_view);
         layoutManager = new LinearLayoutManager(this);
-        placesListView.setLayoutManager(layoutManager);
         viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(DestinationViewModel.class);
         viewModel.getDestinations().observe(this, destinationResource -> {
             if (destinationResource != null && destinationResource.status.equals(Status.SUCCESS) &&
                     destinationResource.data != null && !destinationResource.data.isEmpty()) {
 
-                PlacesListAdapter adapter = new PlacesListAdapter(this, destinationResource.data);
+                placesListView = findViewById(R.id.places_list_recycler_view);
+                PlacesListAdapter adapter = new PlacesListAdapter(this, destinationResource.data, this);
                 placesListView.setAdapter(adapter);
+                placesListView.setLayoutManager(layoutManager);
             }
         });
 

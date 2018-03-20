@@ -24,10 +24,15 @@ import java.util.List;
 
 public class PlacesListAdapter extends RecyclerView.Adapter {
 
+    public interface PlaceListItemClickListener {
+        void clickedPlace(int position);
+    }
+
     private static final String LOG_LABEL = "PlaceListAdapter";
 
     private final Context context;
     private final LayoutInflater inflater;
+    private PlaceListItemClickListener clickListener;
 
     private List<Destination> destinationList;
 
@@ -39,22 +44,27 @@ public class PlacesListAdapter extends RecyclerView.Adapter {
         ImageView cyclingMarker;
         ImageView watershedAllianceMarker;
 
-        private ViewHolder(View parentView) {
+        private ViewHolder(View parentView, final PlaceListItemClickListener listener) {
             super(parentView);
+
+            parentView.setOnClickListener(v -> {
+                listener.clickedPlace(getAdapterPosition());
+            });
         }
     }
 
-    public PlacesListAdapter(Context context, List<Destination> destinations) {
+    public PlacesListAdapter(Context context, List<Destination> destinations, PlaceListItemClickListener listener) {
         this.context = context;
         this.inflater = LayoutInflater.from(context);
         this.destinationList = destinations;
+        this.clickListener = listener;
     }
 
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View parentView = inflater.inflate(R.layout.place_list_item, parent, false);
-        ViewHolder viewHolder = new ViewHolder(parentView);
+        ViewHolder viewHolder = new ViewHolder(parentView, this.clickListener);
 
         viewHolder.imageView = parentView.findViewById(R.id.place_list_item_image);
         viewHolder.placeNameView = parentView.findViewById(R.id.place_list_item_name_label);
@@ -64,6 +74,7 @@ public class PlacesListAdapter extends RecyclerView.Adapter {
         viewHolder.cyclingMarker = parentView.findViewById(R.id.place_list_cycling_activity_marker);
 
         parentView.setTag(viewHolder);
+
         return viewHolder;
     }
 
