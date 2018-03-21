@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.arch.lifecycle.ViewModelProviders;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -30,6 +31,7 @@ public class PlaceDetailActivity extends AppCompatActivity {
 
     private LayoutInflater inflater;
     private CarouselView carouselView;
+    private Toolbar toolbar;
 
     @SuppressWarnings("WeakerAccess")
     @Inject
@@ -43,6 +45,12 @@ public class PlaceDetailActivity extends AppCompatActivity {
         setContentView(R.layout.activity_place_detail);
 
         inflater = getLayoutInflater();
+        toolbar = findViewById(R.id.place_detail_toolbar);
+        // disable default app name title display
+        toolbar.setTitle("");
+        setSupportActionBar(toolbar);
+        //noinspection ConstantConditions
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         if (getIntent().hasExtra(DESTINATION_ID_KEY)) {
             placeId = getIntent().getLongExtra(DESTINATION_ID_KEY, -1);
@@ -55,7 +63,7 @@ public class PlaceDetailActivity extends AppCompatActivity {
 
         Log.d(LOG_LABEL, "Started detail view for place " + placeId);
 
-        carouselView = findViewById(R.id.destination_detail_carousel);
+        carouselView = findViewById(R.id.place_detail_carousel);
         carouselView.setImageClickListener(position ->
                 Log.d(LOG_LABEL, "Clicked item: "+ position));
 
@@ -72,6 +80,9 @@ public class PlaceDetailActivity extends AppCompatActivity {
         // set up carousel
         carouselView.setViewListener(viewListener);
         carouselView.setPageCount(1);
+
+        TextView flagTextView = findViewById(R.id.place_detail_flags_list);
+        flagTextView.setText(destination.getFlagsText());
     }
 
     private final ViewListener viewListener = new ViewListener() {

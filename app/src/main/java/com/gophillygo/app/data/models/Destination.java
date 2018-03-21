@@ -112,6 +112,16 @@ public class Destination {
         this.formattedDistance = formattedDistance;
     }
 
+    /**
+     *
+     * @return text description of the flags set for this place
+     */
+    public String getFlagsText() {
+        String flags = "";
+
+        return flags;
+    }
+
     public int getId() {
         return id;
     }
