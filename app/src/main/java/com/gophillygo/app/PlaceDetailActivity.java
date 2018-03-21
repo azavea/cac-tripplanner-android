@@ -107,7 +107,7 @@ public class PlaceDetailActivity extends AppCompatActivity {
         // TODO:
         TextView upcomingEventsView = findViewById(R.id.place_detail_upcoming_events);
         String upcomingEventsText = getResources()
-                .getQuantityString(R.plurals.place_upcoming_activities_count, 1, 1);
+                .getQuantityString(R.plurals.place_upcoming_activities_count, 2, 2);
         upcomingEventsView.setText(upcomingEventsText);
         upcomingEventsView.setVisibility(View.VISIBLE);
     }

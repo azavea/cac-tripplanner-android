@@ -36,5 +36,7 @@
     <plurals name="place_upcoming_activities_count">
         <item quantity="one">%d upcoming event</item>
         <item quantity="many">%d upcoming events</item>
+        <item quantity="few">%d upcoming events</item>
+        <item quantity="other">%d upcoming events</item>
     </plurals>
 </resources>
