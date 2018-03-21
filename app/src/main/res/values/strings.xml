@@ -41,4 +41,8 @@
     </plurals>
 
     <string name="place_details_been_want_to_go_label">Been here? Want to go?</string>
+
+    <string name="place_detail_map_button">Map</string>
+    <string name="place_detail_directions_button">Directions</string>
+    <string name="place_detail_website_button">Website</string>
 </resources>

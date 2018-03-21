@@ -157,6 +157,16 @@ public class PlaceDetailActivity extends AppCompatActivity {
             popupHelper.setGravity(Gravity.END|Gravity.RIGHT);
             popupHelper.show();
         });
+
+        // toggle watershed alliance logo
+        ImageView watershedAllianceView = findViewById(R.id.place_detail_watershed_alliance_icon);
+        if (destination.isWatershedAlliance()) {
+            watershedAllianceView.setVisibility(View.VISIBLE);
+        } else {
+            watershedAllianceView.setVisibility(View.GONE);
+        }
+
+        // TODO: handle button bar button clicks
     }
 
     private final ViewListener viewListener = new ViewListener() {
