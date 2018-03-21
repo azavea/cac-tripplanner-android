@@ -83,6 +83,7 @@ public class PlaceDetailActivity extends AppCompatActivity {
         carouselView.setPageCount(1);
 
 
+        // set activities list text
         TextView flagTextView = findViewById(R.id.place_detail_activities_list);
         StringBuilder stringBuilder = new StringBuilder("");
         String dot = Html.fromHtml("&nbsp;&#8226;&nbsp;").toString();
@@ -92,8 +93,23 @@ public class PlaceDetailActivity extends AppCompatActivity {
             }
             stringBuilder.append(activity);
         }
-
         flagTextView.setText(stringBuilder.toString());
+
+        // toggle label for cycling activity
+        TextView cyclingView = findViewById(R.id.place_detail_cycling_label);
+        if (destination.isCycling()) {
+            cyclingView.setVisibility(View.VISIBLE);
+        } else {
+            cyclingView.setVisibility(View.INVISIBLE);
+        }
+
+        // set count of upcoming activities
+        // TODO:
+        TextView upcomingEventsView = findViewById(R.id.place_detail_upcoming_events);
+        String upcomingEventsText = getResources()
+                .getQuantityString(R.plurals.place_upcoming_activities_count, 1, 1);
+        upcomingEventsView.setText(upcomingEventsText);
+        upcomingEventsView.setVisibility(View.VISIBLE);
     }
 
     private final ViewListener viewListener = new ViewListener() {

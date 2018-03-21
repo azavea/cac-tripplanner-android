@@ -42,4 +42,22 @@
         app:layout_constraintRight_toRightOf="parent"
         android:textAlignment="center" />
 
+    <TextView
+        android:id="@+id/place_detail_cycling_label"
+        app:layout_constraintTop_toBottomOf="@id/place_detail_activities_list"
+        style="@style/GpgDetailText"
+        android:text="@string/bicycle_activity_label"
+        android:drawableStart="@drawable/ic_thumb_up_black_24dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:visibility="invisible"/>
+    
+    <TextView
+        android:id="@+id/place_detail_upcoming_events"
+        app:layout_constraintTop_toBottomOf="@id/place_detail_activities_list"
+        app:layout_constraintLeft_toRightOf="@id/place_detail_cycling_label"
+        app:layout_constraintRight_toRightOf="parent"
+        android:drawableStart="@drawable/ic_flag_black_24dp"
+        style="@style/GpgDetailText"
+        android:visibility="invisible"/>
+
 </android.support.constraint.ConstraintLayout>
