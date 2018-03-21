@@ -5,6 +5,7 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -81,8 +82,18 @@ public class PlaceDetailActivity extends AppCompatActivity {
         carouselView.setViewListener(viewListener);
         carouselView.setPageCount(1);
 
-        TextView flagTextView = findViewById(R.id.place_detail_flags_list);
-        flagTextView.setText(destination.getFlagsText());
+
+        TextView flagTextView = findViewById(R.id.place_detail_activities_list);
+        StringBuilder stringBuilder = new StringBuilder("");
+        String dot = Html.fromHtml("&nbsp;&#8226;&nbsp;").toString();
+        for (String activity: destination.getActivities()) {
+            if (stringBuilder.length() > 0) {
+                stringBuilder.append(dot);
+            }
+            stringBuilder.append(activity);
+        }
+
+        flagTextView.setText(stringBuilder.toString());
     }
 
     private final ViewListener viewListener = new ViewListener() {
