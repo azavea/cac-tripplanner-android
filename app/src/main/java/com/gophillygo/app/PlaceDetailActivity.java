@@ -4,6 +4,10 @@ import android.annotation.SuppressLint;
 import android.arch.lifecycle.ViewModelProviders;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.view.menu.MenuBuilder;
+import android.support.v7.view.menu.MenuPopupHelper;
+import android.support.v7.widget.CardView;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.util.Log;
@@ -26,6 +30,9 @@ public class PlaceDetailActivity extends AppCompatActivity {
 
     public static final String DESTINATION_ID_KEY = "placeId";
     private static final String LOG_LABEL = "PlaceDetail";
+
+    private static final int DESCRIPTION_COLLAPSED_LINE_COUNT = 4;
+    private static final int DESCRIPTION_EXPANDED_MAX_LINES = 50;
 
     private long placeId = -1;
     private Destination destination;
@@ -76,6 +83,7 @@ public class PlaceDetailActivity extends AppCompatActivity {
         });
     }
 
+    @SuppressLint("RestrictedApi")
     private void displayDestination() {
         Log.d(LOG_LABEL, "Display destination " +  destination.getName());
         // set up carousel
@@ -94,6 +102,11 @@ public class PlaceDetailActivity extends AppCompatActivity {
             stringBuilder.append(activity);
         }
         flagTextView.setText(stringBuilder.toString());
+        if (stringBuilder.length() == 0) {
+            flagTextView.setVisibility(View.GONE);
+        } else {
+            flagTextView.setVisibility(View.VISIBLE);
+        }
 
         // toggle label for cycling activity
         TextView cyclingView = findViewById(R.id.place_detail_cycling_label);
@@ -113,6 +126,37 @@ public class PlaceDetailActivity extends AppCompatActivity {
 
         TextView descriptionView = findViewById(R.id.place_detail_description_text);
         descriptionView.setText(Html.fromHtml(destination.getDescription()));
+        // TODO: better handle expand/collapse
+        descriptionView.setOnClickListener(v -> {
+            Log.d(LOG_LABEL, "TODO: expand details view?");
+            int current = descriptionView.getMaxLines();
+            if (current == DESCRIPTION_COLLAPSED_LINE_COUNT) {
+                descriptionView.setMaxLines(DESCRIPTION_EXPANDED_MAX_LINES);
+            } else {
+                descriptionView.setMaxLines(DESCRIPTION_COLLAPSED_LINE_COUNT);
+            }
+        });
+
+        CardView flagOptionsCard = findViewById(R.id.place_detail_flag_options_card);
+
+        flagOptionsCard.setOnClickListener(v -> {
+            Log.d(LOG_LABEL, "Clicked flags button");
+            PopupMenu menu = new PopupMenu(this, flagOptionsCard);
+            menu.getMenuInflater().inflate(R.menu.place_options_menu, menu.getMenu());
+            menu.setOnMenuItemClickListener(item -> {
+                Log.d(LOG_LABEL, "Clicked " + item.toString());
+                return true;
+            });
+
+            // Force icons to show in the popup menu via the support library API
+            // https://stackoverflow.com/questions/6805756/is-it-possible-to-display-icons-in-a-popupmenu
+            MenuPopupHelper popupHelper = new MenuPopupHelper(this,
+                    (MenuBuilder)menu.getMenu(),
+                    flagOptionsCard);
+            popupHelper.setForceShowIcon(true);
+            popupHelper.setGravity(Gravity.END|Gravity.RIGHT);
+            popupHelper.show();
+        });
     }
 
     private final ViewListener viewListener = new ViewListener() {

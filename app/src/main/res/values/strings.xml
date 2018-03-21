@@ -39,4 +39,6 @@
         <item quantity="few">%d upcoming events</item>
         <item quantity="other">%d upcoming events</item>
     </plurals>
+
+    <string name="place_details_been_want_to_go_label">Been here? Want to go?</string>
 </resources>
