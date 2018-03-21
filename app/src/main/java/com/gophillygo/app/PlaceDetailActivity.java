@@ -103,13 +103,16 @@ public class PlaceDetailActivity extends AppCompatActivity {
             cyclingView.setVisibility(View.INVISIBLE);
         }
 
-        // set count of upcoming activities
-        // TODO:
+        // set count of upcoming events
+        // TODO: use actual count once events stored
         TextView upcomingEventsView = findViewById(R.id.place_detail_upcoming_events);
         String upcomingEventsText = getResources()
                 .getQuantityString(R.plurals.place_upcoming_activities_count, 2, 2);
         upcomingEventsView.setText(upcomingEventsText);
         upcomingEventsView.setVisibility(View.VISIBLE);
+
+        TextView descriptionView = findViewById(R.id.place_detail_description_text);
+        descriptionView.setText(Html.fromHtml(destination.getDescription()));
     }
 
     private final ViewListener viewListener = new ViewListener() {
