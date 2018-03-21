@@ -2,6 +2,8 @@ package com.gophillygo.app;
 
 import android.annotation.SuppressLint;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.view.menu.MenuBuilder;
@@ -14,6 +16,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -137,8 +140,8 @@ public class PlaceDetailActivity extends AppCompatActivity {
             }
         });
 
+        // show popover for flag options (been, want to go, etc.)
         CardView flagOptionsCard = findViewById(R.id.place_detail_flag_options_card);
-
         flagOptionsCard.setOnClickListener(v -> {
             Log.d(LOG_LABEL, "Clicked flags button");
             PopupMenu menu = new PopupMenu(this, flagOptionsCard);
@@ -166,7 +169,45 @@ public class PlaceDetailActivity extends AppCompatActivity {
             watershedAllianceView.setVisibility(View.GONE);
         }
 
-        // TODO: handle button bar button clicks
+        // handle button bar button clicks
+        Button goToMapButton = findViewById(R.id.place_detail_map_button);
+        Button getDirectionsButton = findViewById(R.id.place_detail_directions_button);
+        Button goToWebsiteButton = findViewById(R.id.place_detail_website_button);
+
+        // TODO: open within app map view, once implemented
+        // for now, open Google Maps externally with a marker at the given location
+        goToMapButton.setOnClickListener(v -> {
+            String locationString = destination.getLocation().toString();
+            Uri gmapsUri = Uri.parse("geo:" + locationString + "?q=" + locationString + "(" +
+                destination.getName() + ")");
+            Log.d(LOG_LABEL, gmapsUri.toString());
+            Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmapsUri);
+            mapIntent.setPackage("com.google.android.apps.maps");
+            if (mapIntent.resolveActivity(getPackageManager()) != null) {
+                startActivity(mapIntent);
+            }
+        });
+
+        // open the GoPhillyGo website, passing the destination
+        getDirectionsButton.setOnClickListener(v -> {
+            // pass parameters destination and destinationText to https://gophillygo.org/
+            Uri directionsUri = new Uri.Builder().scheme("https").authority("gophillygo.org")
+                    .appendQueryParameter("destination", destination.getLocation().toString())
+                    .appendQueryParameter("destinationText", destination.getAddress()).build();
+            Intent intent = new Intent(Intent.ACTION_VIEW, directionsUri);
+            startActivity(intent);
+        });
+
+        String website = destination.getWebsiteUrl();
+        goToWebsiteButton.setOnClickListener(v -> {
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(website));
+            startActivity(intent);
+        });
+        if (website.isEmpty()) {
+            goToWebsiteButton.setVisibility(View.GONE);
+        } else {
+            goToWebsiteButton.setVisibility(View.VISIBLE);
+        }
     }
 
     private final ViewListener viewListener = new ViewListener() {

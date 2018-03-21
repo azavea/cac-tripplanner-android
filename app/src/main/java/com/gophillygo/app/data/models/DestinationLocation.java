@@ -21,4 +21,9 @@ public class DestinationLocation {
     public double getY() {
         return y;
     }
+
+    @Override
+    public String toString() {
+        return getY() + "," + getX();
+    }
 }
