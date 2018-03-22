@@ -6,7 +6,7 @@
         android:id="@+id/action_events"
         android:orderInCategory="1"
         app:showAsAction="ifRoom"
-        android:icon="@drawable/ic_today_white_24px"
+        android:icon="@drawable/ic_event_white_24px"
         android:title="@string/menu_action_events"/>
 
     <item

@@ -8,6 +8,7 @@ import android.arch.persistence.room.PrimaryKey;
 import com.google.gson.annotations.SerializedName;
 
 import java.text.NumberFormat;
+import java.util.ArrayList;
 
 
 @Entity
@@ -32,6 +33,7 @@ public class Destination {
     private final int priority;
     private final String state;
     private final String address;
+    private final ArrayList<String> activities;
 
     @Embedded
     private final DestinationLocation location;
@@ -70,7 +72,7 @@ public class Destination {
                        String city, boolean cycling, String zipCode, String description,
                        int priority, String state, String address, DestinationLocation location,
                        DestinationAttributes attributes, boolean watershedAlliance, String websiteUrl,
-                       String wideImage, boolean isEvent) {
+                       String wideImage, boolean isEvent, ArrayList<String> activities) {
         this.id = id;
         this.placeID = placeID;
         this.name = name;
@@ -90,6 +92,7 @@ public class Destination {
 
         this.location = location;
         this.attributes = attributes;
+        this.activities = activities;
     }
 
     /**
@@ -194,5 +197,9 @@ public class Destination {
 
     public String getFormattedDistance() {
         return formattedDistance;
+    }
+
+    public ArrayList<String> getActivities() {
+        return activities;
     }
 }

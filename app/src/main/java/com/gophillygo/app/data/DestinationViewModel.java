@@ -21,7 +21,7 @@ public class DestinationViewModel extends ViewModel {
         destinations = destinationRepository.loadDestinations();
     }
 
-    public LiveData<Destination> getDestination(String destinationId) {
+    public LiveData<Destination> getDestination(long destinationId) {
         return destinationRepository.getDestination(destinationId);
     }
 

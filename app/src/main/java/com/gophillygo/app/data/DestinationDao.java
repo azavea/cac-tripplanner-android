@@ -25,7 +25,7 @@ public abstract class DestinationDao {
     abstract void save(Destination destination);
 
     @Query("SELECT * FROM destination WHERE id = :destinationId")
-    abstract LiveData<Destination> getDestination(String destinationId);
+    abstract LiveData<Destination> getDestination(long destinationId);
 
     @Query("DELETE FROM destination")
     abstract void clear();

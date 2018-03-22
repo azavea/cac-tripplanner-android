@@ -42,7 +42,7 @@ class DestinationRepository {
         this.dao = dao;
     }
 
-    public LiveData<Destination> getDestination(String destinationId) {
+    public LiveData<Destination> getDestination(long destinationId) {
         // return a LiveData item directly from the database.
         return dao.getDestination(destinationId);
     }
@@ -75,10 +75,18 @@ class DestinationRepository {
             protected void saveCallResult(@NonNull DestinationQueryResponse response) {
                 // clear out existing database entries before adding new ones
                 dao.clear();
+                Long timestamp = System.currentTimeMillis();
                 for (Destination item: response.getDestinations()) {
-                    item.setTimestamp(System.currentTimeMillis());
+                    item.setTimestamp(timestamp);
                     dao.save(item);
                 }
+
+                /* TODO: save events
+                for (Destination item: response.getEvents()) {
+                    item.setTimestamp(timestamp);
+                    dao.save(item);
+                }
+                */
             }
 
             @Override

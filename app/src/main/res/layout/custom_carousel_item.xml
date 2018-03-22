@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/color_background_grey"
     android:gravity="center"
     tools:context="com.gophillygo.app.HomeActivity">
     

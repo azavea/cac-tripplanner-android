@@ -17,6 +17,8 @@ public class DestinationQueryResponse {
         return destinations;
     }
 
+    public List<Destination> getEvents() { return events; }
+
     @SuppressWarnings("unused")
     public DestinationQueryResponse(List<Destination> destinations, List<Destination> events) {
         this.destinations = destinations;
