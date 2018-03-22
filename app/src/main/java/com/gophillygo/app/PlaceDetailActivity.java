@@ -13,7 +13,6 @@ import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.TextUtils;
-import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -139,10 +138,6 @@ public class PlaceDetailActivity extends AppCompatActivity {
             int current = view.getMaxLines();
             if (current == DESCRIPTION_COLLAPSED_LINE_COUNT) {
                 view.setMaxLines(DESCRIPTION_EXPANDED_MAX_LINES);
-                // Make links within card clickable, but only when expanded
-                // because LinkMovementMethod is a subclass of ScrollingMovementMethod
-                // and will make the card scroll instead of ellipsize if the text overflows.
-                descriptionView.setMovementMethod(LinkMovementMethod.getInstance());
             } else {
                 view.setMaxLines(DESCRIPTION_COLLAPSED_LINE_COUNT);
                 view.setEllipsize(TextUtils.TruncateAt.END);
