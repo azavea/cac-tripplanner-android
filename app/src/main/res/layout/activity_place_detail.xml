@@ -81,6 +81,7 @@
                 android:id="@+id/place_detail_description_text"
                 android:ellipsize="end"
                 android:maxLines="4"
+                android:autoLink="all"
                 style="@style/GpgDetailText" />
 
         </android.support.v7.widget.CardView>
