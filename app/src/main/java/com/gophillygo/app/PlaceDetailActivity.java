@@ -45,6 +45,7 @@ public class PlaceDetailActivity extends AppCompatActivity {
     private LayoutInflater inflater;
     private CarouselView carouselView;
     private Toolbar toolbar;
+    TextView descriptionView;
     private View.OnClickListener toggleClickListener;
 
     @SuppressWarnings("WeakerAccess")
@@ -89,20 +90,22 @@ public class PlaceDetailActivity extends AppCompatActivity {
         // click handler for toggling expanding/collapsing description card
         toggleClickListener = v -> {
             TextView view = (TextView) v;
-            int current = view.getMaxLines();
+            int current = descriptionView.getMaxLines();
             if (current == COLLAPSED_LINE_COUNT) {
-                view.setMaxLines(EXPANDED_MAX_LINES);
+                descriptionView.setMaxLines(EXPANDED_MAX_LINES);
                 // make links clickable in expanded view
-                view.setMovementMethod(LinkMovementMethod.getInstance());
+                descriptionView.setMovementMethod(LinkMovementMethod.getInstance());
+                view.setText(R.string.place_detail_description_collapse);
             } else {
-                view.setMaxLines(COLLAPSED_LINE_COUNT);
-                view.setEllipsize(TextUtils.TruncateAt.END);
+                descriptionView.setMaxLines(COLLAPSED_LINE_COUNT);
+                descriptionView.setEllipsize(TextUtils.TruncateAt.END);
                 // disable clicking links to also disable scrolling
-                view.setMovementMethod(null);
+                descriptionView.setMovementMethod(null);
                 // must reset click listener after unsetting movement method
-                view.setOnClickListener(toggleClickListener);
+                descriptionView.setOnClickListener(toggleClickListener);
                 // set text again, to make ellipsize run
-                view.setText(view.getText());
+                descriptionView.setText(descriptionView.getText());
+                view.setText(R.string.place_detail_description_expand);
             }
         };
     }
@@ -153,9 +156,10 @@ public class PlaceDetailActivity extends AppCompatActivity {
         });
 
         // expand/collapse description card when clicked
-        TextView descriptionView = findViewById(R.id.place_detail_description_text);
+        descriptionView = findViewById(R.id.place_detail_description_text);
         descriptionView.setText(Html.fromHtml(destination.getDescription()));
-        descriptionView.setOnClickListener(toggleClickListener);
+        TextView descriptionToggle = findViewById(R.id.place_detail_description_toggle);
+        descriptionToggle.setOnClickListener(toggleClickListener);
 
         // show popover for flag options (been, want to go, etc.)
         // TODO: #25 implement user flags
