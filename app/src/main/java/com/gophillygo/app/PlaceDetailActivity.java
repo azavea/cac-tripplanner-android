@@ -13,6 +13,7 @@ import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
 import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -35,8 +36,8 @@ public class PlaceDetailActivity extends AppCompatActivity {
     public static final String DESTINATION_ID_KEY = "placeId";
     private static final String LOG_LABEL = "PlaceDetail";
 
-    private static final int DESCRIPTION_COLLAPSED_LINE_COUNT = 4;
-    private static final int DESCRIPTION_EXPANDED_MAX_LINES = 50;
+    private static final int COLLAPSED_LINE_COUNT = 4;
+    private static final int EXPANDED_MAX_LINES = 50;
 
     private long placeId = -1;
     private Destination destination;
@@ -44,6 +45,7 @@ public class PlaceDetailActivity extends AppCompatActivity {
     private LayoutInflater inflater;
     private CarouselView carouselView;
     private Toolbar toolbar;
+    private View.OnClickListener toggleClickListener;
 
     @SuppressWarnings("WeakerAccess")
     @Inject
@@ -83,6 +85,26 @@ public class PlaceDetailActivity extends AppCompatActivity {
             this.destination = destination;
             displayDestination();
         });
+
+        // click handler for toggling expanding/collapsing description card
+        toggleClickListener = v -> {
+            TextView view = (TextView) v;
+            int current = view.getMaxLines();
+            if (current == COLLAPSED_LINE_COUNT) {
+                view.setMaxLines(EXPANDED_MAX_LINES);
+                // make links clickable in expanded view
+                view.setMovementMethod(LinkMovementMethod.getInstance());
+            } else {
+                view.setMaxLines(COLLAPSED_LINE_COUNT);
+                view.setEllipsize(TextUtils.TruncateAt.END);
+                // disable clicking links to also disable scrolling
+                view.setMovementMethod(null);
+                // must reset click listener after unsetting movement method
+                view.setOnClickListener(toggleClickListener);
+                // set text again, to make ellipsize run
+                view.setText(view.getText());
+            }
+        };
     }
 
     @SuppressLint("RestrictedApi")
@@ -133,16 +155,7 @@ public class PlaceDetailActivity extends AppCompatActivity {
         // expand/collapse description card when clicked
         TextView descriptionView = findViewById(R.id.place_detail_description_text);
         descriptionView.setText(Html.fromHtml(destination.getDescription()));
-        descriptionView.setOnClickListener(v -> {
-            TextView view = (TextView) v;
-            int current = view.getMaxLines();
-            if (current == DESCRIPTION_COLLAPSED_LINE_COUNT) {
-                view.setMaxLines(DESCRIPTION_EXPANDED_MAX_LINES);
-            } else {
-                view.setMaxLines(DESCRIPTION_COLLAPSED_LINE_COUNT);
-                view.setEllipsize(TextUtils.TruncateAt.END);
-            }
-        });
+        descriptionView.setOnClickListener(toggleClickListener);
 
         // show popover for flag options (been, want to go, etc.)
         // TODO: #25 implement user flags
