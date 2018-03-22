@@ -12,6 +12,8 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
 import android.text.Html;
+import android.text.TextUtils;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -72,8 +74,6 @@ public class PlaceDetailActivity extends AppCompatActivity {
             finish();
         }
 
-        Log.d(LOG_LABEL, "Started detail view for place " + placeId);
-
         carouselView = findViewById(R.id.place_detail_carousel);
         carouselView.setImageClickListener(position ->
                 Log.d(LOG_LABEL, "Clicked item: "+ position));
@@ -88,7 +88,6 @@ public class PlaceDetailActivity extends AppCompatActivity {
 
     @SuppressLint("RestrictedApi")
     private void displayDestination() {
-        Log.d(LOG_LABEL, "Display destination " +  destination.getName());
         // set up carousel
         carouselView.setViewListener(viewListener);
         carouselView.setPageCount(1);
@@ -97,6 +96,7 @@ public class PlaceDetailActivity extends AppCompatActivity {
         // set activities list text
         TextView flagTextView = findViewById(R.id.place_detail_activities_list);
         StringBuilder stringBuilder = new StringBuilder("");
+        // separate activities with dots
         String dot = Html.fromHtml("&nbsp;&#8226;&nbsp;").toString();
         for (String activity: destination.getActivities()) {
             if (stringBuilder.length() > 0) {
@@ -120,27 +120,37 @@ public class PlaceDetailActivity extends AppCompatActivity {
         }
 
         // set count of upcoming events
-        // TODO: use actual count once events stored
+        // TODO: #17 use actual count once events stored
         TextView upcomingEventsView = findViewById(R.id.place_detail_upcoming_events);
         String upcomingEventsText = getResources()
                 .getQuantityString(R.plurals.place_upcoming_activities_count, 2, 2);
         upcomingEventsView.setText(upcomingEventsText);
         upcomingEventsView.setVisibility(View.VISIBLE);
+        // TODO: #18 go to filtered event list with events for destination on click
+        upcomingEventsView.setOnClickListener(v -> {
+            Log.d(LOG_LABEL, "Clicked upcoming events for destination " +  destination.getName());
+        });
 
+        // expand/collapse description card when clicked
         TextView descriptionView = findViewById(R.id.place_detail_description_text);
         descriptionView.setText(Html.fromHtml(destination.getDescription()));
-        // TODO: better handle expand/collapse
         descriptionView.setOnClickListener(v -> {
-            Log.d(LOG_LABEL, "TODO: expand details view?");
-            int current = descriptionView.getMaxLines();
+            TextView view = (TextView) v;
+            int current = view.getMaxLines();
             if (current == DESCRIPTION_COLLAPSED_LINE_COUNT) {
-                descriptionView.setMaxLines(DESCRIPTION_EXPANDED_MAX_LINES);
+                view.setMaxLines(DESCRIPTION_EXPANDED_MAX_LINES);
+                // Make links within card clickable, but only when expanded
+                // because LinkMovementMethod is a subclass of ScrollingMovementMethod
+                // and will make the card scroll instead of ellipsize if the text overflows.
+                descriptionView.setMovementMethod(LinkMovementMethod.getInstance());
             } else {
-                descriptionView.setMaxLines(DESCRIPTION_COLLAPSED_LINE_COUNT);
+                view.setMaxLines(DESCRIPTION_COLLAPSED_LINE_COUNT);
+                view.setEllipsize(TextUtils.TruncateAt.END);
             }
         });
 
         // show popover for flag options (been, want to go, etc.)
+        // TODO: #25 implement user flags
         CardView flagOptionsCard = findViewById(R.id.place_detail_flag_options_card);
         flagOptionsCard.setOnClickListener(v -> {
             Log.d(LOG_LABEL, "Clicked flags button");
@@ -174,13 +184,12 @@ public class PlaceDetailActivity extends AppCompatActivity {
         Button getDirectionsButton = findViewById(R.id.place_detail_directions_button);
         Button goToWebsiteButton = findViewById(R.id.place_detail_website_button);
 
-        // TODO: open within app map view, once implemented
+        // TODO: #10 open within app map view, once implemented
         // for now, open Google Maps externally with a marker at the given location
         goToMapButton.setOnClickListener(v -> {
             String locationString = destination.getLocation().toString();
             Uri gmapsUri = Uri.parse("geo:" + locationString + "?q=" + locationString + "(" +
                 destination.getName() + ")");
-            Log.d(LOG_LABEL, gmapsUri.toString());
             Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmapsUri);
             mapIntent.setPackage("com.google.android.apps.maps");
             if (mapIntent.resolveActivity(getPackageManager()) != null) {
