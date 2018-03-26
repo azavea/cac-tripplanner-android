@@ -3,11 +3,8 @@ package com.gophillygo.app.data;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
-import android.arch.persistence.room.Insert;
-import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Transaction;
-import android.arch.persistence.room.Update;
 
 import com.gophillygo.app.data.models.Event;
 
@@ -18,24 +15,18 @@ import java.util.List;
  */
 
 @Dao
-public abstract class EventDao {
+public abstract class EventDao implements AttractionDao<Event> {
     @Query("SELECT * FROM event")
-    abstract LiveData<List<Event>> getAll();
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract void save(Event event);
+    public abstract LiveData<List<Event>> getAll();
 
     @Query("SELECT * FROM event WHERE id = :eventId")
     abstract LiveData<Event> getEvent(long eventId);
 
     @Query("DELETE FROM event")
-    abstract void clear();
-
-    @Update()
-    abstract void update(Event event);
+    public abstract void clear();
 
     @Transaction
-    void bulkUpdate(List<Event> events) {
+    public void bulkUpdate(List<Event> events) {
         for (Event event: events) {
             update(event);
         }
