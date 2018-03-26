@@ -10,7 +10,7 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 
 
-@Entity
+@Entity(inheritSuperIndices = true)
 public class Destination extends Attraction {
 
     private static final NumberFormat numberFormatter = NumberFormat.getNumberInstance();
@@ -22,6 +22,8 @@ public class Destination extends Attraction {
     private final String city;
     private final String state;
     private final String address;
+
+    private final ArrayList<String> categories;
 
     @Embedded
     private final DestinationLocation location;
@@ -45,7 +47,8 @@ public class Destination extends Attraction {
                        String city, boolean cycling, String zipCode, String description,
                        int priority, String state, String address, DestinationLocation location,
                        DestinationAttributes attributes, boolean watershedAlliance, String websiteUrl,
-                       String wideImage, boolean isEvent, ArrayList<String> activities) {
+                       String wideImage, boolean isEvent, ArrayList<String> activities,
+                       ArrayList<String> categories) {
 
         // initialize Attraction
         super(id, placeID, name, accessible, image, cycling, description, priority, websiteUrl,
@@ -59,6 +62,7 @@ public class Destination extends Attraction {
 
         this.location = location;
         this.attributes = attributes;
+        this.categories = categories;
     }
 
     public void setDistance(float distance) {
@@ -105,5 +109,9 @@ public class Destination extends Attraction {
 
     public boolean isWatershedAlliance() {
         return watershedAlliance;
+    }
+
+    public ArrayList<String> getCategories() {
+        return categories;
     }
 }

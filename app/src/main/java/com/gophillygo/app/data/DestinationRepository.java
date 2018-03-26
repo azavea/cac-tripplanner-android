@@ -9,6 +9,7 @@ import android.util.Log;
 
 import com.gophillygo.app.data.models.Destination;
 import com.gophillygo.app.data.models.DestinationQueryResponse;
+import com.gophillygo.app.data.models.Event;
 import com.gophillygo.app.data.networkresource.ApiResponse;
 import com.gophillygo.app.data.networkresource.NetworkBoundResource;
 import com.gophillygo.app.data.networkresource.Resource;
@@ -30,21 +31,24 @@ class DestinationRepository {
     private static final String LOG_LABEL = "DestinationRepository";
 
     private final DestinationWebservice webservice;
-    private final DestinationDao dao;
+    private final DestinationDao destinationDao;
+    private final EventDao eventDao;
 
     // maximum rate at which to refresh data from network
     private static final long RATE_LIMIT = TimeUnit.MINUTES.toMillis(15);
 
     @Inject
     public DestinationRepository(DestinationWebservice webservice,
-                                 DestinationDao dao) {
+                                 DestinationDao destinationDao,
+                                 EventDao eventDao) {
         this.webservice = webservice;
-        this.dao = dao;
+        this.destinationDao = destinationDao;
+        this.eventDao = eventDao;
     }
 
     public LiveData<Destination> getDestination(long destinationId) {
         // return a LiveData item directly from the database.
-        return dao.getDestination(destinationId);
+        return destinationDao.getDestination(destinationId);
     }
 
     @SuppressLint("StaticFieldLeak")
@@ -52,7 +56,7 @@ class DestinationRepository {
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
-                dao.update(destination);
+                destinationDao.update(destination);
                 return null;
             }
         }.execute();
@@ -63,7 +67,7 @@ class DestinationRepository {
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
-                dao.bulkUpdate(destinations);
+                destinationDao.bulkUpdate(destinations);
                 return null;
             }
         }.execute();
@@ -73,20 +77,23 @@ class DestinationRepository {
         return new NetworkBoundResource<List<Destination>, DestinationQueryResponse>() {
             @Override
             protected void saveCallResult(@NonNull DestinationQueryResponse response) {
-                // clear out existing database entries before adding new ones
-                dao.clear();
                 Long timestamp = System.currentTimeMillis();
+
+                // clear out existing database entries before adding new ones
+                destinationDao.clear();
+                eventDao.clear();
+
+                // save destinations
                 for (Destination item: response.getDestinations()) {
                     item.setTimestamp(timestamp);
-                    dao.save(item);
+                    destinationDao.save(item);
                 }
 
-                /* TODO: save events
-                for (Destination item: response.getEvents()) {
+                // save events
+                for (Event item: response.getEvents()) {
                     item.setTimestamp(timestamp);
-                    dao.save(item);
+                    eventDao.save(item);
                 }
-                */
             }
 
             @Override
@@ -100,7 +107,7 @@ class DestinationRepository {
 
             @NonNull @Override
             protected LiveData<List<Destination>> loadFromDb() {
-                return dao.getAll();
+                return destinationDao.getAll();
             }
 
             @NonNull @Override

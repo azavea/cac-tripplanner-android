@@ -86,9 +86,8 @@ public class HomeActivity extends AppCompatActivity {
                 return;
             }
 
+            // if querying from server, state may update with LOADING status before it finishes
             if (!destinationResource.status.equals(Status.SUCCESS)) {
-                Log.e(LOG_LABEL, "Destination query failed with status: " +
-                        destinationResource.status.name());
                 return;
             }
 

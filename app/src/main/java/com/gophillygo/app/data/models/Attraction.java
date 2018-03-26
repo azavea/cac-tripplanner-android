@@ -15,13 +15,22 @@ public class Attraction {
     @PrimaryKey
     private final int id;
 
+    @ColumnInfo(index = true)
     private final int placeID;
+
+    @ColumnInfo(index = true)
     private final String name;
+
+    @ColumnInfo(index = true)
     private final boolean accessible;
     private final String image;
+
+    @ColumnInfo(index = true)
     private final boolean cycling;
     private final String description;
     private final int priority;
+
+    @ColumnInfo(index = true)
     private final ArrayList<String> activities;
 
     @ColumnInfo(name = "website_url")
