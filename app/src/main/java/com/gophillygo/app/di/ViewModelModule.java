@@ -4,6 +4,7 @@ import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProvider;
 
 import com.gophillygo.app.data.DestinationViewModel;
+import com.gophillygo.app.data.EventViewModel;
 
 import dagger.Binds;
 import dagger.Module;
@@ -23,6 +24,11 @@ public abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(DestinationViewModel.class)
     abstract ViewModel bindDestinationViewModel(DestinationViewModel destinationViewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(EventViewModel.class)
+    abstract ViewModel bindEventViewModel(EventViewModel eventViewModel);
 
     @Binds
     abstract ViewModelProvider.Factory bindViewModelFactory(GpgViewModelFactory factory);

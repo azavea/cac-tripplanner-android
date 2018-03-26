@@ -7,6 +7,8 @@ import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Transaction;
 import android.arch.persistence.room.Update;
 
+import com.gophillygo.app.data.models.Attraction;
+
 import java.util.List;
 
 
@@ -26,8 +28,6 @@ interface AttractionDao<T> {
     abstract  void delete(T obj);
 
     abstract void clear();
-
-    abstract LiveData<List<T>> getAll();
 
     @Transaction
     void bulkUpdate(List<T> objs);

@@ -212,7 +212,15 @@ public class HomeActivity extends AppCompatActivity {
     private void clickedGridItem(int position) {
         Log.d(LOG_LABEL, "clicked grid view item: " + position);
 
-        Intent intent = new Intent(this, PlacesListActivity.class);
-        startActivity(intent);
+        switch (position) {
+            case 0:
+                // go to events list
+                startActivity(new Intent(this, EventsListActivity.class));
+                break;
+            default:
+                // go to places list
+                // TODO: #18 filter list based on selected grid item
+                startActivity(new Intent(this, PlacesListActivity.class));
+        }
     }
 }

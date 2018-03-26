@@ -2,6 +2,7 @@ package com.gophillygo.app.di;
 
 import android.app.Application;
 
+import com.gophillygo.app.EventsListActivity;
 import com.gophillygo.app.GoPhillyGoApp;
 import com.gophillygo.app.PlaceDetailActivity;
 import com.gophillygo.app.PlacesListActivity;
@@ -21,9 +22,10 @@ import dagger.android.AndroidInjectionModule;
 @Component(modules = {
         AndroidInjectionModule.class,
         AppModule.class,
+        EventsListActivityModule.class,
         HomeActivityModule.class,
-        PlacesListActivityModule.class,
-        PlaceDetailActivityModule.class
+        PlaceDetailActivityModule.class,
+        PlacesListActivityModule.class
 })
 public interface AppComponent {
     @Component.Builder

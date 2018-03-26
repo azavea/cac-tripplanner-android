@@ -34,12 +34,14 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.gophillygo.app.HomeActivity" />
         </activity>
-        <activity android:name=".PlaceDetailActivity"
+        <activity
+            android:name=".PlaceDetailActivity"
             android:parentActivityName=".PlacesListActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.gophillygo.app.PlacesListActivity" />
         </activity>
+        <activity android:name=".EventsListActivity"></activity>
     </application>
 
 </manifest>

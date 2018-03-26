@@ -4,18 +4,13 @@ import android.annotation.SuppressLint;
 import android.arch.lifecycle.LiveData;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.util.Log;
 
 import com.gophillygo.app.data.models.Destination;
-import com.gophillygo.app.data.models.DestinationQueryResponse;
 import com.gophillygo.app.data.models.Event;
-import com.gophillygo.app.data.networkresource.ApiResponse;
-import com.gophillygo.app.data.networkresource.NetworkBoundResource;
+import com.gophillygo.app.data.networkresource.AttractionNetworkBoundResource;
 import com.gophillygo.app.data.networkresource.Resource;
 
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
@@ -34,9 +29,6 @@ class DestinationRepository {
     private final DestinationDao destinationDao;
     private final EventDao eventDao;
 
-    // maximum rate at which to refresh data from network
-    private static final long RATE_LIMIT = TimeUnit.MINUTES.toMillis(15);
-
     @Inject
     public DestinationRepository(DestinationWebservice webservice,
                                  DestinationDao destinationDao,
@@ -51,12 +43,27 @@ class DestinationRepository {
         return destinationDao.getDestination(destinationId);
     }
 
+    public LiveData<Event> getEvent(long eventId) {
+        return eventDao.getEvent(eventId);
+    }
+
     @SuppressLint("StaticFieldLeak")
     public void updateDestination(Destination destination) {
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
                 destinationDao.update(destination);
+                return null;
+            }
+        }.execute();
+    }
+
+    @SuppressLint("StaticFieldLeak")
+    public void updateEvent(Event event) {
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                eventDao.update(event);
                 return null;
             }
         }.execute();
@@ -73,46 +80,32 @@ class DestinationRepository {
         }.execute();
     }
 
+    @SuppressLint("StaticFieldLeak")
+    public void updateMultipleEvents(List<Event> events) {
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                eventDao.bulkUpdate(events);
+                return null;
+            }
+        }.execute();
+    }
+
     public LiveData<Resource<List<Destination>>> loadDestinations() {
-        return new NetworkBoundResource<List<Destination>, DestinationQueryResponse>() {
+        return new AttractionNetworkBoundResource<Destination>(webservice, destinationDao, eventDao) {
+            @NonNull
             @Override
-            protected void saveCallResult(@NonNull DestinationQueryResponse response) {
-                Long timestamp = System.currentTimeMillis();
-
-                // clear out existing database entries before adding new ones
-                destinationDao.clear();
-                eventDao.clear();
-
-                // save destinations
-                for (Destination item: response.getDestinations()) {
-                    item.setTimestamp(timestamp);
-                    destinationDao.save(item);
-                }
-
-                // save events
-                for (Event item: response.getEvents()) {
-                    item.setTimestamp(timestamp);
-                    eventDao.save(item);
-                }
-            }
-
-            @Override
-            protected boolean shouldFetch(@Nullable List<Destination> data) {
-                if (data == null || data.isEmpty()) {
-                    return true;
-                }
-                Destination first = data.get(0);
-                return System.currentTimeMillis() - first.getTimestamp() > RATE_LIMIT;
-            }
-
-            @NonNull @Override
             protected LiveData<List<Destination>> loadFromDb() {
                 return destinationDao.getAll();
             }
+        }.getAsLiveData();
+    }
 
+    public LiveData<Resource<List<Event>>> loadEvents() {
+        return new AttractionNetworkBoundResource<Event>(webservice, destinationDao, eventDao) {
             @NonNull @Override
-            protected LiveData<ApiResponse<DestinationQueryResponse>> createCall() {
-                return webservice.getDestinations();
+            protected LiveData<List<Event>> loadFromDb() {
+                return eventDao.getAll();
             }
         }.getAsLiveData();
     }

@@ -8,6 +8,7 @@
     <string name="menu_action_logout">Sign out</string>
     <string name="menu_action_events">Go to events</string>
     <string name="menu_action_map">See map</string>
+    <string name="menu_action_event_place">View Destination</string>
 
     <!-- place option menu items -->
     <string name="place_not_interested_option">Not interested</string>
@@ -18,6 +19,7 @@
     <string name="carousel_nearby_label">Nearby</string>
 
     <string name="places_list_title">Places</string>
+    <string name="events_list_title">Events</string>
 
     <!-- filtering -->
     <string name="reset_button">Reset</string>
