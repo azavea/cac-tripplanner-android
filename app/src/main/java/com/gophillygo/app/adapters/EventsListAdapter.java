@@ -20,7 +20,7 @@ import com.gophillygo.app.data.models.Event;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -56,6 +56,7 @@ public class EventsListAdapter extends RecyclerView.Adapter {
         TextView monthView;
         TextView dayOfMonthView;
         TextView dayOfWeekView;
+        TextView timesView;
 
         private ViewHolder(View parentView, final EventListItemClickListener listener) {
             super(parentView);
@@ -118,6 +119,22 @@ public class EventsListAdapter extends RecyclerView.Adapter {
             viewHolder.monthView.setText(monthFormat.format(startDate));
             viewHolder.dayOfMonthView.setText(dayOfMonthFormat.format(startDate));
             viewHolder.dayOfWeekView.setText(dayOfWeekFormat.format(startDate));
+
+            // check if event ends on same day as it starts
+            Calendar startCalendar = Calendar.getInstance();
+            Calendar endCalendar = Calendar.getInstance();
+            startCalendar.setTime(startDate);
+            endCalendar.setTime(endDate);
+
+            // TODO: set times or date range with times
+            if (startCalendar.get(Calendar.YEAR) == endCalendar.get(Calendar.YEAR) &&
+                    startCalendar.get(Calendar.DAY_OF_YEAR) == endCalendar.get(Calendar.DAY_OF_YEAR)) {
+
+
+            } else {
+                // multi-day event
+
+            }
         } catch (ParseException e) {
             e.printStackTrace();
         }

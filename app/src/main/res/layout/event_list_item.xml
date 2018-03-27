@@ -13,9 +13,13 @@
         style="@style/Base.TextAppearance.AppCompat.Title"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/event_list_item_name_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="start"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="4dp"
+        android:textAllCaps="true"
+        android:gravity="center"
         android:padding="2dp" />
 
     <TextView
@@ -25,6 +29,8 @@
         app:layout_constraintTop_toBottomOf="@+id/event_month_label"
         app:layout_constraintBottom_toTopOf="@+id/event_day_of_week_label"
         app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="4dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="start"
@@ -33,13 +39,17 @@
     <TextView
         android:id="@+id/event_day_of_week_label"
         style="@style/Base.TextAppearance.AppCompat.Title"
-        android:textColor="@color/color_text_dark_grey"
+        android:textColor="@color/color_text_light_grey"
         app:layout_constraintTop_toBottomOf="@+id/event_day_of_month_label"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_width="wrap_content"
+        app:layout_constraintEnd_toStartOf="@id/event_list_destination_name"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:gravity="start"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="4dp"
+        android:textAllCaps="true"
+        android:gravity="center"
         android:padding="2dp" />
 
     <TextView
@@ -49,34 +59,41 @@
         app:layout_constraintStart_toEndOf="@id/event_day_of_month_label"
         app:layout_constraintLeft_toRightOf="@id/event_day_of_month_label"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="4dp"
         android:gravity="start"
         android:padding="2dp" />
 
     <TextView
         android:id="@+id/event_list_destination_name"
         style="@style/TextAppearance.AppCompat.Medium"
-        android:layout_width="wrap_content"
+        android:textColor="@color/color_text_dark_grey"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/event_list_item_name_label"
         app:layout_constraintStart_toEndOf="@id/event_day_of_month_label"
         app:layout_constraintLeft_toRightOf="@id/event_day_of_month_label"
+        app:layout_constraintBottom_toTopOf="@+id/event_list_item_options_button"
         app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="4dp"
         android:padding="2dp"
         android:gravity="start" />
 
     <TextView
         android:id="@+id/event_list_time"
         style="@style/TextAppearance.AppCompat.Medium"
-        android:textColor="@color/color_text_dark_grey"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/event_list_destination_name"
+        app:layout_constraintTop_toBottomOf="@id/event_list_destination_name"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/event_list_item_options_button"
         app:layout_constraintStart_toEndOf="@id/event_day_of_month_label"
-        app:layout_constraintBottom_toTopOf="@+id/event_list_item_options_button"
+        android:text="@string/app_name"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="4dp"
         android:padding="2dp"
         android:gravity="start" />
 
