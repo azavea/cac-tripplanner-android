@@ -41,16 +41,20 @@ public class EventsListActivity extends AppCompatActivity
     EventViewModel viewModel;
 
     /**
-     * Go to place detail view when a place in the list clicked.
+     * TODO: #20
+     * Go to event detail view when an event in the list clicked.
      *
      * @param position Offset of the position of the list item clicked
      */
-    public void clickedPlace(int position) {
+    public void clickedEvent(int position) {
         // Get database ID for place clicked, based on positional offset, and pass it along
-        long destinationId = eventsListView.getAdapter().getItemId(position);
-        Intent intent = new Intent(this, PlaceDetailActivity.class);
-        intent.putExtra(PlaceDetailActivity.DESTINATION_ID_KEY, destinationId);
+        long eventId = eventsListView.getAdapter().getItemId(position);
+        Log.d(LOG_LABEL, "Clicked event with ID: " + eventId);
+        /*
+        Intent intent = new Intent(this, EventDetailActivity.class);
+        intent.putExtra(EventDetailActivity.EVENT_ID_KEY, eventId);
         startActivity(intent);
+        */
     }
 
 

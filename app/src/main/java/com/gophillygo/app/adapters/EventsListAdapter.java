@@ -12,10 +12,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.gophillygo.app.R;
+import com.gophillygo.app.data.models.Destination;
 import com.gophillygo.app.data.models.Event;
 
 import java.util.List;
@@ -23,7 +23,7 @@ import java.util.List;
 public class EventsListAdapter extends RecyclerView.Adapter {
 
     public interface EventListItemClickListener {
-        void clickedPlace(int position);
+        void clickedEvent(int position);
     }
 
     private static final String LOG_LABEL = "EventListAdapter";
@@ -35,18 +35,16 @@ public class EventsListAdapter extends RecyclerView.Adapter {
     private List<Event> eventList;
 
     private static class ViewHolder extends RecyclerView.ViewHolder {
-        ImageView imageView;
         TextView eventNameView;
-        TextView distanceView;
+
+        TextView destinationNameView;
         ImageButton eventOptionsButton;
-        ImageView cyclingMarker;
-        ImageView watershedAllianceMarker;
 
         private ViewHolder(View parentView, final EventListItemClickListener listener) {
             super(parentView);
 
             parentView.setOnClickListener(v -> {
-                listener.clickedPlace(getAdapterPosition());
+                listener.clickedEvent(getAdapterPosition());
             });
         }
     }
@@ -61,15 +59,12 @@ public class EventsListAdapter extends RecyclerView.Adapter {
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View parentView = inflater.inflate(R.layout.place_list_item, parent, false);
+        View parentView = inflater.inflate(R.layout.event_list_item, parent, false);
         ViewHolder viewHolder = new ViewHolder(parentView, this.clickListener);
-
-        viewHolder.imageView = parentView.findViewById(R.id.place_list_item_image);
-        viewHolder.eventNameView = parentView.findViewById(R.id.place_list_item_name_label);
-        viewHolder.distanceView = parentView.findViewById(R.id.place_list_item_distance_label);
-        viewHolder.eventOptionsButton = parentView.findViewById(R.id.place_list_item_options_button);
-        viewHolder.watershedAllianceMarker = parentView.findViewById(R.id.place_list_watershed_alliance_marker);
-        viewHolder.cyclingMarker = parentView.findViewById(R.id.place_list_cycling_activity_marker);
+        
+        viewHolder.eventNameView = parentView.findViewById(R.id.event_list_item_name_label);
+        viewHolder.destinationNameView = parentView.findViewById(R.id.event_list_destination_name);
+        viewHolder.eventOptionsButton = parentView.findViewById(R.id.event_list_item_options_button);
 
         parentView.setTag(viewHolder);
 
@@ -84,22 +79,13 @@ public class EventsListAdapter extends RecyclerView.Adapter {
 
         viewHolder.eventNameView.setText(event.getName());
 
-        /*
-        Destination destination = event.getDestination();
-
-        if (destination.isWatershedAlliance()) {
-            viewHolder.watershedAllianceMarker.setVisibility(View.VISIBLE);
-            viewHolder.watershedAllianceMarker.invalidate();
+        String destinationName = event.getDestinationName();
+        if (destinationName != null && !destinationName.isEmpty()) {
+            viewHolder.destinationNameView.setText(destinationName);
+            viewHolder.destinationNameView.setVisibility(View.VISIBLE);
         } else {
-            viewHolder.watershedAllianceMarker.setVisibility(View.GONE);
+            viewHolder.destinationNameView.setVisibility(View.INVISIBLE);
         }
-
-        if (destination.isCycling()) {
-            viewHolder.cyclingMarker.setVisibility(View.VISIBLE);
-        } else {
-            viewHolder.cyclingMarker.setVisibility(View.GONE);
-        }
-        */
 
         viewHolder.eventOptionsButton.setOnClickListener(v -> {
             Log.d(LOG_LABEL, "Clicked event options button for event #" + event.getId());

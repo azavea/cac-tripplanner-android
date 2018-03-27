@@ -1,8 +1,8 @@
 {
   "formatVersion": 1,
   "database": {
-    "version": 6,
-    "identityHash": "03a4c26e8dc1961ab7cddcde1ca546c4",
+    "version": 7,
+    "identityHash": "31d4b725a21a9f16e80079005e8d627c",
     "entities": [
       {
         "tableName": "Destination",
@@ -205,12 +205,18 @@
       },
       {
         "tableName": "Event",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`destination` INTEGER, `start_date` TEXT, `end_date` TEXT, `id` INTEGER NOT NULL, `placeID` INTEGER NOT NULL, `name` TEXT, `accessible` INTEGER NOT NULL, `image` TEXT, `cycling` INTEGER NOT NULL, `description` TEXT, `priority` INTEGER NOT NULL, `activities` TEXT, `website_url` TEXT, `wide_image` TEXT, `is_event` INTEGER NOT NULL, `timestamp` INTEGER NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`destination`) REFERENCES `Destination`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL DEFERRABLE INITIALLY DEFERRED)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`destination` INTEGER, `destinationName` TEXT, `start_date` TEXT, `end_date` TEXT, `id` INTEGER NOT NULL, `placeID` INTEGER NOT NULL, `name` TEXT, `accessible` INTEGER NOT NULL, `image` TEXT, `cycling` INTEGER NOT NULL, `description` TEXT, `priority` INTEGER NOT NULL, `activities` TEXT, `website_url` TEXT, `wide_image` TEXT, `is_event` INTEGER NOT NULL, `timestamp` INTEGER NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`destination`) REFERENCES `Destination`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL DEFERRABLE INITIALLY DEFERRED)",
         "fields": [
           {
-            "fieldPath": "destinationId",
+            "fieldPath": "destination",
             "columnName": "destination",
             "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "destinationName",
+            "columnName": "destinationName",
+            "affinity": "TEXT",
             "notNull": false
           },
           {
@@ -393,7 +399,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"03a4c26e8dc1961ab7cddcde1ca546c4\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"31d4b725a21a9f16e80079005e8d627c\")"
     ]
   }
 }

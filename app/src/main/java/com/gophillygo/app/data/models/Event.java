@@ -3,6 +3,7 @@ package com.gophillygo.app.data.models;
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
@@ -24,6 +25,9 @@ public class Event extends Attraction {
     @ColumnInfo(index = true)
     private final Integer destination;
 
+    // fetch name of related destination from database into this property
+    private String destinationName;
+
     @ColumnInfo(name = "start_date", index = true)
     @SerializedName("start_date")
     private final String startDate;
@@ -36,7 +40,7 @@ public class Event extends Attraction {
     public Event(int id, int placeID, String name, boolean accessible, String image,
                  boolean cycling, String description, int priority, String websiteUrl,
                  String wideImage, boolean isEvent, ArrayList<String> activities,
-                 Integer destination, String startDate, String endDate) {
+                 Integer destination, String startDate, String endDate, String destinationName) {
 
         // initialize Attraction
         super(id, placeID, name, accessible, image, cycling, description, priority, websiteUrl,
@@ -45,6 +49,11 @@ public class Event extends Attraction {
         this.destination = destination;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.destinationName = destinationName;
+    }
+
+    public String getDestinationName() {
+        return destinationName;
     }
 
     public Integer getDestination() {

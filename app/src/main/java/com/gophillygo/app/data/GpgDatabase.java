@@ -7,7 +7,7 @@ import android.arch.persistence.room.TypeConverters;
 import com.gophillygo.app.data.models.Destination;
 import com.gophillygo.app.data.models.Event;
 
-@Database(version=6, entities={Destination.class, Event.class})
+@Database(version=7, entities={Destination.class, Event.class})
 @TypeConverters({RoomConverters.class})
 public abstract class GpgDatabase extends RoomDatabase {
     abstract public DestinationDao destinationDao();

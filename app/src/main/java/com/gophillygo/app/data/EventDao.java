@@ -16,7 +16,8 @@ import java.util.List;
 
 @Dao
 public abstract class EventDao implements AttractionDao<Event> {
-    @Query("SELECT * FROM event")
+    @Query("SELECT event.*, destination.name AS destinationName FROM event " +
+            "LEFT JOIN destination on destination.id = event.destination")
     public abstract LiveData<List<Event>> getAll();
 
     @Query("SELECT * FROM event WHERE id = :eventId")
