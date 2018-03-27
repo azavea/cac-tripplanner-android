@@ -15,10 +15,15 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.gophillygo.app.R;
-import com.gophillygo.app.data.models.Destination;
 import com.gophillygo.app.data.models.Event;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class EventsListAdapter extends RecyclerView.Adapter {
 
@@ -28,6 +33,15 @@ public class EventsListAdapter extends RecyclerView.Adapter {
 
     private static final String LOG_LABEL = "EventListAdapter";
 
+    private static final DateFormat isoDateFormat, monthFormat, dayOfMonthFormat, dayOfWeekFormat;
+
+    static {
+        isoDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US);
+        monthFormat = new SimpleDateFormat("MMM", Locale.US);
+        dayOfMonthFormat = new SimpleDateFormat("dd", Locale.US);
+        dayOfWeekFormat = new SimpleDateFormat("EEE", Locale.US);
+    }
+
     private final Context context;
     private final LayoutInflater inflater;
     private EventListItemClickListener clickListener;
@@ -36,9 +50,12 @@ public class EventsListAdapter extends RecyclerView.Adapter {
 
     private static class ViewHolder extends RecyclerView.ViewHolder {
         TextView eventNameView;
-
         TextView destinationNameView;
         ImageButton eventOptionsButton;
+
+        TextView monthView;
+        TextView dayOfMonthView;
+        TextView dayOfWeekView;
 
         private ViewHolder(View parentView, final EventListItemClickListener listener) {
             super(parentView);
@@ -66,8 +83,11 @@ public class EventsListAdapter extends RecyclerView.Adapter {
         viewHolder.destinationNameView = parentView.findViewById(R.id.event_list_destination_name);
         viewHolder.eventOptionsButton = parentView.findViewById(R.id.event_list_item_options_button);
 
-        parentView.setTag(viewHolder);
+        viewHolder.monthView = parentView.findViewById(R.id.event_month_label);
+        viewHolder.dayOfMonthView = parentView.findViewById(R.id.event_day_of_month_label);
+        viewHolder.dayOfWeekView = parentView.findViewById(R.id.event_day_of_week_label);
 
+        parentView.setTag(viewHolder);
         return viewHolder;
     }
 
@@ -85,6 +105,21 @@ public class EventsListAdapter extends RecyclerView.Adapter {
             viewHolder.destinationNameView.setVisibility(View.VISIBLE);
         } else {
             viewHolder.destinationNameView.setVisibility(View.INVISIBLE);
+        }
+
+        String start = event.getStartDate();
+        String end = event.getEndDate();
+        Date startDate, endDate;
+
+        try {
+            startDate = isoDateFormat.parse(start);
+            endDate = isoDateFormat.parse(end);
+
+            viewHolder.monthView.setText(monthFormat.format(startDate));
+            viewHolder.dayOfMonthView.setText(dayOfMonthFormat.format(startDate));
+            viewHolder.dayOfWeekView.setText(dayOfWeekFormat.format(startDate));
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
 
         viewHolder.eventOptionsButton.setOnClickListener(v -> {
