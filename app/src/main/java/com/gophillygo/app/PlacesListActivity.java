@@ -2,17 +2,12 @@ package com.gophillygo.app;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
 
 import com.gophillygo.app.adapters.PlacesListAdapter;
 import com.gophillygo.app.data.DestinationViewModel;
@@ -21,24 +16,24 @@ import com.gophillygo.app.di.GpgViewModelFactory;
 
 import javax.inject.Inject;
 
-import cn.nekocode.badge.BadgeDrawable;
 
-public class PlacesListActivity extends AppCompatActivity implements FilterDialog.FilterChangeListener,
+public class PlacesListActivity extends FilterableListActivity implements
         PlacesListAdapter.PlaceListItemClickListener {
 
     private static final String LOG_LABEL = "PlacesList";
 
     private LinearLayoutManager layoutManager;
     private RecyclerView placesListView;
-    private Toolbar toolbar;
-    private Button filterButton;
-    private Drawable filterIcon;
 
     @SuppressWarnings("WeakerAccess")
     @Inject
     GpgViewModelFactory viewModelFactory;
     @SuppressWarnings("WeakerAccess")
     DestinationViewModel viewModel;
+
+    public PlacesListActivity() {
+        super(R.layout.activity_places_list, R.id.places_list_toolbar, R.id.places_list_filter_button);
+    }
 
     /**
      * Go to place detail view when a place in the list clicked.
@@ -57,15 +52,6 @@ public class PlacesListActivity extends AppCompatActivity implements FilterDialo
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_places_list);
-
-        filterIcon = ContextCompat.getDrawable(this, R.drawable.ic_filter_list_white_24px);
-
-        // set up toolbar
-        toolbar = findViewById(R.id.places_list_toolbar);
-        setSupportActionBar(toolbar);
-        //noinspection ConstantConditions
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         // set up list of places
         layoutManager = new LinearLayoutManager(this);
@@ -82,12 +68,6 @@ public class PlacesListActivity extends AppCompatActivity implements FilterDialo
             }
         });
 
-        // set up filter button
-        filterButton = findViewById(R.id.places_list_filter_button);
-        filterButton.setOnClickListener(v -> {
-            FilterDialog filterDialog = new FilterDialog();
-            filterDialog.show(getSupportFragmentManager(), filterDialog.getTag());
-        });
     }
 
     @Override
@@ -114,23 +94,5 @@ public class PlacesListActivity extends AppCompatActivity implements FilterDialo
                 return super.onOptionsItemSelected(item);
         }
         return true;
-    }
-
-    @Override
-    public void filtersChanged(int setFilterCount) {
-        // Change filter button's left drawable when filters set to either be a badge with the
-        // filter count, or the default filter icon, if no filters set.
-        if (setFilterCount > 0) {
-            Drawable filterDrawable = new BadgeDrawable.Builder()
-                    .type(BadgeDrawable.TYPE_ONLY_ONE_TEXT)
-                    .badgeColor(ContextCompat.getColor(this, R.color.color_white))
-                    .textColor(ContextCompat.getColor(this, R.color.color_primary))
-                    .text1(String.valueOf(setFilterCount))
-                    .build();
-            filterButton.setCompoundDrawablesWithIntrinsicBounds(filterDrawable, null, null, null);
-        } else {
-            filterButton.setCompoundDrawablesWithIntrinsicBounds(filterIcon, null, null, null);
-        }
-
     }
 }

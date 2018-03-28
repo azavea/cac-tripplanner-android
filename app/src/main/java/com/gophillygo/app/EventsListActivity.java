@@ -1,17 +1,12 @@
 package com.gophillygo.app;
 
 import android.arch.lifecycle.ViewModelProviders;
-import android.graphics.drawable.Drawable;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
 
 import com.gophillygo.app.adapters.EventsListAdapter;
 import com.gophillygo.app.data.EventViewModel;
@@ -20,24 +15,23 @@ import com.gophillygo.app.di.GpgViewModelFactory;
 
 import javax.inject.Inject;
 
-import cn.nekocode.badge.BadgeDrawable;
-
-public class EventsListActivity extends AppCompatActivity
-        implements FilterDialog.FilterChangeListener, EventsListAdapter.EventListItemClickListener {
+public class EventsListActivity extends FilterableListActivity
+        implements EventsListAdapter.EventListItemClickListener {
 
     private static final String LOG_LABEL = "EventsList";
 
     private LinearLayoutManager layoutManager;
     private RecyclerView eventsListView;
-    private Toolbar toolbar;
-    private Button filterButton;
-    private Drawable filterIcon;
 
     @SuppressWarnings("WeakerAccess")
     @Inject
     GpgViewModelFactory viewModelFactory;
     @SuppressWarnings("WeakerAccess")
     EventViewModel viewModel;
+
+    public EventsListActivity() {
+        super(R.layout.activity_events_list, R.id.events_list_toolbar, R.id.events_list_filter_button);
+    }
 
     /**
      * TODO: #20
@@ -46,7 +40,7 @@ public class EventsListActivity extends AppCompatActivity
      * @param position Offset of the position of the list item clicked
      */
     public void clickedEvent(int position) {
-        // Get database ID for place clicked, based on positional offset, and pass it along
+        // Get database ID for event clicked, based on positional offset, and pass it along
         long eventId = eventsListView.getAdapter().getItemId(position);
         Log.d(LOG_LABEL, "Clicked event with ID: " + eventId);
         /*
@@ -60,17 +54,7 @@ public class EventsListActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_events_list);
 
-        filterIcon = ContextCompat.getDrawable(this, R.drawable.ic_filter_list_white_24px);
-
-        // set up toolbar
-        toolbar = findViewById(R.id.events_list_toolbar);
-        setSupportActionBar(toolbar);
-        //noinspection ConstantConditions
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        // set up list of places
         layoutManager = new LinearLayoutManager(this);
         viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(EventViewModel.class);
@@ -85,12 +69,6 @@ public class EventsListActivity extends AppCompatActivity
             }
         });
 
-        // set up filter button
-        filterButton = findViewById(R.id.events_list_filter_button);
-        filterButton.setOnClickListener(v -> {
-            FilterDialog filterDialog = new FilterDialog();
-            filterDialog.show(getSupportFragmentManager(), filterDialog.getTag());
-        });
     }
 
     @Override
@@ -117,23 +95,5 @@ public class EventsListActivity extends AppCompatActivity
                 return super.onOptionsItemSelected(item);
         }
         return true;
-    }
-
-    @Override
-    public void filtersChanged(int setFilterCount) {
-        // Change filter button's left drawable when filters set to either be a badge with the
-        // filter count, or the default filter icon, if no filters set.
-        if (setFilterCount > 0) {
-            Drawable filterDrawable = new BadgeDrawable.Builder()
-                    .type(BadgeDrawable.TYPE_ONLY_ONE_TEXT)
-                    .badgeColor(ContextCompat.getColor(this, R.color.color_white))
-                    .textColor(ContextCompat.getColor(this, R.color.color_primary))
-                    .text1(String.valueOf(setFilterCount))
-                    .build();
-            filterButton.setCompoundDrawablesWithIntrinsicBounds(filterDrawable, null, null, null);
-        } else {
-            filterButton.setCompoundDrawablesWithIntrinsicBounds(filterIcon, null, null, null);
-        }
-
     }
 }
