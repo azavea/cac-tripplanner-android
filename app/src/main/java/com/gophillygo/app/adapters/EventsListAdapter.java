@@ -33,13 +33,16 @@ public class EventsListAdapter extends RecyclerView.Adapter {
 
     private static final String LOG_LABEL = "EventListAdapter";
 
-    private static final DateFormat isoDateFormat, monthFormat, dayOfMonthFormat, dayOfWeekFormat;
+    private static final DateFormat isoDateFormat, monthFormat, dayOfMonthFormat, dayOfWeekFormat,
+            timeFormat, monthDayFormat;
 
     static {
         isoDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US);
         monthFormat = new SimpleDateFormat("MMM", Locale.US);
         dayOfMonthFormat = new SimpleDateFormat("dd", Locale.US);
         dayOfWeekFormat = new SimpleDateFormat("EEE", Locale.US);
+        timeFormat = new SimpleDateFormat("h:mm a", Locale.US);
+        monthDayFormat = new SimpleDateFormat("MMM dd", Locale.US);
     }
 
     private final Context context;
@@ -87,6 +90,7 @@ public class EventsListAdapter extends RecyclerView.Adapter {
         viewHolder.monthView = parentView.findViewById(R.id.event_month_label);
         viewHolder.dayOfMonthView = parentView.findViewById(R.id.event_day_of_month_label);
         viewHolder.dayOfWeekView = parentView.findViewById(R.id.event_day_of_week_label);
+        viewHolder.timesView = parentView.findViewById(R.id.event_list_item_time);
 
         parentView.setTag(viewHolder);
         return viewHolder;
@@ -126,17 +130,24 @@ public class EventsListAdapter extends RecyclerView.Adapter {
             startCalendar.setTime(startDate);
             endCalendar.setTime(endDate);
 
-            // TODO: set times or date range with times
+            // set times if event is a single day event, or date range if multi-day
             if (startCalendar.get(Calendar.YEAR) == endCalendar.get(Calendar.YEAR) &&
                     startCalendar.get(Calendar.DAY_OF_YEAR) == endCalendar.get(Calendar.DAY_OF_YEAR)) {
 
-
+                viewHolder.timesView.setText(context.getString(R.string.event_list_item_time_range,
+                        timeFormat.format(startDate),
+                        timeFormat.format(endDate)));
             } else {
                 // multi-day event
-
+                viewHolder.timesView.setText(context.getString(R.string.event_list_item_time_range,
+                        monthDayFormat.format(startDate),
+                        monthDayFormat.format(endDate)));
             }
+            viewHolder.timesView.setVisibility(View.VISIBLE);
         } catch (ParseException e) {
             e.printStackTrace();
+            Log.e(LOG_LABEL, "Failed to parse an event date");
+            viewHolder.timesView.setVisibility(View.INVISIBLE);
         }
 
         viewHolder.eventOptionsButton.setOnClickListener(v -> {

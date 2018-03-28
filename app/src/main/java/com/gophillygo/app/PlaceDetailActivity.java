@@ -213,6 +213,9 @@ public class PlaceDetailActivity extends AppCompatActivity {
         getDirectionsButton.setOnClickListener(v -> {
             // pass parameters destination and destinationText to https://gophillygo.org/
             Uri directionsUri = new Uri.Builder().scheme("https").authority("gophillygo.org")
+                    // TODO: #9 send current user location as origin
+                    .appendQueryParameter("origin", "")
+                    .appendQueryParameter("originText", "")
                     .appendQueryParameter("destination", destination.getLocation().toString())
                     .appendQueryParameter("destinationText", destination.getAddress()).build();
             Intent intent = new Intent(Intent.ACTION_VIEW, directionsUri);
