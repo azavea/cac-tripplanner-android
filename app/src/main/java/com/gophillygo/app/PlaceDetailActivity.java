@@ -110,7 +110,7 @@ public class PlaceDetailActivity extends AppCompatActivity {
         };
     }
 
-    @SuppressLint("RestrictedApi")
+    @SuppressLint({"RestrictedApi", "RtlHardcoded"})
     private void displayDestination() {
         // set up carousel
         carouselView.setViewListener(viewListener);
@@ -151,9 +151,8 @@ public class PlaceDetailActivity extends AppCompatActivity {
         upcomingEventsView.setText(upcomingEventsText);
         upcomingEventsView.setVisibility(View.VISIBLE);
         // TODO: #18 go to filtered event list with events for destination on click
-        upcomingEventsView.setOnClickListener(v -> {
-            Log.d(LOG_LABEL, "Clicked upcoming events for destination " +  destination.getName());
-        });
+        upcomingEventsView.setOnClickListener(v -> Log.d(LOG_LABEL,
+                "Clicked upcoming events for destination " +  destination.getName()));
 
         // expand/collapse description card when clicked
         descriptionView = findViewById(R.id.place_detail_description_text);

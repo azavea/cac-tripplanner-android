@@ -32,7 +32,7 @@ public class PlacesListAdapter extends RecyclerView.Adapter {
 
     private final Context context;
     private final LayoutInflater inflater;
-    private PlaceListItemClickListener clickListener;
+    private final PlaceListItemClickListener clickListener;
 
     private List<Destination> destinationList;
 
@@ -47,9 +47,7 @@ public class PlacesListAdapter extends RecyclerView.Adapter {
         private ViewHolder(View parentView, final PlaceListItemClickListener listener) {
             super(parentView);
 
-            parentView.setOnClickListener(v -> {
-                listener.clickedPlace(getAdapterPosition());
-            });
+            parentView.setOnClickListener(v -> listener.clickedPlace(getAdapterPosition()));
         }
     }
 

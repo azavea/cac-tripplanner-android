@@ -26,7 +26,7 @@ public class Event extends Attraction {
     private final Integer destination;
 
     // fetch name of related destination from database into this property
-    private String destinationName;
+    private final String destinationName;
 
     @ColumnInfo(name = "start_date", index = true)
     @SerializedName("start_date")

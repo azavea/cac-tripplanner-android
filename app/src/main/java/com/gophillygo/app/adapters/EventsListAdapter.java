@@ -64,9 +64,7 @@ public class EventsListAdapter extends RecyclerView.Adapter {
         private ViewHolder(View parentView, final EventListItemClickListener listener) {
             super(parentView);
 
-            parentView.setOnClickListener(v -> {
-                listener.clickedEvent(getAdapterPosition());
-            });
+            parentView.setOnClickListener(v -> listener.clickedEvent(getAdapterPosition()));
         }
     }
 
