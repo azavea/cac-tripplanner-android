@@ -5,6 +5,7 @@ import android.arch.persistence.room.Room;
 
 import com.gophillygo.app.data.DestinationDao;
 import com.gophillygo.app.data.DestinationWebservice;
+import com.gophillygo.app.data.EventDao;
 import com.gophillygo.app.data.GpgDatabase;
 import com.gophillygo.app.data.networkresource.LiveDataCallAdapterFactory;
 
@@ -61,5 +62,11 @@ class AppModule {
     @Provides
     DestinationDao provideDestinationDao(GpgDatabase db) {
         return db.destinationDao();
+    }
+
+    @Singleton
+    @Provides
+    EventDao provideEventDao(GpgDatabase db) {
+        return db.eventDao();
     }
 }

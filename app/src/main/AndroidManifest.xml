@@ -25,6 +25,14 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <!-- Accepts URIs that begin with "https://gophillygo.org” -->
+                <data android:scheme="https"
+                    android:host="gophillygo.org" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".PlacesListActivity"
@@ -34,11 +42,19 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.gophillygo.app.HomeActivity" />
         </activity>
-        <activity android:name=".PlaceDetailActivity"
+        <activity
+            android:name=".PlaceDetailActivity"
             android:parentActivityName=".PlacesListActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.gophillygo.app.PlacesListActivity" />
+        </activity>
+        <activity android:name=".EventsListActivity"
+            android:label="@string/events_list_title"
+            android:parentActivityName=".HomeActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.gophillygo.app.HomeActivity" />
         </activity>
     </application>
 

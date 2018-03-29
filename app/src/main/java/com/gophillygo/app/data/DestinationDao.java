@@ -2,11 +2,8 @@ package com.gophillygo.app.data;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
-import android.arch.persistence.room.Insert;
-import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Transaction;
-import android.arch.persistence.room.Update;
 
 import com.gophillygo.app.data.models.Destination;
 
@@ -17,24 +14,19 @@ import java.util.List;
  */
 
 @Dao
-public abstract class DestinationDao {
+public abstract class DestinationDao implements AttractionDao<Destination> {
     @Query("SELECT * FROM destination ORDER BY distance ASC")
-    abstract LiveData<List<Destination>> getAll();
+    public abstract LiveData<List<Destination>> getAll();
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    abstract void save(Destination destination);
 
     @Query("SELECT * FROM destination WHERE id = :destinationId")
     abstract LiveData<Destination> getDestination(long destinationId);
 
     @Query("DELETE FROM destination")
-    abstract void clear();
-
-    @Update()
-    abstract void update(Destination destination);
+    public abstract void clear();
 
     @Transaction
-    void bulkUpdate(List<Destination> destinations) {
+    public void bulkUpdate(List<Destination> destinations) {
         for (Destination destination: destinations) {
             update(destination);
         }

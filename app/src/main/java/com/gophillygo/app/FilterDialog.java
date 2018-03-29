@@ -41,7 +41,9 @@ public class FilterDialog extends BottomSheetDialogFragment {
 
         Log.d(LOG_LABEL, "Selected " + String.valueOf(selectedFilterCount) + " filters.");
         FilterChangeListener listener = (FilterChangeListener) getActivity();
-        listener.filtersChanged(selectedFilterCount);
+        if (listener != null) {
+            listener.filtersChanged(selectedFilterCount);
+        }
 
         super.onDismiss(dialog);
     }
@@ -77,9 +79,7 @@ public class FilterDialog extends BottomSheetDialogFragment {
         doneButton = dialog.findViewById(R.id.filter_modal_done_button);
         resetButton = dialog.findViewById(R.id.filter_modal_reset_button);
 
-        doneButton.setOnClickListener(v -> {
-            dismiss();
-        });
+        doneButton.setOnClickListener(v -> dismiss());
 
         resetButton.setOnClickListener(v -> {
             for (GpgToggleButton button: filterButtons) {
