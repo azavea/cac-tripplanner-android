@@ -195,11 +195,6 @@ public class PlaceDetailActivity extends AppCompatActivity {
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(website));
             startActivity(intent);
         });
-        if (website.isEmpty()) {
-            goToWebsiteButton.setVisibility(View.GONE);
-        } else {
-            goToWebsiteButton.setVisibility(View.VISIBLE);
-        }
     }
 
     private final ViewListener viewListener = new ViewListener() {

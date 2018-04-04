@@ -163,6 +163,7 @@
                     android:text="@string/place_detail_website_button"
                     android:layout_weight="1"
                     android:drawableStart="@drawable/ic_public_black_24dp"
+                    android:visibility="@{destination.hasWebsite ? View.VISIBLE : View.GONE}"
                     style="@style/BorderlessDetailButton"
                     android:layout_gravity="end" />
             </LinearLayout>

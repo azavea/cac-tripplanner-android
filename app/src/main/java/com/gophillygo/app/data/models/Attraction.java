@@ -118,6 +118,10 @@ public class Attraction {
         return websiteUrl;
     }
 
+    public boolean hasWebsite() {
+        return !websiteUrl.isEmpty();
+    }
+
     public String getWideImage() {
         return wideImage;
     }
