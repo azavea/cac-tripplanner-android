@@ -3,6 +3,8 @@ package com.gophillygo.app.data.models;
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
+import android.text.Html;
+import android.text.Spanned;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -104,6 +106,10 @@ public class Attraction {
         return description;
     }
 
+    public Spanned getHtmlDescription() {
+        return Html.fromHtml(description);
+    }
+
     public int getPriority() {
         return priority;
     }
@@ -126,5 +132,23 @@ public class Attraction {
 
     public ArrayList<String> getActivities() {
         return activities;
+    }
+
+    public boolean hasActivities() {
+        return activities.size() > 0;
+    }
+
+    // get a dot-separated string listing all the activities available here
+    public String getActivitiesString() {
+        StringBuilder stringBuilder = new StringBuilder("");
+        // separate activities with dots
+        String dot = Html.fromHtml("&nbsp;&#8226;&nbsp;").toString();
+        for (String activity: this.getActivities()) {
+            if (stringBuilder.length() > 0) {
+                stringBuilder.append(dot);
+            }
+            stringBuilder.append(activity);
+        }
+        return stringBuilder.toString();
     }
 }

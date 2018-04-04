@@ -3,6 +3,7 @@ package com.gophillygo.app;
 import android.annotation.SuppressLint;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,7 +12,6 @@ import android.support.v7.view.menu.MenuPopupHelper;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
-import android.text.Html;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
@@ -25,6 +25,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.gophillygo.app.data.DestinationViewModel;
 import com.gophillygo.app.data.models.Destination;
+import com.gophillygo.app.databinding.ActivityPlaceDetailBinding;
 import com.gophillygo.app.di.GpgViewModelFactory;
 import com.synnapps.carouselview.CarouselView;
 import com.synnapps.carouselview.ViewListener;
@@ -43,6 +44,7 @@ public class PlaceDetailActivity extends AppCompatActivity {
     private Destination destination;
 
     private LayoutInflater inflater;
+    private ActivityPlaceDetailBinding binding;
     private CarouselView carouselView;
     private Toolbar toolbar;
     TextView descriptionView;
@@ -57,7 +59,7 @@ public class PlaceDetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_place_detail);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_place_detail);
 
         inflater = getLayoutInflater();
         toolbar = findViewById(R.id.place_detail_toolbar);
@@ -116,32 +118,8 @@ public class PlaceDetailActivity extends AppCompatActivity {
         carouselView.setViewListener(viewListener);
         carouselView.setPageCount(1);
 
-
-        // set activities list text
-        TextView flagTextView = findViewById(R.id.place_detail_activities_list);
-        StringBuilder stringBuilder = new StringBuilder("");
-        // separate activities with dots
-        String dot = Html.fromHtml("&nbsp;&#8226;&nbsp;").toString();
-        for (String activity: destination.getActivities()) {
-            if (stringBuilder.length() > 0) {
-                stringBuilder.append(dot);
-            }
-            stringBuilder.append(activity);
-        }
-        flagTextView.setText(stringBuilder.toString());
-        if (stringBuilder.length() == 0) {
-            flagTextView.setVisibility(View.GONE);
-        } else {
-            flagTextView.setVisibility(View.VISIBLE);
-        }
-
-        // toggle label for cycling activity
-        TextView cyclingView = findViewById(R.id.place_detail_cycling_label);
-        if (destination.isCycling()) {
-            cyclingView.setVisibility(View.VISIBLE);
-        } else {
-            cyclingView.setVisibility(View.INVISIBLE);
-        }
+        // set up data binding object
+        binding.setDestination(destination);
 
         // set count of upcoming events
         // TODO: #17 use actual count once events stored
@@ -156,7 +134,6 @@ public class PlaceDetailActivity extends AppCompatActivity {
 
         // expand/collapse description card when clicked
         descriptionView = findViewById(R.id.place_detail_description_text);
-        descriptionView.setText(Html.fromHtml(destination.getDescription()));
         TextView descriptionToggle = findViewById(R.id.place_detail_description_toggle);
         descriptionToggle.setOnClickListener(toggleClickListener);
 
@@ -181,14 +158,6 @@ public class PlaceDetailActivity extends AppCompatActivity {
             popupHelper.setGravity(Gravity.END|Gravity.RIGHT);
             popupHelper.show();
         });
-
-        // toggle watershed alliance logo
-        ImageView watershedAllianceView = findViewById(R.id.place_detail_watershed_alliance_icon);
-        if (destination.isWatershedAlliance()) {
-            watershedAllianceView.setVisibility(View.VISIBLE);
-        } else {
-            watershedAllianceView.setVisibility(View.GONE);
-        }
 
         // handle button bar button clicks
         Button goToMapButton = findViewById(R.id.place_detail_map_button);
