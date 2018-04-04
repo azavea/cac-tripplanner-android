@@ -29,8 +29,9 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <!-- Accepts URIs that begin with "https://gophillygo.org” -->
+                <!-- Accepts only the top-level URI "https://gophillygo.org” -->
                 <data android:scheme="https"
+                    android:path="/"
                     android:host="gophillygo.org" />
             </intent-filter>
         </activity>
