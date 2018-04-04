@@ -7,6 +7,7 @@
     <data>
         <!-- set up data binding to destination -->
         <variable name="destination" type="com.gophillygo.app.data.models.Destination"/>
+        <variable name="activity" type="com.gophillygo.app.PlaceDetailActivity" />
         <!-- imports to allow referencing within data binding expressions -->
         <import type="android.view.View"/>
     </data>
@@ -140,7 +141,7 @@
                 android:layout_marginBottom="20dp"
                 android:paddingBottom="20dp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
+                android:layout_height="wrap_content">
 
                 <android.support.v7.widget.AppCompatButton
                     android:id="@+id/place_detail_map_button"
@@ -148,6 +149,7 @@
                     android:layout_weight="1"
                     android:drawableStart="@drawable/ic_map_black_24dp"
                     style="@style/BorderlessDetailButton"
+                    android:onClick="@{activity::goToMap}"
                     android:text="@string/place_detail_map_button" />
 
                 <android.support.v7.widget.AppCompatButton
@@ -155,6 +157,7 @@
                     style="@style/BorderlessDetailButton"
                     android:layout_gravity="end"
                     android:layout_weight="1"
+                    android:onClick="@{activity::goToDirections}"
                     android:drawableStart="@drawable/ic_directions_black_24dp"
                     android:text="@string/place_detail_directions_button" />
 
@@ -163,6 +166,7 @@
                     android:text="@string/place_detail_website_button"
                     android:layout_weight="1"
                     android:drawableStart="@drawable/ic_public_black_24dp"
+                    android:onClick="@{activity::goToWebsite}"
                     android:visibility="@{destination.hasWebsite ? View.VISIBLE : View.GONE}"
                     style="@style/BorderlessDetailButton"
                     android:layout_gravity="end" />

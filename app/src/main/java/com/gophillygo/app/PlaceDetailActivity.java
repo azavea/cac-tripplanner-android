@@ -60,6 +60,7 @@ public class PlaceDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_place_detail);
+        binding.setActivity(this);
 
         inflater = getLayoutInflater();
         toolbar = findViewById(R.id.place_detail_toolbar);
@@ -86,10 +87,13 @@ public class PlaceDetailActivity extends AppCompatActivity {
                 .get(DestinationViewModel.class);
         viewModel.getDestination(placeId).observe(this, destination -> {
             this.destination = destination;
+            // set up data binding object
+            binding.setDestination(destination);
             displayDestination();
         });
 
         // click handler for toggling expanding/collapsing description card
+        descriptionView = findViewById(R.id.place_detail_description_text);
         toggleClickListener = v -> {
             TextView view = (TextView) v;
             int current = descriptionView.getMaxLines();
@@ -112,14 +116,44 @@ public class PlaceDetailActivity extends AppCompatActivity {
         };
     }
 
+    // open map when user clicks map button
+    public void goToMap(View view) {
+        // TODO: #10 open within app map view, once implemented
+        // for now, open Google Maps externally with a marker at the given location
+        String locationString = destination.getLocation().toString();
+        Uri gmapsUri = Uri.parse("geo:" + locationString + "?q=" + locationString + "(" +
+                destination.getName() + ")");
+        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmapsUri);
+        mapIntent.setPackage("com.google.android.apps.maps");
+        if (mapIntent.resolveActivity(getPackageManager()) != null) {
+            startActivity(mapIntent);
+        }
+    }
+
+    // open the GoPhillyGo website, passing the destination, when "get directions" clicked
+    public void goToDirections(View view) {
+        // pass parameters destination and destinationText to https://gophillygo.org/
+        Uri directionsUri = new Uri.Builder().scheme("https").authority("gophillygo.org")
+                // TODO: #9 send current user location as origin
+                .appendQueryParameter("origin", "")
+                .appendQueryParameter("originText", "")
+                .appendQueryParameter("destination", destination.getLocation().toString())
+                .appendQueryParameter("destinationText", destination.getAddress()).build();
+        Intent intent = new Intent(Intent.ACTION_VIEW, directionsUri);
+        startActivity(intent);
+    }
+
+    // open website for destination in browser
+    public void goToWebsite(View view) {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(destination.getWebsiteUrl()));
+        startActivity(intent);
+    }
+
     @SuppressLint({"RestrictedApi", "RtlHardcoded"})
     private void displayDestination() {
         // set up carousel
         carouselView.setViewListener(viewListener);
         carouselView.setPageCount(1);
-
-        // set up data binding object
-        binding.setDestination(destination);
 
         // set count of upcoming events
         // TODO: #17 use actual count once events stored
@@ -128,12 +162,12 @@ public class PlaceDetailActivity extends AppCompatActivity {
                 .getQuantityString(R.plurals.place_upcoming_activities_count, 2, 2);
         upcomingEventsView.setText(upcomingEventsText);
         upcomingEventsView.setVisibility(View.VISIBLE);
+
         // TODO: #18 go to filtered event list with events for destination on click
         upcomingEventsView.setOnClickListener(v -> Log.d(LOG_LABEL,
                 "Clicked upcoming events for destination " +  destination.getName()));
 
-        // expand/collapse description card when clicked
-        descriptionView = findViewById(R.id.place_detail_description_text);
+
         TextView descriptionToggle = findViewById(R.id.place_detail_description_toggle);
         descriptionToggle.setOnClickListener(toggleClickListener);
 
@@ -157,43 +191,6 @@ public class PlaceDetailActivity extends AppCompatActivity {
             popupHelper.setForceShowIcon(true);
             popupHelper.setGravity(Gravity.END|Gravity.RIGHT);
             popupHelper.show();
-        });
-
-        // handle button bar button clicks
-        Button goToMapButton = findViewById(R.id.place_detail_map_button);
-        Button getDirectionsButton = findViewById(R.id.place_detail_directions_button);
-        Button goToWebsiteButton = findViewById(R.id.place_detail_website_button);
-
-        // TODO: #10 open within app map view, once implemented
-        // for now, open Google Maps externally with a marker at the given location
-        goToMapButton.setOnClickListener(v -> {
-            String locationString = destination.getLocation().toString();
-            Uri gmapsUri = Uri.parse("geo:" + locationString + "?q=" + locationString + "(" +
-                destination.getName() + ")");
-            Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmapsUri);
-            mapIntent.setPackage("com.google.android.apps.maps");
-            if (mapIntent.resolveActivity(getPackageManager()) != null) {
-                startActivity(mapIntent);
-            }
-        });
-
-        // open the GoPhillyGo website, passing the destination
-        getDirectionsButton.setOnClickListener(v -> {
-            // pass parameters destination and destinationText to https://gophillygo.org/
-            Uri directionsUri = new Uri.Builder().scheme("https").authority("gophillygo.org")
-                    // TODO: #9 send current user location as origin
-                    .appendQueryParameter("origin", "")
-                    .appendQueryParameter("originText", "")
-                    .appendQueryParameter("destination", destination.getLocation().toString())
-                    .appendQueryParameter("destinationText", destination.getAddress()).build();
-            Intent intent = new Intent(Intent.ACTION_VIEW, directionsUri);
-            startActivity(intent);
-        });
-
-        String website = destination.getWebsiteUrl();
-        goToWebsiteButton.setOnClickListener(v -> {
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(website));
-            startActivity(intent);
         });
     }
 
