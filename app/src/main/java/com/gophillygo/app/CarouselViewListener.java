@@ -1,14 +1,12 @@
 package com.gophillygo.app;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.databinding.DataBindingUtil;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.gophillygo.app.data.models.Destination;
+import com.gophillygo.app.databinding.CustomCarouselItemBinding;
 import com.synnapps.carouselview.ViewListener;
 
 /**
@@ -36,27 +34,15 @@ public abstract class CarouselViewListener implements ViewListener {
 
     @Override
     public View setViewForPosition(int position) {
-        // root here must be null (not the carouselView) to avoid ViewPager stack overflow
-        @SuppressLint("InflateParams") View itemView = inflater.inflate(R.layout.custom_carousel_item, null);
-        ImageView carouselImageView = itemView.findViewById(R.id.carousel_item_image);
-        TextView carouselPlaceName = itemView.findViewById(R.id.carousel_item_place_name);
-        TextView carouselDistance = itemView.findViewById(R.id.carousel_item_distance_label);
-
+        // get destination and set up data binding
         Destination destination = getDestinationAt(position);
-
-        if (!showNearbyLabel) {
-            TextView carouselNearby = itemView.findViewById(R.id.carousel_item_nearby_label);
-            carouselNearby.setVisibility(View.GONE);
-        }
-
-        Glide.with(this.activity)
-                .load(destination.getWideImage())
-                .into(carouselImageView);
-
-        carouselPlaceName.setText(destination.getAddress());
-        carouselImageView.setContentDescription(destination.getAddress());
-        carouselDistance.setText(destination.getFormattedDistance());
-
-        return itemView;
+        // root here must be null (not the carouselView) to avoid ViewPager stack overflow
+        CustomCarouselItemBinding binding = DataBindingUtil.inflate(inflater,
+                R.layout.custom_carousel_item,
+                null,
+                false);
+        binding.setDestination(destination);
+        binding.setShowNearbyLabel(showNearbyLabel);
+        return binding.getRoot();
     }
 }
