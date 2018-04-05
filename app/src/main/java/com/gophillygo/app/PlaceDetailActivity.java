@@ -18,7 +18,6 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -86,6 +85,7 @@ public class PlaceDetailActivity extends AppCompatActivity {
         viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(DestinationViewModel.class);
         viewModel.getDestination(placeId).observe(this, destination -> {
+            // TODO: handle if destination not found (go to list of destinations?)
             this.destination = destination;
             // set up data binding object
             binding.setDestination(destination);
@@ -156,12 +156,11 @@ public class PlaceDetailActivity extends AppCompatActivity {
         carouselView.setPageCount(1);
 
         // set count of upcoming events
-        // TODO: #17 use actual count once events stored
+        int eventCount = destination.getEventCount();
         TextView upcomingEventsView = findViewById(R.id.place_detail_upcoming_events);
         String upcomingEventsText = getResources()
-                .getQuantityString(R.plurals.place_upcoming_activities_count, 2, 2);
+                .getQuantityString(R.plurals.place_upcoming_activities_count, eventCount, eventCount);
         upcomingEventsView.setText(upcomingEventsText);
-        upcomingEventsView.setVisibility(View.VISIBLE);
 
         // TODO: #18 go to filtered event list with events for destination on click
         upcomingEventsView.setOnClickListener(v -> Log.d(LOG_LABEL,

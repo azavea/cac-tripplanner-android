@@ -43,12 +43,15 @@ public class Destination extends Attraction {
     private float distance;
     private String formattedDistance;
 
+    // track the count of related events
+    private int eventCount;
+
     public Destination(int id, int placeID, String name, boolean accessible, String image,
                        String city, boolean cycling, String zipCode, String description,
                        int priority, String state, String address, DestinationLocation location,
                        DestinationAttributes attributes, boolean watershedAlliance, String websiteUrl,
                        String wideImage, boolean isEvent, ArrayList<String> activities,
-                       ArrayList<String> categories) {
+                       ArrayList<String> categories, int eventCount) {
 
         // initialize Attraction
         super(id, placeID, name, accessible, image, cycling, description, priority, websiteUrl,
@@ -63,6 +66,7 @@ public class Destination extends Attraction {
         this.location = location;
         this.attributes = attributes;
         this.categories = categories;
+        this.eventCount = eventCount;
     }
 
     public void setDistance(float distance) {
@@ -113,5 +117,13 @@ public class Destination extends Attraction {
 
     public ArrayList<String> getCategories() {
         return categories;
+    }
+
+    public int getEventCount() {
+        return eventCount;
+    }
+
+    public boolean hasEvents() {
+        return eventCount > 0;
     }
 }

@@ -19,7 +19,10 @@ public abstract class DestinationDao implements AttractionDao<Destination> {
     public abstract LiveData<List<Destination>> getAll();
 
 
-    @Query("SELECT * FROM destination WHERE id = :destinationId")
+    @Query("SELECT destination.*, COUNT(event.id) AS eventCount " +
+            "FROM destination LEFT JOIN event ON destination.id = event.destination " +
+            "WHERE destination.id = :destinationId " +
+            "GROUP BY destination.id")
     abstract LiveData<Destination> getDestination(long destinationId);
 
     @Query("DELETE FROM destination")
