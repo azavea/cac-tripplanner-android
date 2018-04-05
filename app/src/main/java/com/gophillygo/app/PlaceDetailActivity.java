@@ -18,16 +18,13 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.gophillygo.app.data.DestinationViewModel;
 import com.gophillygo.app.data.models.Destination;
 import com.gophillygo.app.databinding.ActivityPlaceDetailBinding;
 import com.gophillygo.app.di.GpgViewModelFactory;
 import com.synnapps.carouselview.CarouselView;
-import com.synnapps.carouselview.ViewListener;
 
 import javax.inject.Inject;
 
@@ -79,6 +76,7 @@ public class PlaceDetailActivity extends AppCompatActivity {
         }
 
         carouselView = findViewById(R.id.place_detail_carousel);
+        carouselView.setIndicatorGravity(Gravity.CENTER_HORIZONTAL|Gravity.BOTTOM);
         carouselView.setImageClickListener(position ->
                 Log.d(LOG_LABEL, "Clicked item: "+ position));
 
@@ -86,6 +84,9 @@ public class PlaceDetailActivity extends AppCompatActivity {
                 .get(DestinationViewModel.class);
         viewModel.getDestination(placeId).observe(this, destination -> {
             // TODO: handle if destination not found (go to list of destinations?)
+            if (destination == null) {
+                Log.e(LOG_LABEL, "No matching destination found for ID " + placeId);
+            }
             this.destination = destination;
             // set up data binding object
             binding.setDestination(destination);
@@ -152,7 +153,12 @@ public class PlaceDetailActivity extends AppCompatActivity {
     @SuppressLint({"RestrictedApi", "RtlHardcoded"})
     private void displayDestination() {
         // set up carousel
-        carouselView.setViewListener(viewListener);
+        carouselView.setViewListener(new CarouselViewListener(this, false) {
+            @Override
+            public Destination getDestinationAt(int position) {
+                return destination;
+            }
+        });
         carouselView.setPageCount(1);
 
         // set count of upcoming events
@@ -192,29 +198,4 @@ public class PlaceDetailActivity extends AppCompatActivity {
             popupHelper.show();
         });
     }
-
-    private final ViewListener viewListener = new ViewListener() {
-        @Override
-        public View setViewForPosition(int position) {
-            // root here must be null (not the carouselView) to avoid ViewPager stack overflow
-            @SuppressLint("InflateParams") View itemView = inflater.inflate(R.layout.custom_carousel_item, null);
-            ImageView carouselImageView = itemView.findViewById(R.id.carousel_item_image);
-            TextView carouselPlaceName = itemView.findViewById(R.id.carousel_item_place_name);
-            TextView carouselDistance = itemView.findViewById(R.id.carousel_item_distance_label);
-
-            TextView carouselNearby = itemView.findViewById(R.id.carousel_item_nearby_label);
-            carouselNearby.setVisibility(View.GONE);
-
-            Glide.with(PlaceDetailActivity.this)
-                    .load(destination.getWideImage())
-                    .into(carouselImageView);
-
-            carouselPlaceName.setText(destination.getAddress());
-            carouselImageView.setContentDescription(destination.getAddress());
-            carouselView.setIndicatorGravity(Gravity.CENTER_HORIZONTAL|Gravity.BOTTOM);
-            carouselDistance.setText(destination.getFormattedDistance());
-
-            return itemView;
-        }
-    };
 }

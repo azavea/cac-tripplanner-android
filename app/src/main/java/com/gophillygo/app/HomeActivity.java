@@ -1,6 +1,5 @@
 package com.gophillygo.app;
 
-import android.annotation.SuppressLint;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.location.Location;
@@ -13,12 +12,8 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.GridView;
-import android.widget.ImageView;
-import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.gophillygo.app.adapters.PlaceCategoryGridAdapter;
 import com.gophillygo.app.data.DestinationViewModel;
 import com.gophillygo.app.data.models.Destination;
@@ -26,7 +21,6 @@ import com.gophillygo.app.data.models.DestinationLocation;
 import com.gophillygo.app.data.networkresource.Status;
 import com.gophillygo.app.di.GpgViewModelFactory;
 import com.synnapps.carouselview.CarouselView;
-import com.synnapps.carouselview.ViewListener;
 
 import java.util.List;
 
@@ -74,6 +68,7 @@ public class HomeActivity extends AppCompatActivity {
         gridView.setOnItemClickListener((parent, v, position, id) -> clickedGridItem(position));
 
         carouselView = findViewById(R.id.home_carousel);
+        carouselView.setIndicatorGravity(Gravity.CENTER_HORIZONTAL|Gravity.BOTTOM);
         carouselView.setImageClickListener(position ->
                 Log.d(LOG_LABEL, "Clicked item: "+ position));
 
@@ -105,7 +100,12 @@ public class HomeActivity extends AppCompatActivity {
             nearestDestinations = findNearestDestinations(destinationResource.data);
 
             // set up carousel
-            carouselView.setViewListener(viewListener);
+            carouselView.setViewListener(new CarouselViewListener(this, true) {
+                @Override
+                public Destination getDestinationAt(int position) {
+                    return nearestDestinations.get(position);
+                }
+            });
             carouselView.setPageCount(nearestDestinations.size());
         });
     }
@@ -179,30 +179,6 @@ public class HomeActivity extends AppCompatActivity {
         super.onPostResume();
         carouselView.playCarousel();
     }
-
-    private final ViewListener viewListener = new ViewListener() {
-        @Override
-        public View setViewForPosition(int position) {
-            // root here must be null (not the carouselView) to avoid ViewPager stack overflow
-            @SuppressLint("InflateParams") View itemView = inflater.inflate(R.layout.custom_carousel_item, null);
-            ImageView carouselImageView = itemView.findViewById(R.id.carousel_item_image);
-            TextView carouselPlaceName = itemView.findViewById(R.id.carousel_item_place_name);
-            TextView carouselDistance = itemView.findViewById(R.id.carousel_item_distance_label);
-
-            Destination destination = nearestDestinations.get(position);
-
-            Glide.with(HomeActivity.this)
-                    .load(destination.getWideImage())
-                    .into(carouselImageView);
-
-            carouselPlaceName.setText(destination.getAddress());
-            carouselImageView.setContentDescription(destination.getAddress());
-            carouselView.setIndicatorGravity(Gravity.CENTER_HORIZONTAL|Gravity.BOTTOM);
-            carouselDistance.setText(destination.getFormattedDistance());
-
-            return itemView;
-        }
-    };
 
     @Override
     public void onPointerCaptureChanged(boolean hasCapture) {
