@@ -18,7 +18,7 @@ import javax.inject.Inject;
 
 
 public class PlacesListActivity extends FilterableListActivity implements
-        PlacesListAdapter.PlaceListItemClickListener {
+        PlacesListAdapter.AttractionListItemClickListener {
 
     private static final String LOG_LABEL = "PlacesList";
 
@@ -40,7 +40,7 @@ public class PlacesListActivity extends FilterableListActivity implements
      *
      * @param position Offset of the position of the list item clicked
      */
-    public void clickedPlace(int position) {
+    public void clickedAttraction(int position) {
         // Get database ID for place clicked, based on positional offset, and pass it along
         long destinationId = placesListView.getAdapter().getItemId(position);
         Intent intent = new Intent(this, PlaceDetailActivity.class);
@@ -62,7 +62,7 @@ public class PlacesListActivity extends FilterableListActivity implements
                     destinationResource.data != null && !destinationResource.data.isEmpty()) {
 
                 placesListView = findViewById(R.id.places_list_recycler_view);
-                PlacesListAdapter adapter = new PlacesListAdapter(this, destinationResource.data, this);
+                PlacesListAdapter adapter = new PlacesListAdapter<>(this, destinationResource.data, this);
                 placesListView.setAdapter(adapter);
                 placesListView.setLayoutManager(layoutManager);
             }

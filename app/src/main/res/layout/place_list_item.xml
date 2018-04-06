@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
-        <variable name="destination" type="com.gophillygo.app.data.models.Destination"/>
+        <variable name="attraction" type="com.gophillygo.app.data.models.Destination"/>
         <variable name="adapter" type="com.gophillygo.app.adapters.PlacesListAdapter" />
         <import type="android.view.View"/>
     </data>
@@ -19,8 +19,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:minHeight="170dp"
-            app:imageUrl="@{destination.getWideImage}"
-            android:contentDescription="@{destination.getName}"
+            app:imageUrl="@{attraction.getWideImage}"
+            android:contentDescription="@{attraction.getName}"
             android:scaleType="centerCrop" />
 
         <ImageView
@@ -32,7 +32,7 @@
             app:layout_constraintEnd_toStartOf="@id/place_list_watershed_alliance_marker"
             android:src="@drawable/ic_directions_bike_white_24px"
             android:contentDescription="@string/bicycle_activity_label"
-            android:visibility="@{destination.isCycling ? View.VISIBLE : View.GONE}"
+            android:visibility="@{attraction.isCycling ? View.VISIBLE : View.GONE}"
             android:layout_width="32dp"
             android:layout_height="32dp" />
 
@@ -44,7 +44,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             android:src="@drawable/ic_watershed_alliance"
             android:contentDescription="@string/watershed_alliance_label"
-            android:visibility="@{destination.isWatershedAlliance ? View.VISIBLE : View.GONE}"
+            android:visibility="@{attraction.isWatershedAlliance ? View.VISIBLE : View.GONE}"
             android:layout_width="32dp"
             android:layout_height="32dp" />
 
@@ -54,13 +54,13 @@
             style="@style/Base.TextAppearance.AppCompat.Title"
             android:padding="10dp"
             android:gravity="start"
-            android:text="@{destination.getName}"
+            android:text="@{attraction.getName}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
         <TextView
             android:id="@+id/place_list_item_distance_label"
-            android:text="@{destination.getFormattedDistance}"
+            android:text="@{attraction.getFormattedDistance}"
             style="@style/TextAppearance.AppCompat.Medium"
             android:drawableStart="@drawable/ic_place_black_24dp"
             android:layout_width="wrap_content"
@@ -75,7 +75,7 @@
         <android.support.v7.widget.AppCompatImageButton
             app:backgroundTint="@color/color_white"
             android:id="@+id/place_list_item_options_button"
-            android:onClick="@{(view) -> adapter.optionsButtonClick(view, destination)}"
+            android:onClick="@{(view) -> adapter.optionsButtonClick(view, attraction)}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:src="@drawable/ic_add_black_24dp"
