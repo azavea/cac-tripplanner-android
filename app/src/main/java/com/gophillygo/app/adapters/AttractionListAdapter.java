@@ -32,6 +32,7 @@ public class AttractionListAdapter<T extends Attraction> extends RecyclerView.Ad
     private final Context context;
     private final LayoutInflater inflater;
     private final AttractionListItemClickListener clickListener;
+    private final int itemViewId;
 
     private List<T> attractionList;
 
@@ -50,12 +51,21 @@ public class AttractionListAdapter<T extends Attraction> extends RecyclerView.Ad
         }
     }
 
-    public AttractionListAdapter(Context context, List<T> attractions,
+    /**
+     * Construct a generalized list adapter for places or events.
+     *
+     * @param context List activity displaying the attractions
+     * @param attractions The attractions to list
+     * @param itemViewId The resource identifier for the list item layout file
+     * @param listener Listener for for attraction list item click callbacks
+     */
+    public AttractionListAdapter(Context context, List<T> attractions, int itemViewId,
                              AttractionListItemClickListener listener) {
         this.context = context;
         this.inflater = LayoutInflater.from(context);
         this.attractionList = attractions;
         this.clickListener = listener;
+        this.itemViewId = itemViewId;
     }
 
     @SuppressLint("RestrictedApi")
@@ -79,8 +89,7 @@ public class AttractionListAdapter<T extends Attraction> extends RecyclerView.Ad
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        ViewDataBinding binding = DataBindingUtil.inflate(inflater,
-                R.layout.place_list_item, parent, false);
+        ViewDataBinding binding = DataBindingUtil.inflate(inflater, itemViewId, parent, false);
         binding.setVariable(BR.adapter, this);
         return new ViewHolder(binding, this.clickListener);
     }
