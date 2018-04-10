@@ -62,7 +62,7 @@ public class PlacesListActivity extends FilterableListActivity implements
                     destinationResource.data != null && !destinationResource.data.isEmpty()) {
 
                 placesListView = findViewById(R.id.places_list_recycler_view);
-                PlacesListAdapter adapter = new PlacesListAdapter<>(this, destinationResource.data, this);
+                PlacesListAdapter adapter = new PlacesListAdapter<>(this, destinationResource.data, viewModel, this);
                 placesListView.setAdapter(adapter);
                 placesListView.setLayoutManager(layoutManager);
             }

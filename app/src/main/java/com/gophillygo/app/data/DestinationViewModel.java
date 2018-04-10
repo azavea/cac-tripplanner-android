@@ -11,13 +11,12 @@ import java.util.List;
 import javax.inject.Inject;
 
 
-public class DestinationViewModel extends ViewModel {
+public class DestinationViewModel extends AttractionViewModel {
     private final LiveData<Resource<List<Destination>>> destinations;
-    private final DestinationRepository destinationRepository;
 
     @Inject
     public DestinationViewModel(DestinationRepository destinationRepository) {
-        this.destinationRepository = destinationRepository;
+        super(destinationRepository);
         destinations = destinationRepository.loadDestinations();
     }
 

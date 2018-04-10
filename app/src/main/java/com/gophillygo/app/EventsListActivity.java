@@ -63,7 +63,7 @@ public class EventsListActivity extends FilterableListActivity
                     destinationResource.data != null && !destinationResource.data.isEmpty()) {
 
                 eventsListView = findViewById(R.id.events_list_recycler_view);
-                EventsListAdapter adapter = new EventsListAdapter(this, destinationResource.data, this);
+                EventsListAdapter adapter = new EventsListAdapter(this, destinationResource.data, viewModel, this);
                 eventsListView.setAdapter(adapter);
                 eventsListView.setLayoutManager(layoutManager);
             }

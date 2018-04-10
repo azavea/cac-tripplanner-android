@@ -5,19 +5,21 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
 import android.arch.persistence.room.TypeConverter;
 import android.arch.persistence.room.TypeConverters;
+import android.support.annotation.DrawableRes;
 import android.util.SparseArray;
 
 import com.google.gson.annotations.SerializedName;
+import com.gophillygo.app.R;
 
 @Entity
 public class AttractionFlag {
 
     public enum Option {
-        NotSelected (0),
-        Liked (1),
-        NotInterested (2),
-        Been (3),
-        WantToGo (4);
+        NotSelected (0, R.drawable.ic_add_black_24dp),
+        Liked (1, R.drawable.ic_thumb_up_black_24dp),
+        NotInterested (2, R.drawable.ic_not_interested_black_24dp),
+        Been (3, R.drawable.ic_beenhere_black_24dp),
+        WantToGo (4, R.drawable.ic_flag_black_24dp);
 
         private static final SparseArray<Option> map = new SparseArray<>();
         static {
@@ -27,9 +29,11 @@ public class AttractionFlag {
         }
 
         public final int code;
+        public final @DrawableRes int drawable;
 
-        Option(int code) {
+        Option(int code, @DrawableRes int drawable) {
             this.code = code;
+            this.drawable = drawable;
         }
 
         public static Option valueOf(int code) {
@@ -37,8 +41,8 @@ public class AttractionFlag {
         }
     }
 
-    @PrimaryKey
-    private final int id;
+    @PrimaryKey(autoGenerate = true)
+    private final Integer id;
 
     @ColumnInfo(index = true)
     private final int attractionID;
@@ -50,14 +54,14 @@ public class AttractionFlag {
     @TypeConverters(OptionConverter.class)
     private final Option option;
 
-    public AttractionFlag(int id, int attractionID, boolean isEvent, Option option) {
+    public AttractionFlag(Integer id, int attractionID, boolean isEvent, Option option) {
         this.id = id;
         this.attractionID = attractionID;
         this.isEvent = isEvent;
         this.option = option;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -73,7 +77,7 @@ public class AttractionFlag {
         return option;
     }
 
-    private static class OptionConverter {
+    public static class OptionConverter {
         @TypeConverter
         public static Option toOption(int code) {
             return Option.valueOf(code);

@@ -2,11 +2,14 @@ package com.gophillygo.app.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.databinding.BindingAdapter;
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.v7.view.menu.MenuBuilder;
 import android.support.v7.view.menu.MenuPopupHelper;
+import android.support.v7.widget.AppCompatImageButton;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -16,7 +19,9 @@ import android.view.ViewGroup;
 
 import com.gophillygo.app.BR;
 import com.gophillygo.app.R;
+import com.gophillygo.app.data.AttractionViewModel;
 import com.gophillygo.app.data.models.Attraction;
+import com.gophillygo.app.data.models.AttractionFlag;
 
 import java.util.List;
 
@@ -31,6 +36,7 @@ public class AttractionListAdapter<T extends Attraction> extends RecyclerView.Ad
 
     private final Context context;
     private final LayoutInflater inflater;
+    private final AttractionViewModel viewModel;
     private final AttractionListItemClickListener clickListener;
     private final int itemViewId;
 
@@ -58,14 +64,17 @@ public class AttractionListAdapter<T extends Attraction> extends RecyclerView.Ad
      * @param attractions The attractions to list
      * @param itemViewId The resource identifier for the list item layout file
      * @param listener Listener for for attraction list item click callbacks
+     * @param viewModel viewModel for Attraction, used to persist flags
      */
     public AttractionListAdapter(Context context, List<T> attractions, int itemViewId,
-                             AttractionListItemClickListener listener) {
+                                 AttractionViewModel viewModel,
+                                 AttractionListItemClickListener listener) {
         this.context = context;
         this.inflater = LayoutInflater.from(context);
         this.attractionList = attractions;
         this.clickListener = listener;
         this.itemViewId = itemViewId;
+        this.viewModel = viewModel;
     }
 
     @SuppressLint("RestrictedApi")
@@ -74,7 +83,37 @@ public class AttractionListAdapter<T extends Attraction> extends RecyclerView.Ad
         PopupMenu menu = new PopupMenu(context, view);
         menu.getMenuInflater().inflate(R.menu.place_options_menu, menu.getMenu());
         menu.setOnMenuItemClickListener(item -> {
-            Log.d(LOG_LABEL, "Clicked " + item.toString());
+            AttractionFlag.Option option;
+            switch (item.getItemId()) {
+                case R.id.place_option_not_interested:
+                    option = AttractionFlag.Option.NotInterested;
+                    break;
+                case R.id.place_option_liked:
+                    option = AttractionFlag.Option.Liked;
+                    break;
+                case R.id.place_option_been:
+                    option = AttractionFlag.Option.Been;
+                    break;
+                case R.id.place_option_want_to_go:
+                    option = AttractionFlag.Option.WantToGo;
+                    break;
+                default:
+                    option = AttractionFlag.Option.NotSelected;
+            }
+            AttractionFlag flag = attraction.getFlag();
+            if (flag != null) {
+                if (flag.getOption() == option) {
+                    option = AttractionFlag.Option.NotSelected;
+                }
+                flag = new AttractionFlag(flag.getId(), attraction.getId(), attraction.isEvent(), option);
+            } else {
+                flag = new AttractionFlag(null, attraction.getId(), attraction.isEvent(), option);
+            }
+
+            viewModel.updateAttractionFlag(flag);
+            attraction.setFlag(flag);
+            setImageResource((AppCompatImageButton) view, attraction.getFlagImage());
+
             return true;
         });
 
@@ -116,5 +155,11 @@ public class AttractionListAdapter<T extends Attraction> extends RecyclerView.Ad
     @Override
     public int getItemCount() {
         return attractionList.size();
+    }
+
+
+    @BindingAdapter("imageSource")
+    public static void setImageResource(AppCompatImageButton imageButton, @DrawableRes int drawable) {
+        imageButton.setImageResource(drawable);
     }
 }

@@ -2,7 +2,11 @@ package com.gophillygo.app.data.models;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
+import android.graphics.drawable.Drawable;
+import android.support.annotation.ColorRes;
+import android.support.annotation.DrawableRes;
 import android.text.Html;
 import android.text.Spanned;
 
@@ -50,6 +54,10 @@ public class Attraction {
     // timestamp is not final, as it is set on database save, and not by serializer
     private long timestamp;
 
+    // Stored separately from Attraction models and set afterwards
+    @Ignore
+    private AttractionFlag flag;
+
     public Attraction(int id, int placeID, String name, boolean accessible, String image,
                       boolean cycling, String description, int priority, String websiteUrl,
                       String wideImage, boolean isEvent, ArrayList<String> activities) {
@@ -66,6 +74,16 @@ public class Attraction {
         this.isEvent = isEvent;
 
         this.activities = activities;
+    }
+
+    /**
+     * User options for attraction flags. Does not come from query results and is stored in a
+     * separate table.
+     *
+     * @param flag user flag
+     */
+    public void setFlag(AttractionFlag flag) {
+        this.flag = flag;
     }
 
     /**
@@ -128,6 +146,14 @@ public class Attraction {
 
     public boolean isEvent() {
         return isEvent;
+    }
+
+    public AttractionFlag getFlag() {
+        return flag;
+    }
+
+    public @DrawableRes int getFlagImage() {
+        return flag == null || flag.getOption() == null ? AttractionFlag.Option.NotSelected.drawable : flag.getOption().drawable;
     }
 
     public long getTimestamp() {

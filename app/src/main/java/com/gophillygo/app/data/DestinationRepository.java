@@ -1,18 +1,28 @@
 package com.gophillygo.app.data;
 
 import android.annotation.SuppressLint;
+import android.arch.lifecycle.LifecycleOwner;
 import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MediatorLiveData;
+import android.arch.lifecycle.MutableLiveData;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.Transformations;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
+import android.util.SparseArray;
 
+import com.gophillygo.app.data.models.AttractionFlag;
 import com.gophillygo.app.data.models.Destination;
 import com.gophillygo.app.data.models.Event;
 import com.gophillygo.app.data.networkresource.AttractionNetworkBoundResource;
 import com.gophillygo.app.data.networkresource.Resource;
 
+import java.util.HashMap;
 import java.util.List;
 
 import javax.inject.Inject;
+
+import static android.arch.lifecycle.Transformations.*;
 
 /**
  * Mediator between Destination persistent data store and web service.
@@ -26,14 +36,17 @@ class DestinationRepository {
     private static final String LOG_LABEL = "DestinationRepository";
 
     private final DestinationWebservice webservice;
+    private final AttractionFlagDao attractionFlagDao;
     private final DestinationDao destinationDao;
     private final EventDao eventDao;
 
     @Inject
     public DestinationRepository(DestinationWebservice webservice,
+                                 AttractionFlagDao attractionFlagDao,
                                  DestinationDao destinationDao,
                                  EventDao eventDao) {
         this.webservice = webservice;
+        this.attractionFlagDao = attractionFlagDao;
         this.destinationDao = destinationDao;
         this.eventDao = eventDao;
     }
@@ -70,6 +83,21 @@ class DestinationRepository {
     }
 
     @SuppressLint("StaticFieldLeak")
+    public void updateAttractionFlag(AttractionFlag flag) {
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                if (flag.getId() != null) {
+                    attractionFlagDao.update(flag);
+                } else {
+                    attractionFlagDao.save(flag);
+                }
+                return null;
+            }
+        }.execute();
+    }
+
+    @SuppressLint("StaticFieldLeak")
     public void updateMultipleDestinations(List<Destination> destinations) {
         new AsyncTask<Void, Void, Void>() {
             @Override
@@ -92,13 +120,38 @@ class DestinationRepository {
     }
 
     public LiveData<Resource<List<Destination>>> loadDestinations() {
-        return new AttractionNetworkBoundResource<Destination>(webservice, destinationDao, eventDao) {
+        LiveData<Resource<List<Destination>>> data = new AttractionNetworkBoundResource<Destination>(webservice, destinationDao, eventDao) {
             @NonNull
             @Override
             protected LiveData<List<Destination>> loadFromDb() {
                 return destinationDao.getAll();
             }
         }.getAsLiveData();
+
+        return switchMap(data, destinations -> {
+            MutableLiveData<Resource<List<Destination>>> result = new MutableLiveData<>();
+            if (destinations == null || destinations.data == null) {
+                result.postValue(destinations);
+                return result;
+            }
+
+            return switchMap(attractionFlagDao.getDestinationFlags(), flags -> {
+                if (flags == null) {
+                    result.postValue(destinations);
+                    return result;
+                }
+
+                SparseArray<AttractionFlag> flagMap = new SparseArray<>();
+                for (AttractionFlag flag : flags) {
+                    flagMap.put(flag.getAttractionID(), flag);
+                }
+                for (Destination destination : destinations.data) {
+                    destination.setFlag(flagMap.get(destination.getId()));
+                }
+                result.postValue(destinations);
+                return result;
+            });
+        });
     }
 
     public LiveData<Resource<List<Event>>> loadEvents() {

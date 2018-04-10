@@ -3,6 +3,7 @@ package com.gophillygo.app.adapters;
 import android.content.Context;
 
 import com.gophillygo.app.R;
+import com.gophillygo.app.data.AttractionViewModel;
 import com.gophillygo.app.data.models.Event;
 
 import java.text.DateFormat;
@@ -27,8 +28,8 @@ public class EventsListAdapter extends AttractionListAdapter<Event> {
 
     private Context context;
 
-    public EventsListAdapter(Context context, List<Event> attractions, AttractionListItemClickListener listener) {
-        super(context, attractions, R.layout.event_list_item, listener);
+    public EventsListAdapter(Context context, List<Event> attractions, AttractionViewModel viewModel, AttractionListItemClickListener listener) {
+        super(context, attractions, R.layout.event_list_item, viewModel, listener);
         this.context = context;
     }
 

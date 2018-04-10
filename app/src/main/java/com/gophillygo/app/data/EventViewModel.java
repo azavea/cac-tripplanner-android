@@ -11,14 +11,13 @@ import java.util.List;
 import javax.inject.Inject;
 
 
-public class EventViewModel extends ViewModel {
+public class EventViewModel extends AttractionViewModel {
 
     private final LiveData<Resource<List<Event>>> events;
-    private final DestinationRepository destinationRepository;
 
     @Inject
     public EventViewModel(DestinationRepository destinationRepository) {
-        this.destinationRepository = destinationRepository;
+        super(destinationRepository);
         events = destinationRepository.loadEvents();
     }
 
