@@ -16,7 +16,7 @@ import com.gophillygo.app.di.GpgViewModelFactory;
 import javax.inject.Inject;
 
 public class EventsListActivity extends FilterableListActivity
-        implements EventsListAdapter.EventListItemClickListener {
+        implements EventsListAdapter.AttractionListItemClickListener {
 
     private static final String LOG_LABEL = "EventsList";
 
@@ -39,7 +39,7 @@ public class EventsListActivity extends FilterableListActivity
      *
      * @param position Offset of the position of the list item clicked
      */
-    public void clickedEvent(int position) {
+    public void clickedAttraction(int position) {
         // Get database ID for event clicked, based on positional offset, and pass it along
         long eventId = eventsListView.getAdapter().getItemId(position);
         Log.d(LOG_LABEL, "Clicked event with ID: " + eventId);
