@@ -126,7 +126,7 @@
                     android:id="@+id/place_options_flag_text"
                     android:text="@string/place_details_been_want_to_go_label"
                     android:layout_width="match_parent"
-                    android:drawableEnd="@drawable/ic_add_black_24dp"
+                    android:drawableEnd="@{activity.getFlagImage(destination)}"
                     style="@style/GpgDetailText" />
 
             </android.support.v7.widget.CardView>

@@ -4,7 +4,9 @@ import android.annotation.SuppressLint;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.view.menu.MenuBuilder;
@@ -21,6 +23,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.gophillygo.app.data.DestinationViewModel;
+import com.gophillygo.app.data.models.AttractionFlag;
 import com.gophillygo.app.data.models.Destination;
 import com.gophillygo.app.databinding.ActivityPlaceDetailBinding;
 import com.gophillygo.app.di.GpgViewModelFactory;
@@ -150,6 +153,12 @@ public class PlaceDetailActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public Drawable getFlagImage(Destination attraction) {
+        if (attraction == null) return null;
+
+        return ContextCompat.getDrawable(this, attraction.getFlagImage());
+    }
+
     @SuppressLint({"RestrictedApi", "RtlHardcoded"})
     private void displayDestination() {
         // set up carousel
@@ -177,14 +186,16 @@ public class PlaceDetailActivity extends AppCompatActivity {
         descriptionToggle.setOnClickListener(toggleClickListener);
 
         // show popover for flag options (been, want to go, etc.)
-        // TODO: #25 implement user flags
         CardView flagOptionsCard = findViewById(R.id.place_detail_flag_options_card);
         flagOptionsCard.setOnClickListener(v -> {
             Log.d(LOG_LABEL, "Clicked flags button");
             PopupMenu menu = new PopupMenu(this, flagOptionsCard);
             menu.getMenuInflater().inflate(R.menu.place_options_menu, menu.getMenu());
             menu.setOnMenuItemClickListener(item -> {
-                Log.d(LOG_LABEL, "Clicked " + item.toString());
+                AttractionFlag flag = destination.createAttractionFlag(item.getItemId());
+                destination.setFlag(flag);
+                viewModel.updateAttractionFlag(flag);
+
                 return true;
             });
 

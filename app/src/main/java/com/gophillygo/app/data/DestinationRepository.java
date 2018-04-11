@@ -54,11 +54,11 @@ class DestinationRepository {
 
     public LiveData<Destination> getDestination(long destinationId) {
         // return a LiveData item directly from the database.
-        return destinationDao.getDestination(destinationId);
+        return addAttractionFlag(destinationDao.getDestination(destinationId));
     }
 
     public LiveData<Event> getEvent(long eventId) {
-        return eventDao.getEvent(eventId);
+        return addAttractionFlag(eventDao.getEvent(eventId));
     }
 
     @SuppressLint("StaticFieldLeak")
@@ -141,8 +141,28 @@ class DestinationRepository {
         return addAttractionFlags(data, true);
     }
 
-    private <T extends Attraction> LiveData<Resource<List<T>>> addAttractionFlags (LiveData<Resource<List<T>>> data,
-                                                                                   boolean isEvent) {
+    private <T extends Attraction> LiveData<T> addAttractionFlag(LiveData<T> data) {
+        return switchMap(data, attraction -> {
+            MutableLiveData<T> result = new MutableLiveData<>();
+            if (attraction == null) {
+                result.postValue(attraction);
+                return result;
+            }
+
+            return switchMap(attractionFlagDao.getAttractionFlag(attraction.getId(), attraction.isEvent()), flag -> {
+                if (flag == null) {
+                    result.postValue(attraction);
+                    return result;
+                }
+                attraction.setFlag(flag);
+                result.postValue(attraction);
+                return result;
+            });
+        });
+    }
+
+    private <T extends Attraction> LiveData<Resource<List<T>>> addAttractionFlags(LiveData<Resource<List<T>>> data,
+                                                                                  boolean isEvent) {
         return switchMap(data, attractions -> {
             MutableLiveData<Resource<List<T>>> result = new MutableLiveData<>();
             if (attractions == null || attractions.data == null) {

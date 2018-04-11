@@ -82,36 +82,9 @@ public class AttractionListAdapter<T extends Attraction> extends RecyclerView.Ad
         PopupMenu menu = new PopupMenu(context, view);
         menu.getMenuInflater().inflate(R.menu.place_options_menu, menu.getMenu());
         menu.setOnMenuItemClickListener(item -> {
-            AttractionFlag.Option option;
-            switch (item.getItemId()) {
-                case R.id.place_option_not_interested:
-                    option = AttractionFlag.Option.NotInterested;
-                    break;
-                case R.id.place_option_liked:
-                    option = AttractionFlag.Option.Liked;
-                    break;
-                case R.id.place_option_been:
-                    option = AttractionFlag.Option.Been;
-                    break;
-                case R.id.place_option_want_to_go:
-                    option = AttractionFlag.Option.WantToGo;
-                    break;
-                default:
-                    option = AttractionFlag.Option.NotSelected;
-            }
-            AttractionFlag flag = attraction.getFlag();
-            if (flag != null) {
-                if (flag.getOption() == option) {
-                    option = AttractionFlag.Option.NotSelected;
-                }
-                flag = new AttractionFlag(flag.getId(), attraction.getId(), attraction.isEvent(), option);
-            } else {
-                flag = new AttractionFlag(null, attraction.getId(), attraction.isEvent(), option);
-            }
-
-            viewModel.updateAttractionFlag(flag);
+            AttractionFlag flag = attraction.createAttractionFlag(item.getItemId());
             attraction.setFlag(flag);
-            setImageResource((AppCompatImageButton) view, attraction.getFlagImage());
+            viewModel.updateAttractionFlag(flag);
 
             return true;
         });

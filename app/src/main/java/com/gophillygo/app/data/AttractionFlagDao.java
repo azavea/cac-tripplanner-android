@@ -21,17 +21,9 @@ public abstract class AttractionFlagDao {
     @Query("SELECT * FROM attractionflag WHERE is_event = :isEvent;")
     public abstract LiveData<List<AttractionFlag>> getAttractionFlags(boolean isEvent);
 
-    public LiveData<AttractionFlag> getDestinationFlag(long destinationId) {
-        return getAttractionFlag(destinationId, false);
-    }
-
-    public LiveData<AttractionFlag> getEventFlag(long eventId) {
-        return getAttractionFlag(eventId, true);
-    }
-
     @Query("SELECT * FROM attractionflag " +
             "WHERE attractionID = :attractionID and is_event = :isEvent")
-    abstract LiveData<AttractionFlag> getAttractionFlag(long attractionID, boolean isEvent);
+    public abstract LiveData<AttractionFlag> getAttractionFlag(long attractionID, boolean isEvent);
 
     @Update()
     public abstract void update(AttractionFlag flag);

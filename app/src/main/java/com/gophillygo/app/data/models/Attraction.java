@@ -7,10 +7,12 @@ import android.arch.persistence.room.PrimaryKey;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
+import android.support.annotation.MenuRes;
 import android.text.Html;
 import android.text.Spanned;
 
 import com.google.gson.annotations.SerializedName;
+import com.gophillygo.app.R;
 
 import java.util.ArrayList;
 
@@ -180,5 +182,33 @@ public class Attraction {
             stringBuilder.append(activity);
         }
         return stringBuilder.toString();
+    }
+
+    public AttractionFlag createAttractionFlag(@MenuRes int menuId) {
+        AttractionFlag.Option option;
+        switch (menuId) {
+            case R.id.place_option_not_interested:
+                option = AttractionFlag.Option.NotInterested;
+                break;
+            case R.id.place_option_liked:
+                option = AttractionFlag.Option.Liked;
+                break;
+            case R.id.place_option_been:
+                option = AttractionFlag.Option.Been;
+                break;
+            case R.id.place_option_want_to_go:
+                option = AttractionFlag.Option.WantToGo;
+                break;
+            default:
+                option = AttractionFlag.Option.NotSelected;
+        }
+        if (flag != null) {
+            // When selecting the option already selected, toggle it off
+            if (flag.getOption() == option) {
+                option = AttractionFlag.Option.NotSelected;
+            }
+            return new AttractionFlag(flag.getId(), getId(), isEvent(), option);
+        }
+        return new AttractionFlag(null, getId(), isEvent(), option);
     }
 }
