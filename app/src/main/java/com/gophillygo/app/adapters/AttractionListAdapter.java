@@ -2,14 +2,13 @@ package com.gophillygo.app.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.databinding.BindingAdapter;
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
-import android.support.annotation.DrawableRes;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.view.menu.MenuBuilder;
 import android.support.v7.view.menu.MenuPopupHelper;
-import android.support.v7.widget.AppCompatImageButton;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -157,9 +156,7 @@ public class AttractionListAdapter<T extends Attraction> extends RecyclerView.Ad
         return attractionList.size();
     }
 
-
-    @BindingAdapter("imageSource")
-    public static void setImageResource(AppCompatImageButton imageButton, @DrawableRes int drawable) {
-        imageButton.setImageResource(drawable);
+    public Drawable getFlagImage(Attraction attraction) {
+        return ContextCompat.getDrawable(this.context, attraction.getFlagImage());
     }
 }
