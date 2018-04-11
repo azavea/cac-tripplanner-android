@@ -18,18 +18,15 @@ import java.util.List;
 
 @Dao
 public abstract class AttractionFlagDao {
-    @Query("SELECT * FROM attractionflag WHERE is_event = 0;")
-    public abstract LiveData<List<AttractionFlag>> getDestinationFlags();
-
-    @Query("SELECT * FROM attractionflag WHERE is_event = 1;")
-    public abstract LiveData<List<AttractionFlag>> getEventFlags();
+    @Query("SELECT * FROM attractionflag WHERE is_event = :isEvent;")
+    public abstract LiveData<List<AttractionFlag>> getAttractionFlags(boolean isEvent);
 
     public LiveData<AttractionFlag> getDestinationFlag(long destinationId) {
         return getAttractionFlag(destinationId, false);
     }
 
-    public LiveData<AttractionFlag> getEventFlag(long destinationId) {
-        return getAttractionFlag(destinationId, true);
+    public LiveData<AttractionFlag> getEventFlag(long eventId) {
+        return getAttractionFlag(eventId, true);
     }
 
     @Query("SELECT * FROM attractionflag " +

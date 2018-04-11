@@ -11,6 +11,7 @@ import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.util.SparseArray;
 
+import com.gophillygo.app.data.models.Attraction;
 import com.gophillygo.app.data.models.AttractionFlag;
 import com.gophillygo.app.data.models.Destination;
 import com.gophillygo.app.data.models.Event;
@@ -127,17 +128,31 @@ class DestinationRepository {
                 return destinationDao.getAll();
             }
         }.getAsLiveData();
+        return addAttractionFlags(data, false);
+    }
 
-        return switchMap(data, destinations -> {
-            MutableLiveData<Resource<List<Destination>>> result = new MutableLiveData<>();
-            if (destinations == null || destinations.data == null) {
-                result.postValue(destinations);
+    public LiveData<Resource<List<Event>>> loadEvents() {
+        LiveData<Resource<List<Event>>> data = new AttractionNetworkBoundResource<Event>(webservice, destinationDao, eventDao) {
+            @NonNull @Override
+            protected LiveData<List<Event>> loadFromDb() {
+                return eventDao.getAll();
+            }
+        }.getAsLiveData();
+        return addAttractionFlags(data, true);
+    }
+
+    private <T extends Attraction> LiveData<Resource<List<T>>> addAttractionFlags (LiveData<Resource<List<T>>> data,
+                                                                                   boolean isEvent) {
+        return switchMap(data, attractions -> {
+            MutableLiveData<Resource<List<T>>> result = new MutableLiveData<>();
+            if (attractions == null || attractions.data == null) {
+                result.postValue(attractions);
                 return result;
             }
 
-            return switchMap(attractionFlagDao.getDestinationFlags(), flags -> {
+            return switchMap(attractionFlagDao.getAttractionFlags(isEvent), flags -> {
                 if (flags == null) {
-                    result.postValue(destinations);
+                    result.postValue(attractions);
                     return result;
                 }
 
@@ -145,21 +160,12 @@ class DestinationRepository {
                 for (AttractionFlag flag : flags) {
                     flagMap.put(flag.getAttractionID(), flag);
                 }
-                for (Destination destination : destinations.data) {
-                    destination.setFlag(flagMap.get(destination.getId()));
+                for (T attraction : attractions.data) {
+                    attraction.setFlag(flagMap.get(attraction.getId()));
                 }
-                result.postValue(destinations);
+                result.postValue(attractions);
                 return result;
             });
         });
-    }
-
-    public LiveData<Resource<List<Event>>> loadEvents() {
-        return new AttractionNetworkBoundResource<Event>(webservice, destinationDao, eventDao) {
-            @NonNull @Override
-            protected LiveData<List<Event>> loadFromDb() {
-                return eventDao.getAll();
-            }
-        }.getAsLiveData();
     }
 }
