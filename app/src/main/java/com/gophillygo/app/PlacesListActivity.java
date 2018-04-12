@@ -11,6 +11,9 @@ import android.view.MenuItem;
 
 import com.gophillygo.app.adapters.PlacesListAdapter;
 import com.gophillygo.app.data.DestinationViewModel;
+import com.gophillygo.app.data.models.Attraction;
+import com.gophillygo.app.data.models.AttractionFlag;
+import com.gophillygo.app.data.models.Destination;
 import com.gophillygo.app.data.networkresource.Status;
 import com.gophillygo.app.di.GpgViewModelFactory;
 
@@ -18,7 +21,7 @@ import javax.inject.Inject;
 
 
 public class PlacesListActivity extends FilterableListActivity implements
-        PlacesListAdapter.AttractionListItemClickListener {
+        PlacesListAdapter.AttractionListItemClickListener<Destination> {
 
     private static final String LOG_LABEL = "PlacesList";
 
@@ -48,6 +51,12 @@ public class PlacesListActivity extends FilterableListActivity implements
         startActivity(intent);
     }
 
+    public boolean clickedFlagOption(MenuItem item, Destination destination) {
+        AttractionFlag flag = destination.createAttractionFlag(item.getItemId());
+        destination.setFlag(flag);
+        viewModel.updateAttractionFlag(flag);
+        return true;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +71,7 @@ public class PlacesListActivity extends FilterableListActivity implements
                     destinationResource.data != null && !destinationResource.data.isEmpty()) {
 
                 placesListView = findViewById(R.id.places_list_recycler_view);
-                PlacesListAdapter adapter = new PlacesListAdapter<>(this, destinationResource.data, viewModel, this);
+                PlacesListAdapter adapter = new PlacesListAdapter<>(this, destinationResource.data, this);
                 placesListView.setAdapter(adapter);
                 placesListView.setLayoutManager(layoutManager);
             }

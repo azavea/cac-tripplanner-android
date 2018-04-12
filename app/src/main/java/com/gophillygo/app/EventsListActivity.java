@@ -10,13 +10,15 @@ import android.view.MenuItem;
 
 import com.gophillygo.app.adapters.EventsListAdapter;
 import com.gophillygo.app.data.EventViewModel;
+import com.gophillygo.app.data.models.AttractionFlag;
+import com.gophillygo.app.data.models.Event;
 import com.gophillygo.app.data.networkresource.Status;
 import com.gophillygo.app.di.GpgViewModelFactory;
 
 import javax.inject.Inject;
 
 public class EventsListActivity extends FilterableListActivity
-        implements EventsListAdapter.AttractionListItemClickListener {
+        implements EventsListAdapter.AttractionListItemClickListener<Event> {
 
     private static final String LOG_LABEL = "EventsList";
 
@@ -50,6 +52,12 @@ public class EventsListActivity extends FilterableListActivity
         */
     }
 
+    public boolean clickedFlagOption(MenuItem item, Event event) {
+        AttractionFlag flag = event.createAttractionFlag(item.getItemId());
+        event.setFlag(flag);
+        viewModel.updateAttractionFlag(flag);
+        return true;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +71,7 @@ public class EventsListActivity extends FilterableListActivity
                     destinationResource.data != null && !destinationResource.data.isEmpty()) {
 
                 eventsListView = findViewById(R.id.events_list_recycler_view);
-                EventsListAdapter adapter = new EventsListAdapter(this, destinationResource.data, viewModel, this);
+                EventsListAdapter adapter = new EventsListAdapter(this, destinationResource.data, this);
                 eventsListView.setAdapter(adapter);
                 eventsListView.setLayoutManager(layoutManager);
             }

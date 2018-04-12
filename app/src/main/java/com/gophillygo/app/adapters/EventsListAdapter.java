@@ -28,8 +28,8 @@ public class EventsListAdapter extends AttractionListAdapter<Event> {
 
     private Context context;
 
-    public EventsListAdapter(Context context, List<Event> attractions, AttractionViewModel viewModel, AttractionListItemClickListener listener) {
-        super(context, attractions, R.layout.event_list_item, viewModel, listener);
+    public EventsListAdapter(Context context, List<Event> attractions, AttractionListItemClickListener listener) {
+        super(context, attractions, R.layout.event_list_item, listener);
         this.context = context;
     }
 
