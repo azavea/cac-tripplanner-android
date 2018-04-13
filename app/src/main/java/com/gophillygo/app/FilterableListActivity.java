@@ -7,6 +7,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.widget.Button;
 
+import com.gophillygo.app.data.models.Filter;
+
 import cn.nekocode.badge.BadgeDrawable;
 
 /**
@@ -28,6 +30,8 @@ public abstract class FilterableListActivity extends AppCompatActivity
         this.toolbarId = toolbarId;
         this.filterButtonId = filterButtonId;
     }
+
+    protected abstract void loadData(Filter filter);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,7 +55,10 @@ public abstract class FilterableListActivity extends AppCompatActivity
     }
 
     @Override
-    public void filtersChanged(int setFilterCount) {
+    public void filterChanged(Filter filter) {
+        loadData(filter);
+
+        int setFilterCount = filter.count();
         // Change filter button's left drawable when filters set to either be a badge with the
         // filter count, or the default filter icon, if no filters set.
         if (setFilterCount > 0) {
@@ -65,6 +72,5 @@ public abstract class FilterableListActivity extends AppCompatActivity
         } else {
             filterButton.setCompoundDrawablesWithIntrinsicBounds(filterIcon, null, null, null);
         }
-
     }
 }

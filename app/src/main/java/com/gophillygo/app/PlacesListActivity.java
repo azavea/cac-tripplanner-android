@@ -9,11 +9,14 @@ import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 import com.gophillygo.app.adapters.PlacesListAdapter;
 import com.gophillygo.app.data.DestinationViewModel;
 import com.gophillygo.app.data.models.AttractionInfo;
 import com.gophillygo.app.data.models.DestinationInfo;
+import com.gophillygo.app.data.models.Filter;
 import com.gophillygo.app.data.networkresource.Resource;
 import com.gophillygo.app.data.networkresource.Status;
 import com.gophillygo.app.di.GpgViewModelFactory;
@@ -69,19 +72,27 @@ public class PlacesListActivity extends FilterableListActivity implements
         layoutManager = new LinearLayoutManager(this);
         viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(DestinationViewModel.class);
-        LiveData<Resource<List<DestinationInfo>>> data = viewModel.getDestinations();
+        loadData(null);
+    }
+
+    @Override
+    protected void loadData(Filter filter) {
+        LiveData<Resource<List<DestinationInfo>>> data = viewModel.getFilteredDestinations(filter);
         data.observe(this, destinationResource -> {
             if (destinationResource != null && destinationResource.status.equals(Status.SUCCESS) &&
-                    destinationResource.data != null && !destinationResource.data.isEmpty()) {
+                    destinationResource.data != null) {
+                TextView noDataView = findViewById(R.id.empty_places_list);
+                noDataView.setVisibility(destinationResource.data.isEmpty() ? View.VISIBLE : View.GONE);
 
                 placesListView = findViewById(R.id.places_list_recycler_view);
                 PlacesListAdapter adapter = new PlacesListAdapter(this, destinationResource.data, this);
                 placesListView.setAdapter(adapter);
                 placesListView.setLayoutManager(layoutManager);
+                // Remove observer after loading full list so updates to the destination flags don't
+                // cause unwanted changes to scroll position
                 data.removeObservers(this);
             }
         });
-
     }
 
     @Override
@@ -109,4 +120,5 @@ public class PlacesListActivity extends FilterableListActivity implements
         }
         return true;
     }
+
 }

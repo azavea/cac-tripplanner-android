@@ -14,6 +14,7 @@ import com.gophillygo.app.data.EventViewModel;
 import com.gophillygo.app.data.models.AttractionInfo;
 import com.gophillygo.app.data.models.Event;
 import com.gophillygo.app.data.models.EventInfo;
+import com.gophillygo.app.data.models.Filter;
 import com.gophillygo.app.data.networkresource.Resource;
 import com.gophillygo.app.data.networkresource.Status;
 import com.gophillygo.app.di.GpgViewModelFactory;
@@ -71,6 +72,11 @@ public class EventsListActivity extends FilterableListActivity
         layoutManager = new LinearLayoutManager(this);
         viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(EventViewModel.class);
+        loadData(null);
+    }
+
+    @Override
+    protected void loadData(Filter filter) {
         LiveData<Resource<List<EventInfo>>> data = viewModel.getEvents();
         data.observe(this, destinationResource -> {
             if (destinationResource != null && destinationResource.status.equals(Status.SUCCESS) &&
@@ -83,7 +89,6 @@ public class EventsListActivity extends FilterableListActivity
                 data.removeObservers(this);
             }
         });
-
     }
 
     @Override

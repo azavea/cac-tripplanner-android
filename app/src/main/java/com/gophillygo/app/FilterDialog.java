@@ -9,13 +9,15 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import com.gophillygo.app.data.models.Filter;
+
 import java.util.ArrayList;
 
 
 public class FilterDialog extends BottomSheetDialogFragment {
 
     public interface FilterChangeListener {
-        void filtersChanged(int setFilterCount);
+        void filterChanged(Filter filter);
     }
 
     private static final String LOG_LABEL = "FilterDialog";
@@ -31,18 +33,15 @@ public class FilterDialog extends BottomSheetDialogFragment {
 
     @Override
     public void onDismiss(DialogInterface dialog) {
-        // count how many filter buttons were toggled on and notify activity
-        int selectedFilterCount = 0;
-        for (GpgToggleButton button: filterButtons) {
-            if (button.isChecked()) {
-                selectedFilterCount++;
-            }
-        }
+        Filter filter = new Filter(natureButton.isChecked(), exerciseButton.isChecked(),
+                                   educationalButton.isChecked(), beenButton.isChecked(),
+                                   wantToGoButton.isChecked(), notInterestedButton.isChecked(),
+                                   likedButton.isChecked(), accessibleButton.isChecked());
 
-        Log.d(LOG_LABEL, "Selected " + String.valueOf(selectedFilterCount) + " filters.");
+        Log.d(LOG_LABEL, "Selected " + String.valueOf(filter.count()) + " filters.");
         FilterChangeListener listener = (FilterChangeListener) getActivity();
         if (listener != null) {
-            listener.filtersChanged(selectedFilterCount);
+            listener.filterChanged(filter);
         }
 
         super.onDismiss(dialog);
