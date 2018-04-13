@@ -28,7 +28,7 @@ public class AttractionListAdapter<T extends AttractionInfo> extends RecyclerVie
 
     public interface AttractionListItemClickListener {
         void clickedAttraction(int position);
-        boolean clickedFlagOption(MenuItem item, AttractionInfo info);
+        boolean clickedFlagOption(MenuItem item, AttractionInfo info, Integer position);
     }
 
     private static final String LOG_LABEL = "AttractionListAdapter";
@@ -51,7 +51,8 @@ public class AttractionListAdapter<T extends AttractionInfo> extends RecyclerVie
 
         public void bind(AttractionInfo info) {
             binding.setVariable(BR.attractionInfo, info);
-            binding.setVariable(BR.attraction, info);
+            binding.setVariable(BR.attraction, info.getAttraction());
+            binding.setVariable(BR.position, getAdapterPosition());
             binding.executePendingBindings();
         }
     }
@@ -74,11 +75,11 @@ public class AttractionListAdapter<T extends AttractionInfo> extends RecyclerVie
     }
 
     @SuppressLint("RestrictedApi")
-    public void optionsButtonClick(View view, T info) {
+    public void optionsButtonClick(View view, T info, Integer position) {
         Log.d(LOG_LABEL, "Clicked place options button for attraction #" + info.getAttraction().getId());
         PopupMenu menu = new PopupMenu(context, view);
         menu.getMenuInflater().inflate(R.menu.place_options_menu, menu.getMenu());
-        menu.setOnMenuItemClickListener(item -> listener.clickedFlagOption(item, info));
+        menu.setOnMenuItemClickListener(item -> listener.clickedFlagOption(item, info, position));
 
         // Force icons to show in the popup menu via the support library API
         // https://stackoverflow.com/questions/6805756/is-it-possible-to-display-icons-in-a-popupmenu

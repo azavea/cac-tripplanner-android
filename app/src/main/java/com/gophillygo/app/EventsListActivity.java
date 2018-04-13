@@ -1,5 +1,6 @@
 package com.gophillygo.app;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,8 +12,13 @@ import android.view.MenuItem;
 import com.gophillygo.app.adapters.EventsListAdapter;
 import com.gophillygo.app.data.EventViewModel;
 import com.gophillygo.app.data.models.AttractionInfo;
+import com.gophillygo.app.data.models.Event;
+import com.gophillygo.app.data.models.EventInfo;
+import com.gophillygo.app.data.networkresource.Resource;
 import com.gophillygo.app.data.networkresource.Status;
 import com.gophillygo.app.di.GpgViewModelFactory;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -51,9 +57,10 @@ public class EventsListActivity extends FilterableListActivity
         */
     }
 
-    public boolean clickedFlagOption(MenuItem item, AttractionInfo eventInfo) {
+    public boolean clickedFlagOption(MenuItem item, AttractionInfo eventInfo, Integer position) {
         eventInfo.updateAttractionFlag(item.getItemId());
         viewModel.updateAttractionFlag(eventInfo.getFlag());
+        eventsListView.getAdapter().notifyItemChanged(position);
         return true;
     }
 
@@ -64,7 +71,8 @@ public class EventsListActivity extends FilterableListActivity
         layoutManager = new LinearLayoutManager(this);
         viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(EventViewModel.class);
-        viewModel.getEvents().observe(this, destinationResource -> {
+        LiveData<Resource<List<EventInfo>>> data = viewModel.getEvents();
+        data.observe(this, destinationResource -> {
             if (destinationResource != null && destinationResource.status.equals(Status.SUCCESS) &&
                     destinationResource.data != null && !destinationResource.data.isEmpty()) {
 
@@ -72,6 +80,7 @@ public class EventsListActivity extends FilterableListActivity
                 EventsListAdapter adapter = new EventsListAdapter(this, destinationResource.data, this);
                 eventsListView.setAdapter(adapter);
                 eventsListView.setLayoutManager(layoutManager);
+                data.removeObservers(this);
             }
         });
 

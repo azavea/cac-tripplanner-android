@@ -5,6 +5,7 @@
     <data>
         <variable name="attraction" type="com.gophillygo.app.data.models.Event"/>
         <variable name="attractionInfo" type="com.gophillygo.app.data.models.EventInfo"/>
+        <variable name="position" type="Integer"/>
         <variable name="adapter" type="com.gophillygo.app.adapters.EventsListAdapter" />
         <import type="android.view.View"/>
     </data>
@@ -113,7 +114,7 @@
         <android.support.v7.widget.AppCompatImageButton
             app:backgroundTint="@color/color_white"
             android:id="@+id/event_list_item_options_button"
-            android:onClick="@{(view) -> adapter.optionsButtonClick(view, attractionInfo)}"
+            android:onClick="@{(view) -> adapter.optionsButtonClick(view, attractionInfo, position)}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:src="@{adapter.getFlagImage(attractionInfo)}"
