@@ -11,7 +11,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public class EventsListAdapter extends com.gophillygo.app.adapters.AttractionListAdapter {
+public class EventsListAdapter extends AttractionListAdapter<Event> {
 
     private static final String LOG_LABEL = "EventListAdapter";
 
@@ -52,4 +52,3 @@ public class EventsListAdapter extends com.gophillygo.app.adapters.AttractionLis
         }
     }
 }
-
