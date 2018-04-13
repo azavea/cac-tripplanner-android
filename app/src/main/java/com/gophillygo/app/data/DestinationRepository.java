@@ -1,29 +1,21 @@
 package com.gophillygo.app.data;
 
 import android.annotation.SuppressLint;
-import android.arch.lifecycle.LifecycleOwner;
 import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MediatorLiveData;
-import android.arch.lifecycle.MutableLiveData;
-import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.Transformations;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
-import android.util.SparseArray;
 
-import com.gophillygo.app.data.models.Attraction;
 import com.gophillygo.app.data.models.AttractionFlag;
 import com.gophillygo.app.data.models.Destination;
+import com.gophillygo.app.data.models.DestinationInfo;
 import com.gophillygo.app.data.models.Event;
+import com.gophillygo.app.data.models.EventInfo;
 import com.gophillygo.app.data.networkresource.AttractionNetworkBoundResource;
 import com.gophillygo.app.data.networkresource.Resource;
 
-import java.util.HashMap;
 import java.util.List;
 
 import javax.inject.Inject;
-
-import static android.arch.lifecycle.Transformations.*;
 
 /**
  * Mediator between Destination persistent data store and web service.
@@ -52,13 +44,13 @@ class DestinationRepository {
         this.eventDao = eventDao;
     }
 
-    public LiveData<Destination> getDestination(long destinationId) {
+    public LiveData<DestinationInfo> getDestination(long destinationId) {
         // return a LiveData item directly from the database.
-        return addAttractionFlag(destinationDao.getDestination(destinationId));
+        return destinationDao.getDestination(destinationId);
     }
 
-    public LiveData<Event> getEvent(long eventId) {
-        return addAttractionFlag(eventDao.getEvent(eventId));
+    public LiveData<EventInfo> getEvent(long eventId) {
+        return eventDao.getEvent(eventId);
     }
 
     @SuppressLint("StaticFieldLeak")
@@ -88,11 +80,7 @@ class DestinationRepository {
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
-                if (flag.getId() != null) {
-                    attractionFlagDao.update(flag);
-                } else {
-                    attractionFlagDao.save(flag);
-                }
+                attractionFlagDao.save(flag);
                 return null;
             }
         }.execute();
@@ -120,72 +108,22 @@ class DestinationRepository {
         }.execute();
     }
 
-    public LiveData<Resource<List<Destination>>> loadDestinations() {
-        LiveData<Resource<List<Destination>>> data = new AttractionNetworkBoundResource<Destination>(webservice, destinationDao, eventDao) {
+    public LiveData<Resource<List<DestinationInfo>>> loadDestinations() {
+        return new AttractionNetworkBoundResource<Destination, DestinationInfo>(webservice, destinationDao, eventDao) {
             @NonNull
             @Override
-            protected LiveData<List<Destination>> loadFromDb() {
+            protected LiveData<List<DestinationInfo>> loadFromDb() {
                 return destinationDao.getAll();
             }
         }.getAsLiveData();
-        return addAttractionFlags(data, false);
     }
 
-    public LiveData<Resource<List<Event>>> loadEvents() {
-        LiveData<Resource<List<Event>>> data = new AttractionNetworkBoundResource<Event>(webservice, destinationDao, eventDao) {
+    public LiveData<Resource<List<EventInfo>>> loadEvents() {
+        return new AttractionNetworkBoundResource<Event, EventInfo>(webservice, destinationDao, eventDao) {
             @NonNull @Override
-            protected LiveData<List<Event>> loadFromDb() {
+            protected LiveData<List<EventInfo>> loadFromDb() {
                 return eventDao.getAll();
             }
         }.getAsLiveData();
-        return addAttractionFlags(data, true);
-    }
-
-    private <T extends Attraction> LiveData<T> addAttractionFlag(LiveData<T> data) {
-        return switchMap(data, attraction -> {
-            MutableLiveData<T> result = new MutableLiveData<>();
-            if (attraction == null) {
-                result.postValue(attraction);
-                return result;
-            }
-
-            return switchMap(attractionFlagDao.getAttractionFlag(attraction.getId(), attraction.isEvent()), flag -> {
-                if (flag == null) {
-                    result.postValue(attraction);
-                    return result;
-                }
-                attraction.setFlag(flag);
-                result.postValue(attraction);
-                return result;
-            });
-        });
-    }
-
-    private <T extends Attraction> LiveData<Resource<List<T>>> addAttractionFlags(LiveData<Resource<List<T>>> data,
-                                                                                  boolean isEvent) {
-        return switchMap(data, attractions -> {
-            MutableLiveData<Resource<List<T>>> result = new MutableLiveData<>();
-            if (attractions == null || attractions.data == null) {
-                result.postValue(attractions);
-                return result;
-            }
-
-            return switchMap(attractionFlagDao.getAttractionFlags(isEvent), flags -> {
-                if (flags == null) {
-                    result.postValue(attractions);
-                    return result;
-                }
-
-                SparseArray<AttractionFlag> flagMap = new SparseArray<>();
-                for (AttractionFlag flag : flags) {
-                    flagMap.put(flag.getAttractionID(), flag);
-                }
-                for (T attraction : attractions.data) {
-                    attraction.setFlag(flagMap.get(attraction.getId()));
-                }
-                result.postValue(attractions);
-                return result;
-            });
-        });
     }
 }

@@ -19,17 +19,16 @@ import android.view.ViewGroup;
 
 import com.gophillygo.app.BR;
 import com.gophillygo.app.R;
-import com.gophillygo.app.data.models.Attraction;
+import com.gophillygo.app.data.models.AttractionInfo;
 
 import java.util.List;
 
 
-public class AttractionListAdapter<T extends Attraction> extends RecyclerView.Adapter {
+public class AttractionListAdapter<T extends AttractionInfo> extends RecyclerView.Adapter {
 
-    public interface AttractionListItemClickListener<T> {
+    public interface AttractionListItemClickListener {
         void clickedAttraction(int position);
-        // TODO: Should we pass position here too, instead of the full object?
-        boolean clickedFlagOption(MenuItem item, T attraction);
+        boolean clickedFlagOption(MenuItem item, AttractionInfo info);
     }
 
     private static final String LOG_LABEL = "AttractionListAdapter";
@@ -50,8 +49,9 @@ public class AttractionListAdapter<T extends Attraction> extends RecyclerView.Ad
             this.binding = binding;
         }
 
-        public void bind(Attraction attraction) {
-            binding.setVariable(BR.attraction, attraction);
+        public void bind(AttractionInfo info) {
+            binding.setVariable(BR.attractionInfo, info);
+            binding.setVariable(BR.attraction, info);
             binding.executePendingBindings();
         }
     }
@@ -74,11 +74,11 @@ public class AttractionListAdapter<T extends Attraction> extends RecyclerView.Ad
     }
 
     @SuppressLint("RestrictedApi")
-    public void optionsButtonClick(View view, T attraction) {
-        Log.d(LOG_LABEL, "Clicked place options button for attraction #" + attraction.getId());
+    public void optionsButtonClick(View view, T info) {
+        Log.d(LOG_LABEL, "Clicked place options button for attraction #" + info.getAttraction().getId());
         PopupMenu menu = new PopupMenu(context, view);
         menu.getMenuInflater().inflate(R.menu.place_options_menu, menu.getMenu());
-        menu.setOnMenuItemClickListener(item -> listener.clickedFlagOption(item, attraction));
+        menu.setOnMenuItemClickListener(item -> listener.clickedFlagOption(item, info));
 
         // Force icons to show in the popup menu via the support library API
         // https://stackoverflow.com/questions/6805756/is-it-possible-to-display-icons-in-a-popupmenu
@@ -99,16 +99,16 @@ public class AttractionListAdapter<T extends Attraction> extends RecyclerView.Ad
     @SuppressLint("RestrictedApi")
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        T attraction = attractionList.get(position);
+        T info = attractionList.get(position);
         ViewHolder viewHolder = (ViewHolder) holder;
-        viewHolder.bind(attraction);
+        viewHolder.bind(info);
     }
 
     @Override
     public long getItemId(int position) {
-        T attraction = attractionList.get(position);
-        if (attraction != null) {
-            return attraction.getId();
+        T info = attractionList.get(position);
+        if (info != null) {
+            return info.getAttraction().getId();
         } else {
             Log.w(LOG_LABEL, "Could not find attraction at offset " + String.valueOf(position));
             return -1;
@@ -120,7 +120,7 @@ public class AttractionListAdapter<T extends Attraction> extends RecyclerView.Ad
         return attractionList.size();
     }
 
-    public Drawable getFlagImage(Attraction attraction) {
-        return ContextCompat.getDrawable(this.context, attraction.getFlagImage());
+    public Drawable getFlagImage(AttractionInfo info) {
+        return ContextCompat.getDrawable(this.context, info.getFlagImage());
     }
 }

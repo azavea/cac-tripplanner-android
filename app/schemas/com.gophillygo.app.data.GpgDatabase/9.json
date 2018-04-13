@@ -2,18 +2,12 @@
   "formatVersion": 1,
   "database": {
     "version": 9,
-    "identityHash": "2b331425867fa119154e3764113063a7",
+    "identityHash": "f808213eac224cd20c621585cd4d643c",
     "entities": [
       {
         "tableName": "AttractionFlag",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT, `attractionID` INTEGER NOT NULL, `is_event` INTEGER NOT NULL, `option` INTEGER)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`attractionID` INTEGER NOT NULL, `is_event` INTEGER NOT NULL, `option` INTEGER, PRIMARY KEY(`attractionID`, `is_event`))",
         "fields": [
-          {
-            "fieldPath": "id",
-            "columnName": "id",
-            "affinity": "INTEGER",
-            "notNull": false
-          },
           {
             "fieldPath": "attractionID",
             "columnName": "attractionID",
@@ -35,9 +29,10 @@
         ],
         "primaryKey": {
           "columnNames": [
-            "id"
+            "attractionID",
+            "is_event"
           ],
-          "autoGenerate": true
+          "autoGenerate": false
         },
         "indices": [
           {
@@ -47,13 +42,21 @@
               "attractionID"
             ],
             "createSql": "CREATE  INDEX `index_AttractionFlag_attractionID` ON `${TABLE_NAME}` (`attractionID`)"
+          },
+          {
+            "name": "index_AttractionFlag_is_event",
+            "unique": false,
+            "columnNames": [
+              "is_event"
+            ],
+            "createSql": "CREATE  INDEX `index_AttractionFlag_is_event` ON `${TABLE_NAME}` (`is_event`)"
           }
         ],
         "foreignKeys": []
       },
       {
         "tableName": "Destination",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`city` TEXT, `state` TEXT, `address` TEXT, `categories` TEXT, `watershed_alliance` INTEGER NOT NULL, `zipcode` TEXT, `distance` REAL NOT NULL, `formattedDistance` TEXT, `eventCount` INTEGER NOT NULL, `id` INTEGER NOT NULL, `placeID` INTEGER NOT NULL, `name` TEXT, `accessible` INTEGER NOT NULL, `image` TEXT, `cycling` INTEGER NOT NULL, `description` TEXT, `priority` INTEGER NOT NULL, `activities` TEXT, `website_url` TEXT, `wide_image` TEXT, `is_event` INTEGER NOT NULL, `timestamp` INTEGER NOT NULL, `x` REAL, `y` REAL, `street_address` TEXT, PRIMARY KEY(`id`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`city` TEXT, `state` TEXT, `address` TEXT, `categories` TEXT, `watershed_alliance` INTEGER NOT NULL, `zipcode` TEXT, `distance` REAL NOT NULL, `id` INTEGER NOT NULL, `placeID` INTEGER NOT NULL, `name` TEXT, `accessible` INTEGER NOT NULL, `image` TEXT, `cycling` INTEGER NOT NULL, `description` TEXT, `priority` INTEGER NOT NULL, `activities` TEXT, `website_url` TEXT, `wide_image` TEXT, `is_event` INTEGER NOT NULL, `timestamp` INTEGER NOT NULL, `x` REAL, `y` REAL, `street_address` TEXT, PRIMARY KEY(`id`))",
         "fields": [
           {
             "fieldPath": "city",
@@ -95,18 +98,6 @@
             "fieldPath": "distance",
             "columnName": "distance",
             "affinity": "REAL",
-            "notNull": true
-          },
-          {
-            "fieldPath": "formattedDistance",
-            "columnName": "formattedDistance",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "eventCount",
-            "columnName": "eventCount",
-            "affinity": "INTEGER",
             "notNull": true
           },
           {
@@ -258,18 +249,12 @@
       },
       {
         "tableName": "Event",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`destination` INTEGER, `destinationName` TEXT, `start_date` TEXT, `end_date` TEXT, `id` INTEGER NOT NULL, `placeID` INTEGER NOT NULL, `name` TEXT, `accessible` INTEGER NOT NULL, `image` TEXT, `cycling` INTEGER NOT NULL, `description` TEXT, `priority` INTEGER NOT NULL, `activities` TEXT, `website_url` TEXT, `wide_image` TEXT, `is_event` INTEGER NOT NULL, `timestamp` INTEGER NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`destination`) REFERENCES `Destination`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL DEFERRABLE INITIALLY DEFERRED)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`destination` INTEGER, `start_date` TEXT, `end_date` TEXT, `id` INTEGER NOT NULL, `placeID` INTEGER NOT NULL, `name` TEXT, `accessible` INTEGER NOT NULL, `image` TEXT, `cycling` INTEGER NOT NULL, `description` TEXT, `priority` INTEGER NOT NULL, `activities` TEXT, `website_url` TEXT, `wide_image` TEXT, `is_event` INTEGER NOT NULL, `timestamp` INTEGER NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`destination`) REFERENCES `Destination`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL DEFERRABLE INITIALLY DEFERRED)",
         "fields": [
           {
             "fieldPath": "destination",
             "columnName": "destination",
             "affinity": "INTEGER",
-            "notNull": false
-          },
-          {
-            "fieldPath": "destinationName",
-            "columnName": "destinationName",
-            "affinity": "TEXT",
             "notNull": false
           },
           {
@@ -452,7 +437,7 @@
     ],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"2b331425867fa119154e3764113063a7\")"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"f808213eac224cd20c621585cd4d643c\")"
     ]
   }
 }

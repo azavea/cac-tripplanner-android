@@ -2,7 +2,6 @@ package com.gophillygo.app.data.models;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.PrimaryKey;
 import android.arch.persistence.room.TypeConverter;
 import android.arch.persistence.room.TypeConverters;
 import android.support.annotation.DrawableRes;
@@ -11,7 +10,7 @@ import android.util.SparseArray;
 import com.google.gson.annotations.SerializedName;
 import com.gophillygo.app.R;
 
-@Entity
+@Entity(primaryKeys = {"attractionID", "is_event"})
 public class AttractionFlag {
 
     public enum Option {
@@ -41,28 +40,20 @@ public class AttractionFlag {
         }
     }
 
-    @PrimaryKey(autoGenerate = true)
-    private final Integer id;
-
     @ColumnInfo(index = true)
     private final int attractionID;
 
-    @ColumnInfo(name = "is_event")
+    @ColumnInfo(name = "is_event", index = true)
     @SerializedName("is_event")
     private final boolean isEvent;
 
     @TypeConverters(OptionConverter.class)
     private final Option option;
 
-    public AttractionFlag(Integer id, int attractionID, boolean isEvent, Option option) {
-        this.id = id;
+    public AttractionFlag(int attractionID, boolean isEvent, Option option) {
         this.attractionID = attractionID;
         this.isEvent = isEvent;
         this.option = option;
-    }
-
-    public Integer getId() {
-        return id;
     }
 
     public int getAttractionID() {

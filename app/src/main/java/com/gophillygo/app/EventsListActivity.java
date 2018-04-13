@@ -10,15 +10,14 @@ import android.view.MenuItem;
 
 import com.gophillygo.app.adapters.EventsListAdapter;
 import com.gophillygo.app.data.EventViewModel;
-import com.gophillygo.app.data.models.AttractionFlag;
-import com.gophillygo.app.data.models.Event;
+import com.gophillygo.app.data.models.AttractionInfo;
 import com.gophillygo.app.data.networkresource.Status;
 import com.gophillygo.app.di.GpgViewModelFactory;
 
 import javax.inject.Inject;
 
 public class EventsListActivity extends FilterableListActivity
-        implements EventsListAdapter.AttractionListItemClickListener<Event> {
+        implements EventsListAdapter.AttractionListItemClickListener {
 
     private static final String LOG_LABEL = "EventsList";
 
@@ -52,10 +51,9 @@ public class EventsListActivity extends FilterableListActivity
         */
     }
 
-    public boolean clickedFlagOption(MenuItem item, Event event) {
-        AttractionFlag flag = event.createAttractionFlag(item.getItemId());
-        event.setFlag(flag);
-        viewModel.updateAttractionFlag(flag);
+    public boolean clickedFlagOption(MenuItem item, AttractionInfo eventInfo) {
+        eventInfo.updateAttractionFlag(item.getItemId());
+        viewModel.updateAttractionFlag(eventInfo.getFlag());
         return true;
     }
 

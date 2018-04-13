@@ -2,17 +2,11 @@ package com.gophillygo.app.data.models;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
-import android.graphics.drawable.Drawable;
-import android.support.annotation.ColorRes;
-import android.support.annotation.DrawableRes;
-import android.support.annotation.MenuRes;
 import android.text.Html;
 import android.text.Spanned;
 
 import com.google.gson.annotations.SerializedName;
-import com.gophillygo.app.R;
 
 import java.util.ArrayList;
 
@@ -56,10 +50,6 @@ public class Attraction {
     // timestamp is not final, as it is set on database save, and not by serializer
     private long timestamp;
 
-    // Stored separately from Attraction models and set afterwards
-    @Ignore
-    private AttractionFlag flag;
-
     public Attraction(int id, int placeID, String name, boolean accessible, String image,
                       boolean cycling, String description, int priority, String websiteUrl,
                       String wideImage, boolean isEvent, ArrayList<String> activities) {
@@ -76,16 +66,6 @@ public class Attraction {
         this.isEvent = isEvent;
 
         this.activities = activities;
-    }
-
-    /**
-     * User options for attraction flags. Does not come from query results and is stored in a
-     * separate table.
-     *
-     * @param flag user flag
-     */
-    public void setFlag(AttractionFlag flag) {
-        this.flag = flag;
     }
 
     /**
@@ -150,14 +130,6 @@ public class Attraction {
         return isEvent;
     }
 
-    public AttractionFlag getFlag() {
-        return flag;
-    }
-
-    public @DrawableRes int getFlagImage() {
-        return flag == null || flag.getOption() == null ? AttractionFlag.Option.NotSelected.drawable : flag.getOption().drawable;
-    }
-
     public long getTimestamp() {
         return timestamp;
     }
@@ -182,33 +154,5 @@ public class Attraction {
             stringBuilder.append(activity);
         }
         return stringBuilder.toString();
-    }
-
-    public AttractionFlag createAttractionFlag(@MenuRes int menuId) {
-        AttractionFlag.Option option;
-        switch (menuId) {
-            case R.id.place_option_not_interested:
-                option = AttractionFlag.Option.NotInterested;
-                break;
-            case R.id.place_option_liked:
-                option = AttractionFlag.Option.Liked;
-                break;
-            case R.id.place_option_been:
-                option = AttractionFlag.Option.Been;
-                break;
-            case R.id.place_option_want_to_go:
-                option = AttractionFlag.Option.WantToGo;
-                break;
-            default:
-                option = AttractionFlag.Option.NotSelected;
-        }
-        if (flag != null) {
-            // When selecting the option already selected, toggle it off
-            if (flag.getOption() == option) {
-                option = AttractionFlag.Option.NotSelected;
-            }
-            return new AttractionFlag(flag.getId(), getId(), isEvent(), option);
-        }
-        return new AttractionFlag(null, getId(), isEvent(), option);
     }
 }

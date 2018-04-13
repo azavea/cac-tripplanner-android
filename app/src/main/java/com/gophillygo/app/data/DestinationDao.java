@@ -6,6 +6,7 @@ import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Transaction;
 
 import com.gophillygo.app.data.models.Destination;
+import com.gophillygo.app.data.models.DestinationInfo;
 
 import java.util.List;
 
@@ -15,15 +16,24 @@ import java.util.List;
 
 @Dao
 public abstract class DestinationDao implements AttractionDao<Destination> {
-    @Query("SELECT * FROM destination ORDER BY distance ASC")
-    public abstract LiveData<List<Destination>> getAll();
+    @Query("SELECT destination.*, COUNT(event.id) AS eventCount, attractionflag.option " +
+            "FROM destination " +
+            "LEFT JOIN event ON destination.id = event.destination " +
+            "LEFT JOIN attractionflag " +
+            "ON destination.id = attractionflag.attractionID AND attractionflag.is_event = 0 " +
+            "GROUP BY destination.id " +
+            "ORDER BY distance ASC")
+    public abstract LiveData<List<DestinationInfo>> getAll();
 
 
-    @Query("SELECT destination.*, COUNT(event.id) AS eventCount " +
-            "FROM destination LEFT JOIN event ON destination.id = event.destination " +
+    @Query("SELECT destination.*, COUNT(event.id) AS eventCount, attractionflag.option " +
+            "FROM destination " +
+            "LEFT JOIN event ON destination.id = event.destination " +
+            "LEFT JOIN attractionflag " +
+            "ON destination.id = attractionflag.attractionID AND attractionflag.is_event = 0 " +
             "WHERE destination.id = :destinationId " +
             "GROUP BY destination.id")
-    abstract LiveData<Destination> getDestination(long destinationId);
+    abstract LiveData<DestinationInfo> getDestination(long destinationId);
 
     @Query("DELETE FROM destination")
     public abstract void clear();

@@ -7,6 +7,7 @@ import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Transaction;
 
 import com.gophillygo.app.data.models.Event;
+import com.gophillygo.app.data.models.EventInfo;
 
 import java.util.List;
 
@@ -16,19 +17,21 @@ import java.util.List;
 
 @Dao
 public abstract class EventDao implements AttractionDao<Event> {
-    @Query("SELECT event.*, destination.name AS destinationName FROM event " +
+    @Query("SELECT event.*, destination.name AS destinationName, attractionflag.option " +
+            "FROM event " +
             "LEFT JOIN destination ON destination.id = event.destination " +
+            "LEFT JOIN attractionflag " +
+            "ON event.id = attractionflag.attractionID AND attractionflag.is_event = 1 " +
             "ORDER BY event.start_date ASC;")
-    public abstract LiveData<List<Event>> getAll();
+    public abstract LiveData<List<EventInfo>> getAll();
 
-    @Query("SELECT * FROM event WHERE id = :eventId")
-    public abstract LiveData<Event> getEvent(long eventId);
-
-    @Query("SELECT event.*, destination.name AS destinationName FROM event " +
-            "INNER JOIN destination ON destination.id = event.destination " +
-            "WHERE event.destination = :destinationId " +
-            "ORDER BY event.start_date ASC;")
-    public abstract LiveData<List<Event>> getEventsForDestination(long destinationId);
+    @Query("SELECT event.*, destination.name AS destinationName, attractionflag.option " +
+            "FROM event " +
+            "LEFT JOIN destination ON destination.id = event.destination " +
+            "LEFT JOIN attractionflag " +
+            "ON event.id = attractionflag.attractionID AND attractionflag.is_event = 1 " +
+            "WHERE event.id = :eventId")
+    public abstract LiveData<EventInfo> getEvent(long eventId);
 
     @Query("DELETE FROM event")
     public abstract void clear();
