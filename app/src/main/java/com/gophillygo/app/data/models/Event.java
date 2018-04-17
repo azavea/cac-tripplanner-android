@@ -4,7 +4,6 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.ForeignKey;
 import android.arch.persistence.room.Ignore;
-import android.util.Log;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -41,9 +40,6 @@ public class Event extends Attraction {
     @ColumnInfo(index = true)
     private final Integer destination;
 
-    // fetch name of related destination from database into this property
-    private final String destinationName;
-
     @ColumnInfo(name = "start_date", index = true)
     @SerializedName("start_date")
     private final String startDate;
@@ -62,16 +58,15 @@ public class Event extends Attraction {
     public Event(int id, int placeID, String name, boolean accessible, String image,
                  boolean cycling, String description, int priority, String websiteUrl,
                  String wideImage, boolean isEvent, ArrayList<String> activities,
-                 Integer destination, String startDate, String endDate, String destinationName) {
+                 Integer destination, String startDate, String endDate) {
 
         // initialize Attraction
         super(id, placeID, name, accessible, image, cycling, description, priority, websiteUrl,
-                wideImage, isEvent, activities);
+              wideImage, isEvent, activities);
 
         this.destination = destination;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.destinationName = destinationName;
 
         try {
             this.start = isoDateFormat.parse(startDate);
@@ -87,14 +82,6 @@ public class Event extends Attraction {
 
         this.isSingleDay = checkIfSingleDayEvent();
 
-    }
-
-    public String getDestinationName() {
-        return destinationName;
-    }
-
-    public boolean hasDestinationName() {
-        return destinationName != null && !destinationName.isEmpty();
     }
 
     public Integer getDestination() {

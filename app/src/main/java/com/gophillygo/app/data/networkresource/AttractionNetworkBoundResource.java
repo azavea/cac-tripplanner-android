@@ -8,6 +8,7 @@ import com.gophillygo.app.data.DestinationDao;
 import com.gophillygo.app.data.DestinationWebservice;
 import com.gophillygo.app.data.EventDao;
 import com.gophillygo.app.data.models.Attraction;
+import com.gophillygo.app.data.models.AttractionInfo;
 import com.gophillygo.app.data.models.Destination;
 import com.gophillygo.app.data.models.DestinationQueryResponse;
 import com.gophillygo.app.data.models.Event;
@@ -20,8 +21,8 @@ import java.util.concurrent.TimeUnit;
  * Subclass to get LiveData responses for either destinations or events.
  */
 
-abstract public class AttractionNetworkBoundResource<T extends Attraction>
-        extends NetworkBoundResource<List<T>, DestinationQueryResponse> {
+abstract public class AttractionNetworkBoundResource<A extends Attraction, I extends AttractionInfo<A>>
+        extends NetworkBoundResource<List<I>, DestinationQueryResponse> {
 
     // maximum rate at which to refresh data from network
     private static final long RATE_LIMIT = TimeUnit.MINUTES.toMillis(15);
@@ -60,11 +61,11 @@ abstract public class AttractionNetworkBoundResource<T extends Attraction>
     }
 
     @Override
-    protected boolean shouldFetch(@Nullable List<T> data) {
+    protected boolean shouldFetch(@Nullable List<I> data) {
         if (data == null || data.isEmpty()) {
             return true;
         }
-        Attraction first = data.get(0);
+        Attraction first = data.get(0).getAttraction();
         return System.currentTimeMillis() - first.getTimestamp() > RATE_LIMIT;
     }
 
@@ -74,5 +75,5 @@ abstract public class AttractionNetworkBoundResource<T extends Attraction>
     }
 
     @NonNull @Override
-    abstract protected LiveData<List<T>> loadFromDb();
+    abstract protected LiveData<List<I>> loadFromDb();
 }

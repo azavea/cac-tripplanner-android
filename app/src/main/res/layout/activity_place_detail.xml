@@ -3,10 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:fillViewport="true"
-    tools:context="com.gophillygo.app.HomeActivity">
+    tools:context="com.gophillygo.app.PlaceDetailActivity">
     <data>
         <!-- set up data binding to destination -->
         <variable name="destination" type="com.gophillygo.app.data.models.Destination"/>
+        <variable name="destinationInfo" type="com.gophillygo.app.data.models.DestinationInfo"/>
         <variable name="activity" type="com.gophillygo.app.PlaceDetailActivity" />
         <!-- imports to allow referencing within data binding expressions -->
         <import type="android.view.View"/>
@@ -77,7 +78,7 @@
                 android:paddingEnd="10sp"
                 android:drawableStart="@drawable/ic_event_black_24dp"
                 style="@style/GpgDetailText"
-                android:visibility="@{destination.hasEvents ? View.VISIBLE : View.INVISIBLE}"/>
+                android:visibility="@{destinationInfo.hasEvents ? View.VISIBLE : View.INVISIBLE}"/>
 
             <android.support.v7.widget.CardView
                 android:id="@+id/place_detail_description_card"
@@ -126,7 +127,7 @@
                     android:id="@+id/place_options_flag_text"
                     android:text="@string/place_details_been_want_to_go_label"
                     android:layout_width="match_parent"
-                    android:drawableEnd="@drawable/ic_add_black_24dp"
+                    android:drawableEnd="@{activity.getFlagImage(destinationInfo)}"
                     style="@style/GpgDetailText" />
 
             </android.support.v7.widget.CardView>

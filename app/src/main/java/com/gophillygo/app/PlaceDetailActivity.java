@@ -4,7 +4,9 @@ import android.annotation.SuppressLint;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.view.menu.MenuBuilder;
@@ -22,6 +24,7 @@ import android.widget.TextView;
 
 import com.gophillygo.app.data.DestinationViewModel;
 import com.gophillygo.app.data.models.Destination;
+import com.gophillygo.app.data.models.DestinationInfo;
 import com.gophillygo.app.databinding.ActivityPlaceDetailBinding;
 import com.gophillygo.app.di.GpgViewModelFactory;
 import com.synnapps.carouselview.CarouselView;
@@ -37,7 +40,7 @@ public class PlaceDetailActivity extends AppCompatActivity {
     private static final int EXPANDED_MAX_LINES = 50;
 
     private long placeId = -1;
-    private Destination destination;
+    private DestinationInfo destinationInfo;
 
     private LayoutInflater inflater;
     private ActivityPlaceDetailBinding binding;
@@ -82,14 +85,17 @@ public class PlaceDetailActivity extends AppCompatActivity {
 
         viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(DestinationViewModel.class);
-        viewModel.getDestination(placeId).observe(this, destination -> {
+        viewModel.getDestination(placeId).observe(this, destinationInfo -> {
             // TODO: handle if destination not found (go to list of destinations?)
-            if (destination == null) {
+            if (destinationInfo == null || destinationInfo.getDestination() == null) {
                 Log.e(LOG_LABEL, "No matching destination found for ID " + placeId);
+                return;
             }
-            this.destination = destination;
+
+            this.destinationInfo = destinationInfo;
             // set up data binding object
-            binding.setDestination(destination);
+            binding.setDestination(destinationInfo.getDestination());
+            binding.setDestinationInfo(destinationInfo);
             displayDestination();
         });
 
@@ -121,9 +127,9 @@ public class PlaceDetailActivity extends AppCompatActivity {
     public void goToMap(View view) {
         // TODO: #10 open within app map view, once implemented
         // for now, open Google Maps externally with a marker at the given location
-        String locationString = destination.getLocation().toString();
+        String locationString = destinationInfo.getDestination().getLocation().toString();
         Uri gmapsUri = Uri.parse("geo:" + locationString + "?q=" + locationString + "(" +
-                destination.getName() + ")");
+                destinationInfo.getDestination().getName() + ")");
         Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmapsUri);
         mapIntent.setPackage("com.google.android.apps.maps");
         if (mapIntent.resolveActivity(getPackageManager()) != null) {
@@ -138,16 +144,22 @@ public class PlaceDetailActivity extends AppCompatActivity {
                 // TODO: #9 send current user location as origin
                 .appendQueryParameter("origin", "")
                 .appendQueryParameter("originText", "")
-                .appendQueryParameter("destination", destination.getLocation().toString())
-                .appendQueryParameter("destinationText", destination.getAddress()).build();
+                .appendQueryParameter("destination", destinationInfo.getDestination().getLocation().toString())
+                .appendQueryParameter("destinationText", destinationInfo.getDestination().getAddress()).build();
         Intent intent = new Intent(Intent.ACTION_VIEW, directionsUri);
         startActivity(intent);
     }
 
     // open website for destination in browser
     public void goToWebsite(View view) {
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(destination.getWebsiteUrl()));
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(destinationInfo.getDestination().getWebsiteUrl()));
         startActivity(intent);
+    }
+
+    public Drawable getFlagImage(DestinationInfo attractionInfo) {
+        if (attractionInfo == null) return null;
+
+        return ContextCompat.getDrawable(this, attractionInfo.getFlagImage());
     }
 
     @SuppressLint({"RestrictedApi", "RtlHardcoded"})
@@ -156,13 +168,13 @@ public class PlaceDetailActivity extends AppCompatActivity {
         carouselView.setViewListener(new CarouselViewListener(this, false) {
             @Override
             public Destination getDestinationAt(int position) {
-                return destination;
+                return destinationInfo.getDestination();
             }
         });
         carouselView.setPageCount(1);
 
         // set count of upcoming events
-        int eventCount = destination.getEventCount();
+        int eventCount = destinationInfo.getEventCount();
         TextView upcomingEventsView = findViewById(R.id.place_detail_upcoming_events);
         String upcomingEventsText = getResources()
                 .getQuantityString(R.plurals.place_upcoming_activities_count, eventCount, eventCount);
@@ -170,21 +182,22 @@ public class PlaceDetailActivity extends AppCompatActivity {
 
         // TODO: #18 go to filtered event list with events for destination on click
         upcomingEventsView.setOnClickListener(v -> Log.d(LOG_LABEL,
-                "Clicked upcoming events for destination " +  destination.getName()));
+                "Clicked upcoming events for destination " +  destinationInfo.getDestination().getName()));
 
 
         TextView descriptionToggle = findViewById(R.id.place_detail_description_toggle);
         descriptionToggle.setOnClickListener(toggleClickListener);
 
         // show popover for flag options (been, want to go, etc.)
-        // TODO: #25 implement user flags
         CardView flagOptionsCard = findViewById(R.id.place_detail_flag_options_card);
         flagOptionsCard.setOnClickListener(v -> {
             Log.d(LOG_LABEL, "Clicked flags button");
             PopupMenu menu = new PopupMenu(this, flagOptionsCard);
             menu.getMenuInflater().inflate(R.menu.place_options_menu, menu.getMenu());
             menu.setOnMenuItemClickListener(item -> {
-                Log.d(LOG_LABEL, "Clicked " + item.toString());
+                destinationInfo.updateAttractionFlag(item.getItemId());
+                viewModel.updateAttractionFlag(destinationInfo.getFlag());
+
                 return true;
             });
 

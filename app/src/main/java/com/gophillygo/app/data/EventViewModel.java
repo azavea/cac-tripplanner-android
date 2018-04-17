@@ -1,9 +1,9 @@
 package com.gophillygo.app.data;
 
 import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.ViewModel;
 
 import com.gophillygo.app.data.models.Event;
+import com.gophillygo.app.data.models.EventInfo;
 import com.gophillygo.app.data.networkresource.Resource;
 
 import java.util.List;
@@ -11,18 +11,17 @@ import java.util.List;
 import javax.inject.Inject;
 
 
-public class EventViewModel extends ViewModel {
+public class EventViewModel extends AttractionViewModel {
 
-    private final LiveData<Resource<List<Event>>> events;
-    private final DestinationRepository destinationRepository;
+    private final LiveData<Resource<List<EventInfo>>> events;
 
     @Inject
     public EventViewModel(DestinationRepository destinationRepository) {
-        this.destinationRepository = destinationRepository;
+        super(destinationRepository);
         events = destinationRepository.loadEvents();
     }
 
-    public LiveData<Event> getEvent(long eventId) {
+    public LiveData<EventInfo> getEvent(long eventId) {
         return destinationRepository.getEvent(eventId);
     }
 
@@ -34,7 +33,7 @@ public class EventViewModel extends ViewModel {
         destinationRepository.updateMultipleEvents(events);
     }
 
-    public LiveData<Resource<List<Event>>> getEvents() {
+    public LiveData<Resource<List<EventInfo>>> getEvents() {
         return events;
     }
 }

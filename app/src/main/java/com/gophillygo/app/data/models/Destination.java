@@ -3,6 +3,7 @@ package com.gophillygo.app.data.models;
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Embedded;
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -41,21 +42,19 @@ public class Destination extends Attraction {
 
     // convenience property to track distance to each destination
     private float distance;
+    @Ignore
     private String formattedDistance;
-
-    // track the count of related events
-    private int eventCount;
 
     public Destination(int id, int placeID, String name, boolean accessible, String image,
                        String city, boolean cycling, String zipCode, String description,
                        int priority, String state, String address, DestinationLocation location,
                        DestinationAttributes attributes, boolean watershedAlliance, String websiteUrl,
                        String wideImage, boolean isEvent, ArrayList<String> activities,
-                       ArrayList<String> categories, int eventCount) {
+                       ArrayList<String> categories) {
 
         // initialize Attraction
         super(id, placeID, name, accessible, image, cycling, description, priority, websiteUrl,
-                wideImage, isEvent, activities);
+              wideImage, isEvent, activities);
 
         this.city = city;
         this.zipCode = zipCode;
@@ -66,17 +65,11 @@ public class Destination extends Attraction {
         this.location = location;
         this.attributes = attributes;
         this.categories = categories;
-        this.eventCount = eventCount;
     }
 
     public void setDistance(float distance) {
         this.distance = distance;
         this.formattedDistance = numberFormatter.format(distance) + " mi";
-    }
-
-    // setFormattedDistance is here to please compiler; it is better to set via setDistance
-    public void setFormattedDistance(String formattedDistance) {
-        this.formattedDistance = formattedDistance;
     }
 
     public String getCity() {
@@ -117,13 +110,5 @@ public class Destination extends Attraction {
 
     public ArrayList<String> getCategories() {
         return categories;
-    }
-
-    public int getEventCount() {
-        return eventCount;
-    }
-
-    public boolean hasEvents() {
-        return eventCount > 0;
     }
 }

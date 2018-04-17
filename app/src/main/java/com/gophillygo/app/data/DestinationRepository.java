@@ -5,8 +5,11 @@ import android.arch.lifecycle.LiveData;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 
+import com.gophillygo.app.data.models.AttractionFlag;
 import com.gophillygo.app.data.models.Destination;
+import com.gophillygo.app.data.models.DestinationInfo;
 import com.gophillygo.app.data.models.Event;
+import com.gophillygo.app.data.models.EventInfo;
 import com.gophillygo.app.data.networkresource.AttractionNetworkBoundResource;
 import com.gophillygo.app.data.networkresource.Resource;
 
@@ -26,24 +29,27 @@ class DestinationRepository {
     private static final String LOG_LABEL = "DestinationRepository";
 
     private final DestinationWebservice webservice;
+    private final AttractionFlagDao attractionFlagDao;
     private final DestinationDao destinationDao;
     private final EventDao eventDao;
 
     @Inject
     public DestinationRepository(DestinationWebservice webservice,
+                                 AttractionFlagDao attractionFlagDao,
                                  DestinationDao destinationDao,
                                  EventDao eventDao) {
         this.webservice = webservice;
+        this.attractionFlagDao = attractionFlagDao;
         this.destinationDao = destinationDao;
         this.eventDao = eventDao;
     }
 
-    public LiveData<Destination> getDestination(long destinationId) {
+    public LiveData<DestinationInfo> getDestination(long destinationId) {
         // return a LiveData item directly from the database.
         return destinationDao.getDestination(destinationId);
     }
 
-    public LiveData<Event> getEvent(long eventId) {
+    public LiveData<EventInfo> getEvent(long eventId) {
         return eventDao.getEvent(eventId);
     }
 
@@ -64,6 +70,17 @@ class DestinationRepository {
             @Override
             protected Void doInBackground(Void... voids) {
                 eventDao.update(event);
+                return null;
+            }
+        }.execute();
+    }
+
+    @SuppressLint("StaticFieldLeak")
+    public void updateAttractionFlag(AttractionFlag flag) {
+        new AsyncTask<Void, Void, Void>() {
+            @Override
+            protected Void doInBackground(Void... voids) {
+                attractionFlagDao.save(flag);
                 return null;
             }
         }.execute();
@@ -91,20 +108,20 @@ class DestinationRepository {
         }.execute();
     }
 
-    public LiveData<Resource<List<Destination>>> loadDestinations() {
-        return new AttractionNetworkBoundResource<Destination>(webservice, destinationDao, eventDao) {
+    public LiveData<Resource<List<DestinationInfo>>> loadDestinations() {
+        return new AttractionNetworkBoundResource<Destination, DestinationInfo>(webservice, destinationDao, eventDao) {
             @NonNull
             @Override
-            protected LiveData<List<Destination>> loadFromDb() {
+            protected LiveData<List<DestinationInfo>> loadFromDb() {
                 return destinationDao.getAll();
             }
         }.getAsLiveData();
     }
 
-    public LiveData<Resource<List<Event>>> loadEvents() {
-        return new AttractionNetworkBoundResource<Event>(webservice, destinationDao, eventDao) {
+    public LiveData<Resource<List<EventInfo>>> loadEvents() {
+        return new AttractionNetworkBoundResource<Event, EventInfo>(webservice, destinationDao, eventDao) {
             @NonNull @Override
-            protected LiveData<List<Event>> loadFromDb() {
+            protected LiveData<List<EventInfo>> loadFromDb() {
                 return eventDao.getAll();
             }
         }.getAsLiveData();

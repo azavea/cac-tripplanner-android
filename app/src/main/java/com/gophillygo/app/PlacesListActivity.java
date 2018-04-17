@@ -1,5 +1,6 @@
 package com.gophillygo.app;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,8 +12,13 @@ import android.view.MenuItem;
 
 import com.gophillygo.app.adapters.PlacesListAdapter;
 import com.gophillygo.app.data.DestinationViewModel;
+import com.gophillygo.app.data.models.AttractionInfo;
+import com.gophillygo.app.data.models.DestinationInfo;
+import com.gophillygo.app.data.networkresource.Resource;
 import com.gophillygo.app.data.networkresource.Status;
 import com.gophillygo.app.di.GpgViewModelFactory;
+
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -48,6 +54,12 @@ public class PlacesListActivity extends FilterableListActivity implements
         startActivity(intent);
     }
 
+    public boolean clickedFlagOption(MenuItem item, AttractionInfo destinationInfo, Integer position) {
+        destinationInfo.updateAttractionFlag(item.getItemId());
+        viewModel.updateAttractionFlag(destinationInfo.getFlag());
+        placesListView.getAdapter().notifyItemChanged(position);
+        return true;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,14 +69,16 @@ public class PlacesListActivity extends FilterableListActivity implements
         layoutManager = new LinearLayoutManager(this);
         viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(DestinationViewModel.class);
-        viewModel.getDestinations().observe(this, destinationResource -> {
+        LiveData<Resource<List<DestinationInfo>>> data = viewModel.getDestinations();
+        data.observe(this, destinationResource -> {
             if (destinationResource != null && destinationResource.status.equals(Status.SUCCESS) &&
                     destinationResource.data != null && !destinationResource.data.isEmpty()) {
 
                 placesListView = findViewById(R.id.places_list_recycler_view);
-                PlacesListAdapter adapter = new PlacesListAdapter<>(this, destinationResource.data, this);
+                PlacesListAdapter adapter = new PlacesListAdapter(this, destinationResource.data, this);
                 placesListView.setAdapter(adapter);
                 placesListView.setLayoutManager(layoutManager);
+                data.removeObservers(this);
             }
         });
 

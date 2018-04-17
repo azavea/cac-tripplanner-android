@@ -4,6 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
         <variable name="attraction" type="com.gophillygo.app.data.models.Event"/>
+        <variable name="attractionInfo" type="com.gophillygo.app.data.models.EventInfo"/>
+        <variable name="position" type="Integer"/>
         <variable name="adapter" type="com.gophillygo.app.adapters.EventsListAdapter" />
         <import type="android.view.View"/>
     </data>
@@ -78,8 +80,8 @@
 
         <TextView
             android:id="@+id/event_list_destination_name"
-            android:text="@{attraction.destinationName}"
-            android:visibility="@{attraction.hasDestinationName ? View.VISIBLE : View.INVISIBLE}"
+            android:text="@{attractionInfo.destinationName}"
+            android:visibility="@{attractionInfo.hasDestinationName ? View.VISIBLE : View.INVISIBLE}"
             style="@style/TextAppearance.AppCompat.Medium"
             android:textColor="@color/color_text_dark_grey"
             android:layout_width="0dp"
@@ -112,10 +114,10 @@
         <android.support.v7.widget.AppCompatImageButton
             app:backgroundTint="@color/color_white"
             android:id="@+id/event_list_item_options_button"
-            android:onClick="@{(view) -> adapter.optionsButtonClick(view, attraction)}"
+            android:onClick="@{(view) -> adapter.optionsButtonClick(view, attractionInfo, position)}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:src="@drawable/ic_add_black_24dp"
+            android:src="@{adapter.getFlagImage(attractionInfo)}"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 

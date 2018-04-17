@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.gophillygo.app.R;
 import com.gophillygo.app.data.models.Event;
+import com.gophillygo.app.data.models.EventInfo;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -11,7 +12,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-public class EventsListAdapter extends AttractionListAdapter<Event> {
+public class EventsListAdapter extends AttractionListAdapter<EventInfo> {
 
     private static final String LOG_LABEL = "EventListAdapter";
 
@@ -27,7 +28,7 @@ public class EventsListAdapter extends AttractionListAdapter<Event> {
 
     private Context context;
 
-    public EventsListAdapter(Context context, List<Event> attractions, AttractionListItemClickListener listener) {
+    public EventsListAdapter(Context context, List<EventInfo> attractions, AttractionListItemClickListener listener) {
         super(context, attractions, R.layout.event_list_item, listener);
         this.context = context;
     }

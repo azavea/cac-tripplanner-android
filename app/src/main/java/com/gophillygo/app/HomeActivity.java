@@ -17,11 +17,13 @@ import android.widget.GridView;
 import com.gophillygo.app.adapters.PlaceCategoryGridAdapter;
 import com.gophillygo.app.data.DestinationViewModel;
 import com.gophillygo.app.data.models.Destination;
+import com.gophillygo.app.data.models.DestinationInfo;
 import com.gophillygo.app.data.models.DestinationLocation;
 import com.gophillygo.app.data.networkresource.Status;
 import com.gophillygo.app.di.GpgViewModelFactory;
 import com.synnapps.carouselview.CarouselView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -48,7 +50,7 @@ public class HomeActivity extends AppCompatActivity {
     @SuppressWarnings("WeakerAccess")
     DestinationViewModel viewModel;
 
-    private List<Destination> nearestDestinations;
+    private List<DestinationInfo> nearestDestinations;
     private Location currentLocation;
 
     @Override
@@ -103,7 +105,7 @@ public class HomeActivity extends AppCompatActivity {
             carouselView.setViewListener(new CarouselViewListener(this, true) {
                 @Override
                 public Destination getDestinationAt(int position) {
-                    return nearestDestinations.get(position);
+                    return nearestDestinations.get(position).getDestination();
                 }
             });
             carouselView.setPageCount(nearestDestinations.size());
@@ -111,11 +113,16 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     @NonNull
-    private List<Destination> findNearestDestinations(List<Destination> destinations) {
+    private List<DestinationInfo> findNearestDestinations(List<DestinationInfo> destinationInfos) {
         // TODO: #9 move logic to set distances once location service set up
         // set distance to each location, if not set already
-        Destination firstDestination = destinations.get(0);
+        Destination firstDestination = destinationInfos.get(0).getDestination();
         if (firstDestination.getDistance() == 0) {
+            List<Destination> destinations = new ArrayList<>(destinationInfos.size());
+            for (DestinationInfo info : destinationInfos) {
+                destinations.add(info.getDestination());
+            }
+
             for (Destination dest: destinations) {
                 Location location = new Location("dummy");
                 DestinationLocation coordinates = dest.getLocation();
@@ -131,10 +138,10 @@ public class HomeActivity extends AppCompatActivity {
 
         // return the nearest destinations
         int numDestinations = CAROUSEL_MAX_DESTINATION_COUNT;
-        if (destinations.size() < numDestinations) {
-            numDestinations = destinations.size();
+        if (destinationInfos.size() < numDestinations) {
+            numDestinations = destinationInfos.size();
         }
-        return destinations.subList(0, numDestinations - 1);
+        return destinationInfos.subList(0, numDestinations - 1);
     }
 
     @Override

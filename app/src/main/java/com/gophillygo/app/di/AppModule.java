@@ -3,6 +3,7 @@ package com.gophillygo.app.di;
 import android.app.Application;
 import android.arch.persistence.room.Room;
 
+import com.gophillygo.app.data.AttractionFlagDao;
 import com.gophillygo.app.data.DestinationDao;
 import com.gophillygo.app.data.DestinationWebservice;
 import com.gophillygo.app.data.EventDao;
@@ -68,5 +69,11 @@ class AppModule {
     @Provides
     EventDao provideEventDao(GpgDatabase db) {
         return db.eventDao();
+    }
+
+    @Singleton
+    @Provides
+    AttractionFlagDao provideAttractionFlagDao(GpgDatabase db) {
+        return db.attractionFlagDao();
     }
 }
