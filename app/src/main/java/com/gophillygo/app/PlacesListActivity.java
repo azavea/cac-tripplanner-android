@@ -77,6 +77,7 @@ public class PlacesListActivity extends FilterableListActivity implements
 
     @Override
     protected void loadData(Filter filter) {
+        this.filter = filter;
         LiveData<Resource<List<DestinationInfo>>> data = viewModel.getFilteredDestinations(filter);
         data.observe(this, destinationResource -> {
             if (destinationResource != null && destinationResource.status.equals(Status.SUCCESS) &&

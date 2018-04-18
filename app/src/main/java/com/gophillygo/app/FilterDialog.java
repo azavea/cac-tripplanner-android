@@ -21,6 +21,7 @@ public class FilterDialog extends BottomSheetDialogFragment {
     }
 
     private static final String LOG_LABEL = "FilterDialog";
+    private static final String FILTER_ARG = "Filter";
 
     private Button doneButton;
     private Button resetButton;
@@ -30,6 +31,17 @@ public class FilterDialog extends BottomSheetDialogFragment {
     private GpgToggleButton accessibleButton;
 
     private ArrayList<GpgToggleButton> filterButtons;
+
+
+    public static FilterDialog newInstance(Filter filter) {
+        FilterDialog dialog = new FilterDialog();
+
+        Bundle args = new Bundle();
+        args.putParcelable(FILTER_ARG, filter);
+        dialog.setArguments(args);
+
+        return dialog;
+    }
 
     @Override
     public void onDismiss(DialogInterface dialog) {
@@ -54,15 +66,31 @@ public class FilterDialog extends BottomSheetDialogFragment {
         View contentView = View.inflate(getContext(), R.layout.filter_modal, null);
         dialog.setContentView(contentView);
 
+        Filter filter = null;
+        if (getArguments() != null) {
+            filter = getArguments().getParcelable(FILTER_ARG);
+        }
+        if (filter == null) {
+            filter = new Filter();
+        }
+
         // set up filter buttons
         natureButton = dialog.findViewById(R.id.filter_modal_nature_category_button);
+        natureButton.setChecked(filter.nature);
         exerciseButton = dialog.findViewById(R.id.filter_modal_excercise_category_button);
+        exerciseButton.setChecked(filter.exercise);
         educationalButton = dialog.findViewById(R.id.filter_modal_educational_category_button);
+        educationalButton.setChecked(filter.educational);
         beenButton = dialog.findViewById(R.id.filter_modal_been_button);
+        beenButton.setChecked(filter.been);
         wantToGoButton = dialog.findViewById(R.id.filter_modal_want_to_go_button);
+        wantToGoButton.setChecked(filter.wantToGo);
         notInterestedButton = dialog.findViewById(R.id.filter_modal_not_interested_button);
+        notInterestedButton.setChecked(filter.notInterested);
         likedButton = dialog.findViewById(R.id.filter_modal_liked_button);
+        likedButton.setChecked(filter.liked);
         accessibleButton = dialog.findViewById(R.id.filter_modal_accessible_button);
+        accessibleButton.setChecked(filter.accessible);
 
         filterButtons = new ArrayList<>(8);
         filterButtons.add(natureButton);

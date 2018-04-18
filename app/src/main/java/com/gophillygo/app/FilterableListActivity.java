@@ -24,6 +24,7 @@ public abstract class FilterableListActivity extends AppCompatActivity
     private Button filterButton;
     private Drawable filterIcon;
     private Toolbar toolbar;
+    public Filter filter;
 
     public FilterableListActivity(int layoutId, int toolbarId, int filterButtonId) {
         this.layoutId = layoutId;
@@ -47,9 +48,10 @@ public abstract class FilterableListActivity extends AppCompatActivity
         filterIcon = ContextCompat.getDrawable(this, R.drawable.ic_filter_list_white_24px);
 
         // set up filter button
+        filter = new Filter();
         filterButton = findViewById(filterButtonId);
         filterButton.setOnClickListener(v -> {
-            FilterDialog filterDialog = new FilterDialog();
+            FilterDialog filterDialog = FilterDialog.newInstance(filter);
             filterDialog.show(getSupportFragmentManager(), filterDialog.getTag());
         });
     }

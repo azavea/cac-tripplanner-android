@@ -29,31 +29,8 @@ public abstract class DestinationDao implements AttractionDao<Destination> {
     public abstract LiveData<List<DestinationInfo>> getAll();
 
     public LiveData<List<DestinationInfo>> getFiltered(Filter filter) {
-        List<String> categories = new ArrayList<>();
-        if (filter.nature) {
-            categories.add("Nature");
-        }
-        if (filter.exercise) {
-            categories.add("Exercise");
-        }
-        if (filter.educational) {
-            categories.add("Educational");
-        }
-
-        List<Integer> flags = new ArrayList<>();
-        if (filter.been) {
-            flags.add(AttractionFlag.Option.Been.code);
-        }
-        if (filter.liked) {
-            flags.add(AttractionFlag.Option.Liked.code);
-        }
-        if (filter.notInterested) {
-            flags.add(AttractionFlag.Option.NotInterested.code);
-        }
-        if (filter.wantToGo) {
-            flags.add(AttractionFlag.Option.WantToGo.code);
-        }
-
+        List<String> categories = filter.categories();
+        List<Integer> flags = filter.flags();
         return getFiltered(!categories.isEmpty(), categories, !flags.isEmpty(), flags, filter.accessible);
     }
 
