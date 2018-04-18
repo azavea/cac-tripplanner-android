@@ -2,6 +2,7 @@ package com.gophillygo.app;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -21,15 +22,17 @@ import com.gophillygo.app.data.models.DestinationInfo;
 import com.gophillygo.app.data.models.DestinationLocation;
 import com.gophillygo.app.data.networkresource.Status;
 import com.gophillygo.app.di.GpgViewModelFactory;
+import com.gophillygo.app.utils.GpgLocationUtils;
 import com.synnapps.carouselview.CarouselView;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 
 
-public class HomeActivity extends AppCompatActivity {
+public class HomeActivity extends AppCompatActivity implements GpgLocationUtils.LocationUpdateListener {
 
     private static final String LOG_LABEL = "HomeActivity";
 
@@ -44,12 +47,12 @@ public class HomeActivity extends AppCompatActivity {
     private GridView gridView;
     private Toolbar toolbar;
 
-    @SuppressWarnings("WeakerAccess")
     @Inject
     GpgViewModelFactory viewModelFactory;
     @SuppressWarnings("WeakerAccess")
     DestinationViewModel viewModel;
 
+    private List<DestinationInfo> destinationInfos;
     private List<DestinationInfo> nearestDestinations;
     private Location currentLocation;
 
@@ -93,53 +96,55 @@ public class HomeActivity extends AppCompatActivity {
                 return;
             }
 
-            // TODO: #9 use actual user location
-            // set to dummy location: City Hall
-            currentLocation = new Location("dummy");
-            currentLocation.setLatitude(39.954888);
-            currentLocation.setLongitude(-75.163206);
+            // request location
+            if (!GpgLocationUtils.getLastKnownLocation(new WeakReference<>(this), this)) {
+                // if last location can't be found right now for some reason, use default
+                // set to dummy location: City Hall
+                // TODO: remove/replace
+                currentLocation = new Location("dummy");
+                currentLocation.setLatitude(39.954888);
+                currentLocation.setLongitude(-75.163206);
+            }
 
-            nearestDestinations = findNearestDestinations(destinationResource.data);
-
-            // set up carousel
-            carouselView.setViewListener(new CarouselViewListener(this, true) {
-                @Override
-                public Destination getDestinationAt(int position) {
-                    return nearestDestinations.get(position).getDestination();
-                }
-            });
-            carouselView.setPageCount(nearestDestinations.size());
+            destinationInfos = destinationResource.data;
+            int numDestinations = CAROUSEL_MAX_DESTINATION_COUNT;
+            if (destinationInfos.size() < numDestinations) {
+                numDestinations = destinationInfos.size();
+            }
+            nearestDestinations = destinationInfos.subList(0, numDestinations - 1);
+            viewModel.getDestinations().removeObservers(this);
         });
     }
 
     @NonNull
-    private List<DestinationInfo> findNearestDestinations(List<DestinationInfo> destinationInfos) {
+    private List<DestinationInfo> findNearestDestinations() {
         // TODO: #9 move logic to set distances once location service set up
         // set distance to each location, if not set already
-        Destination firstDestination = destinationInfos.get(0).getDestination();
-        if (firstDestination.getDistance() == 0) {
-            List<Destination> destinations = new ArrayList<>(destinationInfos.size());
-            for (DestinationInfo info : destinationInfos) {
-                destinations.add(info.getDestination());
-            }
-
-            for (Destination dest: destinations) {
-                Location location = new Location("dummy");
-                DestinationLocation coordinates = dest.getLocation();
-                location.setLatitude(coordinates.getY());
-                location.setLongitude(coordinates.getX());
-                float distanceInMeters = currentLocation.distanceTo(location);
-                dest.setDistance(distanceInMeters * METERS_TO_MILES);
-            }
-
-            // update destinations all at once, so LiveData observer only triggers once
-            viewModel.updateMultipleDestinations(destinations);
+        int totalDestinations = destinationInfos.size();
+        // TODO: also update if location changed, but causes live data to reload in a loop
+        //Destination firstDestination = destinationInfos.get(0).getDestination();
+        //if (firstDestination.getDistance() == 0) {
+        List<Destination> destinations = new ArrayList<>(totalDestinations);
+        for (DestinationInfo info : destinationInfos) {
+            destinations.add(info.getDestination());
         }
+
+        for (Destination dest: destinations) {
+            Location location = new Location("dummy");
+            DestinationLocation coordinates = dest.getLocation();
+            location.setLatitude(coordinates.getY());
+            location.setLongitude(coordinates.getX());
+            float distanceInMeters = currentLocation.distanceTo(location);
+            dest.setDistance(distanceInMeters * METERS_TO_MILES);
+        }
+
+        // update destinations all at once, so LiveData observer only triggers once
+        viewModel.updateMultipleDestinations(destinations);
 
         // return the nearest destinations
         int numDestinations = CAROUSEL_MAX_DESTINATION_COUNT;
-        if (destinationInfos.size() < numDestinations) {
-            numDestinations = destinationInfos.size();
+        if (totalDestinations < numDestinations) {
+            numDestinations = totalDestinations;
         }
         return destinationInfos.subList(0, numDestinations - 1);
     }
@@ -187,11 +192,6 @@ public class HomeActivity extends AppCompatActivity {
         carouselView.playCarousel();
     }
 
-    @Override
-    public void onPointerCaptureChanged(boolean hasCapture) {
-
-    }
-
     private void clickedGridItem(int position) {
         Log.d(LOG_LABEL, "clicked grid view item: " + position);
 
@@ -204,6 +204,48 @@ public class HomeActivity extends AppCompatActivity {
                 // go to places list
                 // TODO: #18 filter list based on selected grid item
                 startActivity(new Intent(this, PlacesListActivity.class));
+        }
+    }
+
+    @Override
+    public void locationFound(Location location) {
+        if (location == null) {
+            Log.w(LOG_LABEL, "Have no found location returned.");
+        } else {
+            Log.d(LOG_LABEL, "location found!");
+        }
+        currentLocation = location;
+
+        if (currentLocation == null) {
+            Log.w(LOG_LABEL, "Using City Hall as default");
+            currentLocation = new Location("dummy");
+            currentLocation.setLatitude(39.954888);
+            currentLocation.setLongitude(-75.163206);
+        }
+        nearestDestinations = findNearestDestinations();
+
+        // set up carousel with nearest destinations
+        carouselView.setViewListener(new CarouselViewListener(this, true) {
+            @Override
+            public Destination getDestinationAt(int position) {
+                return nearestDestinations.get(position).getDestination();
+            }
+        });
+        carouselView.setPageCount(nearestDestinations.size());
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == GpgLocationUtils.PERMISSION_REQUEST_ID) {
+            if (grantResults.length > 0) {
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // TODO: re-request location
+                    Log.d(LOG_LABEL, "Re-requesting location");
+                    GpgLocationUtils.getLastKnownLocation(new WeakReference<>(this), this);
+                } else if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
+                    GpgLocationUtils.displayPermissionRequestRationale(getApplicationContext());
+                }
+            }
         }
     }
 }

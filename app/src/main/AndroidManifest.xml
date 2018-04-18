@@ -3,6 +3,7 @@
     package="com.gophillygo.app">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <!--
     Allows Glide to monitor connectivity status and restart failed requests if users go from a
     a disconnected to a connected network state.
@@ -27,12 +28,14 @@
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <!-- Accepts only the top-level URI "https://gophillygo.org” -->
-                <data android:scheme="https"
+                <data
+                    android:host="gophillygo.org"
                     android:path="/"
-                    android:host="gophillygo.org" />
+                    android:scheme="https" />
             </intent-filter>
         </activity>
         <activity
@@ -50,7 +53,8 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.gophillygo.app.PlacesListActivity" />
         </activity>
-        <activity android:name=".EventsListActivity"
+        <activity
+            android:name=".EventsListActivity"
             android:label="@string/events_list_title"
             android:parentActivityName=".HomeActivity">
             <meta-data

@@ -28,6 +28,12 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 @Module(includes = ViewModelModule.class)
 class AppModule {
+
+    private final static String WEBSERVICE_URL = "https://gophillygo.org/";
+
+
+    // Data services
+
     @Singleton
     @Provides
     DestinationWebservice provideDestinationWebservice() {
@@ -44,7 +50,7 @@ class AppModule {
 
         return new Retrofit.Builder()
                 .client(client)
-                .baseUrl("https://gophillygo.org/")
+                .baseUrl(WEBSERVICE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(new LiveDataCallAdapterFactory())
                 .build()

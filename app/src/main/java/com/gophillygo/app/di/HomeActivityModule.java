@@ -12,7 +12,6 @@ import dagger.android.ContributesAndroidInjector;
 
 @Module
 public abstract class HomeActivityModule {
-    @SuppressWarnings("unused")
     @ContributesAndroidInjector
     abstract HomeActivity contributeHomeActivity();
 }

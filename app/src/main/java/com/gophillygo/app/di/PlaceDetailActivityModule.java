@@ -7,7 +7,6 @@ import dagger.android.ContributesAndroidInjector;
 
 @Module
 public abstract class PlaceDetailActivityModule {
-    @SuppressWarnings("unused")
     @ContributesAndroidInjector
     abstract PlaceDetailActivity contributePlaceDetailActivity();
 }

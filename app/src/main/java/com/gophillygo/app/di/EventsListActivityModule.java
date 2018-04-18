@@ -8,7 +8,6 @@ import dagger.android.ContributesAndroidInjector;
 
 @Module
 public abstract class EventsListActivityModule {
-    @SuppressWarnings("unused")
     @ContributesAndroidInjector
     abstract EventsListActivity contributeEventsListActivity();
 }

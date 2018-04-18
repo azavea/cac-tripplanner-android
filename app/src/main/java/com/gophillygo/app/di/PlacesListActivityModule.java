@@ -7,7 +7,6 @@ import dagger.android.ContributesAndroidInjector;
 
 @Module
 public abstract class PlacesListActivityModule {
-    @SuppressWarnings("unused")
     @ContributesAndroidInjector
     abstract PlacesListActivity contributePlacesListActivity();
 }
