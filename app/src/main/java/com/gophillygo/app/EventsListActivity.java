@@ -78,7 +78,7 @@ public class EventsListActivity extends FilterableListActivity
         LiveData<Resource<List<EventInfo>>> data = viewModel.getEvents();
         data.observe(this, destinationResource -> {
             if (destinationResource != null && destinationResource.status.equals(Status.SUCCESS) &&
-                    destinationResource.data != null) {
+                    destinationResource.data != null && !destinationResource.data.isEmpty()) {
                 events = destinationResource.data;
                 loadData();
                 // Remove observer after loading full list so updates to the destination flags don't

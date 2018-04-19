@@ -78,7 +78,7 @@ public class PlacesListActivity extends FilterableListActivity implements
         LiveData<Resource<List<DestinationInfo>>> data = viewModel.getDestinations();
         data.observe(this, destinationResource -> {
             if (destinationResource != null && destinationResource.status.equals(Status.SUCCESS) &&
-                    destinationResource.data != null) {
+                    destinationResource.data != null && !destinationResource.data.isEmpty()) {
                 destinations = destinationResource.data;
                 loadData();
                 // Remove observer after loading full list so updates to the destination flags don't
