@@ -4,6 +4,7 @@ import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -16,11 +17,11 @@ import com.gophillygo.app.adapters.PlacesListAdapter;
 import com.gophillygo.app.data.DestinationViewModel;
 import com.gophillygo.app.data.models.AttractionInfo;
 import com.gophillygo.app.data.models.DestinationInfo;
-import com.gophillygo.app.data.models.Filter;
 import com.gophillygo.app.data.networkresource.Resource;
 import com.gophillygo.app.data.networkresource.Status;
 import com.gophillygo.app.di.GpgViewModelFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -33,6 +34,7 @@ public class PlacesListActivity extends FilterableListActivity implements
 
     private LinearLayoutManager layoutManager;
     private RecyclerView placesListView;
+    private List<DestinationInfo> destinations;
 
     @SuppressWarnings("WeakerAccess")
     @Inject
@@ -72,28 +74,31 @@ public class PlacesListActivity extends FilterableListActivity implements
         layoutManager = new LinearLayoutManager(this);
         viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(DestinationViewModel.class);
-        loadData(null);
-    }
 
-    @Override
-    protected void loadData(Filter filter) {
-        this.filter = filter;
-        LiveData<Resource<List<DestinationInfo>>> data = viewModel.getFilteredDestinations(filter);
+        LiveData<Resource<List<DestinationInfo>>> data = viewModel.getDestinations();
         data.observe(this, destinationResource -> {
             if (destinationResource != null && destinationResource.status.equals(Status.SUCCESS) &&
                     destinationResource.data != null) {
-                TextView noDataView = findViewById(R.id.empty_places_list);
-                noDataView.setVisibility(destinationResource.data.isEmpty() ? View.VISIBLE : View.GONE);
-
-                placesListView = findViewById(R.id.places_list_recycler_view);
-                PlacesListAdapter adapter = new PlacesListAdapter(this, destinationResource.data, this);
-                placesListView.setAdapter(adapter);
-                placesListView.setLayoutManager(layoutManager);
+                destinations = destinationResource.data;
+                loadData();
                 // Remove observer after loading full list so updates to the destination flags don't
                 // cause unwanted changes to scroll position
                 data.removeObservers(this);
             }
         });
+    }
+
+    @Override
+    protected void loadData() {
+        List<DestinationInfo> filteredDestinations = getFilteredDestinations();
+
+        TextView noDataView = findViewById(R.id.empty_places_list);
+        noDataView.setVisibility(filteredDestinations.isEmpty() ? View.VISIBLE : View.GONE);
+
+        placesListView = findViewById(R.id.places_list_recycler_view);
+        PlacesListAdapter adapter = new PlacesListAdapter(this, filteredDestinations, this);
+        placesListView.setAdapter(adapter);
+        placesListView.setLayoutManager(layoutManager);
     }
 
     @Override
@@ -120,6 +125,17 @@ public class PlacesListActivity extends FilterableListActivity implements
                 return super.onOptionsItemSelected(item);
         }
         return true;
+    }
+
+    @NonNull
+    private List<DestinationInfo> getFilteredDestinations() {
+        List<DestinationInfo> filteredDestinations = new ArrayList<>(destinations.size());
+        for (DestinationInfo info : destinations) {
+            if (filter.matches(info)) {
+                filteredDestinations.add(info);
+            }
+        }
+        return filteredDestinations;
     }
 
 }

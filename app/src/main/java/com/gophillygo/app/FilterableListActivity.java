@@ -24,7 +24,8 @@ public abstract class FilterableListActivity extends AppCompatActivity
     private Button filterButton;
     private Drawable filterIcon;
     private Toolbar toolbar;
-    public Filter filter;
+
+    protected Filter filter;
 
     public FilterableListActivity(int layoutId, int toolbarId, int filterButtonId) {
         this.layoutId = layoutId;
@@ -32,7 +33,7 @@ public abstract class FilterableListActivity extends AppCompatActivity
         this.filterButtonId = filterButtonId;
     }
 
-    protected abstract void loadData(Filter filter);
+    protected abstract void loadData();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +59,8 @@ public abstract class FilterableListActivity extends AppCompatActivity
 
     @Override
     public void filterChanged(Filter filter) {
-        loadData(filter);
+        this.filter = filter;
+        loadData();
 
         int setFilterCount = filter.count();
         // Change filter button's left drawable when filters set to either be a badge with the

@@ -10,7 +10,6 @@ import com.gophillygo.app.data.models.Destination;
 import com.gophillygo.app.data.models.DestinationInfo;
 import com.gophillygo.app.data.models.Event;
 import com.gophillygo.app.data.models.EventInfo;
-import com.gophillygo.app.data.models.Filter;
 import com.gophillygo.app.data.networkresource.AttractionNetworkBoundResource;
 import com.gophillygo.app.data.networkresource.Resource;
 
@@ -110,17 +109,10 @@ class DestinationRepository {
     }
 
     public LiveData<Resource<List<DestinationInfo>>> loadDestinations() {
-        return loadDestinations(null);
-    }
-
-    public LiveData<Resource<List<DestinationInfo>>> loadDestinations(Filter filter) {
         return new AttractionNetworkBoundResource<Destination, DestinationInfo>(webservice, destinationDao, eventDao) {
             @NonNull
             @Override
             protected LiveData<List<DestinationInfo>> loadFromDb() {
-                if (filter != null) {
-                    return destinationDao.getFiltered(filter);
-                }
                 return destinationDao.getAll();
             }
         }.getAsLiveData();

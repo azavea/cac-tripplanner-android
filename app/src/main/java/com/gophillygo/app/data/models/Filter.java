@@ -48,7 +48,53 @@ public class Filter implements Parcelable {
         return selectedCount;
     }
 
-    public List<String> categories() {
+    public boolean matches(DestinationInfo info) {
+        boolean categoryMatches = categoryMatches(info.getDestination().getCategories());
+        boolean flagMatches = flagMatches(info.getFlag());
+        boolean accessibleMatches = accessibleMatches(info.getDestination().isAccessible());
+
+        return categoryMatches && flagMatches && accessibleMatches;
+    }
+
+    public boolean matches(EventInfo info) {
+        boolean categoryMatches = categoryMatches(info.getDestinationCategories());
+        boolean flagMatches = flagMatches(info.getFlag());
+        boolean accessibleMatches = accessibleMatches(info.getEvent().isAccessible());
+
+        return categoryMatches && flagMatches && accessibleMatches;
+    }
+
+    private boolean categoryMatches(List<String> destCategories) {
+        if (destCategories == null) return false;
+
+        boolean categoryMatches = categories().isEmpty();
+        for (String category : categories()) {
+            if (destCategories.contains(category)) {
+                categoryMatches = true;
+            }
+        }
+        return categoryMatches;
+    }
+
+    private boolean flagMatches(AttractionFlag flag) {
+        boolean flagMatches = flags().isEmpty();
+        for (AttractionFlag.Option option : flags()) {
+            if (flag.getOption() == option) {
+                flagMatches = true;
+            }
+        }
+        return flagMatches;
+    }
+
+    private boolean accessibleMatches(boolean isAccessible) {
+        boolean accessibleMatches = true;
+        if (accessible && !isAccessible) {
+            accessibleMatches = false;
+        }
+        return accessibleMatches;
+    }
+
+    private List<String> categories() {
         List<String> categories = new ArrayList<>();
         if (nature) {
             categories.add("Nature");
@@ -63,19 +109,19 @@ public class Filter implements Parcelable {
 
     }
 
-    public List<Integer> flags() {
-        List<Integer> flags = new ArrayList<>();
+    private List<AttractionFlag.Option> flags() {
+        List<AttractionFlag.Option> flags = new ArrayList<>();
         if (been) {
-            flags.add(AttractionFlag.Option.Been.code);
+            flags.add(AttractionFlag.Option.Been);
         }
         if (liked) {
-            flags.add(AttractionFlag.Option.Liked.code);
+            flags.add(AttractionFlag.Option.Liked);
         }
         if (notInterested) {
-            flags.add(AttractionFlag.Option.NotInterested.code);
+            flags.add(AttractionFlag.Option.NotInterested);
         }
         if (wantToGo) {
-            flags.add(AttractionFlag.Option.WantToGo.code);
+            flags.add(AttractionFlag.Option.WantToGo);
         }
         return flags;
     }
