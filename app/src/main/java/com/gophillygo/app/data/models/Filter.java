@@ -9,7 +9,7 @@ public class Filter implements Serializable {
     public static String EXERCISE_CATEGORY = "Exercise";
     public static String EDUCATIONAL_CATEGORY = "Educational";
 
-    public boolean nature, exercise, educational, been, wantToGo, notInterested, liked, accessible;
+    private boolean nature, exercise, educational, been, wantToGo, notInterested, liked, accessible;
 
     public Filter() {
         this(false, false, false, false, false, false, false, false);
@@ -55,9 +55,11 @@ public class Filter implements Serializable {
     }
 
     private boolean categoryMatches(List<String> destCategories) {
-        if (destCategories == null) return false;
-
         boolean categoryMatches = categories().isEmpty();
+        if (destCategories == null) {
+            return categoryMatches;
+        }
+
         for (String category : categories()) {
             if (destCategories.contains(category)) {
                 categoryMatches = true;
@@ -114,5 +116,69 @@ public class Filter implements Serializable {
             flags.add(AttractionFlag.Option.WantToGo);
         }
         return flags;
+    }
+
+    public boolean isNature() {
+        return nature;
+    }
+
+    public void setNature(boolean nature) {
+        this.nature = nature;
+    }
+
+    public boolean isExercise() {
+        return exercise;
+    }
+
+    public void setExercise(boolean exercise) {
+        this.exercise = exercise;
+    }
+
+    public boolean isEducational() {
+        return educational;
+    }
+
+    public void setEducational(boolean educational) {
+        this.educational = educational;
+    }
+
+    public boolean isBeen() {
+        return been;
+    }
+
+    public void setBeen(boolean been) {
+        this.been = been;
+    }
+
+    public boolean isWantToGo() {
+        return wantToGo;
+    }
+
+    public void setWantToGo(boolean wantToGo) {
+        this.wantToGo = wantToGo;
+    }
+
+    public boolean isNotInterested() {
+        return notInterested;
+    }
+
+    public void setNotInterested(boolean notInterested) {
+        this.notInterested = notInterested;
+    }
+
+    public boolean isLiked() {
+        return liked;
+    }
+
+    public void setLiked(boolean liked) {
+        this.liked = liked;
+    }
+
+    public boolean isAccessible() {
+        return accessible;
+    }
+
+    public void setAccessible(boolean accessible) {
+        this.accessible = accessible;
     }
 }
