@@ -7,6 +7,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Filter implements Parcelable {
+    public static String NATURE_CATEGORY = "Nature";
+    public static String EXERCISE_CATEGORY = "Exercise";
+    public static String EDUCATIONAL_CATEGORY = "Educational";
+
     public boolean nature, exercise, educational, been, wantToGo, notInterested, liked, accessible;
 
     public Filter() {
@@ -97,13 +101,13 @@ public class Filter implements Parcelable {
     private List<String> categories() {
         List<String> categories = new ArrayList<>();
         if (nature) {
-            categories.add("Nature");
+            categories.add(NATURE_CATEGORY);
         }
         if (exercise) {
-            categories.add("Exercise");
+            categories.add(EXERCISE_CATEGORY);
         }
         if (educational) {
-            categories.add("Educational");
+            categories.add(EDUCATIONAL_CATEGORY);
         }
         return categories;
 
