@@ -1,12 +1,10 @@
 package com.gophillygo.app.data.models;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Filter implements Parcelable {
+public class Filter implements Serializable {
     public static String NATURE_CATEGORY = "Nature";
     public static String EXERCISE_CATEGORY = "Exercise";
     public static String EDUCATIONAL_CATEGORY = "Educational";
@@ -27,18 +25,6 @@ public class Filter implements Parcelable {
         this.notInterested = notInterested;
         this.liked = liked;
         this.accessible = accessible;
-    }
-
-    private Filter(Parcel in) {
-        boolean[] fields = in.createBooleanArray();
-        this.nature = fields[0];
-        this.exercise = fields[1];
-        this.educational = fields[2];
-        this.been = fields[3];
-        this.wantToGo = fields[4];
-        this.notInterested = fields[5];
-        this.liked = fields[6];
-        this.accessible = fields[7];
     }
 
     public int count() {
@@ -129,25 +115,4 @@ public class Filter implements Parcelable {
         }
         return flags;
     }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeBooleanArray(new boolean[]{nature, exercise, educational, been, wantToGo,
-                                               notInterested, liked, accessible});
-    }
-
-    public static final Parcelable.Creator<Filter> CREATOR = new Parcelable.Creator<Filter>() {
-        public Filter createFromParcel(Parcel in) {
-            return new Filter(in);
-        }
-
-        public Filter[] newArray(int size) {
-            return new Filter[size];
-        }
-    };
 }

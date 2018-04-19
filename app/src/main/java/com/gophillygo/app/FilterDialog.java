@@ -37,7 +37,7 @@ public class FilterDialog extends BottomSheetDialogFragment {
         FilterDialog dialog = new FilterDialog();
 
         Bundle args = new Bundle();
-        args.putParcelable(FILTER_ARG, filter);
+        args.putSerializable(FILTER_ARG, filter);
         dialog.setArguments(args);
 
         return dialog;
