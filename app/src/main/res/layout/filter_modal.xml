@@ -4,7 +4,7 @@
     android:fillViewport="true"
     tools:context="com.gophillygo.app.FilterDialog">
     <data>
-        <!-- set up data binding to destination -->
+        <!-- set up data binding to filter and dialog fragment -->
         <variable name="filter" type="com.gophillygo.app.data.models.Filter"/>
         <variable name="dialog" type="com.gophillygo.app.FilterDialog"/>
         <!-- imports to allow referencing within data binding expressions -->

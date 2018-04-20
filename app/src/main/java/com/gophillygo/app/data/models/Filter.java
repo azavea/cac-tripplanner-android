@@ -1,15 +1,35 @@
 package com.gophillygo.app.data.models;
 
+import android.databinding.BaseObservable;
+import android.databinding.Bindable;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Filter implements Serializable {
+import com.gophillygo.app.BR;
+
+public class Filter extends BaseObservable implements Serializable {
     public static String NATURE_CATEGORY = "Nature";
     public static String EXERCISE_CATEGORY = "Exercise";
     public static String EDUCATIONAL_CATEGORY = "Educational";
 
-    private boolean nature, exercise, educational, been, wantToGo, notInterested, liked, accessible;
+    @Bindable
+    private boolean nature;
+    @Bindable
+    private boolean exercise;
+    @Bindable
+    private boolean educational;
+    @Bindable
+    private boolean been;
+    @Bindable
+    private boolean wantToGo;
+    @Bindable
+    private boolean notInterested;
+    @Bindable
+    private boolean liked;
+    @Bindable
+    private boolean accessible;
 
     public Filter() {
         this(false, false, false, false, false, false, false, false);
@@ -36,6 +56,18 @@ public class Filter implements Serializable {
             }
         }
         return selectedCount;
+    }
+
+    public void reset() {
+        this.nature = false;
+        this.exercise = false;
+        this.educational = false;
+        this.been = false;
+        this.wantToGo = false;
+        this.notInterested = false;
+        this.liked = false;
+        this.accessible = false;
+        notifyChange();
     }
 
     public boolean matches(DestinationInfo info) {
@@ -124,6 +156,7 @@ public class Filter implements Serializable {
 
     public void setNature(boolean nature) {
         this.nature = nature;
+        notifyPropertyChanged(BR.nature);
     }
 
     public boolean isExercise() {
@@ -132,6 +165,7 @@ public class Filter implements Serializable {
 
     public void setExercise(boolean exercise) {
         this.exercise = exercise;
+        notifyPropertyChanged(BR.exercise);
     }
 
     public boolean isEducational() {
@@ -140,6 +174,7 @@ public class Filter implements Serializable {
 
     public void setEducational(boolean educational) {
         this.educational = educational;
+        notifyPropertyChanged(BR.educational);
     }
 
     public boolean isBeen() {
@@ -148,6 +183,7 @@ public class Filter implements Serializable {
 
     public void setBeen(boolean been) {
         this.been = been;
+        notifyPropertyChanged(BR.been);
     }
 
     public boolean isWantToGo() {
@@ -156,6 +192,7 @@ public class Filter implements Serializable {
 
     public void setWantToGo(boolean wantToGo) {
         this.wantToGo = wantToGo;
+        notifyPropertyChanged(BR.wantToGo);
     }
 
     public boolean isNotInterested() {
@@ -164,6 +201,7 @@ public class Filter implements Serializable {
 
     public void setNotInterested(boolean notInterested) {
         this.notInterested = notInterested;
+        notifyPropertyChanged(BR.notInterested);
     }
 
     public boolean isLiked() {
@@ -172,6 +210,7 @@ public class Filter implements Serializable {
 
     public void setLiked(boolean liked) {
         this.liked = liked;
+        notifyPropertyChanged(BR.liked);
     }
 
     public boolean isAccessible() {
@@ -180,5 +219,6 @@ public class Filter implements Serializable {
 
     public void setAccessible(boolean accessible) {
         this.accessible = accessible;
+        notifyPropertyChanged(BR.accessible);
     }
 }
