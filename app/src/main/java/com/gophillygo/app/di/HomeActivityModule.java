@@ -1,6 +1,6 @@
 package com.gophillygo.app.di;
 
-import com.gophillygo.app.HomeActivity;
+import com.gophillygo.app.activities.HomeActivity;
 
 import dagger.Module;
 import dagger.android.ContributesAndroidInjector;

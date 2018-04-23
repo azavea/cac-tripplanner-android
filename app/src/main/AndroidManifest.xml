@@ -20,7 +20,7 @@
         android:supportsRtl="true"
         android:theme="@style/GpgAppTheme"
         android:value="GlideModule">
-        <activity android:name=".HomeActivity">
+        <activity android:name=".activities.HomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -39,27 +39,27 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".PlacesListActivity"
+            android:name=".activities.PlacesListActivity"
             android:label="@string/places_list_title"
-            android:parentActivityName=".HomeActivity">
+            android:parentActivityName=".activities.HomeActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.gophillygo.app.HomeActivity" />
+                android:value="com.gophillygo.app.activities.HomeActivity" />
         </activity>
         <activity
-            android:name=".PlaceDetailActivity"
-            android:parentActivityName=".PlacesListActivity">
+            android:name=".activities.PlaceDetailActivity"
+            android:parentActivityName=".activities.PlacesListActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.gophillygo.app.PlacesListActivity" />
+                android:value="com.gophillygo.app.activities.PlacesListActivity" />
         </activity>
         <activity
-            android:name=".EventsListActivity"
+            android:name=".activities.EventsListActivity"
             android:label="@string/events_list_title"
-            android:parentActivityName=".HomeActivity">
+            android:parentActivityName=".activities.HomeActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.gophillygo.app.HomeActivity" />
+                android:value="com.gophillygo.app.activities.HomeActivity" />
         </activity>
     </application>
 

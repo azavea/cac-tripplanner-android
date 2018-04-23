@@ -1,4 +1,4 @@
-package com.gophillygo.app;
+package com.gophillygo.app.activities;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModelProviders;
@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.gophillygo.app.R;
 import com.gophillygo.app.adapters.PlacesListAdapter;
 import com.gophillygo.app.data.DestinationViewModel;
 import com.gophillygo.app.data.models.AttractionInfo;
