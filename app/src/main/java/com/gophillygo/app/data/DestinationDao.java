@@ -25,7 +25,6 @@ public abstract class DestinationDao implements AttractionDao<Destination> {
             "ORDER BY distance ASC")
     public abstract LiveData<List<DestinationInfo>> getAll();
 
-
     @Query("SELECT destination.*, COUNT(event.id) AS eventCount, attractionflag.option " +
             "FROM destination " +
             "LEFT JOIN event ON destination.id = event.destination " +

@@ -53,4 +53,5 @@
 
     <!-- event list -->
     <string name="event_list_item_time_range">%s - %s</string>
+    <string name="no_results">No results</string>
 </resources>
