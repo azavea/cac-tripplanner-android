@@ -1,5 +1,6 @@
 package com.gophillygo.app.activities;
 
+import android.app.Activity;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -23,6 +24,11 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+/**
+ * Base activity that requests last known location and destination data when opened;
+ * if either change, updates the distances to the destinations and calls
+ * `locationOrDestinationsChanged`.
+ */
 public abstract class BaseAttractionActivity extends AppCompatActivity implements GpgLocationUtils.LocationUpdateListener {
 
     private static final String LOG_LABEL = "BaseAttractionActivity";
@@ -58,7 +64,7 @@ public abstract class BaseAttractionActivity extends AppCompatActivity implement
 
     private void fetchLastLocationOrUseDefault() {
         // request location, and if request fails, use default
-        if (!GpgLocationUtils.getLastKnownLocation(new WeakReference<>(this), this)) {
+        if (!GpgLocationUtils.getLastKnownLocation(new WeakReference<>(this))) {
             setDefaultLocation();
         }
     }

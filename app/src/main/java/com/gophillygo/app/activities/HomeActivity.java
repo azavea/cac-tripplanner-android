@@ -55,7 +55,6 @@ public class HomeActivity extends BaseAttractionActivity {
             setUpCarousel();
         } else {
             Log.w(LOG_LABEL, "No nearest destinations yet in locationOrDestinationChanged");
-
         }
     }
 

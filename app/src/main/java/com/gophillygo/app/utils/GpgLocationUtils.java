@@ -29,7 +29,11 @@ public class GpgLocationUtils {
     // identifier for device location access request, if runtime prompt necessary
     // request code must be in lower 8 bits
     public static final int PERMISSION_REQUEST_ID = 11;
-    public static final int API_AVAILABILITY_REQUEST_ID = 22;
+    private static final int API_AVAILABILITY_REQUEST_ID = 22;
+
+    private static final int LOCATION_REQUESTS_COUNT = 12;
+    private static final int LOCATION_REQUEST_EXPIRATION_DURATION_MS = 10000; // 10s
+
 
     private static final String LOG_LABEL = "GpgLocationUtils";
 
@@ -41,9 +45,11 @@ public class GpgLocationUtils {
      * Check if app has permission and access to device location, and that GPS is present and enabled.
      * If so, start receiving location updates.
      *
+     * @param caller Activity that will handle any system dialog results;
+     *               must implement LocationUpdateListener.
      * @return True if location updates have been started
      */
-    public static boolean getLastKnownLocation(WeakReference<Activity> caller, LocationUpdateListener listener) {
+    public static boolean getLastKnownLocation(WeakReference<Activity> caller) {
         // check for location service availability and status
 
         // if calling activity already gone, don't bother attempting to prompt for permissions now
@@ -55,10 +61,10 @@ public class GpgLocationUtils {
         GoogleApiAvailability gapiAvailability = GoogleApiAvailability.getInstance();
         int availability = gapiAvailability.isGooglePlayServicesAvailable(callingActivity);
 
+        // Show system dialog to explain Play Services issue. `availability` here is the error code.
         if (availability != ConnectionResult.SUCCESS) {
-            WeakReference<Activity> activityWeakReference = new WeakReference<>(callingActivity);
-            // show system dialog to explain
-            showApiErrorDialog(activityWeakReference, gapiAvailability, availability);
+            Dialog errorDialog = gapiAvailability.getErrorDialog(callingActivity, availability, API_AVAILABILITY_REQUEST_ID);
+            errorDialog.show();
             return false;
         }
 
@@ -76,9 +82,11 @@ public class GpgLocationUtils {
                     Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_REQUEST_ID);
             return false; // up to the activity to start this service again when permissions granted
         } else {
-            // have correct permissions and Play services are available; go get location now
-            LocationRequest request = LocationRequest.create().setNumUpdates(12)
-                    .setExpirationDuration(10000)
+            // Have correct permissions and Play services are available; go get location now.
+            // Fire off request to get location before getting last known, in case location is
+            // stale due to no other app having requested it recently.
+            LocationRequest request = LocationRequest.create().setNumUpdates(LOCATION_REQUESTS_COUNT)
+                    .setExpirationDuration(LOCATION_REQUEST_EXPIRATION_DURATION_MS)
                     .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
             FusedLocationProviderClient client = LocationServices.getFusedLocationProviderClient(callingActivity);
             client.requestLocationUpdates(request, null)
@@ -87,22 +95,12 @@ public class GpgLocationUtils {
                         client.getLastLocation().addOnCompleteListener(callingActivity, lastLocationTask -> {
                             if (lastLocationTask.isSuccessful() && lastLocationTask.getResult() != null) {
                                 Log.d(LOG_LABEL, "Got result " + lastLocationTask.getResult());
-                                listener.locationFound(lastLocationTask.getResult());
+                                ((LocationUpdateListener)callingActivity).locationFound(lastLocationTask.getResult());
                             }
                         });
                     });
             return true;
         }
-    }
-
-    private static void showApiErrorDialog(WeakReference<Activity> caller, GoogleApiAvailability gapiAvailability, int errorCode) {
-        final Activity callingActivity = caller.get();
-        if (callingActivity == null) {
-            return;
-        }
-
-        Dialog errorDialog = gapiAvailability.getErrorDialog(callingActivity, errorCode, API_AVAILABILITY_REQUEST_ID);
-        errorDialog.show();
     }
 
     // Call this from activity in `onRequestPermissionsResult` if permission denied
