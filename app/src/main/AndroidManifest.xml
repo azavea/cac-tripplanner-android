@@ -3,6 +3,7 @@
     package="com.gophillygo.app">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <!--
     Allows Glide to monitor connectivity status and restart failed requests if users go from a
     a disconnected to a connected network state.
@@ -19,7 +20,7 @@
         android:supportsRtl="true"
         android:theme="@style/GpgAppTheme"
         android:value="GlideModule">
-        <activity android:name=".HomeActivity">
+        <activity android:name=".activities.HomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -27,35 +28,38 @@
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <!-- Accepts only the top-level URI "https://gophillygo.org” -->
-                <data android:scheme="https"
+                <data
+                    android:host="gophillygo.org"
                     android:path="/"
-                    android:host="gophillygo.org" />
+                    android:scheme="https" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".PlacesListActivity"
+            android:name=".activities.PlacesListActivity"
             android:label="@string/places_list_title"
-            android:parentActivityName=".HomeActivity">
+            android:parentActivityName=".activities.HomeActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.gophillygo.app.HomeActivity" />
+                android:value="com.gophillygo.app.activities.HomeActivity" />
         </activity>
         <activity
-            android:name=".PlaceDetailActivity"
-            android:parentActivityName=".PlacesListActivity">
+            android:name=".activities.PlaceDetailActivity"
+            android:parentActivityName=".activities.PlacesListActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.gophillygo.app.PlacesListActivity" />
+                android:value="com.gophillygo.app.activities.PlacesListActivity" />
         </activity>
-        <activity android:name=".EventsListActivity"
+        <activity
+            android:name=".activities.EventsListActivity"
             android:label="@string/events_list_title"
-            android:parentActivityName=".HomeActivity">
+            android:parentActivityName=".activities.HomeActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.gophillygo.app.HomeActivity" />
+                android:value="com.gophillygo.app.activities.HomeActivity" />
         </activity>
     </application>
 

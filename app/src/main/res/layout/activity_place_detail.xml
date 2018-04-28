@@ -3,12 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:fillViewport="true"
-    tools:context="com.gophillygo.app.PlaceDetailActivity">
+    tools:context="com.gophillygo.app.activities.PlaceDetailActivity">
     <data>
         <!-- set up data binding to destination -->
         <variable name="destination" type="com.gophillygo.app.data.models.Destination"/>
         <variable name="destinationInfo" type="com.gophillygo.app.data.models.DestinationInfo"/>
-        <variable name="activity" type="com.gophillygo.app.PlaceDetailActivity" />
+        <variable name="activity" type="com.gophillygo.app.activities.PlaceDetailActivity" />
         <!-- imports to allow referencing within data binding expressions -->
         <import type="android.view.View"/>
     </data>

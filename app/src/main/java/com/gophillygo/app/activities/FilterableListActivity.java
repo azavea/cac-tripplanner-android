@@ -1,4 +1,4 @@
-package com.gophillygo.app;
+package com.gophillygo.app.activities;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -8,6 +8,8 @@ import android.support.v7.widget.Toolbar;
 import android.widget.Button;
 
 import com.gophillygo.app.data.models.Filter;
+import com.gophillygo.app.FilterDialog;
+import com.gophillygo.app.R;
 
 import cn.nekocode.badge.BadgeDrawable;
 
@@ -76,5 +78,6 @@ public abstract class FilterableListActivity extends AppCompatActivity
         } else {
             filterButton.setCompoundDrawablesWithIntrinsicBounds(filterIcon, null, null, null);
         }
+
     }
 }

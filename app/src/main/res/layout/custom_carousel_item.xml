@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context="com.gophillygo.app.HomeActivity">
+    tools:context="com.gophillygo.app.activities.HomeActivity">
     <data>
         <!-- set up data binding to destination -->
         <variable name="destination" type="com.gophillygo.app.data.models.Destination"/>

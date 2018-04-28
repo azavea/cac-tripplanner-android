@@ -1,4 +1,4 @@
-package com.gophillygo.app;
+package com.gophillygo.app.activities;
 
 import android.annotation.SuppressLint;
 import android.arch.lifecycle.ViewModelProviders;
@@ -22,6 +22,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
+import com.gophillygo.app.CarouselViewListener;
+import com.gophillygo.app.R;
 import com.gophillygo.app.data.DestinationViewModel;
 import com.gophillygo.app.data.models.Destination;
 import com.gophillygo.app.data.models.DestinationInfo;
