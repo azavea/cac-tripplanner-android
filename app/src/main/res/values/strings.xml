@@ -58,4 +58,7 @@
     <string name="location_fine_permission_rationale">Device location permission needed.</string>
     <string name="no_results">No results</string>
     <string name="title_activity_maps">Map</string>
+
+    <!-- map -->
+    <string name="map_menu_action_view_day">View day</string>
 </resources>
