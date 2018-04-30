@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/filter_button_bar"
+    android:background="@color/color_primary"
+    android:paddingStart="6dp"
+    android:paddingEnd="6dp"
+    android:weightSum="4"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" >
+
+    <android.support.v7.widget.AppCompatButton
+        android:id="@+id/places_list_filter_button"
+        android:textColor="@color/color_white"
+        android:layout_gravity="start"
+        android:layout_weight="1"
+        android:background="@drawable/toggle_button_toolbar_unchecked"
+        android:drawableStart="@drawable/ic_filter_list_white_24px"
+        style="@style/FilterBarButton"
+        android:text="@string/filter_button_title" />
+
+    <Space
+        android:layout_weight="1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <com.gophillygo.app.GpgToolbarToggleButton
+        android:id="@+id/places_list_liked_filter_button"
+        style="@style/FilterBarButton"
+        android:textColor="@drawable/toggle_button_toolbar_text_selector"
+        android:layout_gravity="end"
+        android:layout_weight="1"
+        android:drawableStart="@drawable/toggle_button_toolbar_like_drawable_selector"
+        android:text="@string/place_liked_option" />
+
+    <com.gophillygo.app.GpgToolbarToggleButton
+        android:id="@+id/places_list_want_to_go_filter_button"
+        android:text="@string/place_want_to_go_option"
+        android:layout_weight="1"
+        android:drawableStart="@drawable/toggle_button_toolbar_flag_drawable_selector"
+        style="@style/FilterBarButton"
+        android:textColor="@drawable/toggle_button_toolbar_text_selector"
+        android:layout_gravity="end" />
+</LinearLayout>
