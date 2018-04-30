@@ -44,7 +44,7 @@ public class PlacesListActivity extends FilterableListActivity implements
     DestinationViewModel viewModel;
 
     public PlacesListActivity() {
-        super(R.layout.activity_places_list, R.id.places_list_toolbar, R.id.places_list_filter_button);
+        super(R.layout.activity_places_list, R.id.places_list_toolbar, R.id.filter_bar_filter_button);
     }
 
     /**

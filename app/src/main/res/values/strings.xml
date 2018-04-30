@@ -60,5 +60,5 @@
     <string name="title_activity_maps">Map</string>
 
     <!-- map -->
-    <string name="map_menu_action_view_day">View day</string>
+    <string name="map_menu_action_view_list">View list</string>
 </resources>

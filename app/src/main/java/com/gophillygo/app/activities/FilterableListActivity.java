@@ -18,7 +18,7 @@ import cn.nekocode.badge.BadgeDrawable;
  * Toolbar button updates to display count of filters currently applied.
  */
 
-public abstract class FilterableListActivity extends AppCompatActivity
+public abstract class FilterableListActivity extends BaseAttractionActivity
         implements FilterDialog.FilterChangeListener {
 
     private int layoutId, toolbarId, filterButtonId;

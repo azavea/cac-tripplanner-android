@@ -1,11 +1,8 @@
 package com.gophillygo.app.activities;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
-import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -16,13 +13,12 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 import com.gophillygo.app.R;
 import com.gophillygo.app.utils.GpgLocationUtils;
 
 import java.lang.ref.WeakReference;
 
-public class MapsActivity extends BaseAttractionActivity implements OnMapReadyCallback {
+public class MapsActivity extends FilterableListActivity implements OnMapReadyCallback {
 
     private static final int DEFAULT_ZOOM = 14;
     private static final String LOG_LABEL = "MapsActivity";
@@ -30,20 +26,28 @@ public class MapsActivity extends BaseAttractionActivity implements OnMapReadyCa
     private GoogleMap googleMap;
     private Toolbar toolbar;
 
+    public MapsActivity() {
+        this(R.layout.activity_maps, R.id.map_toolbar, R.id.filter_bar_filter_button);
+    }
+
+    public MapsActivity(int layoutId, int toolbarId, int filterButtonId) {
+        super(layoutId, toolbarId, filterButtonId);
+    }
+
+
+    @Override
+    protected void loadData() {
+        // TODO: #11 load destionation markers
+        Log.d(LOG_LABEL, "load data in maps activity");
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_maps);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
-        // set up toolbar
-        toolbar = findViewById(R.id.map_toolbar);
-        setSupportActionBar(toolbar);
-        //noinspection ConstantConditions
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
 
@@ -63,9 +67,12 @@ public class MapsActivity extends BaseAttractionActivity implements OnMapReadyCa
     }
 
     private void panToCurrentLocation() {
+        if (googleMap == null) {
+            return;
+        }
         Location location = getCurrentLocation();
         LatLng latlng = new LatLng(location.getLatitude(), location.getLongitude());
-        this.googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latlng, DEFAULT_ZOOM));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latlng, DEFAULT_ZOOM));
     }
 
     @SuppressLint("MissingPermission")
@@ -73,10 +80,11 @@ public class MapsActivity extends BaseAttractionActivity implements OnMapReadyCa
     public void locationOrDestinationsChanged() {
         super.locationOrDestinationsChanged();
         Log.d(LOG_LABEL, "locationOrDestinationsChanged on map");
-        if (GpgLocationUtils.checkFineLocationPermissions(new WeakReference<>(this))) {
+        if (googleMap != null &&
+                GpgLocationUtils.checkFineLocationPermissions(new WeakReference<>(this))) {
             googleMap.setMyLocationEnabled(true);
+            panToCurrentLocation();
         }
-        panToCurrentLocation();
     }
 
     @Override
@@ -94,6 +102,10 @@ public class MapsActivity extends BaseAttractionActivity implements OnMapReadyCa
                 break;
             case R.id.action_map_search:
                 Log.d(LOG_LABEL, "Selected map search menu item");
+                break;
+            case R.id.action_map_view_list:
+                // TODO: #11 implement list/map toggle
+                Log.d(LOG_LABEL, "Selected to go back to list view from map");
                 break;
             default:
                 Log.w(LOG_LABEL, "Unrecognized menu item selected: " + String.valueOf(itemId));

@@ -52,7 +52,7 @@ dependencies {
     implementation "com.android.support:design:$supportVersion"
     implementation 'com.android.support.constraint:constraint-layout:1.1.0'
     // Android Play services libraries
-    def playServicesVersion = '12.0.1'
+    def playServicesVersion = '15.0.0'
     implementation "com.google.android.gms:play-services-location:$playServicesVersion"
     implementation "com.google.android.gms:play-services-maps:$playServicesVersion"
     // Carousel
