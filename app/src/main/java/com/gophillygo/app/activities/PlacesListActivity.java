@@ -117,6 +117,7 @@ public class PlacesListActivity extends FilterableListActivity implements
                 break;
             case R.id.action_map:
                 Log.d(LOG_LABEL, "Selected map menu item");
+                startActivity(new Intent(this, MapsActivity.class));
                 break;
             case R.id.action_search:
                 Log.d(LOG_LABEL, "Selected search menu item");

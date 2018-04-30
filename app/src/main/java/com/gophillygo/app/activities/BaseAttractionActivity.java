@@ -192,6 +192,13 @@ public abstract class BaseAttractionActivity extends AppCompatActivity implement
         return nearestDestinations.size();
     }
 
+    public Location getCurrentLocation() {
+        if (currentLocation == null) {
+            setDefaultLocation();
+        }
+        return currentLocation;
+    }
+
     /**
      * Handle the location services permission request initiated, if needed.
      */

@@ -3,6 +3,7 @@ package com.gophillygo.app.di;
 import android.app.Application;
 
 import com.gophillygo.app.GoPhillyGoApp;
+import com.gophillygo.app.activities.MapsActivity;
 
 import javax.inject.Singleton;
 
@@ -24,7 +25,8 @@ import dagger.android.AndroidInjectionModule;
         EventsListActivityModule.class,
         HomeActivityModule.class,
         PlaceDetailActivityModule.class,
-        PlacesListActivityModule.class
+        PlacesListActivityModule.class,
+        MapsActivityModule.class
 })
 public interface AppComponent {
     @Component.Builder

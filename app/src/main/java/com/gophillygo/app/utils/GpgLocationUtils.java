@@ -1,6 +1,7 @@
 package com.gophillygo.app.utils;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
@@ -42,14 +43,13 @@ public class GpgLocationUtils {
     }
 
     /**
-     * Check if app has permission and access to device location, and that GPS is present and enabled.
-     * If so, start receiving location updates.
+     * Check if fine location service is available and permissions granted to it. If not,
+     * will request permissions or show user what the issue is (i.e., Play services out of date.)
      *
-     * @param caller Activity that will handle any system dialog results;
-     *               must implement LocationUpdateListener.
-     * @return True if location updates have been started
+     * @param caller Activity that will handle any system dialog results
+     * @return True if fine location service is available and permissions have been granted
      */
-    public static boolean getLastKnownLocation(WeakReference<Activity> caller) {
+    public static boolean checkFineLocationPermissions(WeakReference<Activity> caller) {
         // check for location service availability and status
 
         // if calling activity already gone, don't bother attempting to prompt for permissions now
@@ -81,7 +81,31 @@ public class GpgLocationUtils {
             ActivityCompat.requestPermissions(callingActivity, new String[]{
                     Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_REQUEST_ID);
             return false; // up to the activity to start this service again when permissions granted
+        }
+
+        return true;
+    }
+
+    /**
+     * Check if app has permission and access to device location, and that GPS is present and enabled.
+     * If so, start receiving location updates.
+     *
+     * @param caller Activity that will handle any system dialog results;
+     *               must implement LocationUpdateListener.
+     * @return True if location updates have been started
+     */
+    @SuppressLint("MissingPermission")
+    public static boolean getLastKnownLocation(WeakReference<Activity> caller) {
+        // checkFineLocationPermissions handles permissions, so suppress MissingPermissions here
+        if (!checkFineLocationPermissions(caller)) {
+            return false;
         } else {
+            // if calling activity already gone, don't bother attempting to prompt for permissions now
+            Activity callingActivity = caller.get();
+            if (callingActivity == null) {
+                return false;
+            }
+
             // Have correct permissions and Play services are available; go get location now.
             // Fire off request to get location before getting last known, in case location is
             // stale due to no other app having requested it recently.

@@ -43,6 +43,7 @@ dependencies {
     implementation "android.arch.lifecycle:common-java8:$archComponentsVersion"
     // Room
     implementation "android.arch.persistence.room:runtime:$roomVersion"
+    implementation 'com.android.support:appcompat-v7:27.1.1'
     annotationProcessor "android.arch.persistence.room:compiler:$roomVersion"
     // Android UI libraries
     def supportVersion = '27.1.1'
