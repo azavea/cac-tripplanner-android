@@ -6,7 +6,10 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -25,6 +28,7 @@ public class MapsActivity extends BaseAttractionActivity implements OnMapReadyCa
     private static final String LOG_LABEL = "MapsActivity";
 
     private GoogleMap googleMap;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +38,12 @@ public class MapsActivity extends BaseAttractionActivity implements OnMapReadyCa
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        // set up toolbar
+        toolbar = findViewById(R.id.map_toolbar);
+        setSupportActionBar(toolbar);
+        //noinspection ConstantConditions
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
 
@@ -67,5 +77,28 @@ public class MapsActivity extends BaseAttractionActivity implements OnMapReadyCa
             googleMap.setMyLocationEnabled(true);
         }
         panToCurrentLocation();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.map_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int itemId = item.getItemId();
+        switch (itemId) {
+            case R.id.action_map_events:
+                Log.d(LOG_LABEL, "Selected map events menu item");
+                break;
+            case R.id.action_map_search:
+                Log.d(LOG_LABEL, "Selected map search menu item");
+                break;
+            default:
+                Log.w(LOG_LABEL, "Unrecognized menu item selected: " + String.valueOf(itemId));
+                return super.onOptionsItemSelected(item);
+        }
+        return true;
     }
 }
