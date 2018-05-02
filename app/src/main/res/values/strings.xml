@@ -57,4 +57,8 @@
     <string name="location_gps_needed_rationale">GPS needs to be enabled to find destinations near you.</string>
     <string name="location_fine_permission_rationale">Device location permission needed.</string>
     <string name="no_results">No results</string>
+    <string name="title_activity_maps">Map</string>
+
+    <!-- map -->
+    <string name="map_menu_action_view_list">View list</string>
 </resources>

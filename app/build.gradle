@@ -43,6 +43,7 @@ dependencies {
     implementation "android.arch.lifecycle:common-java8:$archComponentsVersion"
     // Room
     implementation "android.arch.persistence.room:runtime:$roomVersion"
+    implementation 'com.android.support:appcompat-v7:27.1.1'
     annotationProcessor "android.arch.persistence.room:compiler:$roomVersion"
     // Android UI libraries
     def supportVersion = '27.1.1'
@@ -51,7 +52,7 @@ dependencies {
     implementation "com.android.support:design:$supportVersion"
     implementation 'com.android.support.constraint:constraint-layout:1.1.0'
     // Android Play services libraries
-    def playServicesVersion = '12.0.1'
+    def playServicesVersion = '15.0.0'
     implementation "com.google.android.gms:play-services-location:$playServicesVersion"
     implementation "com.google.android.gms:play-services-maps:$playServicesVersion"
     // Carousel

@@ -1,6 +1,5 @@
 package com.gophillygo.app.activities;
 
-import android.app.Activity;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -29,7 +28,8 @@ import javax.inject.Inject;
  * if either change, updates the distances to the destinations and calls
  * `locationOrDestinationsChanged`.
  */
-public abstract class BaseAttractionActivity extends AppCompatActivity implements GpgLocationUtils.LocationUpdateListener {
+public abstract class BaseAttractionActivity extends AppCompatActivity
+        implements GpgLocationUtils.LocationUpdateListener {
 
     private static final String LOG_LABEL = "BaseAttractionActivity";
     private static final String DUMMY_LOCATION_PROVIDER = "gophillygo";
@@ -190,6 +190,13 @@ public abstract class BaseAttractionActivity extends AppCompatActivity implement
             return 0;
         }
         return nearestDestinations.size();
+    }
+
+    public Location getCurrentLocation() {
+        if (currentLocation == null) {
+            setDefaultLocation();
+        }
+        return currentLocation;
     }
 
     /**

@@ -1,3 +1,6 @@
+# API keys
+app/**/google_maps_api.xml
+
 # Built application files
 *.apk
 *.ap_
@@ -41,6 +44,7 @@ captures/
 .idea/libraries
 .idea/modules.xml
 .idea/caches/
+.idea/assetWizardSettings.xml
 
 # Keystore files
 *.jks

@@ -2,6 +2,7 @@ package com.gophillygo.app.activities;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
@@ -117,6 +118,7 @@ public class EventsListActivity extends FilterableListActivity
                 break;
             case R.id.action_event_map:
                 Log.d(LOG_LABEL, "Selected map menu item");
+                startActivity(new Intent(this, MapsActivity.class));
                 break;
             case R.id.action_event_search:
                 Log.d(LOG_LABEL, "Selected search menu item");
