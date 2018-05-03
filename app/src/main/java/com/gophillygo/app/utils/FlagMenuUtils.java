@@ -2,29 +2,21 @@ package com.gophillygo.app.utils;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.ColorRes;
-import android.support.annotation.DrawableRes;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
-import android.support.v7.view.menu.ListMenuItemView;
 import android.support.v7.view.menu.MenuBuilder;
 import android.support.v7.view.menu.MenuPopupHelper;
 import android.support.v7.widget.PopupMenu;
 import android.text.SpannableString;
-import android.text.style.BackgroundColorSpan;
 import android.text.style.ForegroundColorSpan;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
 
 import com.gophillygo.app.R;
 import com.gophillygo.app.data.models.AttractionFlag;
-
-import org.w3c.dom.Text;
 
 public class FlagMenuUtils {
     @SuppressLint({"RestrictedApi", "RtlHardcoded"})
