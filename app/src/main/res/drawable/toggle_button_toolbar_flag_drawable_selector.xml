@@ -4,8 +4,8 @@
         android:drawable="@drawable/ic_flag_black_24dp"
         android:state_checked="true" />
     <item
-        android:drawable="@drawable/ic_flag_white_24px"
+        android:drawable="@drawable/ic_flag_white_24dp"
         android:state_checked="false" />
 
-    <item android:drawable="@drawable/ic_flag_white_24px"/>
+    <item android:drawable="@drawable/ic_flag_white_24dp"/>
 </selector>
