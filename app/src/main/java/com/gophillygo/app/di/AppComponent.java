@@ -3,7 +3,6 @@ package com.gophillygo.app.di;
 import android.app.Application;
 
 import com.gophillygo.app.GoPhillyGoApp;
-import com.gophillygo.app.activities.MapsActivity;
 
 import javax.inject.Singleton;
 
