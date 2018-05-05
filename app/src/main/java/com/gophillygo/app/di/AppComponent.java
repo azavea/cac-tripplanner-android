@@ -21,6 +21,7 @@ import dagger.android.AndroidInjectionModule;
         AppModule.class,
 
         // Activities
+        EventDetailActivityModule.class,
         EventsListActivityModule.class,
         HomeActivityModule.class,
         PlaceDetailActivityModule.class,
