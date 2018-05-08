@@ -7,15 +7,18 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.CalendarContract;
 import android.support.v7.view.menu.MenuBuilder;
 import android.support.v7.view.menu.MenuPopupHelper;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.gophillygo.app.R;
 import com.gophillygo.app.data.DestinationViewModel;
@@ -121,7 +124,19 @@ public class EventDetailActivity extends AttractionDetailActivity {
 
     // add event in calendar app
     public void addToCalendar(View view) {
-        // TODO #21: open calendar with intent
+        Event event = eventInfo.getEvent();
+        Intent intent = new Intent(Intent.ACTION_INSERT)
+                .setData(CalendarContract.Events.CONTENT_URI)
+                .putExtra(CalendarContract.Events.TITLE, event.getName())
+                .putExtra(CalendarContract.Events.DESCRIPTION, event.getDescription())
+                .putExtra(CalendarContract.Events.EVENT_LOCATION, eventInfo.getDestinationName())
+                .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, event.getStart().getTime())
+                .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, event.getEnd().getTime());
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        } else {
+            Toast.makeText(this, R.string.event_detail_no_calendar, Toast.LENGTH_SHORT).show();
+        }
     }
 
     @SuppressLint({"RestrictedApi", "RtlHardcoded"})

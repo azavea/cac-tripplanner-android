@@ -13,7 +13,9 @@ import com.gophillygo.app.data.models.Destination;
 import com.gophillygo.app.data.models.DestinationQueryResponse;
 import com.gophillygo.app.data.models.Event;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
