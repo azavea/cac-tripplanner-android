@@ -34,6 +34,10 @@ public class DestinationInfo extends AttractionInfo<Destination> {
         return eventCount > 0;
     }
 
+    public DestinationLocation getLocation() {
+        return destination != null ? destination.getLocation() : null;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -46,7 +50,6 @@ public class DestinationInfo extends AttractionInfo<Destination> {
 
     @Override
     public int hashCode() {
-
         return Objects.hash(super.hashCode(), destination, eventCount);
     }
 }

@@ -12,15 +12,19 @@ public class EventInfo extends AttractionInfo<Event> {
     // fetch fields of related destination from database into these properties
     private final String destinationName;
     private final ArrayList<String> destinationCategories;
+
+    @Embedded
+    private final DestinationLocation location;
     private Float distance;
 
-    public EventInfo(Event event, String destinationName, ArrayList<String> destinationCategories,
-                     AttractionFlag.Option option, Float distance) {
+    public EventInfo(Event event, AttractionFlag.Option option, String destinationName,
+                     ArrayList<String> destinationCategories, Float distance, DestinationLocation location) {
         super(event, option);
         this.event = event;
         this.destinationName = destinationName;
         this.destinationCategories = destinationCategories;
         this.distance = distance;
+        this.location = location;
     }
 
     @Override
@@ -48,6 +52,10 @@ public class EventInfo extends AttractionInfo<Event> {
         return distance;
     }
 
+    public DestinationLocation getLocation() {
+        return location;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -62,7 +70,6 @@ public class EventInfo extends AttractionInfo<Event> {
 
     @Override
     public int hashCode() {
-
         return Objects.hash(super.hashCode(), event, destinationName, destinationCategories, distance);
     }
 }

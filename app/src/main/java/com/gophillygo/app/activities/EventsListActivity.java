@@ -132,7 +132,7 @@ public class EventsListActivity extends FilterableListActivity
                 break;
             case R.id.action_event_map:
                 Log.d(LOG_LABEL, "Selected map menu item");
-                startActivity(new Intent(this, MapsActivity.class));
+                startActivity(new Intent(this, EventsMapsActivity.class));
                 break;
             case R.id.action_event_search:
                 Log.d(LOG_LABEL, "Selected search menu item");

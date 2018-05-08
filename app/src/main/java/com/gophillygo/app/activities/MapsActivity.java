@@ -2,53 +2,59 @@ package com.gophillygo.app.activities;
 
 import android.annotation.SuppressLint;
 import android.databinding.DataBindingUtil;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
+import android.os.Handler;
+import android.support.annotation.DrawableRes;
+import android.support.v4.content.res.ResourcesCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.gophillygo.app.R;
 import com.gophillygo.app.databinding.ActivityMapsBinding;
 import com.gophillygo.app.databinding.FilterButtonBarBinding;
+import com.gophillygo.app.data.models.AttractionInfo;
+import com.gophillygo.app.data.models.DestinationLocation;
 import com.gophillygo.app.utils.GpgLocationUtils;
 
 import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.List;
 
-public class MapsActivity extends FilterableListActivity implements OnMapReadyCallback {
+abstract class MapsActivity<T extends AttractionInfo> extends FilterableListActivity
+        implements OnMapReadyCallback {
 
-    private static final int DEFAULT_ZOOM = 14;
+    private static final int DEFAULT_ZOOM = 12;
     private static final String LOG_LABEL = "MapsActivity";
 
-    private GoogleMap googleMap;
-    private Toolbar toolbar;
+    private List<Marker> markers;
+    private Marker selectedMarker;
+    protected GoogleMap googleMap;
+    protected List<T> attractions;
+
+    public BitmapDescriptor markerIcon, selectedMarkerIcon;
 
     public MapsActivity() {
-        this(R.id.map_toolbar);
+        super(R.id.map_toolbar);
     }
 
-    public MapsActivity(int toolbarId) {
-        super(toolbarId);
-    }
-
-    @Override
-    protected FilterButtonBarBinding setupDataBinding() {
-        // TODO: #11 load destination markers
-        ActivityMapsBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_maps);
-        return binding.mapFilterButtonBar;
-    }
-
-    @Override
-    protected void loadData() {
-        // TODO: #11 load destination markers
-        Log.d(LOG_LABEL, "load data in maps activity");
-    }
+    public abstract boolean filterMatches(T attractionInfo);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,8 +63,17 @@ public class MapsActivity extends FilterableListActivity implements OnMapReadyCa
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        markerIcon = vectorToBitmap(R.drawable.ic_map_marker);
+        selectedMarkerIcon = vectorToBitmap(R.drawable.ic_selected_map_marker);
     }
 
+    @Override
+    protected FilterButtonBarBinding setupDataBinding() {
+        // TODO: #11 load destination markers
+        ActivityMapsBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_maps);
+        return binding.mapFilterButtonBar;
+    }
 
     /**
      * Manipulates the map once available.
@@ -72,6 +87,7 @@ public class MapsActivity extends FilterableListActivity implements OnMapReadyCa
     @Override
     public void onMapReady(GoogleMap googleMap) {
         this.googleMap = googleMap;
+        googleMap.getUiSettings().setMapToolbarEnabled(false);
         panToCurrentLocation();
     }
 
@@ -88,7 +104,7 @@ public class MapsActivity extends FilterableListActivity implements OnMapReadyCa
     @Override
     public void locationOrDestinationsChanged() {
         super.locationOrDestinationsChanged();
-        Log.d(LOG_LABEL, "locationOrDestinationsChanged on map");
+        Log.d(MapsActivity.LOG_LABEL, "locationOrDestinationsChanged on map");
         if (googleMap != null &&
                 GpgLocationUtils.checkFineLocationPermissions(new WeakReference<>(this))) {
             googleMap.setMyLocationEnabled(true);
@@ -107,19 +123,88 @@ public class MapsActivity extends FilterableListActivity implements OnMapReadyCa
         int itemId = item.getItemId();
         switch (itemId) {
             case R.id.action_map_events:
-                Log.d(LOG_LABEL, "Selected map events menu item");
+                Log.d(MapsActivity.LOG_LABEL, "Selected map events menu item");
                 break;
             case R.id.action_map_search:
-                Log.d(LOG_LABEL, "Selected map search menu item");
+                Log.d(MapsActivity.LOG_LABEL, "Selected map search menu item");
                 break;
             case R.id.action_map_view_list:
                 // TODO: #11 implement list/map toggle
-                Log.d(LOG_LABEL, "Selected to go back to list view from map");
+                Log.d(MapsActivity.LOG_LABEL, "Selected to go back to list view from map");
                 break;
             default:
-                Log.w(LOG_LABEL, "Unrecognized menu item selected: " + String.valueOf(itemId));
+                Log.w(MapsActivity.LOG_LABEL, "Unrecognized menu item selected: " + String.valueOf(itemId));
                 return super.onOptionsItemSelected(item);
         }
         return true;
+    }
+
+    @Override
+    protected void loadData() {
+        Log.d(LOG_LABEL, "load data in places maps activity");
+
+        loadMarkers();
+
+        googleMap.setOnMarkerClickListener(marker -> {
+            if (selectedMarker != null) {
+                selectedMarker.setIcon(markerIcon);
+            }
+            selectedMarker = marker;
+            marker.setIcon(selectedMarkerIcon);
+            AttractionInfo attractionInfo = (AttractionInfo)  marker.getTag();
+            showPopup(attractionInfo);
+            Log.d(LOG_LABEL, "Clicked marker for attraction: " + attractionInfo.getAttraction().getId());
+            return false;
+        });
+    }
+
+    private void loadMarkers() {
+        if (markers == null) {
+            markers = new ArrayList<>(attractions.size());
+            for (T attractionInfo : attractions) {
+                if (attractionInfo.getLocation() != null) {
+                    DestinationLocation location = attractionInfo.getLocation();
+                    LatLng latLng = new LatLng(location.getY(), location.getX());
+                    float opacity = filterMatches(attractionInfo) ? 1f : 0.5f;
+                    Marker marker = googleMap.addMarker(new MarkerOptions()
+                            .position(latLng)
+                            .icon(markerIcon)
+                            .alpha(opacity)
+                    );
+                    marker.setTag(attractionInfo);
+                    markers.add(marker);
+                }
+            }
+        } else {
+            for (Marker marker : markers) {
+                float opacity = filterMatches((T) marker.getTag()) ? 1f : 0.5f;
+                marker.setAlpha(opacity);
+            }
+        }
+    }
+
+    private void showPopup(AttractionInfo attractionInfo) {
+        // TODO: Data binding after git rebase
+        View popup = findViewById(R.id.map_popup_card);
+        popup.setVisibility(View.VISIBLE);
+        TextView title = findViewById(R.id.map_popup_title);
+        title.setText(attractionInfo.getAttraction().getName());
+        TextView distance = findViewById(R.id.map_popup_distance_label);
+
+        // Need to set map padding so "Google" logo is above popup, but we need to wait until the
+        // popup is visible in order to measure it's height
+        final Handler handler = new Handler();
+        handler.postDelayed(() -> googleMap.setPadding(0, 0, 0, 25 + popup.getHeight()), 1);
+    }
+
+    private BitmapDescriptor vectorToBitmap(@DrawableRes int id) {
+        Drawable vectorDrawable = ResourcesCompat.getDrawable(getResources(), id, null);
+        assert vectorDrawable != null;
+        Bitmap bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(),
+                vectorDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        vectorDrawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        vectorDrawable.draw(canvas);
+        return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
 }

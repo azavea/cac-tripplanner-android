@@ -91,6 +91,7 @@ public class PlacesListActivity extends FilterableListActivity implements
     protected void loadData() {
         Log.d(LOG_LABEL, "loadData");
         List<DestinationInfo> filteredDestinations = getFilteredDestinations();
+
         TextView noDataView = findViewById(R.id.empty_places_list);
         noDataView.setVisibility(filteredDestinations.isEmpty() ? View.VISIBLE : View.GONE);
 
@@ -124,7 +125,7 @@ public class PlacesListActivity extends FilterableListActivity implements
                 break;
             case R.id.action_map:
                 Log.d(LOG_LABEL, "Selected map menu item");
-                startActivity(new Intent(this, MapsActivity.class));
+                startActivity(new Intent(this, PlacesMapsActivity.class));
                 break;
             case R.id.action_search:
                 Log.d(LOG_LABEL, "Selected search menu item");

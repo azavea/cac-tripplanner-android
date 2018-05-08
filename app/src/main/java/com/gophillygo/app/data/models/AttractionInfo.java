@@ -26,6 +26,8 @@ public abstract class AttractionInfo<T extends Attraction> {
 
     public abstract T getAttraction();
 
+    public abstract DestinationLocation getLocation();
+
     public AttractionFlag getFlag() {
         return flag;
     }
