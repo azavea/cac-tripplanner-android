@@ -38,7 +38,7 @@ public class Event extends Attraction {
 
     // using Integer instead of int so it may be nullable
     @ColumnInfo(index = true)
-    private final Integer destination;
+    private Integer destination;
 
     @ColumnInfo(name = "start_date", index = true)
     @SerializedName("start_date")
@@ -86,6 +86,10 @@ public class Event extends Attraction {
 
     public Integer getDestination() {
         return destination;
+    }
+
+    public void setDestination(Integer id) {
+        destination = id;
     }
 
     public String getStartDate() {
