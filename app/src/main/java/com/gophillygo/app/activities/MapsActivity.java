@@ -1,6 +1,7 @@
 package com.gophillygo.app.activities;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -30,6 +31,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.gophillygo.app.BR;
 import com.gophillygo.app.R;
+import com.gophillygo.app.data.models.Attraction;
 import com.gophillygo.app.data.models.AttractionInfo;
 import com.gophillygo.app.data.models.DestinationLocation;
 import com.gophillygo.app.databinding.ActivityMapsBinding;
@@ -187,6 +189,21 @@ public abstract class MapsActivity<T extends AttractionInfo> extends FilterableL
         });
     }
 
+    public void openDetail(Attraction attraction) {
+        Intent intent;
+        String idKey;
+        if (attraction.isEvent()) {
+            intent = new Intent(this, EventDetailActivity.class);
+            idKey = EventDetailActivity.EVENT_ID_KEY;
+        } else {
+            intent = new Intent(this, PlaceDetailActivity.class);
+            idKey = PlaceDetailActivity.DESTINATION_ID_KEY;
+        }
+        long attractionId = attraction.getId();
+        intent.putExtra(idKey, attractionId);
+        startActivity(intent);
+    }
+
     private void loadMarkers() {
         if (markers == null) {
             markers = new ArrayList<>(attractions.size());
@@ -219,7 +236,7 @@ public abstract class MapsActivity<T extends AttractionInfo> extends FilterableL
         binding.notifyPropertyChanged(BR.attractionInfo);
 
         // Need to set map padding so "Google" logo is above popup, but we need to wait until the
-        // popup is visible in order to measure it's height
+        // popup is visible in order to measure it's height.
         final Handler handler = new Handler();
         handler.postDelayed(() -> {
             googleMap.setPadding(0, 0, 0, 25 + binding.mapPopupCard.getHeight());

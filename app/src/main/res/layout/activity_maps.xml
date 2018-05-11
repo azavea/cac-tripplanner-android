@@ -51,6 +51,7 @@
             android:id="@+id/map_popup_card"
             android:clickable="true"
             android:focusable="true"
+            android:onClick="@{v -> activity.openDetail(attraction)}"
             android:visibility="@{attractionInfo == null ? View.GONE : View.VISIBLE}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
