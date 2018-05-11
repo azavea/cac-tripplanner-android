@@ -27,29 +27,15 @@ public class PlacesMapsActivity extends MapsActivity<DestinationInfo> {
 
     private static final String LOG_LABEL = "PlacesMapsActivity";
 
-    @SuppressWarnings("WeakerAccess")
-    @Inject
-    GpgViewModelFactory viewModelFactory;
-    @SuppressWarnings("WeakerAccess")
-    DestinationViewModel viewModel;
-
     @Override
     public void onMapReady(GoogleMap googleMap) {
         super.onMapReady(googleMap);
+    }
 
-        viewModel = ViewModelProviders.of(this, viewModelFactory)
-                .get(DestinationViewModel.class);
-        LiveData<Resource<List<DestinationInfo>>> data = viewModel.getDestinations();
-        data.observe(this, destinationResource -> {
-            if (destinationResource != null && destinationResource.status.equals(Status.SUCCESS) &&
-                    destinationResource.data != null && !destinationResource.data.isEmpty()) {
-                attractions = destinationResource.data;
-                loadData();
-                // Remove observer after loading full list so updates to the destination flags don't
-                // cause unwanted changes to map position
-                data.removeObservers(this);
-            }
-        });
+    @Override
+    public void locationOrDestinationsChanged() {
+        attractions = destinationInfos;
+        loadData();
     }
 
     public boolean filterMatches(DestinationInfo attractionInfo) {

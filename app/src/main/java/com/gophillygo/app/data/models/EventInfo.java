@@ -1,11 +1,20 @@
 package com.gophillygo.app.data.models;
 
 import android.arch.persistence.room.Embedded;
+import android.arch.persistence.room.Ignore;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Objects;
 
 public class EventInfo extends AttractionInfo<Event> {
+
+    private static final NumberFormat numberFormatter = NumberFormat.getNumberInstance();
+    static {
+        numberFormatter.setMinimumFractionDigits(0);
+        numberFormatter.setMaximumFractionDigits(2);
+    }
+
     @Embedded
     private final Event event;
 
@@ -15,7 +24,9 @@ public class EventInfo extends AttractionInfo<Event> {
 
     @Embedded
     private final DestinationLocation location;
-    private Float distance;
+    private final Float distance;
+    @Ignore
+    private final String formattedDistance;
 
     public EventInfo(Event event, AttractionFlag.Option option, String destinationName,
                      ArrayList<String> destinationCategories, Float distance, DestinationLocation location) {
@@ -25,11 +36,31 @@ public class EventInfo extends AttractionInfo<Event> {
         this.destinationCategories = destinationCategories;
         this.distance = distance;
         this.location = location;
+        if (distance != null) {
+            this.formattedDistance = numberFormatter.format(distance.floatValue()) + " mi";
+        } else {
+            this.formattedDistance = "";
+        }
     }
 
     @Override
     public Event getAttraction() {
         return event;
+    }
+
+    @Override
+    public Float getDistance() {
+        return distance;
+    }
+
+    @Override
+    public DestinationLocation getLocation() {
+        return location;
+    }
+
+    @Override
+    public String getFormattedDistance() {
+        return formattedDistance;
     }
 
     public Event getEvent() {
@@ -46,14 +77,6 @@ public class EventInfo extends AttractionInfo<Event> {
 
     public ArrayList<String> getDestinationCategories() {
         return destinationCategories;
-    }
-
-    public Float getDistance() {
-        return distance;
-    }
-
-    public DestinationLocation getLocation() {
-        return location;
     }
 
     @Override

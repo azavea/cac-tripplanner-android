@@ -9,13 +9,15 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.DrawableRes;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
-import android.support.v4.graphics.drawable.DrawableCompat;
+import android.support.v7.view.menu.MenuBuilder;
+import android.support.v7.view.menu.MenuPopupHelper;
+import android.support.v7.widget.PopupMenu;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -26,18 +28,19 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.gophillygo.app.BR;
 import com.gophillygo.app.R;
-import com.gophillygo.app.databinding.ActivityMapsBinding;
-import com.gophillygo.app.databinding.FilterButtonBarBinding;
 import com.gophillygo.app.data.models.AttractionInfo;
 import com.gophillygo.app.data.models.DestinationLocation;
+import com.gophillygo.app.databinding.ActivityMapsBinding;
+import com.gophillygo.app.databinding.FilterButtonBarBinding;
 import com.gophillygo.app.utils.GpgLocationUtils;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
-abstract class MapsActivity<T extends AttractionInfo> extends FilterableListActivity
+public abstract class MapsActivity<T extends AttractionInfo> extends FilterableListActivity
         implements OnMapReadyCallback {
 
     private static final int DEFAULT_ZOOM = 12;
@@ -49,6 +52,7 @@ abstract class MapsActivity<T extends AttractionInfo> extends FilterableListActi
     protected List<T> attractions;
 
     public BitmapDescriptor markerIcon, selectedMarkerIcon;
+    private ActivityMapsBinding binding;
 
     public MapsActivity() {
         super(R.id.map_toolbar);
@@ -70,8 +74,8 @@ abstract class MapsActivity<T extends AttractionInfo> extends FilterableListActi
 
     @Override
     protected FilterButtonBarBinding setupDataBinding() {
-        // TODO: #11 load destination markers
-        ActivityMapsBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_maps);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_maps);
+        binding.setActivity(this);
         return binding.mapFilterButtonBar;
     }
 
@@ -118,6 +122,11 @@ abstract class MapsActivity<T extends AttractionInfo> extends FilterableListActi
         return true;
     }
 
+    public Drawable getFlagImage(AttractionInfo info) {
+        if (info == null) { return null; }
+        return ContextCompat.getDrawable(this, info.getFlagImage());
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
@@ -137,6 +146,26 @@ abstract class MapsActivity<T extends AttractionInfo> extends FilterableListActi
                 return super.onOptionsItemSelected(item);
         }
         return true;
+    }
+
+    @SuppressLint("RestrictedApi")
+    public void optionsButtonClick(View view, T info) {
+        PopupMenu menu = new PopupMenu(this, view);
+        menu.getMenuInflater().inflate(R.menu.place_options_menu, menu.getMenu());
+        menu.setOnMenuItemClickListener(item -> {
+            info.updateAttractionFlag(item.getItemId());
+            viewModel.updateAttractionFlag(info.getFlag());
+            // TODO binding.notify didn't help, had to directly set :(
+            binding.mapPopupOptionsButton.setImageResource(info.getFlagImage());
+            return true;
+        });
+
+        // Force icons to show in the popup menu via the support library API
+        // https://stackoverflow.com/questions/6805756/is-it-possible-to-display-icons-in-a-popupmenu
+        MenuPopupHelper popupHelper = new MenuPopupHelper(this,
+                (MenuBuilder)menu.getMenu(), view);
+        popupHelper.setForceShowIcon(true);
+        popupHelper.show();
     }
 
     @Override
@@ -184,17 +213,17 @@ abstract class MapsActivity<T extends AttractionInfo> extends FilterableListActi
     }
 
     private void showPopup(AttractionInfo attractionInfo) {
-        // TODO: Data binding after git rebase
-        View popup = findViewById(R.id.map_popup_card);
-        popup.setVisibility(View.VISIBLE);
-        TextView title = findViewById(R.id.map_popup_title);
-        title.setText(attractionInfo.getAttraction().getName());
-        TextView distance = findViewById(R.id.map_popup_distance_label);
+        binding.setAttractionInfo(attractionInfo);
+        binding.setAttraction(attractionInfo.getAttraction());
+        binding.notifyPropertyChanged(BR.attraction);
+        binding.notifyPropertyChanged(BR.attractionInfo);
 
         // Need to set map padding so "Google" logo is above popup, but we need to wait until the
         // popup is visible in order to measure it's height
         final Handler handler = new Handler();
-        handler.postDelayed(() -> googleMap.setPadding(0, 0, 0, 25 + popup.getHeight()), 1);
+        handler.postDelayed(() -> {
+            googleMap.setPadding(0, 0, 0, 25 + binding.mapPopupCard.getHeight());
+        }, 30);
     }
 
     private BitmapDescriptor vectorToBitmap(@DrawableRes int id) {

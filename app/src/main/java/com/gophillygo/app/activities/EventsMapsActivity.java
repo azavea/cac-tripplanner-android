@@ -2,18 +2,9 @@ package com.gophillygo.app.activities;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModelProviders;
-import android.util.Log;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.gophillygo.app.R;
 import com.gophillygo.app.data.EventViewModel;
-import com.gophillygo.app.data.models.DestinationInfo;
-import com.gophillygo.app.data.models.DestinationLocation;
-import com.gophillygo.app.data.models.Event;
 import com.gophillygo.app.data.models.EventInfo;
 import com.gophillygo.app.data.networkresource.Resource;
 import com.gophillygo.app.data.networkresource.Status;

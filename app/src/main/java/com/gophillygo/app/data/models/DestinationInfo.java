@@ -22,6 +22,21 @@ public class DestinationInfo extends AttractionInfo<Destination> {
         return destination;
     }
 
+    @Override
+    public DestinationLocation getLocation() {
+        return destination != null ? destination.getLocation() : null;
+    }
+
+    @Override
+    public Float getDistance() {
+        return destination != null ? destination.getDistance() : null;
+    }
+
+    @Override
+    public String getFormattedDistance() {
+        return destination != null ? destination.getFormattedDistance() : null;
+    }
+
     public Destination getDestination() {
         return destination;
     }
@@ -32,10 +47,6 @@ public class DestinationInfo extends AttractionInfo<Destination> {
 
     public boolean hasEvents() {
         return eventCount > 0;
-    }
-
-    public DestinationLocation getLocation() {
-        return destination != null ? destination.getLocation() : null;
     }
 
     @Override

@@ -19,7 +19,7 @@ import java.util.List;
 public abstract class EventDao implements AttractionDao<Event> {
     @Query("SELECT event.*, destination.name AS destinationName, NULL AS distance, " +
             "destination.categories AS destinationCategories, attractionflag.option, " +
-            "destination.x, destination.y " +
+            "destination.x, destination.y, destination.distance " +
             "FROM event " +
             "LEFT JOIN destination ON destination.id = event.destination " +
             "LEFT JOIN attractionflag " +
@@ -29,7 +29,7 @@ public abstract class EventDao implements AttractionDao<Event> {
 
     @Query("SELECT event.*, destination.name AS destinationName, destination.distance AS distance, " +
             "destination.categories AS destinationCategories, attractionflag.option, " +
-            "destination.x, destination.y " +
+            "destination.x, destination.y, destination.distance " +
             "FROM event " +
             "LEFT JOIN destination ON destination.id = event.destination " +
             "LEFT JOIN attractionflag " +
