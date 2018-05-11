@@ -1,5 +1,6 @@
 package com.gophillygo.app.activities;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -13,6 +14,7 @@ import com.gophillygo.app.data.DestinationViewModel;
 import com.gophillygo.app.data.models.Destination;
 import com.gophillygo.app.data.models.DestinationInfo;
 import com.gophillygo.app.data.models.DestinationLocation;
+import com.gophillygo.app.data.networkresource.Resource;
 import com.gophillygo.app.data.networkresource.Status;
 import com.gophillygo.app.di.GpgViewModelFactory;
 import com.gophillygo.app.utils.GpgLocationUtils;
@@ -25,8 +27,8 @@ import javax.inject.Inject;
 
 /**
  * Base activity that requests last known location and destination data when opened;
- * if either change, updates the distances to the destinations and calls
- * `locationOrDestinationsChanged`.
+ * when destinations are loaded, and thereafter if location changes, updates the distances to the
+ * destinations and calls `locationsOrDestinationsChanged`.
  */
 public abstract class BaseAttractionActivity extends AppCompatActivity
         implements GpgLocationUtils.LocationUpdateListener {
@@ -76,7 +78,8 @@ public abstract class BaseAttractionActivity extends AppCompatActivity
 
         viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(DestinationViewModel.class);
-        viewModel.getDestinations().observe(this, destinationResource -> {
+        LiveData<Resource<List<DestinationInfo>>> data = viewModel.getDestinations();
+        data.observe(this, destinationResource -> {
             // shouldn't happen
             if (destinationResource == null) {
                 Log.e(LOG_LABEL, "No ApiResponse wrapper returned");
@@ -97,6 +100,11 @@ public abstract class BaseAttractionActivity extends AppCompatActivity
             Log.d(LOG_LABEL, "Got destination data");
             nearestDestinations = findNearestDestinations();
             locationOrDestinationsChanged();
+
+            // The list and map activities allow updating AttractionFlag of each attraction
+            // We need to stop listening after we get the initial list of destinations or changes the flags
+            // will cause the list of destinations to change, which causes unwanted refreshes of the view(s)
+            data.removeObservers(this);
         });
     }
 
@@ -169,8 +177,10 @@ public abstract class BaseAttractionActivity extends AppCompatActivity
         Log.d(LOG_LABEL, "location found: " + location.toString());
         currentLocation = location;
         locationHasChanged = true;
-        nearestDestinations = findNearestDestinations();
-        locationOrDestinationsChanged();
+        if (destinationInfos != null) {
+            nearestDestinations = findNearestDestinations();
+            locationOrDestinationsChanged();
+        }
     }
 
     /**
