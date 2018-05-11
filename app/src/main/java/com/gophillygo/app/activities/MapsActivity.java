@@ -2,7 +2,6 @@ package com.gophillygo.app.activities;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.databinding.DataBindingUtil;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
@@ -10,6 +9,8 @@ import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.DrawableRes;
+import android.support.annotation.IdRes;
+import android.support.annotation.LayoutRes;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.view.menu.MenuBuilder;
@@ -34,8 +35,7 @@ import com.gophillygo.app.R;
 import com.gophillygo.app.data.models.Attraction;
 import com.gophillygo.app.data.models.AttractionInfo;
 import com.gophillygo.app.data.models.DestinationLocation;
-import com.gophillygo.app.databinding.ActivityMapsBinding;
-import com.gophillygo.app.databinding.FilterButtonBarBinding;
+import com.gophillygo.app.databinding.MapPopupCardBinding;
 import com.gophillygo.app.utils.GpgLocationUtils;
 
 import java.lang.ref.WeakReference;
@@ -52,12 +52,14 @@ public abstract class MapsActivity<T extends AttractionInfo> extends FilterableL
     private Marker selectedMarker;
     protected GoogleMap googleMap;
     protected List<T> attractions;
+    protected MapPopupCardBinding popupBinding;
+    protected @IdRes int mapId;
 
     public BitmapDescriptor markerIcon, selectedMarkerIcon;
-    private ActivityMapsBinding binding;
 
-    public MapsActivity() {
-        super(R.id.map_toolbar);
+    public MapsActivity(@IdRes int mapId, @IdRes int toolbarId) {
+        super(toolbarId);
+        this.mapId = mapId;
     }
 
     public abstract boolean filterMatches(T attractionInfo);
@@ -67,18 +69,11 @@ public abstract class MapsActivity<T extends AttractionInfo> extends FilterableL
         super.onCreate(savedInstanceState);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
+                .findFragmentById(mapId);
         mapFragment.getMapAsync(this);
 
         markerIcon = vectorToBitmap(R.drawable.ic_map_marker);
         selectedMarkerIcon = vectorToBitmap(R.drawable.ic_selected_map_marker);
-    }
-
-    @Override
-    protected FilterButtonBarBinding setupDataBinding() {
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_maps);
-        binding.setActivity(this);
-        return binding.mapFilterButtonBar;
     }
 
     /**
@@ -118,36 +113,9 @@ public abstract class MapsActivity<T extends AttractionInfo> extends FilterableL
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.map_menu, menu);
-        return true;
-    }
-
     public Drawable getFlagImage(AttractionInfo info) {
         if (info == null) { return null; }
         return ContextCompat.getDrawable(this, info.getFlagImage());
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int itemId = item.getItemId();
-        switch (itemId) {
-            case R.id.action_map_events:
-                Log.d(MapsActivity.LOG_LABEL, "Selected map events menu item");
-                break;
-            case R.id.action_map_search:
-                Log.d(MapsActivity.LOG_LABEL, "Selected map search menu item");
-                break;
-            case R.id.action_map_view_list:
-                // TODO: #11 implement list/map toggle
-                Log.d(MapsActivity.LOG_LABEL, "Selected to go back to list view from map");
-                break;
-            default:
-                Log.w(MapsActivity.LOG_LABEL, "Unrecognized menu item selected: " + String.valueOf(itemId));
-                return super.onOptionsItemSelected(item);
-        }
-        return true;
     }
 
     @SuppressLint("RestrictedApi")
@@ -158,7 +126,7 @@ public abstract class MapsActivity<T extends AttractionInfo> extends FilterableL
             info.updateAttractionFlag(item.getItemId());
             viewModel.updateAttractionFlag(info.getFlag());
             // TODO binding.notify didn't help, had to directly set :(
-            binding.mapPopupOptionsButton.setImageResource(info.getFlagImage());
+            popupBinding.mapPopupOptionsButton.setImageResource(info.getFlagImage());
             return true;
         });
 
@@ -230,16 +198,16 @@ public abstract class MapsActivity<T extends AttractionInfo> extends FilterableL
     }
 
     private void showPopup(AttractionInfo attractionInfo) {
-        binding.setAttractionInfo(attractionInfo);
-        binding.setAttraction(attractionInfo.getAttraction());
-        binding.notifyPropertyChanged(BR.attraction);
-        binding.notifyPropertyChanged(BR.attractionInfo);
+        popupBinding.setAttractionInfo(attractionInfo);
+        popupBinding.setAttraction(attractionInfo.getAttraction());
+        popupBinding.notifyPropertyChanged(BR.attraction);
+        popupBinding.notifyPropertyChanged(BR.attractionInfo);
 
         // Need to set map padding so "Google" logo is above popup, but we need to wait until the
         // popup is visible in order to measure it's height.
         final Handler handler = new Handler();
         handler.postDelayed(() -> {
-            googleMap.setPadding(0, 0, 0, 25 + binding.mapPopupCard.getHeight());
+            googleMap.setPadding(0, 0, 0, 25 + popupBinding.mapPopupCard.getHeight());
         }, 30);
     }
 

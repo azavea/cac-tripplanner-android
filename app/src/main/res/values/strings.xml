@@ -7,6 +7,7 @@
     <string name="menu_action_about">About</string>
     <string name="menu_action_logout">Sign out</string>
     <string name="menu_action_events">Go to events</string>
+    <string name="menu_action_places">Go to places</string>
     <string name="menu_action_map">See map</string>
     <string name="menu_action_event_place">View Destination</string>
 
@@ -33,6 +34,8 @@
     <string name="nature_category_label">Nature</string>
     <string name="exercise_category_label">Exercise</string>
     <string name="educational_category_label">Educational</string>
+
+    <string name="filter_no_results">No results</string>
 
     <!-- place details -->
     <plurals name="place_upcoming_activities_count">
@@ -69,9 +72,9 @@
     <string name="location_requires_gps">Device does not have GPS, which is needed to get location. Please use a different device.</string>
     <string name="location_gps_needed_rationale">GPS needs to be enabled to find destinations near you.</string>
     <string name="location_fine_permission_rationale">Device location permission needed.</string>
-    <string name="filter_no_results">No results</string>
-    <string name="title_activity_maps">Map</string>
 
     <!-- map -->
     <string name="map_menu_action_view_list">View list</string>
+    <string name="title_activity_places_maps">Places</string>
+    <string name="title_activity_events_maps">Events</string>
 </resources>
