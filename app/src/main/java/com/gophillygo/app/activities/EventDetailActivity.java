@@ -8,13 +8,10 @@ import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.CalendarContract;
-import android.support.v7.view.menu.MenuBuilder;
-import android.support.v7.view.menu.MenuPopupHelper;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,6 +24,7 @@ import com.gophillygo.app.data.models.Event;
 import com.gophillygo.app.data.models.EventInfo;
 import com.gophillygo.app.databinding.ActivityEventDetailBinding;
 import com.gophillygo.app.di.GpgViewModelFactory;
+import com.gophillygo.app.utils.FlagMenuUtils;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -162,23 +160,13 @@ public class EventDetailActivity extends AttractionDetailActivity {
         CardView flagOptionsCard = findViewById(R.id.event_detail_flag_options_card);
         flagOptionsCard.setOnClickListener(v -> {
             Log.d(LOG_LABEL, "Clicked flags button");
-            PopupMenu menu = new PopupMenu(this, flagOptionsCard);
-            menu.getMenuInflater().inflate(R.menu.place_options_menu, menu.getMenu());
+            PopupMenu menu = FlagMenuUtils.getFlagPopupMenu(this, flagOptionsCard, eventInfo.getFlag());
             menu.setOnMenuItemClickListener(item -> {
                 eventInfo.updateAttractionFlag(item.getItemId());
                 viewModel.updateAttractionFlag(eventInfo.getFlag());
 
                 return true;
             });
-
-            // Force icons to show in the popup menu via the support library API
-            // https://stackoverflow.com/questions/6805756/is-it-possible-to-display-icons-in-a-popupmenu
-            MenuPopupHelper popupHelper = new MenuPopupHelper(this,
-                    (MenuBuilder)menu.getMenu(),
-                    flagOptionsCard);
-            popupHelper.setForceShowIcon(true);
-            popupHelper.setGravity(Gravity.END|Gravity.RIGHT);
-            popupHelper.show();
         });
     }
 
