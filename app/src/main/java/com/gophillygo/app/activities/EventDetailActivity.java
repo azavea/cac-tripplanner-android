@@ -13,7 +13,6 @@ import android.support.v7.view.menu.MenuPopupHelper;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
-import android.text.Html;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -142,7 +141,7 @@ public class EventDetailActivity extends AttractionDetailActivity {
         Intent intent = new Intent(Intent.ACTION_INSERT)
                 .setData(CalendarContract.Events.CONTENT_URI)
                 .putExtra(CalendarContract.Events.TITLE, event.getName())
-                .putExtra(CalendarContract.Events.DESCRIPTION, event.getDescription())
+                .putExtra(CalendarContract.Events.DESCRIPTION, event.getHtmlDescription().toString())
                 .putExtra(CalendarContract.Events.EVENT_LOCATION, eventInfo.getDestinationName())
                 .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, startTime)
                 .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, endTime)
