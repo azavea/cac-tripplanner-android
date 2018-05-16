@@ -43,7 +43,7 @@
                 android:layout_height="match_parent"
                 android:gravity="center"
                 android:visibility="gone"
-                android:text="@string/no_results" />
+                android:text="@string/filter_no_results" />
 
         </RelativeLayout>
     </android.support.design.widget.CoordinatorLayout>
