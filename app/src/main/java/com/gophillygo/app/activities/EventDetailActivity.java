@@ -31,6 +31,7 @@ import com.gophillygo.app.di.GpgViewModelFactory;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
@@ -125,13 +126,27 @@ public class EventDetailActivity extends AttractionDetailActivity {
     // add event in calendar app
     public void addToCalendar(View view) {
         Event event = eventInfo.getEvent();
+        long startTime = event.getStart().getTime();
+        long endTime = event.getEnd().getTime();
+        // For multi-day events, we set the event to be all-day and set the start time to the next reasonable date
+        if (!event.isSingleDayEvent()) {
+            Calendar now = Calendar.getInstance();
+            if (event.getStart().before(now.getTime())) {
+                // If the event has already started, set the start date to tomorrow
+                now.add(Calendar.DATE, 1);
+                startTime = now.getTimeInMillis();
+            }
+            // All-day events have the same endDate as their startDate
+            endTime = startTime;
+        }
         Intent intent = new Intent(Intent.ACTION_INSERT)
                 .setData(CalendarContract.Events.CONTENT_URI)
                 .putExtra(CalendarContract.Events.TITLE, event.getName())
                 .putExtra(CalendarContract.Events.DESCRIPTION, event.getDescription())
                 .putExtra(CalendarContract.Events.EVENT_LOCATION, eventInfo.getDestinationName())
-                .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, event.getStart().getTime())
-                .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, event.getEnd().getTime());
+                .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, startTime)
+                .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, endTime)
+                .putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, !event.isSingleDayEvent());
         if (intent.resolveActivity(getPackageManager()) != null) {
             startActivity(intent);
         } else {
