@@ -9,8 +9,6 @@ import android.net.Uri;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.view.menu.MenuBuilder;
-import android.support.v7.view.menu.MenuPopupHelper;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
@@ -29,6 +27,7 @@ import com.gophillygo.app.data.models.Destination;
 import com.gophillygo.app.data.models.DestinationInfo;
 import com.gophillygo.app.databinding.ActivityPlaceDetailBinding;
 import com.gophillygo.app.di.GpgViewModelFactory;
+import com.gophillygo.app.utils.FlagMenuUtils;
 import com.synnapps.carouselview.CarouselView;
 
 import javax.inject.Inject;
@@ -194,23 +193,13 @@ public class PlaceDetailActivity extends AppCompatActivity {
         CardView flagOptionsCard = findViewById(R.id.place_detail_flag_options_card);
         flagOptionsCard.setOnClickListener(v -> {
             Log.d(LOG_LABEL, "Clicked flags button");
-            PopupMenu menu = new PopupMenu(this, flagOptionsCard);
-            menu.getMenuInflater().inflate(R.menu.place_options_menu, menu.getMenu());
+            PopupMenu menu = FlagMenuUtils.getFlagPopupMenu(this, flagOptionsCard, destinationInfo.getFlag());
             menu.setOnMenuItemClickListener(item -> {
                 destinationInfo.updateAttractionFlag(item.getItemId());
                 viewModel.updateAttractionFlag(destinationInfo.getFlag());
 
                 return true;
             });
-
-            // Force icons to show in the popup menu via the support library API
-            // https://stackoverflow.com/questions/6805756/is-it-possible-to-display-icons-in-a-popupmenu
-            MenuPopupHelper popupHelper = new MenuPopupHelper(this,
-                    (MenuBuilder)menu.getMenu(),
-                    flagOptionsCard);
-            popupHelper.setForceShowIcon(true);
-            popupHelper.setGravity(Gravity.END|Gravity.RIGHT);
-            popupHelper.show();
         });
     }
 }

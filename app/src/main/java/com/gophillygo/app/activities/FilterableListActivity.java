@@ -52,7 +52,7 @@ public abstract class FilterableListActivity extends BaseAttractionActivity
         //noinspection ConstantConditions
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        filterIcon = ContextCompat.getDrawable(this, R.drawable.ic_filter_list_white_24px);
+        filterIcon = ContextCompat.getDrawable(this, R.drawable.ic_filter_list_white_24dp);
 
         // set up filter button
         filter = new Filter();

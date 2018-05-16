@@ -32,7 +32,7 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintEnd_toStartOf="@id/place_list_watershed_alliance_marker"
-            android:src="@drawable/ic_directions_bike_white_24px"
+            android:src="@drawable/ic_directions_bike_white_24dp"
             android:contentDescription="@string/bicycle_activity_label"
             android:visibility="@{attraction.isCycling ? View.VISIBLE : View.GONE}"
             android:layout_width="32dp"

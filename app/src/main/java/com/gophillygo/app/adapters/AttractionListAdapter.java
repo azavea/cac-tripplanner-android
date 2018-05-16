@@ -7,8 +7,6 @@ import android.databinding.ViewDataBinding;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.view.menu.MenuBuilder;
-import android.support.v7.view.menu.MenuPopupHelper;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -18,8 +16,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.gophillygo.app.BR;
-import com.gophillygo.app.R;
 import com.gophillygo.app.data.models.AttractionInfo;
+import com.gophillygo.app.utils.FlagMenuUtils;
 
 import java.util.List;
 
@@ -77,16 +75,8 @@ public class AttractionListAdapter<T extends AttractionInfo> extends RecyclerVie
     @SuppressLint("RestrictedApi")
     public void optionsButtonClick(View view, T info, Integer position) {
         Log.d(LOG_LABEL, "Clicked place options button for attraction #" + info.getAttraction().getId());
-        PopupMenu menu = new PopupMenu(context, view);
-        menu.getMenuInflater().inflate(R.menu.place_options_menu, menu.getMenu());
+        PopupMenu menu = FlagMenuUtils.getFlagPopupMenu(context, view, info.getFlag());
         menu.setOnMenuItemClickListener(item -> listener.clickedFlagOption(item, info, position));
-
-        // Force icons to show in the popup menu via the support library API
-        // https://stackoverflow.com/questions/6805756/is-it-possible-to-display-icons-in-a-popupmenu
-        MenuPopupHelper popupHelper = new MenuPopupHelper(context,
-                (MenuBuilder)menu.getMenu(), view);
-        popupHelper.setForceShowIcon(true);
-        popupHelper.show();
     }
 
     @NonNull

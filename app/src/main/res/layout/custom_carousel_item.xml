@@ -47,7 +47,7 @@
             style="@style/Base.TextAppearance.AppCompat.Title.Inverse"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:drawableStart="@drawable/ic_place_white_24px"
+            android:drawableStart="@drawable/ic_place_white_24dp"
             android:paddingBottom="2dp"
             android:paddingStart="10dp"
             android:paddingEnd="10dp"
