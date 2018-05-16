@@ -16,10 +16,10 @@ public class AttractionFlag {
 
     public enum Option {
         NotSelected (0, R.drawable.ic_add_black_24dp, null),
-        Liked (1, R.drawable.ic_thumb_up_black_24dp, R.id.place_option_liked),
-        NotInterested (2, R.drawable.ic_not_interested_black_24dp, R.id.place_option_not_interested),
-        Been (3, R.drawable.ic_beenhere_black_24dp, R.id.place_option_been),
-        WantToGo (4, R.drawable.ic_flag_black_24dp, R.id.place_option_want_to_go);
+        Liked (1, R.drawable.ic_thumb_up_blue_24dp, R.id.place_option_liked),
+        NotInterested (2, R.drawable.ic_not_interested_blue_24dp, R.id.place_option_not_interested),
+        Been (3, R.drawable.ic_beenhere_blue_24dp, R.id.place_option_been),
+        WantToGo (4, R.drawable.ic_flag_blue_24dp, R.id.place_option_want_to_go);
 
         private static final SparseArray<Option> map = new SparseArray<>();
         static {
