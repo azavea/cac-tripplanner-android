@@ -51,7 +51,6 @@ public class EventsListActivity extends FilterableListActivity
     }
 
     /**
-     * TODO: #20
      * Go to event detail view when an event in the list clicked.
      *
      * @param position Offset of the position of the list item clicked
@@ -60,11 +59,9 @@ public class EventsListActivity extends FilterableListActivity
         // Get database ID for event clicked, based on positional offset, and pass it along
         long eventId = eventsListView.getAdapter().getItemId(position);
         Log.d(LOG_LABEL, "Clicked event with ID: " + eventId);
-        /*
         Intent intent = new Intent(this, EventDetailActivity.class);
         intent.putExtra(EventDetailActivity.EVENT_ID_KEY, eventId);
         startActivity(intent);
-        */
     }
 
     public boolean clickedFlagOption(MenuItem item, AttractionInfo eventInfo, Integer position) {

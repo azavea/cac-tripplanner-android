@@ -17,7 +17,7 @@ import java.util.List;
 
 @Dao
 public abstract class EventDao implements AttractionDao<Event> {
-    @Query("SELECT event.*, destination.name AS destinationName, " +
+    @Query("SELECT event.*, destination.name AS destinationName, NULL AS distance, " +
             "destination.categories AS destinationCategories, attractionflag.option " +
             "FROM event " +
             "LEFT JOIN destination ON destination.id = event.destination " +
@@ -26,7 +26,7 @@ public abstract class EventDao implements AttractionDao<Event> {
             "ORDER BY event.start_date ASC;")
     public abstract LiveData<List<EventInfo>> getAll();
 
-    @Query("SELECT event.*, destination.name AS destinationName, " +
+    @Query("SELECT event.*, destination.name AS destinationName, destination.distance AS distance, " +
             "destination.categories AS destinationCategories, attractionflag.option " +
             "FROM event " +
             "LEFT JOIN destination ON destination.id = event.destination " +

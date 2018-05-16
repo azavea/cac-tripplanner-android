@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:fillViewport="true"
+    tools:context="com.gophillygo.app.activities.EventDetailActivity">
+    <data>
+        <!-- set up data binding to event -->
+        <variable name="event" type="com.gophillygo.app.data.models.Event"/>
+        <variable name="eventInfo" type="com.gophillygo.app.data.models.EventInfo"/>
+        <variable name="destination" type="com.gophillygo.app.data.models.Destination"/>
+        <variable name="activity" type="com.gophillygo.app.activities.EventDetailActivity" />
+        <!-- imports to allow referencing within data binding expressions -->
+        <import type="android.view.View"/>
+    </data>
+    <ScrollView
+
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/event_detail_image"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="200dp"
+                app:imageUrl="@{event.getWideImage}"
+                android:contentDescription="@{event.getName}"
+                android:scaleType="centerCrop" />
+
+            <TextView
+                android:id="@+id/event_detail_item_name_label"
+                style="@style/Base.TextAppearance.AppCompat.Title.Inverse"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:padding="10dp"
+                android:text="@{event.getName}"
+                app:layout_constraintBottom_toTopOf="@+id/event_detail_item_distance_label" />
+
+            <TextView
+                android:id="@+id/event_detail_item_distance_label"
+                style="@style/Base.TextAppearance.AppCompat.Title.Inverse"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_place_white_24px"
+                android:gravity="start"
+                android:paddingBottom="2dp"
+                android:paddingEnd="10dp"
+                android:paddingStart="10dp"
+                android:text='@{String.format("%.1f", eventInfo.distance) + " miles"}'
+                android:visibility="@{eventInfo.distance != null ? View.VISIBLE : View.GONE}"
+                app:layout_constraintBottom_toBottomOf="@+id/event_detail_image" />
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/event_detail_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:minHeight="?attr/actionBarSize"
+                android:background="@null"
+                android:fitsSystemWindows="true"
+                android:elevation="4dp"
+                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                tools:targetApi="lollipop" />
+
+            <TextView
+                android:id="@+id/event_detail_date_label"
+                style="@style/TextAppearance.AppCompat.Title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingBottom="2dp"
+                android:paddingTop="10dp"
+                android:paddingEnd="10dp"
+                android:paddingStart="10dp"
+                android:text='@{eventInfo != null ? activity.getEventTimeString() : ""}'
+                app:layout_constraintTop_toBottomOf="@+id/event_detail_image" />
+
+            <TextView
+                android:id="@+id/event_detail_destination_name"
+                style="@style/TextAppearance.AppCompat.Title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingBottom="2dp"
+                android:paddingTop="10dp"
+                android:paddingEnd="10dp"
+                android:paddingStart="10dp"
+                android:text="@{eventInfo.destinationName}"
+                android:visibility="@{eventInfo.destinationName != null ? View.VISIBLE : View.GONE}"
+                app:layout_constraintTop_toBottomOf="@+id/event_detail_date_label" />
+
+
+            <include
+                android:id="@+id/event_detail_description_card"
+                layout="@layout/detail_description"
+                android:layout_margin="10dp"
+                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                app:htmlDescription="@{event.htmlDescription}"
+                app:layout_constraintTop_toBottomOf="@+id/event_detail_destination_name" />
+
+            <android.support.v7.widget.CardView
+                android:id="@+id/event_detail_flag_options_card"
+                app:layout_constraintTop_toBottomOf="@+id/event_detail_description_card"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/event_options_flag_text"
+                    android:text="@string/event_details_been_want_to_go_label"
+                    android:layout_width="match_parent"
+                    android:drawableEnd="@{activity.getFlagImage(eventInfo)}"
+                    style="@style/GpgDetailText" />
+
+            </android.support.v7.widget.CardView>
+
+            <LinearLayout
+                android:id="@+id/event_detail_button_bar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:gravity="center_horizontal"
+                android:paddingBottom="20dp"
+                android:paddingEnd="6dp"
+                android:paddingStart="6dp"
+                android:weightSum="3"
+                app:layout_constraintTop_toBottomOf="@+id/event_detail_flag_options_card">
+
+                <android.support.v7.widget.AppCompatButton
+                    android:id="@+id/event_detail_map_button"
+                    style="@style/BorderlessDetailButton"
+                    android:layout_gravity="start"
+                    android:layout_weight="1"
+                    android:drawableStart="@drawable/ic_map_black_24dp"
+                    android:onClick="@{activity::goToMap}"
+                    android:text="@string/event_detail_map_button"
+                    android:visibility="@{destination != null ? View.VISIBLE : View.GONE}" />
+
+                <android.support.v7.widget.AppCompatButton
+                    android:id="@+id/event_detail_directions_button"
+                    style="@style/BorderlessDetailButton"
+                    android:layout_gravity="end"
+                    android:layout_weight="1"
+                    android:drawableStart="@drawable/ic_directions_black_24dp"
+                    android:onClick="@{activity::goToDirections}"
+                    android:text="@string/event_detail_directions_button"
+                    android:visibility="@{destination != null ? View.VISIBLE : View.GONE}" />
+
+                <android.support.v7.widget.AppCompatButton
+                    android:id="@+id/event_detail_website_button"
+                    style="@style/BorderlessDetailButton"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:drawableStart="@drawable/ic_public_black_24dp"
+                    android:onClick="@{activity::goToWebsite}"
+                    android:text="@string/event_detail_website_button"
+                    android:visibility="@{event.hasWebsite ? View.VISIBLE : View.GONE}" />
+            </LinearLayout>
+
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/event_detail_calendar_button"
+                style="@style/BorderlessDetailButton"
+                android:layout_gravity="center_horizontal"
+                android:drawableStart="@drawable/ic_event_black_24dp"
+                android:onClick="@{activity::addToCalendar}"
+                android:text="@string/event_detail_add_to_calendar"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/event_detail_button_bar" />
+
+        </android.support.constraint.ConstraintLayout>
+    </ScrollView>
+</layout>

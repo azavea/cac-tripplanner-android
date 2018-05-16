@@ -13,7 +13,9 @@ import com.gophillygo.app.data.models.Destination;
 import com.gophillygo.app.data.models.DestinationQueryResponse;
 import com.gophillygo.app.data.models.Event;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -48,13 +50,20 @@ abstract public class AttractionNetworkBoundResource<A extends Attraction, I ext
         eventDao.clear();
 
         // save destinations
-        for (Destination item: response.getDestinations()) {
+        List<Destination> destinations = response.getDestinations();
+        Set<Integer> destinationIds = new HashSet<>(destinations.size());
+        for (Destination item : destinations) {
             item.setTimestamp(timestamp);
+            destinationIds.add(item.getId());
             destinationDao.save(item);
         }
 
         // save events
         for (Event item: response.getEvents()) {
+            // Work-around for published event with unpublished destination
+            if (item.getDestination() != null && !destinationIds.contains(item.getDestination())) {
+                item.setDestination(null);
+            }
             item.setTimestamp(timestamp);
             eventDao.save(item);
         }

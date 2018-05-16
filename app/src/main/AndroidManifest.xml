@@ -61,6 +61,13 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.gophillygo.app.activities.HomeActivity" />
         </activity>
+        <activity
+            android:name=".activities.EventDetailActivity"
+            android:parentActivityName=".activities.EventsListActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.gophillygo.app.activities.EventsListActivity" />
+        </activity>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").

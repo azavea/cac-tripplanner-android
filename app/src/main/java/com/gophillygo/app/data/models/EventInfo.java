@@ -11,13 +11,15 @@ public class EventInfo extends AttractionInfo<Event> {
     // fetch fields of related destination from database into these properties
     private final String destinationName;
     private final ArrayList<String> destinationCategories;
+    private Float distance;
 
     public EventInfo(Event event, String destinationName, ArrayList<String> destinationCategories,
-                     AttractionFlag.Option option) {
+                     AttractionFlag.Option option, Float distance) {
         super(event, option);
         this.event = event;
         this.destinationName = destinationName;
         this.destinationCategories = destinationCategories;
+        this.distance = distance;
     }
 
     @Override
@@ -39,5 +41,9 @@ public class EventInfo extends AttractionInfo<Event> {
 
     public ArrayList<String> getDestinationCategories() {
         return destinationCategories;
+    }
+
+    public Float getDistance() {
+        return distance;
     }
 }

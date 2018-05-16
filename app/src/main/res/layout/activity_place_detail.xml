@@ -79,37 +79,13 @@
                 style="@style/GpgDetailText"
                 android:visibility="@{destinationInfo.hasEvents ? View.VISIBLE : View.INVISIBLE}"/>
 
-            <android.support.v7.widget.CardView
+            <include layout="@layout/detail_description"
                 android:id="@+id/place_detail_description_card"
-                app:layout_constraintTop_toBottomOf="@+id/place_detail_upcoming_events"
-                android:layout_gravity="center"
                 android:layout_margin="10dp"
+                android:layout_height="wrap_content"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <android.support.constraint.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-                    <TextView
-                        android:id="@+id/place_detail_description_text"
-                        android:ellipsize="end"
-                        android:maxLines="4"
-                        style="@style/GpgDetailText"
-                        android:text="@{destination.getHtmlDescription}"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
-
-                    <TextView
-                        android:id="@+id/place_detail_description_toggle"
-                        android:text="@string/place_detail_description_expand"
-                        app:layout_constraintTop_toBottomOf="@id/place_detail_description_text"
-                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
-                        android:textAlignment="center"
-                        android:paddingTop="10sp"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
-                </android.support.constraint.ConstraintLayout>
-
-            </android.support.v7.widget.CardView>
+                app:layout_constraintTop_toBottomOf="@+id/place_detail_upcoming_events"
+                app:htmlDescription="@{destination.htmlDescription}" />
 
             <android.support.v7.widget.CardView
                 android:id="@+id/place_detail_flag_options_card"
