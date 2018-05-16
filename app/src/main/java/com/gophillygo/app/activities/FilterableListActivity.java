@@ -3,12 +3,13 @@ package com.gophillygo.app.activities;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.widget.Button;
 
 import com.gophillygo.app.data.models.Filter;
+import com.gophillygo.app.databinding.FilterButtonBarBinding;
 import com.gophillygo.app.FilterDialog;
+import com.gophillygo.app.BR;
 import com.gophillygo.app.R;
 
 import cn.nekocode.badge.BadgeDrawable;
@@ -19,28 +20,31 @@ import cn.nekocode.badge.BadgeDrawable;
  */
 
 public abstract class FilterableListActivity extends BaseAttractionActivity
-        implements FilterDialog.FilterChangeListener {
+        implements FilterDialog.FilterChangeListener, ToolbarFilterListener {
 
-    private int layoutId, toolbarId, filterButtonId;
+    private int toolbarId;
 
     private Button filterButton;
     private Drawable filterIcon;
     private Toolbar toolbar;
 
     protected Filter filter;
+    private FilterButtonBarBinding filterBinding;
 
-    public FilterableListActivity(int layoutId, int toolbarId, int filterButtonId) {
-        this.layoutId = layoutId;
+    public FilterableListActivity(int toolbarId) {
         this.toolbarId = toolbarId;
-        this.filterButtonId = filterButtonId;
     }
 
     protected abstract void loadData();
+    protected abstract FilterButtonBarBinding setupDataBinding();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(layoutId);
+
+        filterBinding = setupDataBinding();
+        filterBinding.setListener(this);
+        filterBinding.setFilter(filter);
 
         // set up toolbar
         toolbar = findViewById(toolbarId);
@@ -52,9 +56,11 @@ public abstract class FilterableListActivity extends BaseAttractionActivity
 
         // set up filter button
         filter = new Filter();
-        filterButton = findViewById(filterButtonId);
+        filterButton = findViewById(R.id.filter_bar_filter_button);
         filterButton.setOnClickListener(v -> {
-            FilterDialog filterDialog = FilterDialog.newInstance(filter);
+            // Need to give the filter dialog a copy of the filter, or toggling the
+            // liked / want to go filters in the dialog will toggle the toolbar buttons too soon
+            FilterDialog filterDialog = FilterDialog.newInstance(new Filter(filter));
             filterDialog.show(getSupportFragmentManager(), filterDialog.getTag());
         });
     }
@@ -62,6 +68,8 @@ public abstract class FilterableListActivity extends BaseAttractionActivity
     @Override
     public void filterChanged(Filter filter) {
         this.filter = filter;
+        filterBinding.setFilter(filter);
+        filterBinding.notifyPropertyChanged(BR.filter);
         loadData();
 
         int setFilterCount = filter.count();
@@ -80,4 +88,17 @@ public abstract class FilterableListActivity extends BaseAttractionActivity
         }
 
     }
+
+    @Override
+    public void toggleLiked() {
+        filter.setLiked(filterBinding.filterBarLikedButton.isChecked());
+        filterChanged(filter);
+    }
+
+    @Override
+    public void toggleWantToGo() {
+        filter.setWantToGo(filterBinding.filterBarWantToGoButton.isChecked());
+        filterChanged(filter);
+    }
+
 }

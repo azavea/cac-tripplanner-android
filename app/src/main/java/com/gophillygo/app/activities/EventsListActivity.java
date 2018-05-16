@@ -3,6 +3,7 @@ package com.gophillygo.app.activities;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.gophillygo.app.BR;
 import com.gophillygo.app.R;
 import com.gophillygo.app.adapters.EventsListAdapter;
 import com.gophillygo.app.data.EventViewModel;
@@ -20,6 +22,8 @@ import com.gophillygo.app.data.models.AttractionInfo;
 import com.gophillygo.app.data.models.EventInfo;
 import com.gophillygo.app.data.networkresource.Resource;
 import com.gophillygo.app.data.networkresource.Status;
+import com.gophillygo.app.databinding.ActivityEventsListBinding;
+import com.gophillygo.app.databinding.FilterButtonBarBinding;
 import com.gophillygo.app.di.GpgViewModelFactory;
 
 import java.util.ArrayList;
@@ -43,7 +47,7 @@ public class EventsListActivity extends FilterableListActivity
     EventViewModel viewModel;
 
     public EventsListActivity() {
-        super(R.layout.activity_events_list, R.id.events_list_toolbar, R.id.events_list_filter_button);
+        super(R.id.events_list_toolbar);
     }
 
     /**
@@ -88,6 +92,12 @@ public class EventsListActivity extends FilterableListActivity
                 data.removeObservers(this);
             }
         });
+    }
+
+    @Override
+    protected FilterButtonBarBinding setupDataBinding() {
+        ActivityEventsListBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_events_list);
+        return binding.eventsListFilterButtonBar;
     }
 
     @Override

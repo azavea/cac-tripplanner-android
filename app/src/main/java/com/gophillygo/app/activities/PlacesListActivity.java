@@ -3,6 +3,7 @@ package com.gophillygo.app.activities;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.gophillygo.app.BR;
 import com.gophillygo.app.R;
 import com.gophillygo.app.adapters.PlacesListAdapter;
 import com.gophillygo.app.data.DestinationViewModel;
@@ -20,6 +22,8 @@ import com.gophillygo.app.data.models.AttractionInfo;
 import com.gophillygo.app.data.models.DestinationInfo;
 import com.gophillygo.app.data.networkresource.Resource;
 import com.gophillygo.app.data.networkresource.Status;
+import com.gophillygo.app.databinding.ActivityPlacesListBinding;
+import com.gophillygo.app.databinding.FilterButtonBarBinding;
 import com.gophillygo.app.di.GpgViewModelFactory;
 
 import java.util.ArrayList;
@@ -44,7 +48,7 @@ public class PlacesListActivity extends FilterableListActivity implements
     DestinationViewModel viewModel;
 
     public PlacesListActivity() {
-        super(R.layout.activity_places_list, R.id.places_list_toolbar, R.id.filter_bar_filter_button);
+        super(R.id.places_list_toolbar);
     }
 
     /**
@@ -87,6 +91,12 @@ public class PlacesListActivity extends FilterableListActivity implements
                 data.removeObservers(this);
             }
         });
+    }
+
+    @Override
+    protected FilterButtonBarBinding setupDataBinding() {
+        ActivityPlacesListBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_places_list);
+        return binding.placesListFilterButtonBar;
     }
 
     @Override

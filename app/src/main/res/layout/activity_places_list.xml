@@ -1,47 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     tools:context="com.gophillygo.app.activities.PlacesListActivity">
-    <RelativeLayout
+    <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/places_list_toolbar"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:fitsSystemWindows="true"
-            android:elevation="0dp"
-            android:background="@color/color_primary"
-            app:title="@string/places_list_title"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-            tools:targetApi="lollipop" />
+            android:layout_height="match_parent">
 
-        <include layout="@layout/filter_button_bar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/places_list_toolbar" />
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/places_list_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:fitsSystemWindows="true"
+                android:elevation="0dp"
+                android:background="@color/color_primary"
+                app:title="@string/places_list_title"
+                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                tools:targetApi="lollipop" />
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/places_list_recycler_view"
-            android:layout_below="@id/filter_button_bar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-        </android.support.v7.widget.RecyclerView>
+            <include layout="@layout/filter_button_bar"
+                android:id="@+id/places_list_filter_button_bar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/places_list_toolbar" />
 
-        <TextView
-            android:id="@+id/empty_places_list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:visibility="gone"
-            android:text="@string/no_results" />
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/places_list_recycler_view"
+                android:layout_below="@id/places_list_filter_button_bar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            </android.support.v7.widget.RecyclerView>
 
-    </RelativeLayout>
-</android.support.design.widget.CoordinatorLayout>
+            <TextView
+                android:id="@+id/empty_places_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:visibility="gone"
+                android:text="@string/filter_no_results" />
+
+        </RelativeLayout>
+    </android.support.design.widget.CoordinatorLayout>
+</layout>

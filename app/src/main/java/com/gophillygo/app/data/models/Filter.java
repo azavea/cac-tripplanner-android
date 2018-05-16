@@ -35,6 +35,10 @@ public class Filter extends BaseObservable implements Serializable {
         this(false, false, false, false, false, false, false, false);
     }
 
+    public Filter(Filter other) {
+        this(other.nature, other.exercise, other.educational, other.been, other.wantToGo, other.notInterested, other.liked, other.accessible);
+    }
+
     public Filter(boolean nature, boolean exercise, boolean educational, boolean been,
                   boolean wantToGo, boolean notInterested, boolean liked, boolean accessible) {
         this.nature = nature;
