@@ -58,6 +58,8 @@ public abstract class FilterableListActivity extends BaseAttractionActivity
         filter = new Filter();
         filterButton = findViewById(R.id.filter_bar_filter_button);
         filterButton.setOnClickListener(v -> {
+            // Need to give the filter dialog a copy of the filter, or toggling the
+            // liked / want to go filters in the dialog will toggle the toolbar buttons too soon
             FilterDialog filterDialog = FilterDialog.newInstance(new Filter(filter));
             filterDialog.show(getSupportFragmentManager(), filterDialog.getTag());
         });
