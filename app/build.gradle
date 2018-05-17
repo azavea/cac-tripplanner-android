@@ -36,7 +36,7 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     // Architecture Components
     def archComponentsVersion = '1.1.1'
-    def roomVersion = '1.0.0'
+    def roomVersion = '1.1.0'
     // ViewModel and LiveData
     implementation "android.arch.lifecycle:extensions:$archComponentsVersion"
     // Java8 support for Lifecycles
@@ -52,7 +52,7 @@ dependencies {
     implementation "com.android.support:design:$supportVersion"
     implementation 'com.android.support.constraint:constraint-layout:1.1.0'
     // Android Play services libraries
-    def playServicesVersion = '15.0.0'
+    def playServicesVersion = '15.0.1'
     implementation "com.google.android.gms:play-services-location:$playServicesVersion"
     implementation "com.google.android.gms:play-services-maps:$playServicesVersion"
     // Carousel
@@ -79,8 +79,8 @@ dependencies {
     annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
     // testing
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'com.android.support.test:runner:1.0.1'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.1'
+    androidTestImplementation 'com.android.support.test:runner:1.0.2'
+    androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     // Test helpers for LiveData
     testImplementation "android.arch.core:core-testing:$archComponentsVersion"
     // Test helpers for Room
