@@ -9,6 +9,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Objects;
 
 
 @Entity(inheritSuperIndices = true)
@@ -110,5 +111,29 @@ public class Destination extends Attraction {
 
     public ArrayList<String> getCategories() {
         return categories;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        Destination that = (Destination) o;
+        return watershedAlliance == that.watershedAlliance &&
+                Float.compare(that.distance, distance) == 0 &&
+                Objects.equals(city, that.city) &&
+                Objects.equals(state, that.state) &&
+                Objects.equals(address, that.address) &&
+                Objects.equals(categories, that.categories) &&
+                Objects.equals(location, that.location) &&
+                Objects.equals(attributes, that.attributes) &&
+                Objects.equals(zipCode, that.zipCode) &&
+                Objects.equals(formattedDistance, that.formattedDistance);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(super.hashCode(), city, state, address, categories, location, watershedAlliance, attributes, zipCode, distance, formattedDistance);
     }
 }
