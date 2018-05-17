@@ -30,6 +30,10 @@ public abstract class AttractionInfo<T extends Attraction> {
         return flag;
     }
 
+    public void setFlag(AttractionFlag flag) {
+        this.flag = flag;
+    }
+
     public @DrawableRes int getFlagImage() {
         return flag == null || flag.getOption() == null ? AttractionFlag.Option.NotSelected.drawable : flag.getOption().drawable;
     }
@@ -66,15 +70,15 @@ public abstract class AttractionInfo<T extends Attraction> {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof AttractionInfo)) return false;
         AttractionInfo<?> that = (AttractionInfo<?>) o;
         return Objects.equals(flag, that.flag) &&
-                option == that.option;
+                option == that.option &&
+                Objects.equals(getAttraction(), that.getAttraction());
     }
 
     @Override
     public int hashCode() {
-
         return Objects.hash(flag, option);
     }
 }

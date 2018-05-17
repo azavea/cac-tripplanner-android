@@ -9,6 +9,7 @@ import android.text.Spanned;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 
 @Entity
@@ -154,5 +155,33 @@ public class Attraction {
             stringBuilder.append(activity);
         }
         return stringBuilder.toString();
+    }
+
+    // Implement equals and hashcode for list adapter to diff.
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Attraction that = (Attraction) o;
+        return id == that.id &&
+                placeID == that.placeID &&
+                accessible == that.accessible &&
+                cycling == that.cycling &&
+                priority == that.priority &&
+                isEvent == that.isEvent &&
+                timestamp == that.timestamp &&
+                Objects.equals(name, that.name) &&
+                Objects.equals(image, that.image) &&
+                Objects.equals(description, that.description) &&
+                Objects.equals(activities, that.activities) &&
+                Objects.equals(websiteUrl, that.websiteUrl) &&
+                Objects.equals(wideImage, that.wideImage);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(id, placeID, name, accessible, image, cycling, description, priority, activities, websiteUrl, wideImage, isEvent, timestamp);
     }
 }
