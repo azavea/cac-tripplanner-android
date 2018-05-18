@@ -7,6 +7,8 @@ import android.databinding.ViewDataBinding;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.recyclerview.extensions.ListAdapter;
+import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -22,7 +24,7 @@ import com.gophillygo.app.utils.FlagMenuUtils;
 import java.util.List;
 
 
-public class AttractionListAdapter<T extends AttractionInfo> extends RecyclerView.Adapter {
+public class AttractionListAdapter<T extends AttractionInfo> extends ListAdapter<T, AttractionListAdapter.ViewHolder> {
 
     public interface AttractionListItemClickListener {
         void clickedAttraction(int position);
@@ -31,14 +33,14 @@ public class AttractionListAdapter<T extends AttractionInfo> extends RecyclerVie
 
     private static final String LOG_LABEL = "AttractionListAdapter";
 
-    private final Context context;
-    private final LayoutInflater inflater;
-    private final AttractionListItemClickListener listener;
-    private final int itemViewId;
+    private Context context;
+    private LayoutInflater inflater;
+    private AttractionListItemClickListener listener;
+    private int itemViewId;
 
     private List<T> attractionList;
 
-    private static class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         private final ViewDataBinding binding;
 
         private ViewHolder(ViewDataBinding binding, final AttractionListItemClickListener listener) {
@@ -55,6 +57,24 @@ public class AttractionListAdapter<T extends AttractionInfo> extends RecyclerVie
         }
     }
 
+    private AttractionListAdapter() {
+        super(new DiffUtil.ItemCallback<T>() {
+
+            @Override
+            public boolean areItemsTheSame(T oldItem, T newItem) {
+                // Returns true if these are for the same attraction; properties may differ.
+                return oldItem.getAttraction().getId() == newItem.getAttraction().getId() &&
+                        oldItem.getAttraction().isEvent() == newItem.getAttraction().isEvent();
+            }
+
+            @Override
+            public boolean areContentsTheSame(T oldItem, T newItem) {
+                return oldItem.equals(newItem);
+            }
+        });
+    }
+
+
     /**
      * Construct a generalized list adapter for places or events.
      *
@@ -65,6 +85,7 @@ public class AttractionListAdapter<T extends AttractionInfo> extends RecyclerVie
      */
     public AttractionListAdapter(Context context, List<T> attractions, int itemViewId,
                                  AttractionListItemClickListener listener) {
+        this();
         this.context = context;
         this.inflater = LayoutInflater.from(context);
         this.attractionList = attractions;
@@ -79,20 +100,24 @@ public class AttractionListAdapter<T extends AttractionInfo> extends RecyclerVie
         menu.setOnMenuItemClickListener(item -> listener.clickedFlagOption(item, info, position));
     }
 
+    @Override
+    public void submitList(List<T> list) {
+        super.submitList(list);
+        this.attractionList = list;
+    }
+
     @NonNull
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         ViewDataBinding binding = DataBindingUtil.inflate(inflater, itemViewId, parent, false);
         binding.setVariable(BR.adapter, this);
         return new ViewHolder(binding, this.listener);
     }
 
-    @SuppressLint("RestrictedApi")
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         T info = attractionList.get(position);
-        ViewHolder viewHolder = (ViewHolder) holder;
-        viewHolder.bind(info);
+        holder.bind(info);
     }
 
     @Override

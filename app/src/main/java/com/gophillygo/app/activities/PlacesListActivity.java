@@ -1,7 +1,5 @@
 package com.gophillygo.app.activities;
 
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -14,23 +12,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import com.gophillygo.app.BR;
 import com.gophillygo.app.R;
 import com.gophillygo.app.adapters.PlacesListAdapter;
-import com.gophillygo.app.data.DestinationViewModel;
 import com.gophillygo.app.data.models.AttractionInfo;
 import com.gophillygo.app.data.models.DestinationInfo;
-import com.gophillygo.app.data.networkresource.Resource;
-import com.gophillygo.app.data.networkresource.Status;
 import com.gophillygo.app.databinding.ActivityPlacesListBinding;
 import com.gophillygo.app.databinding.FilterButtonBarBinding;
-import com.gophillygo.app.di.GpgViewModelFactory;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.inject.Inject;
-
 
 public class PlacesListActivity extends FilterableListActivity implements
         PlacesListAdapter.AttractionListItemClickListener {
@@ -39,16 +29,27 @@ public class PlacesListActivity extends FilterableListActivity implements
 
     private LinearLayoutManager layoutManager;
     private RecyclerView placesListView;
-    private List<DestinationInfo> destinations;
-
-    @SuppressWarnings("WeakerAccess")
-    @Inject
-    GpgViewModelFactory viewModelFactory;
-    @SuppressWarnings("WeakerAccess")
-    DestinationViewModel viewModel;
+    PlacesListAdapter placesListAdapter;
 
     public PlacesListActivity() {
         super(R.id.places_list_toolbar);
+
+        // If destinations were loaded before this activity showed, use them immediately.
+        if (destinationInfos != null && !destinationInfos.isEmpty()) {
+            loadData();
+        } else {
+            Log.d(LOG_LABEL, "Have no destinations for the places list");
+        }
+    }
+
+    @Override
+    public void locationOrDestinationsChanged() {
+        super.locationOrDestinationsChanged();
+        if (destinationInfos != null && !destinationInfos.isEmpty()) {
+            loadData();
+        } else {
+            Log.d(LOG_LABEL, "Have no destinations for the places list in locationOrDestinationsChanged");
+        }
     }
 
     /**
@@ -58,16 +59,15 @@ public class PlacesListActivity extends FilterableListActivity implements
      */
     public void clickedAttraction(int position) {
         // Get database ID for place clicked, based on positional offset, and pass it along
-        long destinationId = placesListView.getAdapter().getItemId(position);
+        long detailId = placesListView.getAdapter().getItemId(position);
         Intent intent = new Intent(this, PlaceDetailActivity.class);
-        intent.putExtra(PlaceDetailActivity.DESTINATION_ID_KEY, destinationId);
+        intent.putExtra(PlaceDetailActivity.DESTINATION_ID_KEY, detailId);
         startActivity(intent);
     }
 
     public boolean clickedFlagOption(MenuItem item, AttractionInfo destinationInfo, Integer position) {
         destinationInfo.updateAttractionFlag(item.getItemId());
         viewModel.updateAttractionFlag(destinationInfo.getFlag());
-        placesListView.getAdapter().notifyItemChanged(position);
         return true;
     }
 
@@ -77,20 +77,7 @@ public class PlacesListActivity extends FilterableListActivity implements
 
         // set up list of places
         layoutManager = new LinearLayoutManager(this);
-        viewModel = ViewModelProviders.of(this, viewModelFactory)
-                .get(DestinationViewModel.class);
-
-        LiveData<Resource<List<DestinationInfo>>> data = viewModel.getDestinations();
-        data.observe(this, destinationResource -> {
-            if (destinationResource != null && destinationResource.status.equals(Status.SUCCESS) &&
-                    destinationResource.data != null && !destinationResource.data.isEmpty()) {
-                destinations = destinationResource.data;
-                loadData();
-                // Remove observer after loading full list so updates to the destination flags don't
-                // cause unwanted changes to scroll position
-                data.removeObservers(this);
-            }
-        });
+        placesListView = findViewById(R.id.places_list_recycler_view);
     }
 
     @Override
@@ -101,15 +88,24 @@ public class PlacesListActivity extends FilterableListActivity implements
 
     @Override
     protected void loadData() {
+        Log.d(LOG_LABEL, "loadData");
         List<DestinationInfo> filteredDestinations = getFilteredDestinations();
-
         TextView noDataView = findViewById(R.id.empty_places_list);
         noDataView.setVisibility(filteredDestinations.isEmpty() ? View.VISIBLE : View.GONE);
 
-        placesListView = findViewById(R.id.places_list_recycler_view);
-        PlacesListAdapter adapter = new PlacesListAdapter(this, filteredDestinations, this);
-        placesListView.setAdapter(adapter);
-        placesListView.setLayoutManager(layoutManager);
+        // Reset list adapter if either it isn't set up, or if a filter was applied/removed.
+        if (placesListAdapter == null || filteredDestinations.size() != placesListAdapter.getItemCount()) {
+            placesListAdapter = new PlacesListAdapter(this, filteredDestinations, this);
+            // must set the list before the adapter for the differ to initialize properly
+            placesListAdapter.submitList(filteredDestinations);
+            placesListView.setAdapter(placesListAdapter);
+            placesListView.setLayoutManager(layoutManager);
+        } else {
+            Log.d(LOG_LABEL, "submit list for diff");
+            // Let the AsyncListDiffer find which have changed, and only update their view holders
+            // https://developer.android.com/reference/android/support/v7/recyclerview/extensions/ListAdapter
+            placesListAdapter.submitList(filteredDestinations);
+        }
     }
 
     @Override
@@ -140,14 +136,13 @@ public class PlacesListActivity extends FilterableListActivity implements
     }
 
     @NonNull
-    private List<DestinationInfo> getFilteredDestinations() {
-        List<DestinationInfo> filteredDestinations = new ArrayList<>(destinations.size());
-        for (DestinationInfo info : destinations) {
+    private ArrayList<DestinationInfo> getFilteredDestinations() {
+        ArrayList<DestinationInfo> filteredDestinations = new ArrayList<>(destinationInfos.size());
+        for (DestinationInfo info : destinationInfos) {
             if (filter.matches(info)) {
                 filteredDestinations.add(info);
             }
         }
         return filteredDestinations;
     }
-
 }

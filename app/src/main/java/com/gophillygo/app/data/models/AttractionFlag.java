@@ -11,6 +11,8 @@ import android.util.SparseArray;
 import com.google.gson.annotations.SerializedName;
 import com.gophillygo.app.R;
 
+import java.util.Objects;
+
 @Entity(primaryKeys = {"attractionID", "is_event"})
 public class AttractionFlag {
 
@@ -81,6 +83,22 @@ public class AttractionFlag {
         public static int toInt(Option option) {
             return option.code;
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AttractionFlag that = (AttractionFlag) o;
+        return attractionID == that.attractionID &&
+                isEvent == that.isEvent &&
+                option == that.option;
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(attractionID, isEvent, option);
     }
 }
 

@@ -7,6 +7,8 @@ import android.support.annotation.MenuRes;
 
 import com.gophillygo.app.R;
 
+import java.util.Objects;
+
 public abstract class AttractionInfo<T extends Attraction> {
     @Ignore
     protected AttractionFlag flag;
@@ -26,6 +28,10 @@ public abstract class AttractionInfo<T extends Attraction> {
 
     public AttractionFlag getFlag() {
         return flag;
+    }
+
+    public void setFlag(AttractionFlag flag) {
+        this.flag = flag;
     }
 
     public @DrawableRes int getFlagImage() {
@@ -59,5 +65,20 @@ public abstract class AttractionInfo<T extends Attraction> {
 
     public AttractionFlag.Option getOption() {
         return option;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof AttractionInfo)) return false;
+        AttractionInfo<?> that = (AttractionInfo<?>) o;
+        return Objects.equals(flag, that.flag) &&
+                option == that.option &&
+                Objects.equals(getAttraction(), that.getAttraction());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(flag, option);
     }
 }

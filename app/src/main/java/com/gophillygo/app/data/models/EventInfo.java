@@ -3,6 +3,7 @@ package com.gophillygo.app.data.models;
 import android.arch.persistence.room.Embedded;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class EventInfo extends AttractionInfo<Event> {
     @Embedded
@@ -45,5 +46,23 @@ public class EventInfo extends AttractionInfo<Event> {
 
     public Float getDistance() {
         return distance;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        EventInfo eventInfo = (EventInfo) o;
+        return Objects.equals(event, eventInfo.event) &&
+                Objects.equals(destinationName, eventInfo.destinationName) &&
+                Objects.equals(destinationCategories, eventInfo.destinationCategories) &&
+                Objects.equals(distance, eventInfo.distance);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(super.hashCode(), event, destinationName, destinationCategories, distance);
     }
 }

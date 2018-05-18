@@ -6,6 +6,7 @@ import android.databinding.Bindable;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import com.gophillygo.app.BR;
 
@@ -224,5 +225,26 @@ public class Filter extends BaseObservable implements Serializable {
     public void setAccessible(boolean accessible) {
         this.accessible = accessible;
         notifyPropertyChanged(BR.accessible);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Filter filter = (Filter) o;
+        return nature == filter.nature &&
+                exercise == filter.exercise &&
+                educational == filter.educational &&
+                been == filter.been &&
+                wantToGo == filter.wantToGo &&
+                notInterested == filter.notInterested &&
+                liked == filter.liked &&
+                accessible == filter.accessible;
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(nature, exercise, educational, been, wantToGo, notInterested, liked, accessible);
     }
 }

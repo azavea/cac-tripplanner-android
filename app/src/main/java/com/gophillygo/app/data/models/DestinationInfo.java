@@ -2,6 +2,8 @@ package com.gophillygo.app.data.models;
 
 import android.arch.persistence.room.Embedded;
 
+import java.util.Objects;
+
 public class DestinationInfo extends AttractionInfo<Destination> {
     @Embedded
     private final Destination destination;
@@ -32,4 +34,19 @@ public class DestinationInfo extends AttractionInfo<Destination> {
         return eventCount > 0;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        DestinationInfo that = (DestinationInfo) o;
+        return eventCount == that.eventCount &&
+                Objects.equals(destination, that.destination);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(super.hashCode(), destination, eventCount);
+    }
 }

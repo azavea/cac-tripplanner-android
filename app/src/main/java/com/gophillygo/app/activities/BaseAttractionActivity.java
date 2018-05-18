@@ -103,7 +103,8 @@ public abstract class BaseAttractionActivity extends AppCompatActivity
     @NonNull
     private List<DestinationInfo> findNearestDestinations() {
 
-        if (currentLocation == null || destinationInfos == null || destinationInfos.isEmpty()) {
+        // getCurrentLocation will set to default if null
+        if (getCurrentLocation() == null || destinationInfos == null || destinationInfos.isEmpty()) {
             return new ArrayList<>();
         }
 
@@ -116,7 +117,7 @@ public abstract class BaseAttractionActivity extends AppCompatActivity
         if (firstDestination.getDestination().getDistance() > 0) {
             // have distances; only update if location changed
             if (!locationHasChanged) {
-                Log.d(LOG_LABEL, "Have distances and location unchanged; not updating destinations");
+                Log.d(LOG_LABEL, "Have distances and location unchanged; not updating distances");
                 update = false;
             }
         }
@@ -195,6 +196,7 @@ public abstract class BaseAttractionActivity extends AppCompatActivity
     public Location getCurrentLocation() {
         if (currentLocation == null) {
             setDefaultLocation();
+            locationHasChanged = true;
         }
         return currentLocation;
     }

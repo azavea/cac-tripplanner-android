@@ -14,7 +14,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
-import com.gophillygo.app.BR;
 import com.gophillygo.app.R;
 import com.gophillygo.app.adapters.EventsListAdapter;
 import com.gophillygo.app.data.EventViewModel;
@@ -39,6 +38,7 @@ public class EventsListActivity extends FilterableListActivity
     private LinearLayoutManager layoutManager;
     private RecyclerView eventsListView;
     private List<EventInfo> events;
+    private EventsListAdapter adapter;
 
     @SuppressWarnings("WeakerAccess")
     @Inject
@@ -67,7 +67,6 @@ public class EventsListActivity extends FilterableListActivity
     public boolean clickedFlagOption(MenuItem item, AttractionInfo eventInfo, Integer position) {
         eventInfo.updateAttractionFlag(item.getItemId());
         viewModel.updateAttractionFlag(eventInfo.getFlag());
-        eventsListView.getAdapter().notifyItemChanged(position);
         return true;
     }
 
@@ -76,6 +75,10 @@ public class EventsListActivity extends FilterableListActivity
         super.onCreate(savedInstanceState);
 
         layoutManager = new LinearLayoutManager(this);
+        eventsListView = findViewById(R.id.events_list_recycler_view);
+
+        // In addition to the destination data loaded by the BaseAttraction, get the full
+        // events data here.
         viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(EventViewModel.class);
         LiveData<Resource<List<EventInfo>>> data = viewModel.getEvents();
@@ -84,9 +87,6 @@ public class EventsListActivity extends FilterableListActivity
                     destinationResource.data != null && !destinationResource.data.isEmpty()) {
                 events = destinationResource.data;
                 loadData();
-                // Remove observer after loading full list so updates to the destination flags don't
-                // cause unwanted changes to scroll position
-                data.removeObservers(this);
             }
         });
     }
@@ -104,10 +104,16 @@ public class EventsListActivity extends FilterableListActivity
         TextView noDataView = findViewById(R.id.empty_events_list);
         noDataView.setVisibility(filteredEvents.isEmpty() ? View.VISIBLE : View.GONE);
 
-        eventsListView = findViewById(R.id.events_list_recycler_view);
-        EventsListAdapter adapter = new EventsListAdapter(this, filteredEvents, this);
-        eventsListView.setAdapter(adapter);
-        eventsListView.setLayoutManager(layoutManager);
+        // Reset list adapter if either it isn't set up, or if a filter was applied/removed.
+        if (adapter == null || filteredEvents.size() != adapter.getItemCount()) {
+            adapter = new EventsListAdapter(this, filteredEvents, this);
+            adapter.submitList(filteredEvents);
+            eventsListView.setAdapter(adapter);
+            eventsListView.setLayoutManager(layoutManager);
+        } else {
+            // Let the AsyncListDiffer find which have changed, and only update their view holders
+            adapter.submitList(filteredEvents);
+        }
     }
 
     @Override

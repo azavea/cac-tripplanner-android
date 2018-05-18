@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Objects;
 
 import static android.arch.persistence.room.ForeignKey.SET_NULL;
 
@@ -132,5 +133,25 @@ public class Event extends Attraction {
 
         return startCalendar.get(Calendar.YEAR) == endCalendar.get(Calendar.YEAR) &&
                 startCalendar.get(Calendar.DAY_OF_YEAR) == endCalendar.get(Calendar.DAY_OF_YEAR);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+        Event event = (Event) o;
+        return isSingleDay == event.isSingleDay &&
+                Objects.equals(destination, event.destination) &&
+                Objects.equals(startDate, event.startDate) &&
+                Objects.equals(endDate, event.endDate) &&
+                Objects.equals(start, event.start) &&
+                Objects.equals(end, event.end);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(super.hashCode(), destination, startDate, endDate, start, end, isSingleDay);
     }
 }
