@@ -3,10 +3,12 @@ package com.gophillygo.app.data.models;
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
+import android.support.annotation.NonNull;
 import android.text.Html;
 import android.text.Spanned;
 
 import com.google.gson.annotations.SerializedName;
+import com.gophillygo.app.data.DestinationWebservice;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -69,6 +71,20 @@ public class Attraction {
         this.activities = activities;
     }
 
+
+    /**
+     * Helper to prepend host name to path; only needed in development with local server.
+     *
+     * @param path Image path, which may be relative
+     * @return Full URL for image
+     */
+    private String addHostToPath(@NonNull String path) {
+        if (!path.isEmpty() && !path.startsWith("http")) {
+            return DestinationWebservice.WEBSERVICE_URL.concat(path);
+        }
+        return path;
+    }
+
     /**
      * Timestamp entries. Timestamp value does not come from query result; it should be set
      * on database save. Gson serializer will initialize value to zero.
@@ -96,7 +112,7 @@ public class Attraction {
     }
 
     public String getImage() {
-        return image;
+        return addHostToPath(image);
     }
 
     public boolean isCycling() {
@@ -124,7 +140,7 @@ public class Attraction {
     }
 
     public String getWideImage() {
-        return wideImage;
+        return addHostToPath(wideImage);
     }
 
     public boolean isEvent() {

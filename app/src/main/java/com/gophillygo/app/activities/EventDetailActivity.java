@@ -25,6 +25,7 @@ import com.gophillygo.app.data.models.EventInfo;
 import com.gophillygo.app.databinding.ActivityEventDetailBinding;
 import com.gophillygo.app.di.GpgViewModelFactory;
 import com.gophillygo.app.utils.FlagMenuUtils;
+import com.gophillygo.app.utils.UserUuidUtils;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -48,6 +49,7 @@ public class EventDetailActivity extends AttractionDetailActivity {
 
     private long eventId = -1;
     private EventInfo eventInfo;
+    private String userUuid;
 
     private ActivityEventDetailBinding binding;
 
@@ -111,6 +113,10 @@ public class EventDetailActivity extends AttractionDetailActivity {
             binding.setEventInfo(eventInfo);
             displayEvent();
         });
+
+        // Get or create unique, random UUID for app install for posting user flags
+        UserUuidUtils userUuidUtils = new UserUuidUtils(getApplicationContext());
+        userUuid = userUuidUtils.getUserUuid();
     }
 
     @Override
@@ -163,7 +169,7 @@ public class EventDetailActivity extends AttractionDetailActivity {
             PopupMenu menu = FlagMenuUtils.getFlagPopupMenu(this, flagOptionsCard, eventInfo.getFlag());
             menu.setOnMenuItemClickListener(item -> {
                 eventInfo.updateAttractionFlag(item.getItemId());
-                viewModel.updateAttractionFlag(eventInfo.getFlag());
+                viewModel.updateAttractionFlag(eventInfo.getFlag(), userUuid, getString(R.string.user_flag_post_api_key));
 
                 return true;
             });

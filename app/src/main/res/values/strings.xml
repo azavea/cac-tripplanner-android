@@ -74,4 +74,11 @@
 
     <!-- map -->
     <string name="map_menu_action_view_list">View list</string>
+
+    <!-- shared resources for user UUID -->
+
+    <!-- the name of the shared preferences file -->
+    <string name="user_uuid_shared_preferences_file">gophillygo_user_uuid_shared_preferences</string>
+    <!-- the key to the UUID within the shared preferences file -->
+    <string name="user_uuid_shared_preferences_key">gophillygo_user_uuid</string>
 </resources>

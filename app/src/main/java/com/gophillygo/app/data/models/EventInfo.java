@@ -12,7 +12,7 @@ public class EventInfo extends AttractionInfo<Event> {
     // fetch fields of related destination from database into these properties
     private final String destinationName;
     private final ArrayList<String> destinationCategories;
-    private Float distance;
+    private final Float distance;
 
     public EventInfo(Event event, String destinationName, ArrayList<String> destinationCategories,
                      AttractionFlag.Option option, Float distance) {
