@@ -35,8 +35,6 @@
     <string name="exercise_category_label">Exercise</string>
     <string name="educational_category_label">Educational</string>
 
-    <string name="filter_no_results">No results</string>
-
     <!-- place details -->
     <plurals name="place_upcoming_activities_count">
         <item quantity="one">%d upcoming event</item>
@@ -72,9 +70,18 @@
     <string name="location_requires_gps">Device does not have GPS, which is needed to get location. Please use a different device.</string>
     <string name="location_gps_needed_rationale">GPS needs to be enabled to find destinations near you.</string>
     <string name="location_fine_permission_rationale">Device location permission needed.</string>
+    <string name="filter_no_results">No results</string>
+    <string name="title_activity_maps">Map</string>
 
     <!-- map -->
     <string name="map_menu_action_view_list">View list</string>
     <string name="title_activity_places_maps">Places</string>
     <string name="title_activity_events_maps">Events</string>
+
+    <!-- shared resources for user UUID -->
+
+    <!-- the name of the shared preferences file -->
+    <string name="user_uuid_shared_preferences_file">gophillygo_user_uuid_shared_preferences</string>
+    <!-- the key to the UUID within the shared preferences file -->
+    <string name="user_uuid_shared_preferences_key">gophillygo_user_uuid</string>
 </resources>

@@ -22,7 +22,7 @@ import cn.nekocode.badge.BadgeDrawable;
 public abstract class FilterableListActivity extends BaseAttractionActivity
         implements FilterDialog.FilterChangeListener, ToolbarFilterListener {
 
-    private int toolbarId;
+    private final int toolbarId;
 
     private Button filterButton;
     private Drawable filterIcon;

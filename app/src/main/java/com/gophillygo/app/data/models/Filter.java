@@ -11,9 +11,9 @@ import java.util.Objects;
 import com.gophillygo.app.BR;
 
 public class Filter extends BaseObservable implements Serializable {
-    public static String NATURE_CATEGORY = "Nature";
-    public static String EXERCISE_CATEGORY = "Exercise";
-    public static String EDUCATIONAL_CATEGORY = "Educational";
+    public static final String NATURE_CATEGORY = "Nature";
+    public static final String EXERCISE_CATEGORY = "Exercise";
+    public static final String EDUCATIONAL_CATEGORY = "Educational";
 
     @Bindable
     private boolean nature;

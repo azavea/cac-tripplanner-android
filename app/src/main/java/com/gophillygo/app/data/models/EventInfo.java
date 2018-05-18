@@ -28,8 +28,8 @@ public class EventInfo extends AttractionInfo<Event> {
     @Ignore
     private final String formattedDistance;
 
-    public EventInfo(Event event, AttractionFlag.Option option, String destinationName,
-                     ArrayList<String> destinationCategories, Float distance, DestinationLocation location) {
+    public EventInfo(Event event, String destinationName, ArrayList<String> destinationCategories,
+                     AttractionFlag.Option option, Float distance, DestinationLocation location) {
         super(event, option);
         this.event = event;
         this.destinationName = destinationName;

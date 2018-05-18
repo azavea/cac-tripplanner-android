@@ -137,7 +137,7 @@ public abstract class MapsActivity<T extends AttractionInfo> extends FilterableL
         PopupMenu menu = FlagMenuUtils.getFlagPopupMenu(this, view, info.getFlag());
         menu.setOnMenuItemClickListener(item -> {
             info.updateAttractionFlag(item.getItemId());
-            viewModel.updateAttractionFlag(info.getFlag());
+            viewModel.updateAttractionFlag(info.getFlag(), userUuid, getString(R.string.user_flag_post_api_key));
             popupBinding.setAttractionInfo(info);
             popupBinding.setAttraction(info.getAttraction());
             return true;

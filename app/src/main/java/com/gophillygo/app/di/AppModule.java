@@ -29,15 +29,11 @@ import retrofit2.converter.gson.GsonConverterFactory;
 @Module(includes = ViewModelModule.class)
 class AppModule {
 
-    private final static String WEBSERVICE_URL = "https://gophillygo.org/";
-
-
     // Data services
 
     @Singleton
     @Provides
     DestinationWebservice provideDestinationWebservice() {
-
         // add network query logging by setting client on Retrofit
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
         HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
@@ -50,7 +46,7 @@ class AppModule {
 
         return new Retrofit.Builder()
                 .client(client)
-                .baseUrl(WEBSERVICE_URL)
+                .baseUrl(DestinationWebservice.WEBSERVICE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(new LiveDataCallAdapterFactory())
                 .build()
