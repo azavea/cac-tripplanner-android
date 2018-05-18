@@ -67,7 +67,6 @@ public class EventsListActivity extends FilterableListActivity
     public boolean clickedFlagOption(MenuItem item, AttractionInfo eventInfo, Integer position) {
         eventInfo.updateAttractionFlag(item.getItemId());
         viewModel.updateAttractionFlag(eventInfo.getFlag());
-        eventsListView.getAdapter().notifyItemChanged(position);
         return true;
     }
 
