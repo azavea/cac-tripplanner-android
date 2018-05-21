@@ -116,7 +116,6 @@ public class PlaceDetailActivity extends AttractionDetailActivity {
             menu.setOnMenuItemClickListener(item -> {
                 destinationInfo.updateAttractionFlag(item.getItemId());
                 viewModel.updateAttractionFlag(destinationInfo.getFlag());
-
                 return true;
             });
         });
