@@ -41,7 +41,7 @@ public abstract class MapsActivity<T extends AttractionInfo> extends FilterableL
         implements OnMapReadyCallback {
 
     private static final int DEFAULT_ZOOM = 12;
-    private static final int ATTRACTION_ZOOM = 12;
+    private static final int ATTRACTION_ZOOM = 14;
     private static final float DEFAULT_OPACITY = 1f, FILTERED_OPACITY = 0.5f;
     private static final String LOG_LABEL = "MapsActivity";
     public static final String X = "x";
