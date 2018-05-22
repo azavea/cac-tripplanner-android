@@ -16,5 +16,6 @@
     Once you have your key (it starts with "AIza"), replace the "google_maps_key"
     string in this file.
     -->
-    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">YOUR_KEY_HERE</string>
+    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">YOUR_GOOGLE_MAPS_KEY_HERE</string>
+    <string name="user_flag_post_api_key" templateMergeStrategy="preserve" translatable="false">GOPHILLY_GO_SERVER_KEY_HERE</string>
 </resources>
