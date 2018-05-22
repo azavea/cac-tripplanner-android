@@ -34,7 +34,7 @@ public abstract class BaseAttractionActivity extends AppCompatActivity
         implements GpgLocationUtils.LocationUpdateListener {
 
     private static final String LOG_LABEL = "BaseAttractionActivity";
-    private static final String DUMMY_LOCATION_PROVIDER = "gophillygo";
+    protected static final String DUMMY_LOCATION_PROVIDER = "gophillygo";
 
     private static final float METERS_TO_MILES = 0.000621371192f;
 

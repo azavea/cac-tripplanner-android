@@ -14,6 +14,7 @@ import android.widget.TextView;
 import com.gophillygo.app.R;
 import com.gophillygo.app.data.models.AttractionInfo;
 import com.gophillygo.app.data.models.DestinationInfo;
+import com.gophillygo.app.data.models.DestinationLocation;
 
 abstract class AttractionDetailActivity extends AppCompatActivity {
     protected static final int COLLAPSED_LINE_COUNT = 4;
@@ -21,6 +22,9 @@ abstract class AttractionDetailActivity extends AppCompatActivity {
     protected DestinationInfo destinationInfo;
 
     protected View.OnClickListener toggleClickListener;
+
+    protected abstract Class getMapActivity();
+    protected abstract int getAttractionId();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,16 +56,12 @@ abstract class AttractionDetailActivity extends AppCompatActivity {
 
     // open map when user clicks map button
     public void goToMap(View view) {
-        // TODO: #10 open within app map view, once implemented
-        // for now, open Google Maps externally with a marker at the given location
-        String locationString = destinationInfo.getDestination().getLocation().toString();
-        Uri gmapsUri = Uri.parse("geo:" + locationString + "?q=" + locationString + "(" +
-                destinationInfo.getDestination().getName() + ")");
-        Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmapsUri);
-        mapIntent.setPackage("com.google.android.apps.maps");
-        if (mapIntent.resolveActivity(getPackageManager()) != null) {
-            startActivity(mapIntent);
-        }
+        DestinationLocation loc = destinationInfo.getDestination().getLocation();
+        Intent mapIntent = new Intent(this, getMapActivity());
+        mapIntent.putExtra(MapsActivity.X, loc.getX());
+        mapIntent.putExtra(MapsActivity.Y, loc.getY());
+        mapIntent.putExtra(MapsActivity.ATTRACTION_ID, getAttractionId());
+        startActivity(mapIntent);
     }
 
     // open the GoPhillyGo website, passing the destination, when "get directions" clicked

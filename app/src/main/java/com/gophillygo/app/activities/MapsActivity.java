@@ -41,11 +41,16 @@ public abstract class MapsActivity<T extends AttractionInfo> extends FilterableL
         implements OnMapReadyCallback {
 
     private static final int DEFAULT_ZOOM = 12;
+    private static final int ATTRACTION_ZOOM = 12;
     private static final float DEFAULT_OPACITY = 1f, FILTERED_OPACITY = 0.5f;
     private static final String LOG_LABEL = "MapsActivity";
+    public static final String X = "x";
+    public static final String Y = "y";
+    public static final String ATTRACTION_ID = "id";
 
     private Map<Integer, Marker> markers;
     private Marker selectedMarker;
+    private boolean locationSet = false;
     protected GoogleMap googleMap;
     protected Map<Integer, T> attractions;
     protected MapPopupCardBinding popupBinding;
@@ -85,16 +90,29 @@ public abstract class MapsActivity<T extends AttractionInfo> extends FilterableL
     public void onMapReady(GoogleMap googleMap) {
         this.googleMap = googleMap;
         googleMap.getUiSettings().setMapToolbarEnabled(false);
-        panToCurrentLocation();
+        panToLocation();
     }
 
-    private void panToCurrentLocation() {
-        if (googleMap == null) {
+    private void panToLocation() {
+        if (googleMap == null || locationSet) {
             return;
         }
-        Location location = getCurrentLocation();
+        locationSet = true;
+
+        Intent intent = getIntent();
+        Location location;
+        int zoom;
+        if (intent.hasExtra(X) && intent.hasExtra(Y)) {
+            location = new Location(DUMMY_LOCATION_PROVIDER);
+            location.setLatitude(intent.getDoubleExtra(Y, 0));
+            location.setLongitude(intent.getDoubleExtra(X, 0));
+            zoom = ATTRACTION_ZOOM;
+        } else {
+            location = getCurrentLocation();
+            zoom = DEFAULT_ZOOM;
+        }
         LatLng latlng = new LatLng(location.getLatitude(), location.getLongitude());
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latlng, DEFAULT_ZOOM));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latlng, zoom));
     }
 
     @SuppressLint("MissingPermission")
@@ -105,7 +123,7 @@ public abstract class MapsActivity<T extends AttractionInfo> extends FilterableL
         if (googleMap != null &&
                 GpgLocationUtils.checkFineLocationPermissions(new WeakReference<>(this))) {
             googleMap.setMyLocationEnabled(true);
-            panToCurrentLocation();
+            panToLocation();
         }
     }
 
@@ -133,15 +151,7 @@ public abstract class MapsActivity<T extends AttractionInfo> extends FilterableL
         loadMarkers();
         reloadSelectedAttraction();
 
-        googleMap.setOnMarkerClickListener(marker -> {
-            if (selectedMarker != null) {
-                selectedMarker.setIcon(markerIcon);
-            }
-            selectedMarker = marker;
-            marker.setIcon(selectedMarkerIcon);
-            showPopup();
-            return false;
-        });
+        googleMap.setOnMarkerClickListener(this::selectMarker);
     }
 
     public void openDetail(Attraction attraction) {
@@ -178,6 +188,10 @@ public abstract class MapsActivity<T extends AttractionInfo> extends FilterableL
                     markers.put(id, marker);
                 }
             }
+            if (getIntent().hasExtra(ATTRACTION_ID)) {
+                Integer id = getIntent().getIntExtra(ATTRACTION_ID, 0);
+                selectMarker(markers.get(id));
+            }
         } else {
             for (Map.Entry<Integer, Marker> entry : markers.entrySet()) {
                 T info = attractions.get(entry.getKey());
@@ -203,6 +217,16 @@ public abstract class MapsActivity<T extends AttractionInfo> extends FilterableL
     private T selectedAttractionInfo() {
         Integer id = (Integer) selectedMarker.getTag();
         return attractions.get(id);
+    }
+
+    private boolean selectMarker(Marker marker) {
+        if (selectedMarker != null) {
+            selectedMarker.setIcon(markerIcon);
+        }
+        selectedMarker = marker;
+        marker.setIcon(selectedMarkerIcon);
+        showPopup();
+        return false;
     }
 
     private void showPopup() {
