@@ -10,15 +10,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.IdRes;
-import android.support.annotation.LayoutRes;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.res.ResourcesCompat;
-import android.support.v7.view.menu.MenuBuilder;
-import android.support.v7.view.menu.MenuPopupHelper;
 import android.support.v7.widget.PopupMenu;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -30,28 +25,29 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.gophillygo.app.BR;
 import com.gophillygo.app.R;
 import com.gophillygo.app.data.models.Attraction;
 import com.gophillygo.app.data.models.AttractionInfo;
 import com.gophillygo.app.data.models.DestinationLocation;
 import com.gophillygo.app.databinding.MapPopupCardBinding;
+import com.gophillygo.app.utils.FlagMenuUtils;
 import com.gophillygo.app.utils.GpgLocationUtils;
 
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 public abstract class MapsActivity<T extends AttractionInfo> extends FilterableListActivity
         implements OnMapReadyCallback {
 
     private static final int DEFAULT_ZOOM = 12;
+    private static final float DEFAULT_OPACITY = 1f, FILTERED_OPACITY = 0.5f;
     private static final String LOG_LABEL = "MapsActivity";
 
-    private List<Marker> markers;
+    private Map<Integer, Marker> markers;
     private Marker selectedMarker;
     protected GoogleMap googleMap;
-    protected List<T> attractions;
+    protected Map<Integer, T> attractions;
     protected MapPopupCardBinding popupBinding;
     protected @IdRes int mapId;
 
@@ -120,22 +116,14 @@ public abstract class MapsActivity<T extends AttractionInfo> extends FilterableL
 
     @SuppressLint("RestrictedApi")
     public void optionsButtonClick(View view, T info) {
-        PopupMenu menu = new PopupMenu(this, view);
-        menu.getMenuInflater().inflate(R.menu.place_options_menu, menu.getMenu());
+        PopupMenu menu = FlagMenuUtils.getFlagPopupMenu(this, view, info.getFlag());
         menu.setOnMenuItemClickListener(item -> {
             info.updateAttractionFlag(item.getItemId());
             viewModel.updateAttractionFlag(info.getFlag());
-            // TODO binding.notify didn't help, had to directly set :(
-            popupBinding.mapPopupOptionsButton.setImageResource(info.getFlagImage());
+            popupBinding.setAttractionInfo(info);
+            popupBinding.setAttraction(info.getAttraction());
             return true;
         });
-
-        // Force icons to show in the popup menu via the support library API
-        // https://stackoverflow.com/questions/6805756/is-it-possible-to-display-icons-in-a-popupmenu
-        MenuPopupHelper popupHelper = new MenuPopupHelper(this,
-                (MenuBuilder)menu.getMenu(), view);
-        popupHelper.setForceShowIcon(true);
-        popupHelper.show();
     }
 
     @Override
@@ -143,6 +131,7 @@ public abstract class MapsActivity<T extends AttractionInfo> extends FilterableL
         Log.d(LOG_LABEL, "load data in places maps activity");
 
         loadMarkers();
+        reloadSelectedAttraction();
 
         googleMap.setOnMarkerClickListener(marker -> {
             if (selectedMarker != null) {
@@ -150,9 +139,7 @@ public abstract class MapsActivity<T extends AttractionInfo> extends FilterableL
             }
             selectedMarker = marker;
             marker.setIcon(selectedMarkerIcon);
-            AttractionInfo attractionInfo = (AttractionInfo)  marker.getTag();
-            showPopup(attractionInfo);
-            Log.d(LOG_LABEL, "Clicked marker for attraction: " + attractionInfo.getAttraction().getId());
+            showPopup();
             return false;
         });
     }
@@ -172,36 +159,56 @@ public abstract class MapsActivity<T extends AttractionInfo> extends FilterableL
         startActivity(intent);
     }
 
+    @SuppressLint("UseSparseArrays")
     private void loadMarkers() {
         if (markers == null) {
-            markers = new ArrayList<>(attractions.size());
-            for (T attractionInfo : attractions) {
+            markers = new HashMap<>(attractions.size());
+            for (T attractionInfo : attractions.values()) {
                 if (attractionInfo.getLocation() != null) {
                     DestinationLocation location = attractionInfo.getLocation();
                     LatLng latLng = new LatLng(location.getY(), location.getX());
-                    float opacity = filterMatches(attractionInfo) ? 1f : 0.5f;
+                    float opacity = filterMatches(attractionInfo) ? DEFAULT_OPACITY : FILTERED_OPACITY;
                     Marker marker = googleMap.addMarker(new MarkerOptions()
                             .position(latLng)
                             .icon(markerIcon)
                             .alpha(opacity)
                     );
-                    marker.setTag(attractionInfo);
-                    markers.add(marker);
+                    Integer id = attractionInfo.getAttraction().getId();
+                    marker.setTag(id);
+                    markers.put(id, marker);
                 }
             }
         } else {
-            for (Marker marker : markers) {
-                float opacity = filterMatches((T) marker.getTag()) ? 1f : 0.5f;
-                marker.setAlpha(opacity);
+            for (Map.Entry<Integer, Marker> entry : markers.entrySet()) {
+                T info = attractions.get(entry.getKey());
+                Marker marker = entry.getValue();
+                if (info == null) {
+                    marker.remove();
+                } else {
+                    float opacity = filterMatches(info) ? DEFAULT_OPACITY : FILTERED_OPACITY;
+                    marker.setAlpha(opacity);
+                }
             }
         }
     }
 
-    private void showPopup(AttractionInfo attractionInfo) {
+    private void reloadSelectedAttraction() {
+        if (selectedMarker == null) { return; }
+
+        T attractionInfo = selectedAttractionInfo();
         popupBinding.setAttractionInfo(attractionInfo);
         popupBinding.setAttraction(attractionInfo.getAttraction());
-        popupBinding.notifyPropertyChanged(BR.attraction);
-        popupBinding.notifyPropertyChanged(BR.attractionInfo);
+    }
+
+    private T selectedAttractionInfo() {
+        Integer id = (Integer) selectedMarker.getTag();
+        return attractions.get(id);
+    }
+
+    private void showPopup() {
+        T attractionInfo = selectedAttractionInfo();
+        popupBinding.setAttractionInfo(attractionInfo);
+        popupBinding.setAttraction(attractionInfo.getAttraction());
 
         // Need to set map padding so "Google" logo is above popup, but we need to wait until the
         // popup is visible in order to measure it's height.

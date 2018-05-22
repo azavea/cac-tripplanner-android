@@ -1,5 +1,6 @@
 package com.gophillygo.app.activities;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.util.Log;
@@ -11,6 +12,8 @@ import com.gophillygo.app.R;
 import com.gophillygo.app.data.models.DestinationInfo;
 import com.gophillygo.app.databinding.FilterButtonBarBinding;
 import com.gophillygo.app.databinding.ActivityPlacesMapsBinding;
+
+import java.util.HashMap;
 
 public class PlacesMapsActivity extends MapsActivity<DestinationInfo> {
 
@@ -64,10 +67,19 @@ public class PlacesMapsActivity extends MapsActivity<DestinationInfo> {
         return true;
     }
 
+    @SuppressLint("UseSparseArrays")
     @Override
     public void locationOrDestinationsChanged() {
-        attractions = destinationInfos;
-        loadData();
+        super.locationOrDestinationsChanged();
+        if (destinationInfos != null && !destinationInfos.isEmpty()) {
+            attractions = new HashMap<>(destinationInfos.size());
+            for (DestinationInfo destinationInfo : destinationInfos) {
+                attractions.put(destinationInfo.getAttraction().getId(), destinationInfo);
+            }
+            loadData();
+        } else {
+            Log.d(LOG_LABEL, "Have no destinations for the places list in locationOrDestinationsChanged");
+        }
     }
 
     @Override

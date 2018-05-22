@@ -1,5 +1,6 @@
 package com.gophillygo.app.activities;
 
+import android.annotation.SuppressLint;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
@@ -17,6 +18,7 @@ import com.gophillygo.app.data.networkresource.Status;
 import com.gophillygo.app.databinding.FilterButtonBarBinding;
 import com.gophillygo.app.databinding.ActivityEventsMapsBinding;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class EventsMapsActivity extends MapsActivity<EventInfo> {
@@ -30,6 +32,7 @@ public class EventsMapsActivity extends MapsActivity<EventInfo> {
         super(R.id.events_map, R.id.events_map_toolbar);
     }
 
+    @SuppressLint("UseSparseArrays")
     @Override
     public void onMapReady(GoogleMap googleMap) {
         super.onMapReady(googleMap);
@@ -40,11 +43,11 @@ public class EventsMapsActivity extends MapsActivity<EventInfo> {
         data.observe(this, eventsResource -> {
             if (eventsResource != null && eventsResource.status.equals(Status.SUCCESS) &&
                     eventsResource.data != null && !eventsResource.data.isEmpty()) {
-                attractions = eventsResource.data;
+                attractions = new HashMap<>(eventsResource.data.size());
+                for (EventInfo eventInfo : eventsResource.data) {
+                    attractions.put(eventInfo.getAttraction().getId(), eventInfo);
+                }
                 loadData();
-                // Remove observer after loading full list so updates to the events flags don't
-                // cause unwanted changes to map position
-                data.removeObservers(this);
             }
         });
     }
@@ -69,7 +72,6 @@ public class EventsMapsActivity extends MapsActivity<EventInfo> {
                 Log.d(LOG_LABEL, "Selected map search menu item");
                 break;
             case R.id.events_map_action_view_list:
-                // TODO: #11 implement list/map toggle
                 Log.d(LOG_LABEL, "Selected to go back to list view from map");
                 intent = new Intent(this, EventsListActivity.class);
                 startActivity(intent);
