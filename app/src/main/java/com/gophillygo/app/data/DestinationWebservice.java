@@ -25,7 +25,6 @@ public interface DestinationWebservice {
     @GET("api/destinations/search?text=")
     LiveData<ApiResponse<DestinationQueryResponse>> getDestinations();
 
-    // FIXME: rename endpoint to start with api/ for consistency
-    @POST("user_flag/")
+    @POST("api/user_flag/")
     Call<UserFlagPostResponse> postUserFlag(@Body UserFlagPost post);
 }
