@@ -103,7 +103,7 @@ class DestinationRepository {
             }
 
             @Override
-            public void onFailure(@NonNull Call<UserFlagPostResponse> call, Throwable t) {
+            public void onFailure(@NonNull Call<UserFlagPostResponse> call, @NonNull Throwable t) {
                 Log.e(LOG_LABEL, "Request to POST user flag failed: " + t.toString());
             }
         });

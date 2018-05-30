@@ -3,6 +3,7 @@ package com.gophillygo.app.data.models;
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.text.Html;
 import android.text.Spanned;
@@ -124,7 +125,7 @@ public class Attraction {
     }
 
     public Spanned getHtmlDescription() {
-        return Html.fromHtml(description);
+        return getHtmlFromString(description);
     }
 
     public int getPriority() {
@@ -159,11 +160,26 @@ public class Attraction {
         return activities.size() > 0;
     }
 
+    /**
+     * Helper to build an HTML span from a String, in a backwards-compatible way.
+     *
+     * @param source String representation of HTML
+     * @return Parsed HTML in a span
+     */
+    @SuppressWarnings("deprecation")
+    private Spanned getHtmlFromString(String source) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            return Html.fromHtml(source, Html.FROM_HTML_MODE_LEGACY);
+        } else {
+            return Html.fromHtml(source);
+        }
+    }
+
     // get a dot-separated string listing all the activities available here
     public String getActivitiesString() {
         StringBuilder stringBuilder = new StringBuilder("");
         // separate activities with dots
-        String dot = Html.fromHtml("&nbsp;&#8226;&nbsp;").toString();
+        String dot = getHtmlFromString("&nbsp;&#8226;&nbsp;").toString();
         for (String activity: this.getActivities()) {
             if (stringBuilder.length() > 0) {
                 stringBuilder.append(dot);
