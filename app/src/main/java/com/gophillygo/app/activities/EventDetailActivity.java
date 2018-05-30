@@ -116,8 +116,7 @@ public class EventDetailActivity extends AttractionDetailActivity {
         });
 
         // Get or create unique, random UUID for app install for posting user flags
-        UserUuidUtils userUuidUtils = new UserUuidUtils(getApplicationContext());
-        userUuid = userUuidUtils.getUserUuid();
+        userUuid = UserUuidUtils.getUserUuid(getApplicationContext());
     }
 
     @Override
