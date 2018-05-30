@@ -11,11 +11,9 @@ import java.util.UUID;
 public class UserUuidUtils {
 
     private static final String LOG_LABEL = "UserUUidUtils";
-    private final Context context;
 
-    public UserUuidUtils(Context context) {
-        this.context = context;
-    }
+    // Do not instantiate
+    private UserUuidUtils() { }
 
     /**
      * Get the randomly generated ID for this app install from Shared Preferences, or create and
@@ -24,7 +22,7 @@ public class UserUuidUtils {
      *
      * @return String representation of a UUID
      */
-    public String getUserUuid() {
+    public static String getUserUuid(Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(
                 context.getString(R.string.user_uuid_shared_preferences_file),
                 Context.MODE_PRIVATE);
@@ -44,7 +42,7 @@ public class UserUuidUtils {
         return uuid;
     }
 
-    private String getRandomUuid() {
+    private static String getRandomUuid() {
         return UUID.randomUUID().toString();
     }
 
