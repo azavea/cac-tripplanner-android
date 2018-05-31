@@ -24,11 +24,6 @@ public class PlacesMapsActivity extends MapsActivity<DestinationInfo> {
     }
 
     @Override
-    public void onMapReady(GoogleMap googleMap) {
-        super.onMapReady(googleMap);
-    }
-
-    @Override
     protected FilterButtonBarBinding setupDataBinding() {
         ActivityPlacesMapsBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_places_maps);
         popupBinding = binding.placesMapPopupCard;

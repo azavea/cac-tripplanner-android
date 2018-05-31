@@ -4,18 +4,25 @@ import android.annotation.SuppressLint;
 import android.arch.lifecycle.LiveData;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.gophillygo.app.data.models.AttractionFlag;
 import com.gophillygo.app.data.models.Destination;
 import com.gophillygo.app.data.models.DestinationInfo;
 import com.gophillygo.app.data.models.Event;
 import com.gophillygo.app.data.models.EventInfo;
+import com.gophillygo.app.data.models.UserFlagPost;
+import com.gophillygo.app.data.models.UserFlagPostResponse;
 import com.gophillygo.app.data.networkresource.AttractionNetworkBoundResource;
 import com.gophillygo.app.data.networkresource.Resource;
 
 import java.util.List;
 
 import javax.inject.Inject;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Mediator between Destination persistent data store and web service.
@@ -76,7 +83,7 @@ class DestinationRepository {
     }
 
     @SuppressLint("StaticFieldLeak")
-    public void updateAttractionFlag(AttractionFlag flag) {
+    public void updateAttractionFlag(AttractionFlag flag, String userUuid, String apiKey) {
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
@@ -84,6 +91,23 @@ class DestinationRepository {
                 return null;
             }
         }.execute();
+
+        UserFlagPost post = new UserFlagPost(flag.getAttractionID(), flag.getOption().api_name,
+                flag.isEvent(), userUuid, apiKey);
+
+        webservice.postUserFlag(post).enqueue(new Callback<UserFlagPostResponse>() {
+            @Override
+            public void onResponse(@NonNull Call<UserFlagPostResponse> call,
+                                   @NonNull Response<UserFlagPostResponse> response) {
+                Log.d(LOG_LABEL, "User flag posted: " + response.message());
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<UserFlagPostResponse> call, @NonNull Throwable t) {
+                Log.e(LOG_LABEL, "Request to POST user flag failed: " + t.toString());
+            }
+        });
+
     }
 
     @SuppressLint("StaticFieldLeak")

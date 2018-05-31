@@ -18,6 +18,7 @@ import com.gophillygo.app.data.models.Destination;
 import com.gophillygo.app.databinding.ActivityPlaceDetailBinding;
 import com.gophillygo.app.di.GpgViewModelFactory;
 import com.gophillygo.app.utils.FlagMenuUtils;
+import com.gophillygo.app.utils.UserUuidUtils;
 import com.synnapps.carouselview.CarouselView;
 
 import javax.inject.Inject;
@@ -28,6 +29,7 @@ public class PlaceDetailActivity extends AttractionDetailActivity {
     private static final String LOG_LABEL = "PlaceDetail";
 
     private long placeId = -1;
+    private String userUuid;
 
     private ActivityPlaceDetailBinding binding;
     private CarouselView carouselView;
@@ -81,6 +83,9 @@ public class PlaceDetailActivity extends AttractionDetailActivity {
             binding.setDestinationInfo(destinationInfo);
             displayDestination();
         });
+
+        // Get or create unique, random UUID for app install for posting user flags
+        userUuid = UserUuidUtils.getUserUuid(getApplicationContext());
     }
 
     @SuppressLint({"RestrictedApi", "RtlHardcoded"})
@@ -115,7 +120,7 @@ public class PlaceDetailActivity extends AttractionDetailActivity {
             PopupMenu menu = FlagMenuUtils.getFlagPopupMenu(this, flagOptionsCard, destinationInfo.getFlag());
             menu.setOnMenuItemClickListener(item -> {
                 destinationInfo.updateAttractionFlag(item.getItemId());
-                viewModel.updateAttractionFlag(destinationInfo.getFlag());
+                viewModel.updateAttractionFlag(destinationInfo.getFlag(), userUuid, getString(R.string.user_flag_post_api_key));
                 return true;
             });
         });

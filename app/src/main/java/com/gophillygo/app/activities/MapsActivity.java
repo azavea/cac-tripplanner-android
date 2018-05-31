@@ -137,7 +137,7 @@ public abstract class MapsActivity<T extends AttractionInfo> extends FilterableL
         PopupMenu menu = FlagMenuUtils.getFlagPopupMenu(this, view, info.getFlag());
         menu.setOnMenuItemClickListener(item -> {
             info.updateAttractionFlag(item.getItemId());
-            viewModel.updateAttractionFlag(info.getFlag());
+            viewModel.updateAttractionFlag(info.getFlag(), userUuid, getString(R.string.user_flag_post_api_key));
             popupBinding.setAttractionInfo(info);
             popupBinding.setAttraction(info.getAttraction());
             return true;
@@ -237,9 +237,8 @@ public abstract class MapsActivity<T extends AttractionInfo> extends FilterableL
         // Need to set map padding so "Google" logo is above popup, but we need to wait until the
         // popup is visible in order to measure it's height.
         final Handler handler = new Handler();
-        handler.postDelayed(() -> {
-            googleMap.setPadding(0, 0, 0, 25 + popupBinding.mapPopupCard.getHeight());
-        }, 30);
+        handler.postDelayed(() -> googleMap.setPadding(0, 0, 0,
+                25 + popupBinding.mapPopupCard.getHeight()), 30);
     }
 
     private BitmapDescriptor vectorToBitmap(@DrawableRes int id) {

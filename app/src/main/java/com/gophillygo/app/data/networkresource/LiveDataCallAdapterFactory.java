@@ -22,8 +22,8 @@ public class LiveDataCallAdapterFactory extends CallAdapter.Factory {
     @Override
     public CallAdapter<?, ?> get(@NonNull Type returnType, @NonNull Annotation[] annotations, @NonNull Retrofit retrofit) {
         if (getRawType(returnType) != LiveData.class) {
-            Log.e(LOG_LABEL, "Unexpected return type:");
-            Log.e(LOG_LABEL, returnType.toString());
+            Log.w(LOG_LABEL, "Not wrapping non-LiveData return type:");
+            Log.w(LOG_LABEL, returnType.toString());
             return null;
         }
         Type observableType = getParameterUpperBound(0, (ParameterizedType) returnType);

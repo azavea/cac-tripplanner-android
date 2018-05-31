@@ -16,6 +16,7 @@ import com.gophillygo.app.data.models.DestinationLocation;
 import com.gophillygo.app.data.networkresource.Status;
 import com.gophillygo.app.di.GpgViewModelFactory;
 import com.gophillygo.app.utils.GpgLocationUtils;
+import com.gophillygo.app.utils.UserUuidUtils;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -48,6 +49,8 @@ public abstract class BaseAttractionActivity extends AppCompatActivity
 
     protected List<DestinationInfo> destinationInfos;
     private List<DestinationInfo> nearestDestinations;
+
+    protected String userUuid;
 
     @Inject
     GpgViewModelFactory viewModelFactory;
@@ -97,6 +100,9 @@ public abstract class BaseAttractionActivity extends AppCompatActivity
             Log.d(LOG_LABEL, "Got destination data");
             nearestDestinations = findNearestDestinations();
             locationOrDestinationsChanged();
+
+            // Get or create unique, random UUID for app install for posting user flags
+            userUuid = UserUuidUtils.getUserUuid(getApplicationContext());
         });
     }
 
