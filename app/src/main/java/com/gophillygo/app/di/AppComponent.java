@@ -26,7 +26,8 @@ import dagger.android.AndroidInjectionModule;
         HomeActivityModule.class,
         PlaceDetailActivityModule.class,
         PlacesListActivityModule.class,
-        MapsActivityModule.class
+        EventsMapsActivityModule.class,
+        PlacesMapsActivityModule.class
 })
 public interface AppComponent {
     @Component.Builder

@@ -51,7 +51,7 @@
                 android:paddingBottom="2dp"
                 android:paddingEnd="10dp"
                 android:paddingStart="10dp"
-                android:text='@{String.format("%.1f", eventInfo.distance) + " miles"}'
+                android:text='@{eventInfo.formattedDistance}'
                 android:visibility="@{eventInfo.distance != null ? View.VISIBLE : View.GONE}"
                 app:layout_constraintBottom_toBottomOf="@+id/event_detail_image" />
 

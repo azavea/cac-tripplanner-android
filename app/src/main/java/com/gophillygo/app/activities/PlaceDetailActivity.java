@@ -120,4 +120,14 @@ public class PlaceDetailActivity extends AttractionDetailActivity {
             });
         });
     }
+
+    @Override
+    protected Class getMapActivity() {
+        return PlacesMapsActivity.class;
+    }
+
+    @Override
+    protected int getAttractionId() {
+        return (int) placeId;
+    }
 }

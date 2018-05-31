@@ -97,7 +97,7 @@ public class Destination extends Attraction {
         return zipCode;
     }
 
-    public float getDistance() {
+    public Float getDistance() {
         return distance;
     }
 

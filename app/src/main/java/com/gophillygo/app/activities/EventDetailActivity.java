@@ -37,6 +37,7 @@ import javax.inject.Inject;
 public class EventDetailActivity extends AttractionDetailActivity {
 
     public static final String EVENT_ID_KEY = "eventId";
+    protected final Class MAP_ACTIVITY = PlacesMapsActivity.class;
     private static final String LOG_LABEL = "EventDetail";
 
     private static final DateFormat timeFormat, monthDayFormat;
@@ -118,6 +119,16 @@ public class EventDetailActivity extends AttractionDetailActivity {
     public void goToWebsite(View view) {
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(eventInfo.getEvent().getWebsiteUrl()));
         startActivity(intent);
+    }
+
+    @Override
+    protected Class getMapActivity() {
+        return EventsMapsActivity.class;
+    }
+
+    @Override
+    protected int getAttractionId() {
+        return (int) eventId;
     }
 
     // add event in calendar app

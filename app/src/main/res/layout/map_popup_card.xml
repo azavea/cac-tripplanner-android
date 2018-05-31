@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="@layout/activity_places_maps">
+    <data>
+        <variable name="attractionInfo" type="com.gophillygo.app.data.models.AttractionInfo" />
+        <variable name="attraction" type="com.gophillygo.app.data.models.Attraction" />
+        <variable name="activity" type="com.gophillygo.app.activities.MapsActivity" />
+        <!-- imports to allow referencing within data binding expressions -->
+        <import type="android.view.View"/>
+    </data>
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/map_popup_card"
+        android:clickable="true"
+        android:focusable="true"
+        android:onClick="@{v -> activity.openDetail(attraction)}"
+        android:visibility="@{attractionInfo == null ? View.GONE : View.VISIBLE}"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                style="@style/GpgDetailText"
+                android:id="@+id/map_popup_title"
+                android:layout_width="match_parent"
+                android:text="@{attraction.name}" />
+
+            <TextView
+                android:id="@+id/map_popup_distance_label"
+                android:text='@{attractionInfo.formattedDistance}'
+                style="@style/TextAppearance.AppCompat.Medium"
+                android:layout_below="@id/map_popup_title"
+                android:drawableStart="@drawable/ic_place_black_24dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:paddingBottom="2dp"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:gravity="start" />
+
+            <android.support.v7.widget.AppCompatImageButton
+                app:backgroundTint="@color/color_white"
+                android:id="@+id/map_popup_options_button"
+                android:onClick="@{(view) -> activity.optionsButtonClick(view, attractionInfo)}"
+                android:src="@{activity.getFlagImage(attractionInfo)}"
+                android:layout_alignParentEnd="true"
+                android:layout_below="@id/map_popup_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </RelativeLayout>
+
+    </android.support.v7.widget.CardView>
+</layout>
