@@ -68,7 +68,7 @@ public class PlacesListActivity extends FilterableListActivity implements
     public boolean clickedFlagOption(MenuItem item, AttractionInfo destinationInfo, Integer position) {
         destinationInfo.updateAttractionFlag(item.getItemId());
         viewModel.updateAttractionFlag(destinationInfo.getFlag(), userUuid, getString(R.string.user_flag_post_api_key));
-	    placesListAdapter.notifyItemChanged(position);
+        placesListAdapter.notifyItemChanged(position);
 	    return true;
     }
 

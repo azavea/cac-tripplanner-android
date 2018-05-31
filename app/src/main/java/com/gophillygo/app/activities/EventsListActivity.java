@@ -67,7 +67,7 @@ public class EventsListActivity extends FilterableListActivity
     public boolean clickedFlagOption(MenuItem item, AttractionInfo eventInfo, Integer position) {
         eventInfo.updateAttractionFlag(item.getItemId());
         viewModel.updateAttractionFlag(eventInfo.getFlag(), userUuid, getString(R.string.user_flag_post_api_key));
-	    adapter.notifyItemChanged(position);
+        adapter.notifyItemChanged(position);
         return true;
     }
 
