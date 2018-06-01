@@ -34,6 +34,29 @@
                 app:indicatorMarginHorizontal="5dp"
                 app:strokeWidth="0dp" />
 
+            <TextView
+                android:id="@+id/place_detail_name_label"
+                style="@style/Base.TextAppearance.AppCompat.Title.Inverse"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="2dp"
+                android:paddingEnd="10dp"
+                android:paddingStart="10dp"
+                android:text="@{destination.getAddress}"
+                app:layout_constraintBottom_toTopOf="@+id/place_detail_distance_label" />
+
+            <TextView
+                android:id="@+id/place_detail_distance_label"
+                style="@style/Base.TextAppearance.AppCompat.Title.Inverse"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_place_white_24dp"
+                android:paddingBottom="2dp"
+                android:paddingEnd="10dp"
+                android:paddingStart="10dp"
+                android:text="@{destination.getFormattedDistance}"
+                app:layout_constraintBottom_toBottomOf="@+id/place_detail_carousel" />
+
             <android.support.v7.widget.Toolbar
                 android:id="@+id/place_detail_toolbar"
                 android:layout_width="match_parent"

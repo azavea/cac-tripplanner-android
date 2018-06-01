@@ -11,10 +11,13 @@ import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.gophillygo.app.R;
+import com.gophillygo.app.data.models.Attraction;
 import com.gophillygo.app.data.models.AttractionInfo;
 import com.gophillygo.app.data.models.DestinationInfo;
 import com.gophillygo.app.data.models.DestinationLocation;
+import com.synnapps.carouselview.CarouselView;
 
 abstract class AttractionDetailActivity extends AppCompatActivity {
     protected static final int COLLAPSED_LINE_COUNT = 4;
@@ -87,5 +90,18 @@ abstract class AttractionDetailActivity extends AppCompatActivity {
         if (attractionInfo == null) return null;
 
         return ContextCompat.getDrawable(this, attractionInfo.getFlagImage());
+    }
+
+    public void setupCarousel(CarouselView carouselView, Attraction attraction) {
+        carouselView.setImageListener((position, imageView) -> {
+            String url;
+            if (position == 0) {
+                url = attraction.getWideImage();
+            } else {
+                url = attraction.getExtraWideImages().get(position - 1);
+            }
+            Glide.with(this).load(url).into(imageView);
+        });
+        carouselView.setPageCount(attraction.getExtraWideImages().size() + 1);
     }
 }

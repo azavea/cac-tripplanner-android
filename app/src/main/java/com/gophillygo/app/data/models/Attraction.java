@@ -51,12 +51,17 @@ public class Attraction {
     @SerializedName("is_event")
     private final boolean isEvent;
 
+    @ColumnInfo(name = "extra_wide_images")
+    @SerializedName("extra_wide_images")
+    private final ArrayList<String> extraWideImages;
+
     // timestamp is not final, as it is set on database save, and not by serializer
     private long timestamp;
 
     public Attraction(int id, int placeID, String name, boolean accessible, String image,
                       boolean cycling, String description, int priority, String websiteUrl,
-                      String wideImage, boolean isEvent, ArrayList<String> activities) {
+                      String wideImage, boolean isEvent, ArrayList<String> activities,
+                      ArrayList<String> extraWideImages) {
         this.id = id;
         this.placeID = placeID;
         this.name = name;
@@ -66,10 +71,14 @@ public class Attraction {
         this.description = description;
         this.priority = priority;
         this.websiteUrl = websiteUrl;
-        this.wideImage = wideImage;
         this.isEvent = isEvent;
-
         this.activities = activities;
+
+        this.wideImage = addHostToPath(wideImage);
+        this.extraWideImages = new ArrayList<>(extraWideImages.size());
+        for (String url : extraWideImages) {
+            this.extraWideImages.add(addHostToPath(url));
+        }
     }
 
 
@@ -144,11 +153,15 @@ public class Attraction {
     }
 
     public String getWideImage() {
-        return addHostToPath(wideImage);
+        return wideImage;
     }
 
     public boolean isEvent() {
         return isEvent;
+    }
+
+    public ArrayList<String> getExtraWideImages() {
+        return extraWideImages;
     }
 
     public long getTimestamp() {
@@ -211,7 +224,8 @@ public class Attraction {
                 Objects.equals(description, that.description) &&
                 Objects.equals(activities, that.activities) &&
                 Objects.equals(websiteUrl, that.websiteUrl) &&
-                Objects.equals(wideImage, that.wideImage);
+                Objects.equals(wideImage, that.wideImage) &&
+                Objects.equals(extraWideImages, that.extraWideImages);
     }
 
     @Override

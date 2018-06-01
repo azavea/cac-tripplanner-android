@@ -11,10 +11,8 @@ import android.util.Log;
 import android.view.Gravity;
 import android.widget.TextView;
 
-import com.gophillygo.app.CarouselViewListener;
 import com.gophillygo.app.R;
 import com.gophillygo.app.data.DestinationViewModel;
-import com.gophillygo.app.data.models.Destination;
 import com.gophillygo.app.databinding.ActivityPlaceDetailBinding;
 import com.gophillygo.app.di.GpgViewModelFactory;
 import com.gophillygo.app.utils.FlagMenuUtils;
@@ -65,8 +63,6 @@ public class PlaceDetailActivity extends AttractionDetailActivity {
 
         carouselView = findViewById(R.id.place_detail_carousel);
         carouselView.setIndicatorGravity(Gravity.CENTER_HORIZONTAL|Gravity.BOTTOM);
-        carouselView.setImageClickListener(position ->
-                Log.d(LOG_LABEL, "Clicked item: "+ position));
 
         viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(DestinationViewModel.class);
@@ -90,14 +86,7 @@ public class PlaceDetailActivity extends AttractionDetailActivity {
 
     @SuppressLint({"RestrictedApi", "RtlHardcoded"})
     private void displayDestination() {
-        // set up carousel
-        carouselView.setViewListener(new CarouselViewListener(this, false) {
-            @Override
-            public Destination getDestinationAt(int position) {
-                return destinationInfo.getDestination();
-            }
-        });
-        carouselView.setPageCount(1);
+        setupCarousel(carouselView, destinationInfo.getDestination());
 
         TextView descriptionToggle = findViewById(R.id.detail_description_toggle);
         descriptionToggle.setOnClickListener(toggleClickListener);
