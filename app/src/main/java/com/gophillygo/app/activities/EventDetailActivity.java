@@ -38,7 +38,6 @@ import javax.inject.Inject;
 public class EventDetailActivity extends AttractionDetailActivity {
 
     public static final String EVENT_ID_KEY = "eventId";
-    protected final Class MAP_ACTIVITY = PlacesMapsActivity.class;
     private static final String LOG_LABEL = "EventDetail";
 
     private static final DateFormat timeFormat, monthDayFormat;
