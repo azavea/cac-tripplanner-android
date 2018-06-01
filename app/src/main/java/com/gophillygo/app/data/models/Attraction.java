@@ -81,6 +81,9 @@ public class Attraction {
      */
     private String addHostToPath(@NonNull String path) {
         if (!path.isEmpty() && !path.startsWith("http")) {
+            if (path.startsWith("/")) {
+                path = path.substring(1);
+            }
             return DestinationWebservice.WEBSERVICE_URL.concat(path);
         }
         return path;
