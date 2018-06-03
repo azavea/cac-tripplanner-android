@@ -11,12 +11,19 @@ import com.google.android.gms.location.GeofencingClient;
 import com.google.android.gms.location.GeofencingRequest;
 import com.google.android.gms.location.LocationServices;
 import com.gophillygo.app.BuildConfig;
-import com.gophillygo.app.GoPhillyGoApp;
 
 import androidx.work.Data;
 import androidx.work.Worker;
 
 public class AddGeofenceWorker extends Worker {
+
+    // Must match action name in broadcast filter in the manifest
+    public static final String ACTION_GEOFENCE_TRANSITION = "com.gophillygo.app.tasks.ACTION_GEOFENCE_TRANSITION";
+
+    // When in development (debug) trigger entry immediately
+    public static final int GEOFENCE_ENTER_TRIGGER = BuildConfig.DEBUG ?
+            GeofencingRequest.INITIAL_TRIGGER_ENTER :
+            GeofencingRequest.INITIAL_TRIGGER_DWELL;
 
     // https://developer.android.com/training/location/geofencing
     // Minimum radius should be at least 100 - 150, more for outdoors areas with no WiFi.
@@ -24,7 +31,7 @@ public class AddGeofenceWorker extends Worker {
     private static final int GEOFENCE_RADIUS_METERS = 300;
 
     // Send alert roughly after device has been in geofence for this long.
-    // Since we are using the DWELL filter, this is about when we will receive notifications.
+    // When we are using the DWELL filter, this is about when we will receive notifications.
     // In development (DEBUG build), use no delay.
     private static final int GEOFENCE_LOITERING_DELAY = BuildConfig.DEBUG ? 0 : 300000; // 5 minutes
 
@@ -46,7 +53,7 @@ public class AddGeofenceWorker extends Worker {
 
         GeofencingClient geofencingClient = LocationServices.getGeofencingClient(context);
         GeofencingRequest.Builder builder = new GeofencingRequest.Builder();
-        builder.setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_DWELL);
+        builder.setInitialTrigger(GEOFENCE_ENTER_TRIGGER);
 
         // Get the data for the locations to add as primitive arrays with label and coordinates at
         // matching offsets.
@@ -67,12 +74,13 @@ public class AddGeofenceWorker extends Worker {
                     .setRequestId(geofenceLabels[i])
                     .setLoiteringDelay(GEOFENCE_LOITERING_DELAY)
                     .setNotificationResponsiveness(GEOFENCE_RESPONSIVENESS)
-                    .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_DWELL | Geofence.GEOFENCE_TRANSITION_EXIT)
+                    .setTransitionTypes(GEOFENCE_ENTER_TRIGGER | Geofence.GEOFENCE_TRANSITION_EXIT)
                     .build());
         }
 
         // Location access permissions prompting is handled by `GpgLocationUtils`.
         Intent intent = new Intent(context, GeofenceTransitionBroadcastReceiver.class);
+        intent.setAction(ACTION_GEOFENCE_TRANSITION);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
                 TRANSITION_BROADCAST_REQUEST_CODE,
                 intent,

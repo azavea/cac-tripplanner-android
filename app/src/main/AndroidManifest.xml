@@ -97,16 +97,21 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <!-- Set up geofences again after reboot -->
+        <!-- Set up geofences again after reboot or location provider changes -->
         <receiver android:name=".tasks.AddGeofencesBroadcastReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.location.PROVIDERS_CHANGED" />
             </intent-filter>
         </receiver>
 
-
-        <!-- Listen to geofence transitions -->
-        <receiver android:name=".tasks.GeofenceTransitionBroadcastReceiver" android:exported="false" />
+        <!-- Listen to geofence transitions. -->
+        <receiver android:name=".tasks.GeofenceTransitionBroadcastReceiver"
+            android:exported="false" android:enabled="true">
+            <intent-filter>
+                <action android:name="com.gophillygo.app.tasks.ACTION_GEOFENCE_TRANSITION" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

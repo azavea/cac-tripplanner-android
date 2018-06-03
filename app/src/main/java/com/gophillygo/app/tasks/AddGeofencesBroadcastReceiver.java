@@ -63,6 +63,7 @@ public class AddGeofencesBroadcastReceiver extends BroadcastReceiver {
             // Read datatabase instead of relying on an intent with extras; on boot, have no extras set
             List<Destination> destinations = destinationDao.getGeofenceDestinations().getValue();
             if (destinations == null || destinations.isEmpty()) {
+                // FIXME: this returns empty after reboot, although there are geofences to add
                 Log.d(LOG_LABEL, "Have no destinations with geofences to add.");
                 return;
             }

@@ -76,16 +76,18 @@ public class GeofenceTransitionWorker extends Worker {
 
         // Get the transition type.
         int geofenceTransition = data.getInt(TRANSITION_KEY, Geofence.GEOFENCE_TRANSITION_EXIT);
-        Boolean dwellingInGeofence = geofenceTransition == Geofence.GEOFENCE_TRANSITION_DWELL;
+        Boolean enteredGeofence = geofenceTransition == AddGeofenceWorker.GEOFENCE_ENTER_TRIGGER;
         String[] geofences = data.getStringArray(TRIGGERING_GEOFENCES);
 
         if (geofences.length > 0) {
             for (String geofenceID : geofences) {
                 // TODO: send notification
-                if (dwellingInGeofence) {
-                    Log.d(LOG_LABEL, "Dwelling in geofence ID " + geofenceID);
+                if (enteredGeofence) {
+                    Log.d(LOG_LABEL, "Entered geofence ID " + geofenceID);
                 } else {
                     Log.d(LOG_LABEL, "Exited geofence ID " + geofenceID);
+                    // TODO: remove and re-register geofence, or else it will ignore future events
+
                 }
 
             }

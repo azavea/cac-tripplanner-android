@@ -8,7 +8,6 @@ import android.util.Log;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingEvent;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -16,17 +15,14 @@ import androidx.work.Data;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 import androidx.work.WorkRequest;
-import dagger.Provides;
 import dagger.android.AndroidInjection;
-import dagger.android.ContributesAndroidInjector;
 
 public class GeofenceTransitionBroadcastReceiver extends BroadcastReceiver {
 
     private static final String LOG_LABEL = "GeofenceTransitionBR";
     @Override
     public void onReceive(Context context, Intent intent) {
-        // TODO: is this necessary?
-        //AndroidInjection.inject(this, context);
+        AndroidInjection.inject(this, context);
 
         Log.d(LOG_LABEL, "Received geofence transition event");
         // Start a worker to send notifications from a background thread.
@@ -49,7 +45,7 @@ public class GeofenceTransitionBroadcastReceiver extends BroadcastReceiver {
             int geofenceTransition = geofencingEvent.getGeofenceTransition();
             builder.putInt(GeofenceTransitionWorker.TRANSITION_KEY, geofenceTransition);
 
-            if (geofenceTransition == Geofence.GEOFENCE_TRANSITION_DWELL ||
+            if (geofenceTransition == AddGeofenceWorker.GEOFENCE_ENTER_TRIGGER ||
                     geofenceTransition == Geofence.GEOFENCE_TRANSITION_EXIT) {
 
                 List<Geofence> triggeringGeofences = geofencingEvent.getTriggeringGeofences();
