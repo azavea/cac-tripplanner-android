@@ -7,6 +7,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 import android.widget.Toast;
@@ -16,6 +17,8 @@ import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.gophillygo.app.R;
 
 import java.lang.ref.WeakReference;
@@ -84,6 +87,40 @@ public class GpgLocationUtils {
         }
 
         return true;
+    }
+
+    /**
+     * Get the last known device location, without requesting to update it or prompting the user
+     * for permissions if they haven't been granted.
+     *
+     * Intended for use by background tasks that do not have an Activity.
+     *
+     * @param context Calling context
+     * @param listener Callback for when location found. Must implement {@link LocationUpdateListener}
+     *
+     * @return True if permissions have been already granted
+     */
+    public static boolean getLastKnownLocation(Context context, LocationUpdateListener listener) {
+        FusedLocationProviderClient client = LocationServices.getFusedLocationProviderClient(context);
+
+        // If permissions haven't been granted already, do not ask for them.
+        // This is useful for accessing location from background tasks.
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(context,
+                        Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            client.getLastLocation().addOnCompleteListener(lastLocationTask -> {
+                if (lastLocationTask.isSuccessful() && lastLocationTask.getResult() != null) {
+                    Log.d(LOG_LABEL, "Found location " + lastLocationTask.getResult());
+                    listener.locationFound(lastLocationTask.getResult());
+                }
+            });
+
+            return true;
+        }
+
+        return false;
     }
 
     /**
