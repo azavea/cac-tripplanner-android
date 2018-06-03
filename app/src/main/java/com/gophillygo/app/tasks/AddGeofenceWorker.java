@@ -1,12 +1,9 @@
 package com.gophillygo.app.tasks;
 
-import android.Manifest;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.util.Log;
 
 import com.google.android.gms.location.Geofence;
@@ -14,6 +11,7 @@ import com.google.android.gms.location.GeofencingClient;
 import com.google.android.gms.location.GeofencingRequest;
 import com.google.android.gms.location.LocationServices;
 import com.gophillygo.app.BuildConfig;
+import com.gophillygo.app.GoPhillyGoApp;
 
 import androidx.work.Data;
 import androidx.work.Worker;
@@ -43,7 +41,9 @@ public class AddGeofenceWorker extends Worker {
     @NonNull
     @Override
     public WorkerResult doWork() {
+
         Context context = getApplicationContext();
+
         GeofencingClient geofencingClient = LocationServices.getGeofencingClient(context);
         GeofencingRequest.Builder builder = new GeofencingRequest.Builder();
         builder.setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_DWELL);
@@ -71,28 +71,25 @@ public class AddGeofenceWorker extends Worker {
                     .build());
         }
 
-        // Check permissions here, but do not prompt if they are missing.
         // Location access permissions prompting is handled by `GpgLocationUtils`.
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            Intent intent = new Intent(context, GeofenceTransitionBroadcastReceiver.class);
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
-                    TRANSITION_BROADCAST_REQUEST_CODE,
-                    intent,
-                    PendingIntent.FLAG_CANCEL_CURRENT);
+        Intent intent = new Intent(context, GeofenceTransitionBroadcastReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
+                TRANSITION_BROADCAST_REQUEST_CODE,
+                intent,
+                PendingIntent.FLAG_CANCEL_CURRENT);
 
-            try {
-                geofencingClient.addGeofences(builder.build(), pendingIntent);
-                return  WorkerResult.SUCCESS;
-            } catch (Exception ex) {
-                Log.e(LOG_LABEL, "Failed to add geofences");
-                Log.e(LOG_LABEL, ex.getMessage());
-                return WorkerResult.FAILURE;
-            }
-
-        } else {
-            Log.e(LOG_LABEL, "Cannot add geofences because permissions are missing");
+        try {
+            geofencingClient.addGeofences(builder.build(), pendingIntent);
+            return WorkerResult.SUCCESS;
+        } catch (SecurityException ex) {
+            Log.e(LOG_LABEL, "Missing permissions to add geofences");
+            ex.printStackTrace();
+            return WorkerResult.FAILURE;
+        } catch (Exception ex) {
+            Log.e(LOG_LABEL, "Failed to add geofences");
+            ex.printStackTrace();
             return WorkerResult.FAILURE;
         }
+
     }
 }

@@ -3,24 +3,36 @@ package com.gophillygo.app.tasks;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingEvent;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import androidx.work.Data;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 import androidx.work.WorkRequest;
+import dagger.Provides;
+import dagger.android.AndroidInjection;
+import dagger.android.ContributesAndroidInjector;
 
 public class GeofenceTransitionBroadcastReceiver extends BroadcastReceiver {
+
+    private static final String LOG_LABEL = "GeofenceTransitionBR";
     @Override
     public void onReceive(Context context, Intent intent) {
+        // TODO: is this necessary?
+        //AndroidInjection.inject(this, context);
+
+        Log.d(LOG_LABEL, "Received geofence transition event");
         // Start a worker to send notifications from a background thread.
         OneTimeWorkRequest.Builder workRequestBuilder = new OneTimeWorkRequest.Builder(GeofenceTransitionWorker.class);
         workRequestBuilder.setInputData(getGeofenceData(intent));
+        workRequestBuilder.setInitialDelay(0, TimeUnit.SECONDS);
         // TODO: set constraints and backoff on builder
         WorkRequest workRequest = workRequestBuilder.build();
         WorkManager.getInstance().enqueue(workRequest);
@@ -41,13 +53,14 @@ public class GeofenceTransitionBroadcastReceiver extends BroadcastReceiver {
                     geofenceTransition == Geofence.GEOFENCE_TRANSITION_EXIT) {
 
                 List<Geofence> triggeringGeofences = geofencingEvent.getTriggeringGeofences();
-                ArrayList<String> geofences = new ArrayList<>(triggeringGeofences.size());
+                String[] geofences = new String[triggeringGeofences.size()];
+                int i = 0;
                 for (Geofence fence : triggeringGeofences) {
-                    geofences.add(fence.getRequestId());
+                    geofences[i] = (fence.getRequestId());
+                    i++;
                 }
 
-                builder.putStringArray(GeofenceTransitionWorker.TRIGGERING_GEOFENCES,
-                        (String[]) geofences.toArray());
+                builder.putStringArray(GeofenceTransitionWorker.TRIGGERING_GEOFENCES, geofences);
 
             }
         } else {

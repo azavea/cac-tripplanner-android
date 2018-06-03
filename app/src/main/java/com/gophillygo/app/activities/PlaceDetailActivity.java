@@ -11,10 +11,14 @@ import android.util.Log;
 import android.view.Gravity;
 import android.widget.TextView;
 
+import com.gophillygo.app.CarouselViewListener;
 import com.gophillygo.app.R;
 import com.gophillygo.app.data.DestinationViewModel;
+import com.gophillygo.app.data.models.AttractionFlag;
+import com.gophillygo.app.data.models.Destination;
 import com.gophillygo.app.databinding.ActivityPlaceDetailBinding;
 import com.gophillygo.app.di.GpgViewModelFactory;
+import com.gophillygo.app.tasks.AddGeofencesBroadcastReceiver;
 import com.gophillygo.app.utils.FlagMenuUtils;
 import com.gophillygo.app.utils.UserUuidUtils;
 import com.synnapps.carouselview.CarouselView;
@@ -63,6 +67,8 @@ public class PlaceDetailActivity extends AttractionDetailActivity {
 
         carouselView = findViewById(R.id.place_detail_carousel);
         carouselView.setIndicatorGravity(Gravity.CENTER_HORIZONTAL|Gravity.BOTTOM);
+        carouselView.setImageClickListener(position ->
+                Log.d(LOG_LABEL, "Clicked item: "+ position));
 
         viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(DestinationViewModel.class);
@@ -108,8 +114,27 @@ public class PlaceDetailActivity extends AttractionDetailActivity {
             Log.d(LOG_LABEL, "Clicked flags button");
             PopupMenu menu = FlagMenuUtils.getFlagPopupMenu(this, flagOptionsCard, destinationInfo.getFlag());
             menu.setOnMenuItemClickListener(item -> {
+                Boolean haveExistingGeofence = false;
+                if (!destinationInfo.getAttraction().isEvent() && destinationInfo.getFlag().getOption()
+                        .api_name.equals(AttractionFlag.Option.WantToGo.api_name)) {
+
+                    haveExistingGeofence = true;
+                }
                 destinationInfo.updateAttractionFlag(item.getItemId());
                 viewModel.updateAttractionFlag(destinationInfo.getFlag(), userUuid, getString(R.string.user_flag_post_api_key));
+                if (destinationInfo.getFlag().getOption().api_name.equals(AttractionFlag.Option.WantToGo.api_name)) {
+                    if (haveExistingGeofence) {
+                        Log.d(LOG_LABEL, "No change to geofence");
+                        return true; // no change
+                    }
+
+                    // add geofence
+                    Log.d(LOG_LABEL, "Add geofence from place detail");
+                    AddGeofencesBroadcastReceiver.addOneGeofence(destinationInfo.getAttraction());
+                } else if (haveExistingGeofence) {
+                    // TODO: implement removing geofence
+                    Log.e(LOG_LABEL, "TODO: implement removing geofence");
+                }
                 return true;
             });
         });

@@ -103,6 +103,10 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
+
+
+        <!-- Listen to geofence transitions -->
+        <receiver android:name=".tasks.GeofenceTransitionBroadcastReceiver" android:exported="false" />
     </application>
 
 </manifest>

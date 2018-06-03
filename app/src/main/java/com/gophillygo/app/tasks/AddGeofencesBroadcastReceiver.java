@@ -1,25 +1,15 @@
 package com.gophillygo.app.tasks;
 
-import android.arch.lifecycle.Lifecycle;
-import android.arch.lifecycle.LifecycleObserver;
-import android.arch.lifecycle.LifecycleOwner;
-import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.gophillygo.app.BuildConfig;
 import com.gophillygo.app.data.DestinationDao;
-import com.gophillygo.app.data.DestinationViewModel;
 import com.gophillygo.app.data.models.Destination;
 import com.gophillygo.app.data.models.DestinationLocation;
-import com.gophillygo.app.di.GpgViewModelFactory;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -47,9 +37,10 @@ public class AddGeofencesBroadcastReceiver extends BroadcastReceiver {
     @Inject
     DestinationDao destinationDao;
 
+    public static final String ADD_GEOFENCE_TAG = "gpg-add-geofences";
+
     private static final String LOG_LABEL = "AddGeofenceBroadcast";
     private static final int MAX_GEOFENCES = 100; // cannot set up more than these
-    private static final String ADD_GEOFENCE_TAG = "gpg-add-geofences";
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -94,9 +85,8 @@ public class AddGeofencesBroadcastReceiver extends BroadcastReceiver {
                 Destination destination = destinations.get(i);
                 labels[i] = String.valueOf(destination.getId());
                 DestinationLocation location = destination.getLocation();
-                // FIXME: is this even right
-                latitudes[i] = location.getX();
-                longitudes[i] = location.getY();
+                latitudes[i] = location.getY();
+                longitudes[i] = location.getX();
             }
         }
 
@@ -113,6 +103,30 @@ public class AddGeofencesBroadcastReceiver extends BroadcastReceiver {
                 .putStringArray(AddGeofenceWorker.GEOFENCE_LABELS_KEY, labels)
                 .build();
 
+        startWorker(data);
+    }
+
+    /**
+     * Convenience static method to start a worker without using the broadcast receiver.
+     *
+     * @param destination Destination with a location to use for the geofence to add.
+     */
+    public static void addOneGeofence(@NonNull Destination destination) {
+        double[] latitudes = {destination.getLocation().getY()};
+        double[] longitudes = {destination.getLocation().getX()};
+        String[] labels = {String.valueOf(destination.getId())};
+
+        Data data = new Data.Builder()
+                .putDoubleArray(AddGeofenceWorker.LATITUDES_KEY, latitudes)
+                .putDoubleArray(AddGeofenceWorker.LONGITUDES_KEY, longitudes)
+                .putStringArray(AddGeofenceWorker.GEOFENCE_LABELS_KEY, labels)
+                .build();
+
+        Log.d(LOG_LABEL, "addOneGeofence");
+        startWorker(data);
+    }
+
+    private static void startWorker(Data data) {
         // Start a worker to add geofences from a background thread.
         OneTimeWorkRequest.Builder workRequestBuilder = new OneTimeWorkRequest.Builder(AddGeofenceWorker.class);
         workRequestBuilder.setInputData(data);
@@ -120,5 +134,6 @@ public class AddGeofencesBroadcastReceiver extends BroadcastReceiver {
         // TODO: set constraints and backoff on builder
         WorkRequest workRequest = workRequestBuilder.build();
         WorkManager.getInstance().enqueue(workRequest);
+        Log.d(LOG_LABEL, "Enqueued new work request to add geofence(s)");
     }
 }

@@ -8,6 +8,7 @@ import com.google.android.gms.location.GeofenceStatusCodes;
 
 import androidx.work.Data;
 import androidx.work.Worker;
+import dagger.android.AndroidInjection;
 
 public class GeofenceTransitionWorker extends Worker {
 

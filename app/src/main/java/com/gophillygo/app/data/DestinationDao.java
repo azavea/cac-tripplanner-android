@@ -49,7 +49,7 @@ public abstract class DestinationDao implements AttractionDao<Destination> {
      *
      * @return Destination objects, without related event info
      */
-    @Query("SELECT destination.* FROM destination INNER JOIN attractionflag " +
+    @Query(value = "SELECT destination.* FROM destination INNER JOIN attractionflag " +
             "ON destination.id == attractionflag.attractionID AND attractionflag.is_event = 0 " +
             "WHERE attractionflag.option == 'want_to_go'")
     public abstract LiveData<List<Destination>> getGeofenceDestinations();

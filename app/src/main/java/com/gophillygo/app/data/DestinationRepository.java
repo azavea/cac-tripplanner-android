@@ -84,6 +84,10 @@ class DestinationRepository {
 
     @SuppressLint("StaticFieldLeak")
     public void updateAttractionFlag(AttractionFlag flag, String userUuid, String apiKey) {
+
+        // TODO: remove geofence if should be unset
+        // TODO: add geofence if want to go
+
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {

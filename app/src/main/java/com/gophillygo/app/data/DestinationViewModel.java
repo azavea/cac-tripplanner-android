@@ -2,6 +2,7 @@ package com.gophillygo.app.data;
 
 import android.arch.lifecycle.LiveData;
 
+import com.gophillygo.app.data.models.AttractionFlag;
 import com.gophillygo.app.data.models.Destination;
 import com.gophillygo.app.data.models.DestinationInfo;
 import com.gophillygo.app.data.networkresource.Resource;
