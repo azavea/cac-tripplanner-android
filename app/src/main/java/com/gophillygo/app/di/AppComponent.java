@@ -3,6 +3,8 @@ package com.gophillygo.app.di;
 import android.app.Application;
 
 import com.gophillygo.app.GoPhillyGoApp;
+import com.gophillygo.app.tasks.GeofenceTransitionBroadcastReceiver;
+import com.gophillygo.app.tasks.GeofenceTransitionWorker;
 
 import javax.inject.Singleton;
 

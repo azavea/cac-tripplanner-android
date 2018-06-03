@@ -5,7 +5,6 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.location.Location;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.util.Log;
@@ -14,7 +13,7 @@ import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingClient;
 import com.google.android.gms.location.GeofencingRequest;
 import com.google.android.gms.location.LocationServices;
-import com.gophillygo.app.utils.GpgLocationUtils;
+import com.gophillygo.app.BuildConfig;
 
 import androidx.work.Data;
 import androidx.work.Worker;
@@ -26,13 +25,13 @@ public class AddGeofenceWorker extends Worker {
     // Greater values reduce battery consumption.
     private static final int GEOFENCE_RADIUS_METERS = 300;
 
-    // FIXME: configure testing vs production values for these responsiveness values
     // Send alert roughly after device has been in geofence for this long.
     // Since we are using the DWELL filter, this is about when we will receive notifications.
-    private static final int GEOFENCE_LOITERING_DELAY = 0; // 300000; // 5 minutes
+    // In development (DEBUG build), use no delay.
+    private static final int GEOFENCE_LOITERING_DELAY = BuildConfig.DEBUG ? 0 : 300000; // 5 minutes
 
     // Set responsiveness high to save battery
-    private static final int GEOFENCE_RESPONSIVENESS = 0; // 300000; // 5 minutes
+    private static final int GEOFENCE_RESPONSIVENESS = BuildConfig.DEBUG ? 0 : 300000; // 5 minutes
 
     private static final String LOG_LABEL = "AddGeofenceWorker";
     private static final int TRANSITION_BROADCAST_REQUEST_CODE = 42;
