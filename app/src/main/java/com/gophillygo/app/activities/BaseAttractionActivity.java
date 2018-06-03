@@ -1,6 +1,7 @@
 package com.gophillygo.app.activities;
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -15,6 +16,8 @@ import com.gophillygo.app.data.models.DestinationInfo;
 import com.gophillygo.app.data.models.DestinationLocation;
 import com.gophillygo.app.data.networkresource.Status;
 import com.gophillygo.app.di.GpgViewModelFactory;
+import com.gophillygo.app.tasks.AddGeofenceWorker;
+import com.gophillygo.app.tasks.AddGeofencesBroadcastReceiver;
 import com.gophillygo.app.utils.GpgLocationUtils;
 import com.gophillygo.app.utils.UserUuidUtils;
 
@@ -23,6 +26,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
+
+import androidx.work.Data;
+import androidx.work.WorkManager;
 
 /**
  * Base activity that requests last known location and destination data when opened;
@@ -215,10 +221,23 @@ public abstract class BaseAttractionActivity extends AppCompatActivity
         if (requestCode == GpgLocationUtils.PERMISSION_REQUEST_ID) {
             if (grantResults.length > 0) {
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Log.d(LOG_LABEL, "Re-requesting location after getting permissions");
+                    Log.d(LOG_LABEL, "Re-requesting location after getting fine location permissions");
                     fetchLastLocationOrUseDefault();
                 } else if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
                     GpgLocationUtils.displayPermissionRequestRationale(getApplicationContext());
+                }
+            }
+        } else if (requestCode == GpgLocationUtils.LOCATION_SETTINGS_REQUEST_ID) {
+            if (grantResults.length > 0) {
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Log.d(LOG_LABEL, "Re-requesting location after getting location network permissions");
+                    fetchLastLocationOrUseDefault();
+                    Log.d(LOG_LABEL, "Attempting to register geofences from database again");
+                    Intent intent = new Intent(getApplicationContext(), AddGeofencesBroadcastReceiver.class);
+                    intent.setAction(AddGeofenceWorker.ACTION_GEOFENCE_TRANSITION);
+                    sendBroadcast(intent);
+                } else if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
+                    Log.w(LOG_LABEL, "Location network permissions not updated; geofencing may not work");
                 }
             }
         }

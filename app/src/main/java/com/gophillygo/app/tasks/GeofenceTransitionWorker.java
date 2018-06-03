@@ -31,12 +31,13 @@ public class GeofenceTransitionWorker extends Worker {
 
             switch (error) {
                 case GeofenceStatusCodes.GEOFENCE_NOT_AVAILABLE:
-                    Log.e(LOG_LABEL, "Geofence not available");
+                    Log.e(LOG_LABEL, "Geofence not available; high accuracy location probably not enabled");
                     // This typically happens after NLP (Android's Network Location Provider) is disabled.
                     // https://developer.android.com/training/location/geofencing
-                    // FIXME: is the default backoff appropriate?
-                    // TODO: geofences should be re-registered
-                    return WorkerResult.RETRY;
+                    // TODO: geofences should be re-registered on PROVIDERS_CHANGED
+                    // but implicit system broadcast cannot read DB in background to find
+                    // what to fence.
+                    break;
                 case GeofenceStatusCodes.GEOFENCE_TOO_MANY_GEOFENCES:
                     // FIXME: ensure there are not more than 100 geofences. Clear them here?
                     Log.e(LOG_LABEL, "Too many geofences!");

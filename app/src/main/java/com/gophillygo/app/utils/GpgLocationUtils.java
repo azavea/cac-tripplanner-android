@@ -5,9 +5,11 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.location.Location;
-import android.support.annotation.NonNull;
+import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -15,10 +17,14 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResponse;
+import com.google.android.gms.location.LocationSettingsStates;
+import com.google.android.gms.location.SettingsClient;
 import com.google.android.gms.tasks.Task;
 import com.gophillygo.app.R;
 
@@ -34,7 +40,8 @@ public class GpgLocationUtils {
     // identifier for device location access request, if runtime prompt necessary
     // request code must be in lower 8 bits
     public static final int PERMISSION_REQUEST_ID = 11;
-    private static final int API_AVAILABILITY_REQUEST_ID = 22;
+    public static final int API_AVAILABILITY_REQUEST_ID = 22;
+    public static final int LOCATION_SETTINGS_REQUEST_ID = 33;
 
     private static final int LOCATION_REQUESTS_COUNT = 12;
     private static final int LOCATION_REQUEST_EXPIRATION_DURATION_MS = 10000; // 10s
@@ -86,6 +93,37 @@ public class GpgLocationUtils {
                     Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_REQUEST_ID);
             return false; // up to the activity to start this service again when permissions granted
         }
+
+        // Check location settings
+        // https://developer.android.com/training/location/change-location-settings#get-settings
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
+        SettingsClient client = LocationServices.getSettingsClient(callingActivity);
+        Task<LocationSettingsResponse> task = client.checkLocationSettings(builder.build());
+        task.addOnFailureListener(e -> {
+            if (e instanceof ResolvableApiException) {
+                try {
+                    ResolvableApiException resolvable = (ResolvableApiException) e;
+                    resolvable.startResolutionForResult(callingActivity, LOCATION_SETTINGS_REQUEST_ID);
+                } catch (IntentSender.SendIntentException e1) {
+                    Log.e(LOG_LABEL, "Failed to prompt user for location settings changes");
+                    e1.printStackTrace();
+                }
+            } else {
+                Log.e(LOG_LABEL, "Received unresolvable location settings exception.");
+                e.printStackTrace();
+            }
+        }).addOnSuccessListener(locationSettingsResponse -> {
+            LocationSettingsStates states = locationSettingsResponse.getLocationSettingsStates();
+            if (!states.isNetworkLocationPresent() || !states.isNetworkLocationUsable()) {
+                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                // TODO: a dialog would be easier to read
+                Toast toast = Toast.makeText(callingActivity,
+                        callingActivity.getString(R.string.location_network_permission_rationale),
+                        Toast.LENGTH_LONG);
+                toast.show();
+                callingActivity.startActivity(intent);
+            }
+        });
 
         return true;
     }
