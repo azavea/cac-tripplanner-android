@@ -12,6 +12,8 @@ import com.google.android.gms.location.GeofencingRequest;
 import com.google.android.gms.location.LocationServices;
 import com.gophillygo.app.BuildConfig;
 
+import java.util.Map;
+
 import androidx.work.Data;
 import androidx.work.Worker;
 
@@ -55,12 +57,24 @@ public class AddGeofenceWorker extends Worker {
         GeofencingRequest.Builder builder = new GeofencingRequest.Builder();
         builder.setInitialTrigger(GEOFENCE_ENTER_TRIGGER);
 
+        double[] latitudes;
+        double[] longitudes;
+        String[] geofenceLabels;
+
         // Get the data for the locations to add as primitive arrays with label and coordinates at
         // matching offsets.
         Data data = getInputData();
-        double[] latitudes = data.getDoubleArray(LATITUDES_KEY);
-        double[] longitudes = data.getDoubleArray(LONGITUDES_KEY);
-        String[] geofenceLabels = data.getStringArray(GEOFENCE_LABELS_KEY);
+        Map<String, Object> map = data.getKeyValueMap();
+        if (map.containsKey(LATITUDES_KEY) && map.containsKey(LONGITUDES_KEY) &&
+                map.containsKey(GEOFENCE_LABELS_KEY)) {
+
+            latitudes = data.getDoubleArray(LATITUDES_KEY);
+            longitudes = data.getDoubleArray(LONGITUDES_KEY);
+            geofenceLabels = data.getStringArray(GEOFENCE_LABELS_KEY);
+        } else {
+            Log.e(LOG_LABEL, "Data missing for geofences to add");
+            return  WorkerResult.FAILURE;
+        }
 
         if (latitudes.length != longitudes.length || latitudes.length != geofenceLabels.length) {
             Log.e(LOG_LABEL, "Location data for geofences to add should be arrays of the same length.");
@@ -68,6 +82,7 @@ public class AddGeofenceWorker extends Worker {
         }
 
         for (int i = 0; i < latitudes.length; i++) {
+            Log.d(LOG_LABEL, "Adding geofence for " + geofenceLabels[i]);
             builder.addGeofence(new Geofence.Builder()
                     .setCircularRegion(latitudes[i], longitudes[i], GEOFENCE_RADIUS_METERS)
                     .setExpirationDuration(Geofence.NEVER_EXPIRE)

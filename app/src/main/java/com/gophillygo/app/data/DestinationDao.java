@@ -5,6 +5,7 @@ import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Transaction;
 
+import com.gophillygo.app.data.models.AttractionFlag;
 import com.gophillygo.app.data.models.Destination;
 import com.gophillygo.app.data.models.DestinationInfo;
 
@@ -45,12 +46,15 @@ public abstract class DestinationDao implements AttractionDao<Destination> {
     }
 
     /**
-     * Find those destinations flagged "Want to Go", which are those that should be geofenced.
+     * Find those destinations with a given flag set, which are those that should be geofenced.
+     *
+     * Must be accessed on a background thread.
      *
      * @return Destination objects, without related event info
      */
+
     @Query(value = "SELECT destination.* FROM destination INNER JOIN attractionflag " +
-            "ON destination.id == attractionflag.attractionID AND attractionflag.is_event = 0 " +
-            "WHERE attractionflag.option == 'want_to_go'")
-    public abstract LiveData<List<Destination>> getGeofenceDestinations();
+            "ON destination.id = attractionflag.attractionID AND attractionflag.is_event = 0 " +
+            "WHERE attractionflag.option = :geofenceFlagCode")
+    public abstract List<Destination> getGeofenceDestinations(int geofenceFlagCode);
 }

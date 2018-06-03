@@ -101,7 +101,8 @@
         <receiver android:name=".tasks.AddGeofencesBroadcastReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <action android:name="android.location.PROVIDERS_CHANGED" />
+                <!-- FIXME: implicit system broadcast intent cannot start background thread
+                <action android:name="android.location.PROVIDERS_CHANGED" /> -->
             </intent-filter>
         </receiver>
 

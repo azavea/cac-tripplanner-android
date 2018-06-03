@@ -92,7 +92,7 @@ public class EventDetailActivity extends AttractionDetailActivity {
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(EventViewModel.class);
         destinationViewModel = ViewModelProviders.of(this, viewModelFactory).get(DestinationViewModel.class);
         viewModel.getEvent(eventId).observe(this, eventInfo -> {
-            // TODO: handle if event not found (go to list of events?)
+            // TODO: #61 handle if event not found (go to list of events?)
             if (eventInfo == null || eventInfo.getEvent() == null) {
                 Log.e(LOG_LABEL, "No matching event found for ID " + eventId);
                 return;

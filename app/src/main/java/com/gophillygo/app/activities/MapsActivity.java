@@ -147,7 +147,7 @@ public abstract class MapsActivity<T extends AttractionInfo> extends FilterableL
     public void optionsButtonClick(View view, T info) {
         PopupMenu menu = FlagMenuUtils.getFlagPopupMenu(this, view, info.getFlag());
         menu.setOnMenuItemClickListener(item -> {
-            // TODO: support events too
+            // FIXME: support geofencing events too
 
             Boolean haveExistingGeofence = false;
             if (!info.getAttraction().isEvent() && info.getFlag().getOption()
@@ -171,7 +171,7 @@ public abstract class MapsActivity<T extends AttractionInfo> extends FilterableL
                 Log.d(LOG_LABEL, "Add geofence from map");
                 AddGeofencesBroadcastReceiver.addOneGeofence((Destination)info.getAttraction());
             } else if (haveExistingGeofence) {
-                // TODO: implement removing geofence
+                // FIXME: implement removing geofence
                 Log.e(LOG_LABEL, "TODO: implement removing geofence");
             }
             return true;

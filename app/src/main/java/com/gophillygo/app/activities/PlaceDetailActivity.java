@@ -73,7 +73,7 @@ public class PlaceDetailActivity extends AttractionDetailActivity {
         viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(DestinationViewModel.class);
         viewModel.getDestination(placeId).observe(this, destinationInfo -> {
-            // TODO: handle if destination not found (go to list of destinations?)
+            // TODO: #61 handle if destination not found (go to list of destinations?)
             if (destinationInfo == null || destinationInfo.getDestination() == null) {
                 Log.e(LOG_LABEL, "No matching destination found for ID " + placeId);
                 return;
@@ -132,7 +132,7 @@ public class PlaceDetailActivity extends AttractionDetailActivity {
                     Log.d(LOG_LABEL, "Add geofence from place detail");
                     AddGeofencesBroadcastReceiver.addOneGeofence(destinationInfo.getAttraction());
                 } else if (haveExistingGeofence) {
-                    // TODO: implement removing geofence
+                    // FIXME: implement removing geofence
                     Log.e(LOG_LABEL, "TODO: implement removing geofence");
                 }
                 return true;

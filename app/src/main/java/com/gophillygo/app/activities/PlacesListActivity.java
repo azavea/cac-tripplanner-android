@@ -86,7 +86,7 @@ public class PlacesListActivity extends FilterableListActivity implements
             Log.d(LOG_LABEL, "Add geofence from places list");
             AddGeofencesBroadcastReceiver.addOneGeofence((Destination)destinationInfo.getAttraction());
         } else if (haveExistingGeofence) {
-            // TODO: implement removing geofence
+            // FIXME: implement removing geofence
             Log.e(LOG_LABEL, "TODO: implement removing geofence");
         }
 	    return true;

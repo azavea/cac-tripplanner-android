@@ -74,7 +74,6 @@ abstract class AttractionDetailActivity extends AppCompatActivity {
     public void goToDirections(View view) {
         // pass parameters destination and destinationText to https://gophillygo.org/
         Uri directionsUri = new Uri.Builder().scheme("https").authority("gophillygo.org")
-                // TODO: #9 send current user location as origin
                 .appendQueryParameter("origin", "")
                 .appendQueryParameter("originText", "")
                 .appendQueryParameter("destination", destinationInfo.getDestination().getLocation().toString())
