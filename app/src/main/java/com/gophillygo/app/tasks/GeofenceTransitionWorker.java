@@ -45,9 +45,10 @@ public class GeofenceTransitionWorker extends Worker {
         if (data.getBoolean(HAS_ERROR_KEY, true)) {
             int error = data.getInt(ERROR_CODE_KEY, GeofenceStatusCodes.DEVELOPER_ERROR);
 
+            // https://developers.google.com/android/reference/com/google/android/gms/location/GeofenceStatusCodes
             switch (error) {
                 case GeofenceStatusCodes.GEOFENCE_NOT_AVAILABLE:
-                    Log.e(LOG_LABEL, "Geofence not available; high accuracy location probably not enabled");
+                    Log.e(LOG_LABEL, "Geofencing service not available; high accuracy location probably not enabled");
                     // This typically happens after NLP (Android's Network Location Provider) is disabled.
                     // https://developer.android.com/training/location/geofencing
                     // TODO: geofences should be re-registered on PROVIDERS_CHANGED
@@ -59,14 +60,12 @@ public class GeofenceTransitionWorker extends Worker {
                     Log.e(LOG_LABEL, "Too many geofences!");
                     break;
                 case GeofenceStatusCodes.TIMEOUT:
-                    // FIXME: what could cause this?
                     Log.w(LOG_LABEL, "Geofence timeout");
                     return WorkerResult.RETRY;
                 case GeofenceStatusCodes.GEOFENCE_TOO_MANY_PENDING_INTENTS:
-                    Log.e(LOG_LABEL, "Too many geofence pending intents");
-                    break;
+                    Log.e(LOG_LABEL, "Too many pending intents to addGeofence. Max is 5.");
+                    return  WorkerResult.RETRY;
                 case GeofenceStatusCodes.API_NOT_CONNECTED:
-                    // FIXME: what could cause this?
                     Log.e(LOG_LABEL, "Geofencing prevented because API not connected");
                     return WorkerResult.RETRY;
                 case GeofenceStatusCodes.CANCELED:
@@ -82,7 +81,6 @@ public class GeofenceTransitionWorker extends Worker {
                     Log.e(LOG_LABEL, "Geofencing encountered an internal error");
                     break;
                 case GeofenceStatusCodes.INTERRUPTED:
-                    // FIXME: what could cause this?
                     Log.w(LOG_LABEL, "Geofencing interrupted");
                     return  WorkerResult.RETRY;
                 default:
