@@ -85,4 +85,5 @@
     <!-- the key to the UUID within the shared preferences file -->
     <string name="user_uuid_shared_preferences_key">gophillygo_user_uuid</string>
     <string name="location_network_permission_rationale">Please set location mode to \"High Accuracy\" to receive notifications when places you want to go are nearby.</string>
+    <string name="channel_description">Nearby GoPhillyGo destinations you want to go visit</string>
 </resources>
