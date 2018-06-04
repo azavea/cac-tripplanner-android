@@ -90,6 +90,17 @@ public class AddGeofencesBroadcastReceiver extends BroadcastReceiver {
             // Read datatabase instead of relying on an intent with extras; on boot, have no extras set
             new AsyncTask<Void, Void, Void>() {
                 @Override
+                protected void onPostExecute(Void aVoid) {
+                    // Need to release BroadcastReceiver since have gone async
+                    pendingResult.finish();
+                }
+
+                @Override
+                protected void onCancelled() {
+                    pendingResult.abortBroadcast();
+                }
+
+                @Override
                 protected Void doInBackground(Void... voids) {
                     List<Destination> destinations = destinationDao
                             .getGeofenceDestinations(AttractionFlag.Option.WantToGo.code);
@@ -127,9 +138,6 @@ public class AddGeofencesBroadcastReceiver extends BroadcastReceiver {
                             .build();
 
                     startWorker(data);
-
-                    // Need to release BroadcastReceiver since have gone async
-                    pendingResult.finish();
                     return null;
                 }
             }.execute();
