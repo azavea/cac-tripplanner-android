@@ -31,6 +31,7 @@ import com.gophillygo.app.data.models.AttractionFlag;
 import com.gophillygo.app.data.models.AttractionInfo;
 import com.gophillygo.app.data.models.Destination;
 import com.gophillygo.app.data.models.DestinationLocation;
+import com.gophillygo.app.data.models.EventInfo;
 import com.gophillygo.app.databinding.MapPopupCardBinding;
 import com.gophillygo.app.tasks.AddGeofenceWorker;
 import com.gophillygo.app.tasks.AddGeofencesBroadcastReceiver;
@@ -148,14 +149,8 @@ public abstract class MapsActivity<T extends AttractionInfo> extends FilterableL
     public void optionsButtonClick(View view, T info) {
         PopupMenu menu = FlagMenuUtils.getFlagPopupMenu(this, view, info.getFlag());
         menu.setOnMenuItemClickListener(item -> {
-            // FIXME: support geofencing events too
-
-            Boolean haveExistingGeofence = false;
-            if (!info.getAttraction().isEvent() && info.getFlag().getOption()
-                    .api_name.equals(AttractionFlag.Option.WantToGo.api_name)) {
-
-                haveExistingGeofence = true;
-            }
+            Boolean haveExistingGeofence = info.getFlag().getOption()
+                    .api_name.equals(AttractionFlag.Option.WantToGo.api_name);
 
             info.updateAttractionFlag(item.getItemId());
             viewModel.updateAttractionFlag(info.getFlag(), userUuid, getString(R.string.user_flag_post_api_key));
@@ -170,7 +165,13 @@ public abstract class MapsActivity<T extends AttractionInfo> extends FilterableL
 
                 // add geofence
                 Log.d(LOG_LABEL, "Add geofence from map");
-                AddGeofencesBroadcastReceiver.addOneGeofence((Destination)info.getAttraction());
+                if (info.getAttraction().isEvent()) {
+                    // event
+                    AddGeofencesBroadcastReceiver.addOneGeofence((EventInfo)info);
+                } else {
+                    // destination
+                    AddGeofencesBroadcastReceiver.addOneGeofence((Destination)info.getAttraction());
+                }
             } else if (haveExistingGeofence) {
                 Log.e(LOG_LABEL, "Removing geofence");
                 RemoveGeofenceWorker.removeOneGeofence(String.valueOf(info.getAttraction().getId()));

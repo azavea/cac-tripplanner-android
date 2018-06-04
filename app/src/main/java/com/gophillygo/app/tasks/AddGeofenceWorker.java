@@ -104,10 +104,12 @@ public class AddGeofenceWorker extends Worker {
         intent.putExtra(LATITUDES_KEY, latitudes);
         intent.putExtra(LONGITUDES_KEY, longitudes);
         intent.setAction(ACTION_GEOFENCE_TRANSITION);
+        // FIXME: max of 5 pending intents can resolve at once, so cannot send more than
+        // five notifications at a time. How to address?
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
                 TRANSITION_BROADCAST_REQUEST_CODE,
                 intent,
-                PendingIntent.FLAG_UPDATE_CURRENT);
+                PendingIntent.FLAG_ONE_SHOT);
 
         try {
             geofencingClient.addGeofences(builder.build(), pendingIntent);

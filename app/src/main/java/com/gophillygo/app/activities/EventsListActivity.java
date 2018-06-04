@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.gophillygo.app.R;
 import com.gophillygo.app.adapters.EventsListAdapter;
 import com.gophillygo.app.data.EventViewModel;
+import com.gophillygo.app.data.models.AttractionFlag;
 import com.gophillygo.app.data.models.AttractionInfo;
 import com.gophillygo.app.data.models.EventInfo;
 import com.gophillygo.app.data.networkresource.Resource;
@@ -24,6 +25,8 @@ import com.gophillygo.app.data.networkresource.Status;
 import com.gophillygo.app.databinding.ActivityEventsListBinding;
 import com.gophillygo.app.databinding.FilterButtonBarBinding;
 import com.gophillygo.app.di.GpgViewModelFactory;
+import com.gophillygo.app.tasks.AddGeofencesBroadcastReceiver;
+import com.gophillygo.app.tasks.RemoveGeofenceWorker;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,9 +68,31 @@ public class EventsListActivity extends FilterableListActivity
     }
 
     public boolean clickedFlagOption(MenuItem item, AttractionInfo eventInfo, Integer position) {
+        Boolean haveExistingGeofence = eventInfo.getFlag()
+                .getOption().api_name.equals(AttractionFlag.Option.WantToGo.api_name);
+
         eventInfo.updateAttractionFlag(item.getItemId());
         viewModel.updateAttractionFlag(eventInfo.getFlag(), userUuid, getString(R.string.user_flag_post_api_key));
         adapter.notifyItemChanged(position);
+
+        if (((EventInfo)eventInfo).hasDestinationName()) {
+            if (eventInfo.getFlag().getOption().api_name.equals(AttractionFlag.Option.WantToGo.api_name)) {
+                if (haveExistingGeofence) {
+                    Log.d(LOG_LABEL, "No change to event geofence");
+                    return true; // no change
+                }
+                // add geofence
+                Log.d(LOG_LABEL, "Add event geofence from event list");
+                AddGeofencesBroadcastReceiver.addOneGeofence((EventInfo)eventInfo);
+            } else if (haveExistingGeofence) {
+                Log.e(LOG_LABEL, "Removing geofence from event list");
+                RemoveGeofenceWorker.removeOneGeofence(String.valueOf(eventInfo.getAttraction().getId()));
+            }
+        } else {
+            // TODO: notify user?
+            Log.w(LOG_LABEL, "Cannot add geofence for an event without an associated destination");
+        }
+
         return true;
     }
 

@@ -115,12 +115,9 @@ public class PlaceDetailActivity extends AttractionDetailActivity {
             Log.d(LOG_LABEL, "Clicked flags button");
             PopupMenu menu = FlagMenuUtils.getFlagPopupMenu(this, flagOptionsCard, destinationInfo.getFlag());
             menu.setOnMenuItemClickListener(item -> {
-                Boolean haveExistingGeofence = false;
-                if (!destinationInfo.getAttraction().isEvent() && destinationInfo.getFlag().getOption()
-                        .api_name.equals(AttractionFlag.Option.WantToGo.api_name)) {
+                Boolean haveExistingGeofence = destinationInfo.getFlag().getOption()
+                        .api_name.equals(AttractionFlag.Option.WantToGo.api_name);
 
-                    haveExistingGeofence = true;
-                }
                 destinationInfo.updateAttractionFlag(item.getItemId());
                 viewModel.updateAttractionFlag(destinationInfo.getFlag(), userUuid, getString(R.string.user_flag_post_api_key));
                 if (destinationInfo.getFlag().getOption().api_name.equals(AttractionFlag.Option.WantToGo.api_name)) {

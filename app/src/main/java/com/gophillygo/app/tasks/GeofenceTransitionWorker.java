@@ -18,6 +18,7 @@ import android.util.Log;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofenceStatusCodes;
 import com.gophillygo.app.R;
+import com.gophillygo.app.activities.EventDetailActivity;
 import com.gophillygo.app.activities.PlaceDetailActivity;
 
 import androidx.work.Data;
@@ -56,7 +57,6 @@ public class GeofenceTransitionWorker extends Worker {
                     // what to fence.
                     break;
                 case GeofenceStatusCodes.GEOFENCE_TOO_MANY_GEOFENCES:
-                    // FIXME: ensure there are not more than 100 geofences. Clear them here?
                     Log.e(LOG_LABEL, "Too many geofences!");
                     break;
                 case GeofenceStatusCodes.TIMEOUT:
@@ -103,18 +103,32 @@ public class GeofenceTransitionWorker extends Worker {
             // Send notification the main thread
             Handler handler = new Handler(Looper.getMainLooper());
             for (int i = 0; i < geofences.length; i++) {
-                String geofenceID = geofences[i];
+                // Need a unique int we can find later, for the notification
+                String geofenceLabel = geofences[i];
                 String placeName = geofencePlaceNames[i];
                 double latitude = latitudes[i];
                 double longitude = longitudes[i];
 
+                // Geofence string ID is "d" for destination or "e" for event, followed by the
+                // destination or event integer ID.
+                int geofenceId = Integer.valueOf(geofenceLabel.substring(1));
+                boolean isEvent = geofenceLabel.startsWith("e");
+                String notificationTag = isEvent ? "e" : "d";
+
                 if (enteredGeofence) {
-                    Log.d(LOG_LABEL, "Entered geofence ID " + geofenceID);
+                    Log.d(LOG_LABEL, "Entered geofence ID " + geofenceLabel);
 
                     handler.post(() -> {
                         // Get intent for the detail view to open on notification click.
-                        Intent intent = new Intent(context, PlaceDetailActivity.class);
-                        intent.putExtra(PlaceDetailActivity.DESTINATION_ID_KEY, Long.valueOf(geofenceID));
+                        Intent intent;
+                        if (isEvent) {
+                            intent = new Intent(context, EventDetailActivity.class);
+                            intent.putExtra(EventDetailActivity.EVENT_ID_KEY, (long)geofenceId);
+                        } else {
+                            intent = new Intent(context, PlaceDetailActivity.class);
+                            intent.putExtra(PlaceDetailActivity.DESTINATION_ID_KEY, (long)geofenceId);
+                        }
+
 
                         // Add the intent to the stack builder, which inflates the back stack
                         TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
@@ -136,22 +150,22 @@ public class GeofenceTransitionWorker extends Worker {
 
                         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
 
-                        // notificationId is a unique int for each notification that you must define
-                        notificationManager.notify(Integer.valueOf(geofenceID), mBuilder.build());
+                        // The pair of notification string tag and int must be unique for the app
+                        notificationManager.notify(notificationTag, geofenceId, mBuilder.build());
                     });
 
                 } else {
-                    Log.d(LOG_LABEL, "Exited geofence ID " + geofenceID);
+                    Log.d(LOG_LABEL, "Exited geofence ID " + geofenceLabel);
                     handler.post(() -> {
                         Log.d(LOG_LABEL, "Removing notification for geofence");
                         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
-                        notificationManager.cancel(Integer.valueOf(geofenceID));
+                        notificationManager.cancel(notificationTag, geofenceId);
                     });
 
                     Log.d(LOG_LABEL, "Re-registering geofence after exit");
                     // remove and re-register geofence, or else it will ignore future events
-                    RemoveGeofenceWorker.removeOneGeofence(geofenceID);
-                    AddGeofencesBroadcastReceiver.addOneGeofence(longitude, latitude, geofenceID, placeName);
+                    RemoveGeofenceWorker.removeOneGeofence(geofenceLabel);
+                    AddGeofencesBroadcastReceiver.addOneGeofence(longitude, latitude, geofenceLabel, placeName);
                 }
             }
 

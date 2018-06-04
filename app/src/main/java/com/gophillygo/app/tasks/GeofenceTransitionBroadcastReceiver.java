@@ -68,6 +68,7 @@ public class GeofenceTransitionBroadcastReceiver extends BroadcastReceiver {
                     double[] latitudes = intent.getDoubleArrayExtra(AddGeofenceWorker.LATITUDES_KEY);
                     double[] longitudes = intent.getDoubleArrayExtra(AddGeofenceWorker.LONGITUDES_KEY);
 
+                    // map the geofence string IDs to their index in the full value arrays
                     Map<String, Integer> geofenceNameMap = new HashMap<>(labels.length);
                     for (int i = 0; i < labels.length; i++) {
                         geofenceNameMap.put(labels[i], i);
@@ -75,12 +76,23 @@ public class GeofenceTransitionBroadcastReceiver extends BroadcastReceiver {
 
                     int i = 0;
                     for (Geofence fence : triggeringGeofences) {
-                        int index = geofenceNameMap.get(fence.getRequestId());
-                        geofences[i] = fence.getRequestId();
-                        geofenceNames[i] = names[index];
-                        geofenceLatitudes[i] = latitudes[index];
-                        geofenceLongitudes[i] = longitudes[index];
-                        i++;
+                        String fenceId = fence.getRequestId();
+                        Log.d(LOG_LABEL, "Handling transition for geofence " + fenceId);
+                        try {
+                            int index = geofenceNameMap.get(fenceId);
+                            geofences[i] = fenceId;
+                            geofenceNames[i] = names[index];
+                            geofenceLatitudes[i] = latitudes[index];
+                            geofenceLongitudes[i] = longitudes[index];
+                            i++;
+                        } catch (NullPointerException npe) {
+                            // FIXME: why does this happen sometimes?
+                            Log.e(LOG_LABEL, "Null pointer exception attempting to find geofence in map");
+                            Log.e(LOG_LABEL, "Fence ID: " + fenceId);
+                            for (String label: labels) {
+                                Log.d(LOG_LABEL, "Found label " + label);
+                            }
+                        }
                     }
 
                     builder.putStringArray(GeofenceTransitionWorker.TRIGGERING_GEOFENCES, geofences);

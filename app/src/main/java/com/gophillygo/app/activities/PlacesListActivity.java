@@ -70,13 +70,13 @@ public class PlacesListActivity extends FilterableListActivity implements
     }
 
     public boolean clickedFlagOption(MenuItem item, AttractionInfo destinationInfo, Integer position) {
-        Boolean haveExistingGeofence = false;
-        if (destinationInfo.getFlag().getOption().api_name.equals(AttractionFlag.Option.WantToGo.api_name)) {
-            haveExistingGeofence = true;
-        }
+        Boolean haveExistingGeofence = destinationInfo.getFlag().getOption()
+                .api_name.equals(AttractionFlag.Option.WantToGo.api_name);
+
         destinationInfo.updateAttractionFlag(item.getItemId());
         viewModel.updateAttractionFlag(destinationInfo.getFlag(), userUuid, getString(R.string.user_flag_post_api_key));
         placesListAdapter.notifyItemChanged(position);
+
         if (destinationInfo.getFlag().getOption().api_name.equals(AttractionFlag.Option.WantToGo.api_name)) {
             if (haveExistingGeofence) {
                 Log.d(LOG_LABEL, "No change to geofence");

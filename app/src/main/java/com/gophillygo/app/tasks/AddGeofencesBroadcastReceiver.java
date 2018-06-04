@@ -9,10 +9,14 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.gophillygo.app.data.DestinationDao;
+import com.gophillygo.app.data.EventDao;
 import com.gophillygo.app.data.models.AttractionFlag;
 import com.gophillygo.app.data.models.Destination;
 import com.gophillygo.app.data.models.DestinationLocation;
+import com.gophillygo.app.data.models.Event;
+import com.gophillygo.app.data.models.EventInfo;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -39,6 +43,9 @@ public class AddGeofencesBroadcastReceiver extends BroadcastReceiver {
 
     @Inject
     DestinationDao destinationDao;
+
+    @Inject
+    EventDao eventDao;
 
     public static final String ADD_GEOFENCE_TAG = "gpg-add-geofences";
 
@@ -104,30 +111,53 @@ public class AddGeofencesBroadcastReceiver extends BroadcastReceiver {
                 protected Void doInBackground(Void... voids) {
                     List<Destination> destinations = destinationDao
                             .getGeofenceDestinations(AttractionFlag.Option.WantToGo.code);
-                    if (destinations == null || destinations.isEmpty()) {
-                        Log.d(LOG_LABEL, "Have no destinations with geofences to add.");
+                    List<EventInfo> events = eventDao.getGeofenceEvents(AttractionFlag.Option.WantToGo.code);
+
+                    // Check that there is at least one place to geofence and prevent NPEs by
+                    // initializing null lists
+                    if ((events == null || events.isEmpty()) &&
+                            (destinations == null || destinations.isEmpty())) {
+                        Log.d(LOG_LABEL, "Have no destinations or events with geofences to add.");
                         return null;
+                    } else if (events == null) {
+                        events = new ArrayList<>(0);
+                    } else if (destinations == null) {
+                        destinations = new ArrayList<>(0);
                     }
 
                     int destinationsCount = destinations.size();
-                    if (destinationsCount > MAX_GEOFENCES) {
-                        // FIXME: handle
+                    int geofencesCount = destinationsCount + events.size();
+                    if (geofencesCount > MAX_GEOFENCES) {
+                        // FIXME: handle having too many geofences
                         Log.e(LOG_LABEL, "Too many destinations with geofences to add.");
                         return null;
                     }
 
-                    double[] latitudes = new double[destinationsCount];
-                    double[] longitudes = new double[destinationsCount];
-                    String[] labels = new String[destinationsCount];
-                    String[] names = new String[destinationsCount];
+                    // send arrays of combined values for destinations and events
+                    double[] latitudes = new double[geofencesCount];
+                    double[] longitudes = new double[geofencesCount];
+                    String[] labels = new String[geofencesCount];
+                    String[] names = new String[geofencesCount];
 
+                    // add destinations to the beginning
                     for (int i = 0; i < destinationsCount; i++) {
                         Destination destination = destinations.get(i);
-                        labels[i] = String.valueOf(destination.getId());
+                        labels[i] = "d" + String.valueOf(destination.getId());
                         names[i] = destination.getName();
                         DestinationLocation location = destination.getLocation();
                         latitudes[i] = location.getY();
                         longitudes[i] = location.getX();
+                    }
+
+                    // add events to the end
+                    for (int i = 0; i < geofencesCount; i++) {
+                        int combinedIndex = i + destinationsCount;
+                        EventInfo eventInfo = events.get(i);
+                        labels[combinedIndex] = "e" + String.valueOf(eventInfo.getAttraction().getId());
+                        names[combinedIndex] = eventInfo.getEvent().getName();
+                        DestinationLocation location = eventInfo.getLocation();
+                        latitudes[combinedIndex] = location.getY();
+                        latitudes[combinedIndex] = location.getX();
                     }
 
                     Data data = new Data.Builder()
@@ -152,7 +182,18 @@ public class AddGeofencesBroadcastReceiver extends BroadcastReceiver {
      */
     public static void addOneGeofence(@NonNull Destination destination) {
         addOneGeofence(destination.getLocation().getX(), destination.getLocation().getY(),
-                String.valueOf(destination.getId()), String.valueOf(destination.getName()));
+                "d" + String.valueOf(destination.getId()), String.valueOf(destination.getName()));
+    }
+
+    public static void addOneGeofence(@NonNull EventInfo eventInfo) {
+        DestinationLocation location = eventInfo.getLocation();
+        if (location != null) {
+            Event event = eventInfo.getEvent();
+            addOneGeofence(location.getX(), location.getY(),
+                    "e" + String.valueOf(event.getId()), event.getName());
+        } else {
+            Log.e(LOG_LABEL, "Cannot add geofence for event without associated location.");
+        }
     }
 
     public static void addOneGeofence(double x, double y, @NonNull String label, @NonNull String name) {
