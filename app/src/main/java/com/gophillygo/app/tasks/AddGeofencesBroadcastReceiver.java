@@ -53,14 +53,17 @@ public class AddGeofencesBroadcastReceiver extends BroadcastReceiver {
         double[] latitudes;
         double[] longitudes;
         String[] labels;
+        String[] names;
 
         // Use intent extras when adding geofence(s) in response to user action.
         if (intent.hasExtra(AddGeofenceWorker.LATITUDES_KEY) && intent.hasExtra(AddGeofenceWorker.LONGITUDES_KEY)
-                && intent.hasExtra(AddGeofenceWorker.GEOFENCE_LABELS_KEY)) {
+                && intent.hasExtra(AddGeofenceWorker.GEOFENCE_LABELS_KEY) &&
+                intent.hasExtra(AddGeofenceWorker.GEOFENCE_NAMES_KEY)) {
 
             latitudes = intent.getDoubleArrayExtra(AddGeofenceWorker.LATITUDES_KEY);
             longitudes = intent.getDoubleArrayExtra(AddGeofenceWorker.LONGITUDES_KEY);
             labels = intent.getStringArrayExtra(AddGeofenceWorker.GEOFENCE_LABELS_KEY);
+            names = intent.getStringArrayExtra(AddGeofenceWorker.GEOFENCE_NAMES_KEY);
 
             // Sanity check the data before starting the worker
             if (latitudes.length == 0 || latitudes.length != longitudes.length ||
@@ -73,6 +76,7 @@ public class AddGeofencesBroadcastReceiver extends BroadcastReceiver {
                     .putDoubleArray(AddGeofenceWorker.LATITUDES_KEY, latitudes)
                     .putDoubleArray(AddGeofenceWorker.LONGITUDES_KEY, longitudes)
                     .putStringArray(AddGeofenceWorker.GEOFENCE_LABELS_KEY, labels)
+                    .putStringArray(AddGeofenceWorker.GEOFENCE_NAMES_KEY, names)
                     .build();
 
             startWorker(data);
@@ -108,10 +112,12 @@ public class AddGeofencesBroadcastReceiver extends BroadcastReceiver {
                     double[] latitudes = new double[destinationsCount];
                     double[] longitudes = new double[destinationsCount];
                     String[] labels = new String[destinationsCount];
+                    String[] names = new String[destinationsCount];
 
                     for (int i = 0; i < destinationsCount; i++) {
                         Destination destination = destinations.get(i);
                         labels[i] = String.valueOf(destination.getId());
+                        names[i] = destination.getName();
                         DestinationLocation location = destination.getLocation();
                         latitudes[i] = location.getY();
                         longitudes[i] = location.getX();
@@ -121,6 +127,7 @@ public class AddGeofencesBroadcastReceiver extends BroadcastReceiver {
                             .putDoubleArray(AddGeofenceWorker.LATITUDES_KEY, latitudes)
                             .putDoubleArray(AddGeofenceWorker.LONGITUDES_KEY, longitudes)
                             .putStringArray(AddGeofenceWorker.GEOFENCE_LABELS_KEY, labels)
+                            .putStringArray(AddGeofenceWorker.GEOFENCE_NAMES_KEY, names)
                             .build();
 
                     startWorker(data);
@@ -143,11 +150,13 @@ public class AddGeofencesBroadcastReceiver extends BroadcastReceiver {
         double[] latitudes = {destination.getLocation().getY()};
         double[] longitudes = {destination.getLocation().getX()};
         String[] labels = {String.valueOf(destination.getId())};
+        String[] names = {String.valueOf(destination.getName())};
 
         Data data = new Data.Builder()
                 .putDoubleArray(AddGeofenceWorker.LATITUDES_KEY, latitudes)
                 .putDoubleArray(AddGeofenceWorker.LONGITUDES_KEY, longitudes)
                 .putStringArray(AddGeofenceWorker.GEOFENCE_LABELS_KEY, labels)
+                .putStringArray(AddGeofenceWorker.GEOFENCE_NAMES_KEY, names)
                 .build();
 
         Log.d(LOG_LABEL, "addOneGeofence");

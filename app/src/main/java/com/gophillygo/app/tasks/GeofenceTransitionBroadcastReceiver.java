@@ -8,7 +8,9 @@ import android.util.Log;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingEvent;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import androidx.work.Data;
@@ -50,14 +52,32 @@ public class GeofenceTransitionBroadcastReceiver extends BroadcastReceiver {
 
                 List<Geofence> triggeringGeofences = geofencingEvent.getTriggeringGeofences();
                 String[] geofences = new String[triggeringGeofences.size()];
-                int i = 0;
-                for (Geofence fence : triggeringGeofences) {
-                    geofences[i] = (fence.getRequestId());
-                    i++;
+                String[] geofenceNames = new String[triggeringGeofences.size()];
+
+                if (intent.hasExtra(AddGeofenceWorker.GEOFENCE_NAMES_KEY) &&
+                        intent.hasExtra(AddGeofenceWorker.GEOFENCE_LABELS_KEY)) {
+
+                    // get full set of IDs (labels) and place names that are flagged for geofencing
+                    String[] labels = intent.getStringArrayExtra(AddGeofenceWorker.GEOFENCE_LABELS_KEY);
+                    String[] names = intent.getStringArrayExtra(AddGeofenceWorker.GEOFENCE_NAMES_KEY);
+
+                    Map<String, String> geofenceNameMap = new HashMap<>(labels.length);
+                    for (int i = 0; i < labels.length; i++) {
+                        geofenceNameMap.put(labels[i], names[i]);
+                    }
+
+                    int i = 0;
+                    for (Geofence fence : triggeringGeofences) {
+                        geofences[i] = (fence.getRequestId());
+                        geofenceNames[i] = geofenceNameMap.get(fence.getRequestId());
+                        i++;
+                    }
+
+                    builder.putStringArray(GeofenceTransitionWorker.TRIGGERING_GEOFENCES, geofences);
+                    builder.putStringArray(AddGeofenceWorker.GEOFENCE_NAMES_KEY, geofenceNames);
+                } else {
+                    Log.e(LOG_LABEL, "Broadcast intent is missing the geofence labels and/or names");
                 }
-
-                builder.putStringArray(GeofenceTransitionWorker.TRIGGERING_GEOFENCES, geofences);
-
             }
         } else {
             builder.putInt(GeofenceTransitionWorker.ERROR_CODE_KEY, geofencingEvent.getErrorCode());

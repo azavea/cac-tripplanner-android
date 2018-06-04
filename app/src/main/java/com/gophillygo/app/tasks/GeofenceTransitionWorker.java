@@ -1,18 +1,24 @@
 package com.gophillygo.app.tasks;
 
+import android.annotation.SuppressLint;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
+import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofenceStatusCodes;
 import com.gophillygo.app.R;
+import com.gophillygo.app.activities.PlaceDetailActivity;
 
 import androidx.work.Data;
 import androidx.work.Worker;
@@ -30,6 +36,7 @@ public class GeofenceTransitionWorker extends Worker {
 
     @NonNull
     @Override
+    @SuppressLint("StringFormatInvalid")
     public WorkerResult doWork() {
 
         // Geofence event data passed along as primitives
@@ -84,31 +91,47 @@ public class GeofenceTransitionWorker extends Worker {
             return WorkerResult.FAILURE;
         }
 
+        Context context = getApplicationContext();
+
         // Get the transition type.
         int geofenceTransition = data.getInt(TRANSITION_KEY, Geofence.GEOFENCE_TRANSITION_EXIT);
         Boolean enteredGeofence = geofenceTransition == AddGeofenceWorker.GEOFENCE_ENTER_TRIGGER;
         String[] geofences = data.getStringArray(TRIGGERING_GEOFENCES);
+        String[] geofencePlaceNames = data.getStringArray(AddGeofenceWorker.GEOFENCE_NAMES_KEY);
 
         if (geofences.length > 0) {
             Handler handler = new Handler(Looper.getMainLooper());
-            for (String geofenceID : geofences) {
+            for (int i = 0; i < geofences.length; i++) {
+                String geofenceID = geofences[i];
+                String placeName = geofencePlaceNames[i];
                 // TODO: send notification
                 if (enteredGeofence) {
                     Log.d(LOG_LABEL, "Entered geofence ID " + geofenceID);
 
-                    // FIXME: set up channel
-                    // https://developer.android.com/training/notify-user/build-notification
-
                     handler.post(() -> {
-                        createNotificationChannel();
-                        // show on UI thread
-                        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
-                                .setSmallIcon(R.drawable.watershed_alliance_full_icon_300x104px)
-                                .setContentTitle("Near a place")
-                                .setContentText("Something interesting is nearby")
-                                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+                        // Get intent for the detail view to open on notification click.
+                        Intent intent = new Intent(context, PlaceDetailActivity.class);
+                        intent.putExtra(PlaceDetailActivity.DESTINATION_ID_KEY, Long.valueOf(geofenceID));
 
-                        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getApplicationContext());
+                        // Add the intent to the stack builder, which inflates the back stack
+                        TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
+                        stackBuilder.addNextIntentWithParentStack(intent);
+                        // Get the PendingIntent containing the entire back stack
+                        PendingIntent resultPendingIntent =
+                                stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                        createNotificationChannel(context);
+                        // show on UI thread
+                        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context, CHANNEL_ID)
+                                // TODO: use app icon of some sort
+                                .setSmallIcon(R.drawable.ic_flag_blue_24dp)
+                                .setContentTitle(placeName)
+                                .setContentText(context.getString(R.string.place_nearby_notification, placeName))
+                                .setContentIntent(resultPendingIntent)
+                                .setAutoCancel(true) // close notifcation when tapped
+                                .setPriority(NotificationCompat.PRIORITY_HIGH);
+
+                        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
 
                         // notificationId is a unique int for each notification that you must define
                         notificationManager.notify(Integer.valueOf(geofenceID), mBuilder.build());
@@ -117,21 +140,12 @@ public class GeofenceTransitionWorker extends Worker {
                 } else {
                     Log.d(LOG_LABEL, "Exited geofence ID " + geofenceID);
                     // TODO: remove and re-register geofence, or else it will ignore future events
-                    createNotificationChannel();
                     handler.post(() -> {
-                        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
-                                .setSmallIcon(R.drawable.watershed_alliance_full_icon_300x104px)
-                                .setContentTitle("Left a place")
-                                .setContentText("Passed by something interesting nearby")
-                                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-
-                        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(getApplicationContext());
-
-                        // notificationId is a unique int for each notification that you must define
-                        notificationManager.notify(Integer.valueOf(geofenceID), mBuilder.build());
+                        Log.d(LOG_LABEL, "Removing notification for geofence");
+                        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
+                        notificationManager.cancel(Integer.valueOf(geofenceID));
                     });
                 }
-
             }
 
             return WorkerResult.SUCCESS;
@@ -141,19 +155,33 @@ public class GeofenceTransitionWorker extends Worker {
         }
     }
 
-    private void createNotificationChannel() {
-        // Create the NotificationChannel, but only on API 26+ because
-        // the NotificationChannel class is new and not in the support library
+    /**
+     * Create the NotificationChannel, but only on API 26+ because the NotificationChannel class
+     * is new and not in the support library.
+     * https://developer.android.com/training/notify-user/build-notification
+     * 
+     * @param context Application context
+     */
+    private static void createNotificationChannel(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = CHANNEL_ID;
-            String description = getApplicationContext().getString(R.string.channel_description);
+            String description = context.getString(R.string.channel_description);
             int importance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, name, importance);
+            NotificationChannel channel = new NotificationChannel(CHANNEL_ID, CHANNEL_ID, importance);
             channel.setDescription(description);
             // Register the channel with the system; you can't change the importance
             // or other notification behaviors after this
-            NotificationManager notificationManager = getApplicationContext().getSystemService(NotificationManager.class);
-            notificationManager.createNotificationChannel(channel);
+            NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
+            if (notificationManager != null) {
+                NotificationChannel existingChannel = notificationManager.getNotificationChannel(CHANNEL_ID);
+                if (existingChannel == null) {
+                    Log.d(LOG_LABEL, "Creating new notification channel for app:");
+                    notificationManager.createNotificationChannel(channel);
+                } else {
+                    Log.d(LOG_LABEL, "Have notification channel set up already");
+                }
+            } else {
+                Log.e(LOG_LABEL, "Failed to get notification manager");
+            }
         }
     }
 

@@ -46,6 +46,7 @@ public class AddGeofenceWorker extends Worker {
     public static final String LATITUDES_KEY = "latitudes";
     public static final String LONGITUDES_KEY = "longitudes";
     public static final String GEOFENCE_LABELS_KEY = "geofence_labels";
+    public static final String GEOFENCE_NAMES_KEY = "geofence_names";
 
     @NonNull
     @Override
@@ -60,23 +61,26 @@ public class AddGeofenceWorker extends Worker {
         double[] latitudes;
         double[] longitudes;
         String[] geofenceLabels;
+        String[] geofenceNames;
 
         // Get the data for the locations to add as primitive arrays with label and coordinates at
         // matching offsets.
         Data data = getInputData();
         Map<String, Object> map = data.getKeyValueMap();
         if (map.containsKey(LATITUDES_KEY) && map.containsKey(LONGITUDES_KEY) &&
-                map.containsKey(GEOFENCE_LABELS_KEY)) {
+                map.containsKey(GEOFENCE_LABELS_KEY) && map.containsKey(GEOFENCE_NAMES_KEY)) {
 
             latitudes = data.getDoubleArray(LATITUDES_KEY);
             longitudes = data.getDoubleArray(LONGITUDES_KEY);
             geofenceLabels = data.getStringArray(GEOFENCE_LABELS_KEY);
+            geofenceNames = data.getStringArray(GEOFENCE_NAMES_KEY);
         } else {
             Log.e(LOG_LABEL, "Data missing for geofences to add");
             return  WorkerResult.FAILURE;
         }
 
-        if (latitudes.length != longitudes.length || latitudes.length != geofenceLabels.length) {
+        if (latitudes.length != longitudes.length || latitudes.length != geofenceLabels.length ||
+                latitudes.length != geofenceNames.length) {
             Log.e(LOG_LABEL, "Location data for geofences to add should be arrays of the same length.");
             return WorkerResult.FAILURE;
         }
@@ -95,11 +99,13 @@ public class AddGeofenceWorker extends Worker {
 
         // Location access permissions prompting is handled by `GpgLocationUtils`.
         Intent intent = new Intent(context, GeofenceTransitionBroadcastReceiver.class);
+        intent.putExtra(GEOFENCE_LABELS_KEY, geofenceLabels);
+        intent.putExtra(GEOFENCE_NAMES_KEY, geofenceNames);
         intent.setAction(ACTION_GEOFENCE_TRANSITION);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
                 TRANSITION_BROADCAST_REQUEST_CODE,
                 intent,
-                PendingIntent.FLAG_CANCEL_CURRENT);
+                PendingIntent.FLAG_UPDATE_CURRENT);
 
         try {
             geofencingClient.addGeofences(builder.build(), pendingIntent);
