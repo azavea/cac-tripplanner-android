@@ -21,6 +21,7 @@ import com.gophillygo.app.data.models.DestinationInfo;
 import com.gophillygo.app.databinding.ActivityPlacesListBinding;
 import com.gophillygo.app.databinding.FilterButtonBarBinding;
 import com.gophillygo.app.tasks.AddGeofencesBroadcastReceiver;
+import com.gophillygo.app.tasks.RemoveGeofenceWorker;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -86,8 +87,8 @@ public class PlacesListActivity extends FilterableListActivity implements
             Log.d(LOG_LABEL, "Add geofence from places list");
             AddGeofencesBroadcastReceiver.addOneGeofence((Destination)destinationInfo.getAttraction());
         } else if (haveExistingGeofence) {
-            // FIXME: implement removing geofence
-            Log.e(LOG_LABEL, "TODO: implement removing geofence");
+            Log.e(LOG_LABEL, "Removing geofence");
+            RemoveGeofenceWorker.removeOneGeofence(String.valueOf(destinationInfo.getAttraction().getId()));
         }
 	    return true;
     }

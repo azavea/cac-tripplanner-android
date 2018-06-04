@@ -98,13 +98,18 @@ public class GeofenceTransitionWorker extends Worker {
         Boolean enteredGeofence = geofenceTransition == AddGeofenceWorker.GEOFENCE_ENTER_TRIGGER;
         String[] geofences = data.getStringArray(TRIGGERING_GEOFENCES);
         String[] geofencePlaceNames = data.getStringArray(AddGeofenceWorker.GEOFENCE_NAMES_KEY);
+        double[] latitudes = data.getDoubleArray(AddGeofenceWorker.LATITUDES_KEY);
+        double[] longitudes = data.getDoubleArray(AddGeofenceWorker.LONGITUDES_KEY);
 
         if (geofences.length > 0) {
+            // Send notification the main thread
             Handler handler = new Handler(Looper.getMainLooper());
             for (int i = 0; i < geofences.length; i++) {
                 String geofenceID = geofences[i];
                 String placeName = geofencePlaceNames[i];
-                // TODO: send notification
+                double latitude = latitudes[i];
+                double longitude = longitudes[i];
+
                 if (enteredGeofence) {
                     Log.d(LOG_LABEL, "Entered geofence ID " + geofenceID);
 
@@ -139,12 +144,16 @@ public class GeofenceTransitionWorker extends Worker {
 
                 } else {
                     Log.d(LOG_LABEL, "Exited geofence ID " + geofenceID);
-                    // TODO: remove and re-register geofence, or else it will ignore future events
                     handler.post(() -> {
                         Log.d(LOG_LABEL, "Removing notification for geofence");
                         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
                         notificationManager.cancel(Integer.valueOf(geofenceID));
                     });
+
+                    Log.d(LOG_LABEL, "Re-registering geofence after exit");
+                    // remove and re-register geofence, or else it will ignore future events
+                    RemoveGeofenceWorker.removeOneGeofence(geofenceID);
+                    AddGeofencesBroadcastReceiver.addOneGeofence(longitude, latitude, geofenceID, placeName);
                 }
             }
 

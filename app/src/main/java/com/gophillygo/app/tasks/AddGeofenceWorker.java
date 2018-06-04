@@ -101,6 +101,8 @@ public class AddGeofenceWorker extends Worker {
         Intent intent = new Intent(context, GeofenceTransitionBroadcastReceiver.class);
         intent.putExtra(GEOFENCE_LABELS_KEY, geofenceLabels);
         intent.putExtra(GEOFENCE_NAMES_KEY, geofenceNames);
+        intent.putExtra(LATITUDES_KEY, latitudes);
+        intent.putExtra(LONGITUDES_KEY, longitudes);
         intent.setAction(ACTION_GEOFENCE_TRANSITION);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
                 TRANSITION_BROADCAST_REQUEST_CODE,

@@ -94,7 +94,6 @@ public class AddGeofencesBroadcastReceiver extends BroadcastReceiver {
                     List<Destination> destinations = destinationDao
                             .getGeofenceDestinations(AttractionFlag.Option.WantToGo.code);
                     if (destinations == null || destinations.isEmpty()) {
-                        // FIXME: this returns empty after reboot, although there are geofences to add
                         Log.d(LOG_LABEL, "Have no destinations with geofences to add.");
                         return null;
                     }
@@ -105,9 +104,6 @@ public class AddGeofencesBroadcastReceiver extends BroadcastReceiver {
                         Log.e(LOG_LABEL, "Too many destinations with geofences to add.");
                         return null;
                     }
-
-                    // TODO: remove any existing geofences first before adding all from database?
-                    // If got here from reboot event, they shouldn't exist anyways.
 
                     double[] latitudes = new double[destinationsCount];
                     double[] longitudes = new double[destinationsCount];
@@ -147,10 +143,15 @@ public class AddGeofencesBroadcastReceiver extends BroadcastReceiver {
      * @param destination Destination with a location to use for the geofence to add.
      */
     public static void addOneGeofence(@NonNull Destination destination) {
-        double[] latitudes = {destination.getLocation().getY()};
-        double[] longitudes = {destination.getLocation().getX()};
-        String[] labels = {String.valueOf(destination.getId())};
-        String[] names = {String.valueOf(destination.getName())};
+        addOneGeofence(destination.getLocation().getX(), destination.getLocation().getY(),
+                String.valueOf(destination.getId()), String.valueOf(destination.getName()));
+    }
+
+    public static void addOneGeofence(double x, double y, @NonNull String label, @NonNull String name) {
+        double[] latitudes = {y};
+        double[] longitudes = {x};
+        String[] labels = {label};
+        String[] names = {name};
 
         Data data = new Data.Builder()
                 .putDoubleArray(AddGeofenceWorker.LATITUDES_KEY, latitudes)
@@ -163,7 +164,7 @@ public class AddGeofencesBroadcastReceiver extends BroadcastReceiver {
         startWorker(data);
     }
 
-    private static void startWorker(Data data) {
+    public static void startWorker(Data data) {
         // Start a worker to add geofences from a background thread.
         OneTimeWorkRequest.Builder workRequestBuilder = new OneTimeWorkRequest.Builder(AddGeofenceWorker.class);
         workRequestBuilder.setInputData(data);

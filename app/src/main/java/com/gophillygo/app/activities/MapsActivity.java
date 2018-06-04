@@ -34,6 +34,7 @@ import com.gophillygo.app.data.models.DestinationLocation;
 import com.gophillygo.app.databinding.MapPopupCardBinding;
 import com.gophillygo.app.tasks.AddGeofenceWorker;
 import com.gophillygo.app.tasks.AddGeofencesBroadcastReceiver;
+import com.gophillygo.app.tasks.RemoveGeofenceWorker;
 import com.gophillygo.app.utils.FlagMenuUtils;
 import com.gophillygo.app.utils.GpgLocationUtils;
 
@@ -171,8 +172,8 @@ public abstract class MapsActivity<T extends AttractionInfo> extends FilterableL
                 Log.d(LOG_LABEL, "Add geofence from map");
                 AddGeofencesBroadcastReceiver.addOneGeofence((Destination)info.getAttraction());
             } else if (haveExistingGeofence) {
-                // FIXME: implement removing geofence
-                Log.e(LOG_LABEL, "TODO: implement removing geofence");
+                Log.e(LOG_LABEL, "Removing geofence");
+                RemoveGeofenceWorker.removeOneGeofence(String.valueOf(info.getAttraction().getId()));
             }
             return true;
         });

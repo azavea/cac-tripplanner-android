@@ -51,30 +51,42 @@ public class GeofenceTransitionBroadcastReceiver extends BroadcastReceiver {
                     geofenceTransition == Geofence.GEOFENCE_TRANSITION_EXIT) {
 
                 List<Geofence> triggeringGeofences = geofencingEvent.getTriggeringGeofences();
-                String[] geofences = new String[triggeringGeofences.size()];
-                String[] geofenceNames = new String[triggeringGeofences.size()];
+                int numGeofences = triggeringGeofences.size();
+                String[] geofences = new String[numGeofences];
+                String[] geofenceNames = new String[numGeofences];
+                double[] geofenceLatitudes = new double[numGeofences];
+                double[] geofenceLongitudes = new double[numGeofences];
 
                 if (intent.hasExtra(AddGeofenceWorker.GEOFENCE_NAMES_KEY) &&
-                        intent.hasExtra(AddGeofenceWorker.GEOFENCE_LABELS_KEY)) {
+                        intent.hasExtra(AddGeofenceWorker.GEOFENCE_LABELS_KEY) &&
+                        intent.hasExtra(AddGeofenceWorker.LATITUDES_KEY) &&
+                        intent.hasExtra(AddGeofenceWorker.LONGITUDES_KEY)) {
 
-                    // get full set of IDs (labels) and place names that are flagged for geofencing
+                    // get full set of info for places that are flagged for geofencing
                     String[] labels = intent.getStringArrayExtra(AddGeofenceWorker.GEOFENCE_LABELS_KEY);
                     String[] names = intent.getStringArrayExtra(AddGeofenceWorker.GEOFENCE_NAMES_KEY);
+                    double[] latitudes = intent.getDoubleArrayExtra(AddGeofenceWorker.LATITUDES_KEY);
+                    double[] longitudes = intent.getDoubleArrayExtra(AddGeofenceWorker.LONGITUDES_KEY);
 
-                    Map<String, String> geofenceNameMap = new HashMap<>(labels.length);
+                    Map<String, Integer> geofenceNameMap = new HashMap<>(labels.length);
                     for (int i = 0; i < labels.length; i++) {
-                        geofenceNameMap.put(labels[i], names[i]);
+                        geofenceNameMap.put(labels[i], i);
                     }
 
                     int i = 0;
                     for (Geofence fence : triggeringGeofences) {
-                        geofences[i] = (fence.getRequestId());
-                        geofenceNames[i] = geofenceNameMap.get(fence.getRequestId());
+                        int index = geofenceNameMap.get(fence.getRequestId());
+                        geofences[i] = fence.getRequestId();
+                        geofenceNames[i] = names[index];
+                        geofenceLatitudes[i] = latitudes[index];
+                        geofenceLongitudes[i] = longitudes[index];
                         i++;
                     }
 
                     builder.putStringArray(GeofenceTransitionWorker.TRIGGERING_GEOFENCES, geofences);
                     builder.putStringArray(AddGeofenceWorker.GEOFENCE_NAMES_KEY, geofenceNames);
+                    builder.putDoubleArray(AddGeofenceWorker.LATITUDES_KEY, geofenceLatitudes);
+                    builder.putDoubleArray(AddGeofenceWorker.LONGITUDES_KEY, geofenceLongitudes);
                 } else {
                     Log.e(LOG_LABEL, "Broadcast intent is missing the geofence labels and/or names");
                 }
