@@ -57,4 +57,15 @@ public abstract class DestinationDao implements AttractionDao<Destination> {
             "ON destination.id = attractionflag.attractionID AND attractionflag.is_event = 0 " +
             "WHERE attractionflag.option = :geofenceFlagCode")
     public abstract List<Destination> getGeofenceDestinations(int geofenceFlagCode);
+
+    /**
+     * Get a single destination.
+     *
+     * Must be accessed from a background thread.
+     *
+     * @param destinationId ID of place to fetch
+     * @return Matching destination, with related event count and user flag.
+     */
+    @Query("SELECT * FROM destination WHERE destination.id = :destinationId")
+    public abstract Destination getDestinationInBackground(long destinationId);
 }

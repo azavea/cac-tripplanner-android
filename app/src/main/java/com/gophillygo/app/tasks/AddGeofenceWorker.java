@@ -51,6 +51,7 @@ public class AddGeofenceWorker extends Worker {
     @NonNull
     @Override
     public WorkerResult doWork() {
+        Log.d(LOG_LABEL, "Starting add geofence worker");
 
         Context context = getApplicationContext();
 
@@ -99,17 +100,10 @@ public class AddGeofenceWorker extends Worker {
 
         // Location access permissions prompting is handled by `GpgLocationUtils`.
         Intent intent = new Intent(context, GeofenceTransitionBroadcastReceiver.class);
-        intent.putExtra(GEOFENCE_LABELS_KEY, geofenceLabels);
-        intent.putExtra(GEOFENCE_NAMES_KEY, geofenceNames);
-        intent.putExtra(LATITUDES_KEY, latitudes);
-        intent.putExtra(LONGITUDES_KEY, longitudes);
-        intent.setAction(ACTION_GEOFENCE_TRANSITION);
-        // FIXME: max of 5 pending intents can resolve at once, so cannot send more than
-        // five notifications at a time. How to address?
         PendingIntent pendingIntent = PendingIntent.getBroadcast(context,
                 TRANSITION_BROADCAST_REQUEST_CODE,
                 intent,
-                PendingIntent.FLAG_ONE_SHOT);
+                PendingIntent.FLAG_UPDATE_CURRENT);
 
         try {
             geofencingClient.addGeofences(builder.build(), pendingIntent);

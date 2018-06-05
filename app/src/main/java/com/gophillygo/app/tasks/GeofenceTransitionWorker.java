@@ -29,7 +29,7 @@ public class GeofenceTransitionWorker extends Worker {
     public static final String HAS_ERROR_KEY = "has_error";
     public static final String ERROR_CODE_KEY = "error_code";
     public static final String TRANSITION_KEY = "transition";
-    public static final String TRIGGERING_GEOFENCES = "triggering_geofences";
+    public static final String TRIGGERING_GEOFENCES_KEY = "triggering_geofences";
 
     private static final String CHANNEL_ID = "gophillygo-nearby-places";
 
@@ -39,70 +39,41 @@ public class GeofenceTransitionWorker extends Worker {
     @Override
     @SuppressLint("StringFormatInvalid")
     public WorkerResult doWork() {
+        Log.d(LOG_LABEL, "Starting geofence transition worker");
 
         // Geofence event data passed along as primitives
         Data data = getInputData();
 
         if (data.getBoolean(HAS_ERROR_KEY, true)) {
+            Log.d(LOG_LABEL, "Found error for geofence transition");
             int error = data.getInt(ERROR_CODE_KEY, GeofenceStatusCodes.DEVELOPER_ERROR);
-
-            // https://developers.google.com/android/reference/com/google/android/gms/location/GeofenceStatusCodes
-            switch (error) {
-                case GeofenceStatusCodes.GEOFENCE_NOT_AVAILABLE:
-                    Log.e(LOG_LABEL, "Geofencing service not available; high accuracy location probably not enabled");
-                    // This typically happens after NLP (Android's Network Location Provider) is disabled.
-                    // https://developer.android.com/training/location/geofencing
-                    // TODO: geofences should be re-registered on PROVIDERS_CHANGED
-                    // but implicit system broadcast cannot read DB in background to find
-                    // what to fence.
-                    break;
-                case GeofenceStatusCodes.GEOFENCE_TOO_MANY_GEOFENCES:
-                    Log.e(LOG_LABEL, "Too many geofences!");
-                    break;
-                case GeofenceStatusCodes.TIMEOUT:
-                    Log.w(LOG_LABEL, "Geofence timeout");
-                    return WorkerResult.RETRY;
-                case GeofenceStatusCodes.GEOFENCE_TOO_MANY_PENDING_INTENTS:
-                    Log.e(LOG_LABEL, "Too many pending intents to addGeofence. Max is 5.");
-                    return  WorkerResult.RETRY;
-                case GeofenceStatusCodes.API_NOT_CONNECTED:
-                    Log.e(LOG_LABEL, "Geofencing prevented because API not connected");
-                    return WorkerResult.RETRY;
-                case GeofenceStatusCodes.CANCELED:
-                    Log.w(LOG_LABEL, "Geofencing cancelled");
-                    break;
-                case GeofenceStatusCodes.ERROR:
-                    Log.w(LOG_LABEL, "Geofencing error");
-                    break;
-                case GeofenceStatusCodes.DEVELOPER_ERROR:
-                    Log.e(LOG_LABEL, "Geofencing encountered a developer error");
-                    break;
-                case GeofenceStatusCodes.INTERNAL_ERROR:
-                    Log.e(LOG_LABEL, "Geofencing encountered an internal error");
-                    break;
-                case GeofenceStatusCodes.INTERRUPTED:
-                    Log.w(LOG_LABEL, "Geofencing interrupted");
-                    return  WorkerResult.RETRY;
-                default:
-                    Log.w(LOG_LABEL, "Unrecognized GeofenceStatusCodes value: " + error);
-            }
-            return WorkerResult.FAILURE;
+            handleError(error);
         }
 
+        // if got this far, have no error
         Context context = getApplicationContext();
 
         // Get the transition type.
         int geofenceTransition = data.getInt(TRANSITION_KEY, Geofence.GEOFENCE_TRANSITION_EXIT);
         Boolean enteredGeofence = geofenceTransition == AddGeofenceWorker.GEOFENCE_ENTER_TRIGGER;
-        String[] geofences = data.getStringArray(TRIGGERING_GEOFENCES);
+        String[] geofences = data.getStringArray(TRIGGERING_GEOFENCES_KEY);
         String[] geofencePlaceNames = data.getStringArray(AddGeofenceWorker.GEOFENCE_NAMES_KEY);
         double[] latitudes = data.getDoubleArray(AddGeofenceWorker.LATITUDES_KEY);
         double[] longitudes = data.getDoubleArray(AddGeofenceWorker.LONGITUDES_KEY);
+        Log.d(LOG_LABEL, "Got geofence transition worker data");
 
-        if (geofences.length > 0) {
+        int geofencesCount = geofences.length;
+        Log.d(LOG_LABEL, "Have " + geofencesCount + " geofence transitions to process");
+        if (geofencePlaceNames.length != geofences.length || geofences.length != latitudes.length ||
+                geofences.length != longitudes.length) {
+            Log.e(LOG_LABEL, "Got geofence worker data arrays of differing lengths");
+            return WorkerResult.FAILURE;
+        }
+
+        if (geofencesCount > 0) {
             // Send notification the main thread
             Handler handler = new Handler(Looper.getMainLooper());
-            for (int i = 0; i < geofences.length; i++) {
+            for (int i = 0; i < geofencesCount; i++) {
                 // Need a unique int we can find later, for the notification
                 String geofenceLabel = geofences[i];
                 String placeName = geofencePlaceNames[i];
@@ -116,7 +87,7 @@ public class GeofenceTransitionWorker extends Worker {
                 String notificationTag = isEvent ? "e" : "d";
 
                 if (enteredGeofence) {
-                    Log.d(LOG_LABEL, "Entered geofence ID " + geofenceLabel);
+                    Log.d(LOG_LABEL, "Entered geofence ID " + geofenceLabel + " for " + placeName);
 
                     handler.post(() -> {
                         // Get intent for the detail view to open on notification click.
@@ -204,6 +175,50 @@ public class GeofenceTransitionWorker extends Worker {
                 Log.e(LOG_LABEL, "Failed to get notification manager");
             }
         }
+    }
+
+    private WorkerResult handleError(int error) {
+        // https://developers.google.com/android/reference/com/google/android/gms/location/GeofenceStatusCodes
+        switch (error) {
+            case GeofenceStatusCodes.GEOFENCE_NOT_AVAILABLE:
+                Log.e(LOG_LABEL, "Geofencing service not available; high accuracy location probably not enabled");
+                // This typically happens after NLP (Android's Network Location Provider) is disabled.
+                // https://developer.android.com/training/location/geofencing
+                // TODO: geofences should be re-registered on PROVIDERS_CHANGED
+                // but implicit system broadcast cannot read DB in background to find
+                // what to fence.
+                break;
+            case GeofenceStatusCodes.GEOFENCE_TOO_MANY_GEOFENCES:
+                Log.e(LOG_LABEL, "Too many geofences!");
+                break;
+            case GeofenceStatusCodes.TIMEOUT:
+                Log.w(LOG_LABEL, "Geofence timeout");
+                return WorkerResult.RETRY;
+            case GeofenceStatusCodes.GEOFENCE_TOO_MANY_PENDING_INTENTS:
+                Log.e(LOG_LABEL, "Too many pending intents to addGeofence. Max is 5.");
+                return  WorkerResult.RETRY;
+            case GeofenceStatusCodes.API_NOT_CONNECTED:
+                Log.e(LOG_LABEL, "Geofencing prevented because API not connected");
+                return WorkerResult.RETRY;
+            case GeofenceStatusCodes.CANCELED:
+                Log.w(LOG_LABEL, "Geofencing cancelled");
+                break;
+            case GeofenceStatusCodes.ERROR:
+                Log.w(LOG_LABEL, "Geofencing error");
+                break;
+            case GeofenceStatusCodes.DEVELOPER_ERROR:
+                Log.e(LOG_LABEL, "Geofencing encountered a developer error");
+                break;
+            case GeofenceStatusCodes.INTERNAL_ERROR:
+                Log.e(LOG_LABEL, "Geofencing encountered an internal error");
+                break;
+            case GeofenceStatusCodes.INTERRUPTED:
+                Log.w(LOG_LABEL, "Geofencing interrupted");
+                return  WorkerResult.RETRY;
+            default:
+                Log.w(LOG_LABEL, "Unrecognized GeofenceStatusCodes value: " + error);
+        }
+        return WorkerResult.FAILURE;
     }
 
 }

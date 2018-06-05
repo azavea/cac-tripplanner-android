@@ -150,7 +150,7 @@ public class AddGeofencesBroadcastReceiver extends BroadcastReceiver {
                     }
 
                     // add events to the end
-                    for (int i = 0; i < geofencesCount; i++) {
+                    for (int i = 0; i < events.size(); i++) {
                         int combinedIndex = i + destinationsCount;
                         EventInfo eventInfo = events.get(i);
                         labels[combinedIndex] = "e" + String.valueOf(eventInfo.getAttraction().getId());

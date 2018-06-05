@@ -65,4 +65,20 @@ public abstract class EventDao implements AttractionDao<Event> {
             "ON event.id = attractionflag.attractionID AND attractionflag.is_event = 1 " +
             "WHERE attractionflag.option = :geofenceFlagCode")
     public abstract List<EventInfo> getGeofenceEvents(int geofenceFlagCode);
+
+    /**
+     * Get event from background thread.
+     *
+     * @param eventId ID of event to fetch (*not* placeID)
+     * @return Event with related destination information, if any
+     */
+    @Query("SELECT event.*, destination.name AS destinationName, destination.distance AS distance, " +
+            "destination.categories AS destinationCategories, attractionflag.option, " +
+            "destination.x, destination.y, destination.distance " +
+            "FROM event " +
+            "LEFT JOIN destination ON destination.id = event.destination " +
+            "LEFT JOIN attractionflag " +
+            "ON event.id = attractionflag.attractionID AND attractionflag.is_event = 1 " +
+            "WHERE event.id = :eventId")
+    public abstract EventInfo getEventInBackground(long eventId);
 }
