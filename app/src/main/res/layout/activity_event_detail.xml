@@ -39,28 +39,41 @@
             <TextView
                 android:id="@+id/event_detail_item_name_label"
                 style="@style/Base.TextAppearance.AppCompat.Title.Inverse"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:fontFamily="sans-serif"
                 android:gravity="start"
-                android:paddingBottom="2dp"
-                android:paddingEnd="10dp"
-                android:paddingStart="10dp"
                 android:text="@{event.getName}"
-                app:layout_constraintBottom_toTopOf="@+id/event_detail_item_distance_label" />
+                android:textAlignment="textStart"
+                android:textColor="?android:attr/colorForegroundInverse"
+                android:textSize="24sp"
+                app:autoSizeTextType="uniform"
+                app:layout_constraintBottom_toTopOf="@+id/event_detail_item_distance_label"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent" />
 
             <TextView
                 android:id="@+id/event_detail_item_distance_label"
                 style="@style/Base.TextAppearance.AppCompat.Title.Inverse"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:drawablePadding="8dp"
                 android:drawableStart="@drawable/ic_place_white_24dp"
                 android:gravity="start"
-                android:paddingBottom="2dp"
-                android:paddingEnd="10dp"
-                android:paddingStart="10dp"
                 android:text='@{eventInfo.formattedDistance}'
+                android:textAlignment="textStart"
+                android:textColor="?android:attr/colorForegroundInverse"
+                android:textSize="14sp"
                 android:visibility="@{eventInfo.distance != null ? View.VISIBLE : View.GONE}"
                 app:layout_constraintBottom_toBottomOf="@+id/event_detail_carousel" />
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent" />
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/event_detail_toolbar"
@@ -77,58 +90,78 @@
 
             <TextView
                 android:id="@+id/event_detail_date_label"
-                style="@style/TextAppearance.AppCompat.Title"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="16dp"
                 android:gravity="center"
-                android:paddingBottom="2dp"
-                android:paddingTop="10dp"
-                android:paddingEnd="10dp"
-                android:paddingStart="10dp"
                 android:text='@{eventInfo != null ? activity.getEventTimeString() : ""}'
-                app:layout_constraintTop_toBottomOf="@+id/event_detail_carousel" />
+                app:layout_constraintTop_toBottomOf="@+id/event_detail_carousel"
+                android:textColor="?android:attr/colorForeground"
+                android:textSize="22dp"
+                android:textStyle="bold"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent" />
 
             <TextView
                 android:id="@+id/event_detail_destination_name"
-                style="@style/TextAppearance.AppCompat.Title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_width="0dp"
+                android:layout_height="25dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="16dp"
                 android:gravity="center"
-                android:paddingBottom="2dp"
-                android:paddingTop="10dp"
-                android:paddingEnd="10dp"
-                android:paddingStart="10dp"
                 android:text="@{eventInfo.destinationName}"
+                android:textColor="?android:attr/colorForeground"
+                android:textSize="20dp"
                 android:visibility="@{eventInfo.destinationName != null ? View.VISIBLE : View.GONE}"
+                app:autoSizeTextType="uniform"
+                app:layout_constraintBottom_toTopOf="@+id/event_detail_description_card"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/event_detail_date_label" />
 
 
             <include
                 android:id="@+id/event_detail_description_card"
                 layout="@layout/detail_description"
-                android:layout_margin="10dp"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_width="match_parent"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="20dp"
                 app:htmlDescription="@{event.htmlDescription}"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/event_detail_destination_name" />
 
             <android.support.v7.widget.CardView
                 android:id="@+id/event_detail_flag_options_card"
-                app:layout_constraintTop_toBottomOf="@+id/event_detail_description_card"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginStart="10dp"
                 android:layout_marginTop="20dp"
-                android:layout_marginBottom="20dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                app:cardElevation="1dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/event_detail_description_card">
 
                 <TextView
                     android:id="@+id/event_options_flag_text"
-                    android:text="@string/event_details_been_want_to_go_label"
+                    style="@style/GpgDetailText"
                     android:layout_width="match_parent"
+                    android:layout_height="56dp"
                     android:drawableEnd="@{activity.getFlagImage(eventInfo)}"
-                    style="@style/GpgDetailText" />
+                    android:gravity="center_vertical"
+                    android:padding="8dp"
+                    android:text="@string/event_details_been_want_to_go_label"
+                    android:textColor="?android:attr/colorForeground"
+                    android:textSize="15sp" />
 
             </android.support.v7.widget.CardView>
 
@@ -136,52 +169,78 @@
                 android:id="@+id/event_detail_button_bar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:gravity="center_horizontal"
-                android:paddingBottom="20dp"
-                android:paddingEnd="6dp"
-                android:paddingStart="6dp"
+                android:layout_marginTop="16dp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:paddingEnd="8dp"
+                android:paddingStart="8dp"
                 android:weightSum="3"
-                app:layout_constraintTop_toBottomOf="@+id/event_detail_flag_options_card">
+                app:layout_constraintTop_toBottomOf="@+id/event_detail_flag_options_card"
+                tools:layout_editor_absoluteX="20dp">
 
                 <android.support.v7.widget.AppCompatButton
                     android:id="@+id/event_detail_map_button"
                     style="@style/BorderlessDetailButton"
+                    android:layout_height="match_parent"
                     android:layout_gravity="start"
+                    android:layout_margin="0dp"
                     android:layout_weight="1"
-                    android:drawableStart="@drawable/ic_map_black_24dp"
+                    android:drawablePadding="8dp"
+                    android:drawableStart="@drawable/ic_map_blue_24dp"
                     android:onClick="@{activity::goToMap}"
                     android:text="@string/event_detail_map_button"
+                    android:textAlignment="textStart"
+                    android:textColor="?attr/colorPrimary"
+                    android:textSize="14sp"
                     android:visibility="@{destination != null ? View.VISIBLE : View.GONE}" />
 
                 <android.support.v7.widget.AppCompatButton
                     android:id="@+id/event_detail_directions_button"
                     style="@style/BorderlessDetailButton"
-                    android:layout_gravity="end"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_margin="0dp"
                     android:layout_weight="1"
-                    android:drawableStart="@drawable/ic_directions_black_24dp"
+                    android:drawablePadding="8dp"
+                    android:drawableStart="@drawable/ic_directions_blue_24dp"
                     android:onClick="@{activity::goToDirections}"
                     android:text="@string/event_detail_directions_button"
+                    android:textAlignment="textStart"
+                    android:textColor="?attr/colorPrimary"
+                    android:textSize="14sp"
                     android:visibility="@{destination != null ? View.VISIBLE : View.GONE}" />
 
                 <android.support.v7.widget.AppCompatButton
                     android:id="@+id/event_detail_website_button"
                     style="@style/BorderlessDetailButton"
-                    android:layout_gravity="center"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="end"
+                    android:layout_margin="0dp"
                     android:layout_weight="1"
-                    android:drawableStart="@drawable/ic_public_black_24dp"
+                    android:drawablePadding="8dp"
+                    android:drawableStart="@drawable/ic_public_blue_24dp"
                     android:onClick="@{activity::goToWebsite}"
                     android:text="@string/event_detail_website_button"
+                    android:textAlignment="textStart"
+                    android:textColor="?attr/colorPrimary"
+                    android:textSize="14sp"
                     android:visibility="@{event.hasWebsite ? View.VISIBLE : View.GONE}" />
+
             </LinearLayout>
 
             <android.support.v7.widget.AppCompatButton
                 android:id="@+id/event_detail_calendar_button"
                 style="@style/BorderlessDetailButton"
                 android:layout_gravity="center_horizontal"
-                android:drawableStart="@drawable/ic_event_black_24dp"
+                android:layout_margin="10dp"
+                android:drawablePadding="8dp"
+                android:drawableStart="@drawable/ic_event_blue_24dp"
                 android:onClick="@{activity::addToCalendar}"
+                android:paddingTop="20dp"
                 android:text="@string/event_detail_add_to_calendar"
+                android:textAlignment="textStart"
+                android:textColor="@color/color_primary"
+                android:textSize="14sp"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/event_detail_button_bar" />

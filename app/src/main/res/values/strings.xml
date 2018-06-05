@@ -69,7 +69,7 @@
     <string name="detail_description_collapse">SHOW LESS</string>
 
     <!-- event list -->
-    <string name="event_list_item_time_range">%s - %s</string>
+    <string name="event_list_item_time_range">%s – %s</string>
     <string name="location_requires_gps">Device does not have GPS, which is needed to get location. Please use a different device.</string>
     <string name="location_gps_needed_rationale">GPS needs to be enabled to find destinations near you.</string>
     <string name="location_fine_permission_rationale">Device location permission needed.</string>

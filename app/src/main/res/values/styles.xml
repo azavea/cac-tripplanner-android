@@ -11,6 +11,7 @@
 
         <!-- action bar overlaps content (do not use windowActionBarOverlay) -->
         <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:textColorPrimary">@color/text_color_primary</item>
     </style>
 
     <!-- buttons -->
