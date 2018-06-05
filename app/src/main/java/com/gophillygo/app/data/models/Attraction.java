@@ -9,9 +9,11 @@ import android.text.Html;
 import android.text.Spanned;
 
 import com.google.gson.annotations.SerializedName;
+import com.gophillygo.app.BuildConfig;
 import com.gophillygo.app.data.DestinationWebservice;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 
@@ -74,11 +76,8 @@ public class Attraction {
         this.isEvent = isEvent;
         this.activities = activities;
 
-        this.wideImage = addHostToPath(wideImage);
-        this.extraWideImages = new ArrayList<>(extraWideImages.size());
-        for (String url : extraWideImages) {
-            this.extraWideImages.add(addHostToPath(url));
-        }
+        this.wideImage = wideImage;
+        this.extraWideImages = extraWideImages;
     }
 
 
@@ -153,7 +152,7 @@ public class Attraction {
     }
 
     public String getWideImage() {
-        return wideImage;
+        return BuildConfig.DEBUG ? addHostToPath(wideImage) : wideImage;
     }
 
     public boolean isEvent() {
@@ -161,7 +160,15 @@ public class Attraction {
     }
 
     public ArrayList<String> getExtraWideImages() {
-        return extraWideImages;
+        if (!BuildConfig.DEBUG) {
+            return extraWideImages;
+        }
+
+        ArrayList<String> imagesWithHost = new ArrayList<>(extraWideImages.size());
+        for (String url : extraWideImages) {
+            imagesWithHost.add(addHostToPath(url));
+        }
+        return imagesWithHost;
     }
 
     public long getTimestamp() {
