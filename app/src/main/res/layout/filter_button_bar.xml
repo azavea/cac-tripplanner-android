@@ -21,7 +21,7 @@
             android:background="@drawable/toggle_button_toolbar_unchecked"
             android:drawableStart="@drawable/ic_filter_list_white_24dp"
             style="@style/FilterBarButton"
-            android:text="@string/filter_button_title" />
+            android:text="@string/many_filter_button_title" />
 
         <Space
             android:layout_weight="1"
