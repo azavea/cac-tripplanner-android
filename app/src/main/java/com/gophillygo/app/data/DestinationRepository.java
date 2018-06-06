@@ -84,6 +84,7 @@ class DestinationRepository {
 
     @SuppressLint("StaticFieldLeak")
     public void updateAttractionFlag(AttractionFlag flag, String userUuid, String apiKey) {
+
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {

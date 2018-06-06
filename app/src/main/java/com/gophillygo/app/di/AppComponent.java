@@ -3,6 +3,8 @@ package com.gophillygo.app.di;
 import android.app.Application;
 
 import com.gophillygo.app.GoPhillyGoApp;
+import com.gophillygo.app.tasks.GeofenceTransitionBroadcastReceiver;
+import com.gophillygo.app.tasks.GeofenceTransitionWorker;
 
 import javax.inject.Singleton;
 
@@ -27,7 +29,11 @@ import dagger.android.AndroidInjectionModule;
         PlaceDetailActivityModule.class,
         PlacesListActivityModule.class,
         EventsMapsActivityModule.class,
-        PlacesMapsActivityModule.class
+        PlacesMapsActivityModule.class,
+
+        // Broadcast Receivers
+        AddGeofenceBroadcastReceiverModule.class,
+        GeofenceTransitionBroadcastReceiverModule.class
 })
 public interface AppComponent {
     @Component.Builder

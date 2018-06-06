@@ -12,8 +12,11 @@ import android.widget.GridView;
 import com.gophillygo.app.CarouselViewListener;
 import com.gophillygo.app.R;
 import com.gophillygo.app.adapters.PlaceCategoryGridAdapter;
+import com.gophillygo.app.data.models.AttractionFlag;
 import com.gophillygo.app.data.models.Destination;
 import com.synnapps.carouselview.CarouselView;
+
+import java.util.List;
 
 
 public class HomeActivity extends BaseAttractionActivity {
@@ -45,6 +48,7 @@ public class HomeActivity extends BaseAttractionActivity {
 
         // initialize carousel if destinations already loaded
         locationOrDestinationsChanged();
+
     }
 
     @Override

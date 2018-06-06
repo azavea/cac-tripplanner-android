@@ -55,6 +55,8 @@ dependencies {
     def playServicesVersion = '15.0.1'
     implementation "com.google.android.gms:play-services-location:$playServicesVersion"
     implementation "com.google.android.gms:play-services-maps:$playServicesVersion"
+    // Android WorkManager
+    implementation "android.arch.work:work-runtime:1.0.0-alpha02"
     // Carousel
     implementation 'com.github.flibbertigibbet:carouselview:1.0.5'
     // Badges

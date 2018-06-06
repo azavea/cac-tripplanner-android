@@ -20,11 +20,14 @@ import android.widget.Toast;
 import com.gophillygo.app.R;
 import com.gophillygo.app.data.DestinationViewModel;
 import com.gophillygo.app.data.EventViewModel;
+import com.gophillygo.app.data.models.AttractionFlag;
 import com.gophillygo.app.data.models.DestinationInfo;
 import com.gophillygo.app.data.models.Event;
 import com.gophillygo.app.data.models.EventInfo;
 import com.gophillygo.app.databinding.ActivityEventDetailBinding;
 import com.gophillygo.app.di.GpgViewModelFactory;
+import com.gophillygo.app.tasks.AddGeofencesBroadcastReceiver;
+import com.gophillygo.app.tasks.RemoveGeofenceWorker;
 import com.gophillygo.app.utils.FlagMenuUtils;
 import com.gophillygo.app.utils.UserUuidUtils;
 import com.synnapps.carouselview.CarouselView;
@@ -92,7 +95,7 @@ public class EventDetailActivity extends AttractionDetailActivity {
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(EventViewModel.class);
         destinationViewModel = ViewModelProviders.of(this, viewModelFactory).get(DestinationViewModel.class);
         viewModel.getEvent(eventId).observe(this, eventInfo -> {
-            // TODO: handle if event not found (go to list of events?)
+            // TODO: #61 handle if event not found (go to list of events?)
             if (eventInfo == null || eventInfo.getEvent() == null) {
                 Log.e(LOG_LABEL, "No matching event found for ID " + eventId);
                 return;
@@ -185,9 +188,13 @@ public class EventDetailActivity extends AttractionDetailActivity {
             Log.d(LOG_LABEL, "Clicked flags button");
             PopupMenu menu = FlagMenuUtils.getFlagPopupMenu(this, flagOptionsCard, eventInfo.getFlag());
             menu.setOnMenuItemClickListener(item -> {
+                Boolean haveExistingGeofence = eventInfo.getFlag().getOption()
+                        .api_name.equals(AttractionFlag.Option.WantToGo.api_name);
+
                 eventInfo.updateAttractionFlag(item.getItemId());
                 viewModel.updateAttractionFlag(eventInfo.getFlag(), userUuid, getString(R.string.user_flag_post_api_key));
-
+                Boolean settingGeofence = destinationInfo.getFlag().getOption().api_name.equals(AttractionFlag.Option.WantToGo.api_name);
+                addOrRemoveGeofence(destinationInfo, haveExistingGeofence, settingGeofence);
                 return true;
             });
         });

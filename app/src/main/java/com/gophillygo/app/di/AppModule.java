@@ -9,6 +9,7 @@ import com.gophillygo.app.data.DestinationWebservice;
 import com.gophillygo.app.data.EventDao;
 import com.gophillygo.app.data.GpgDatabase;
 import com.gophillygo.app.data.networkresource.LiveDataCallAdapterFactory;
+import com.gophillygo.app.tasks.GeofenceTransitionWorker;
 
 import javax.inject.Singleton;
 

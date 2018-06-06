@@ -10,6 +10,9 @@
     -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
+    <!-- Listen for reboot to set up geofences again -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
     <application
         android:name=".GoPhillyGoApp"
         android:allowBackup="true"
@@ -93,6 +96,23 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
+
+        <!-- Set up geofences again after reboot or location provider changes -->
+        <receiver android:name=".tasks.AddGeofencesBroadcastReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <!-- FIXME: implicit system broadcast intent cannot start background thread
+                <action android:name="android.location.PROVIDERS_CHANGED" /> -->
+            </intent-filter>
+        </receiver>
+
+        <!-- Listen to geofence transitions. -->
+        <receiver android:name=".tasks.GeofenceTransitionBroadcastReceiver"
+            android:exported="false" android:enabled="true">
+            <intent-filter>
+                <action android:name="com.gophillygo.app.tasks.ACTION_GEOFENCE_TRANSITION" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

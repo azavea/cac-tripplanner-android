@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.gophillygo.app.R;
 import com.gophillygo.app.data.DestinationViewModel;
+import com.gophillygo.app.data.models.AttractionFlag;
 import com.gophillygo.app.databinding.ActivityPlaceDetailBinding;
 import com.gophillygo.app.di.GpgViewModelFactory;
 import com.gophillygo.app.utils.FlagMenuUtils;
@@ -63,11 +64,13 @@ public class PlaceDetailActivity extends AttractionDetailActivity {
 
         carouselView = findViewById(R.id.place_detail_carousel);
         carouselView.setIndicatorGravity(Gravity.CENTER_HORIZONTAL|Gravity.BOTTOM);
+        carouselView.setImageClickListener(position ->
+                Log.d(LOG_LABEL, "Clicked item: "+ position));
 
         viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(DestinationViewModel.class);
         viewModel.getDestination(placeId).observe(this, destinationInfo -> {
-            // TODO: handle if destination not found (go to list of destinations?)
+            // TODO: #61 handle if destination not found (go to list of destinations?)
             if (destinationInfo == null || destinationInfo.getDestination() == null) {
                 Log.e(LOG_LABEL, "No matching destination found for ID " + placeId);
                 return;
@@ -108,8 +111,13 @@ public class PlaceDetailActivity extends AttractionDetailActivity {
             Log.d(LOG_LABEL, "Clicked flags button");
             PopupMenu menu = FlagMenuUtils.getFlagPopupMenu(this, flagOptionsCard, destinationInfo.getFlag());
             menu.setOnMenuItemClickListener(item -> {
+                Boolean haveExistingGeofence = destinationInfo.getFlag().getOption()
+                        .api_name.equals(AttractionFlag.Option.WantToGo.api_name);
+
                 destinationInfo.updateAttractionFlag(item.getItemId());
                 viewModel.updateAttractionFlag(destinationInfo.getFlag(), userUuid, getString(R.string.user_flag_post_api_key));
+                Boolean settingGeofence = destinationInfo.getFlag().getOption().api_name.equals(AttractionFlag.Option.WantToGo.api_name);
+                addOrRemoveGeofence(destinationInfo, haveExistingGeofence, settingGeofence);
                 return true;
             });
         });

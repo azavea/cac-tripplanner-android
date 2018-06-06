@@ -2,14 +2,17 @@ package com.gophillygo.app;
 
 import android.app.Activity;
 import android.app.Application;
+import android.content.BroadcastReceiver;
 import android.util.Log;
 
 import com.gophillygo.app.di.AppInjector;
 
 import javax.inject.Inject;
 
+import dagger.android.AndroidInjector;
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.HasActivityInjector;
+import dagger.android.HasBroadcastReceiverInjector;
 
 /**
  * Based on:
@@ -17,13 +20,17 @@ import dagger.android.HasActivityInjector;
  */
 
 
-public class GoPhillyGoApp extends Application implements HasActivityInjector {
+public class GoPhillyGoApp extends Application implements HasActivityInjector, HasBroadcastReceiverInjector {
 
     private static final String LOG_LABEL = "GPGApp";
 
     @SuppressWarnings("WeakerAccess")
     @Inject
     DispatchingAndroidInjector<Activity> dispatchingAndroidInjector;
+
+    @SuppressWarnings("WeakerAccess")
+    @Inject
+    DispatchingAndroidInjector<BroadcastReceiver> broadcastReceiverInjector;
 
     @Override
     public void onCreate() {
@@ -37,5 +44,10 @@ public class GoPhillyGoApp extends Application implements HasActivityInjector {
     @Override
     public DispatchingAndroidInjector<Activity> activityInjector() {
         return dispatchingAndroidInjector;
+    }
+
+    @Override
+    public AndroidInjector<BroadcastReceiver> broadcastReceiverInjector() {
+        return broadcastReceiverInjector;
     }
 }

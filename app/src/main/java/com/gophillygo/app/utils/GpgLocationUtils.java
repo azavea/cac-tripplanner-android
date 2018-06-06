@@ -5,17 +5,27 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.common.api.ResolvableApiException;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.LocationSettingsResponse;
+import com.google.android.gms.location.LocationSettingsStates;
+import com.google.android.gms.location.SettingsClient;
+import com.google.android.gms.tasks.Task;
 import com.gophillygo.app.R;
 
 import java.lang.ref.WeakReference;
@@ -30,7 +40,8 @@ public class GpgLocationUtils {
     // identifier for device location access request, if runtime prompt necessary
     // request code must be in lower 8 bits
     public static final int PERMISSION_REQUEST_ID = 11;
-    private static final int API_AVAILABILITY_REQUEST_ID = 22;
+    public static final int API_AVAILABILITY_REQUEST_ID = 22;
+    public static final int LOCATION_SETTINGS_REQUEST_ID = 33;
 
     private static final int LOCATION_REQUESTS_COUNT = 12;
     private static final int LOCATION_REQUEST_EXPIRATION_DURATION_MS = 10000; // 10s
@@ -83,7 +94,72 @@ public class GpgLocationUtils {
             return false; // up to the activity to start this service again when permissions granted
         }
 
+        // Check location settings
+        // https://developer.android.com/training/location/change-location-settings#get-settings
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
+        SettingsClient client = LocationServices.getSettingsClient(callingActivity);
+        Task<LocationSettingsResponse> task = client.checkLocationSettings(builder.build());
+        task.addOnFailureListener(e -> {
+            if (e instanceof ResolvableApiException) {
+                try {
+                    ResolvableApiException resolvable = (ResolvableApiException) e;
+                    resolvable.startResolutionForResult(callingActivity, LOCATION_SETTINGS_REQUEST_ID);
+                } catch (IntentSender.SendIntentException e1) {
+                    Log.e(LOG_LABEL, "Failed to prompt user for location settings changes");
+                    e1.printStackTrace();
+                }
+            } else {
+                Log.e(LOG_LABEL, "Received unresolvable location settings exception.");
+                e.printStackTrace();
+            }
+        }).addOnSuccessListener(locationSettingsResponse -> {
+            LocationSettingsStates states = locationSettingsResponse.getLocationSettingsStates();
+            if (!states.isNetworkLocationPresent() || !states.isNetworkLocationUsable()) {
+                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                // TODO: a dialog would be easier to read
+                Toast toast = Toast.makeText(callingActivity,
+                        callingActivity.getString(R.string.location_network_permission_rationale),
+                        Toast.LENGTH_LONG);
+                toast.show();
+                callingActivity.startActivity(intent);
+            }
+        });
+
         return true;
+    }
+
+    /**
+     * Get the last known device location, without requesting to update it or prompting the user
+     * for permissions if they haven't been granted.
+     *
+     * Intended for use by background tasks that do not have an Activity.
+     *
+     * @param context Calling context
+     * @param listener Callback for when location found. Must implement {@link LocationUpdateListener}
+     *
+     * @return True if permissions have been already granted
+     */
+    public static boolean getLastKnownLocation(Context context, LocationUpdateListener listener) {
+        FusedLocationProviderClient client = LocationServices.getFusedLocationProviderClient(context);
+
+        // If permissions haven't been granted already, do not ask for them.
+        // This is useful for accessing location from background tasks.
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(context,
+                        Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+            client.getLastLocation().addOnCompleteListener(lastLocationTask -> {
+                if (lastLocationTask.isSuccessful() && lastLocationTask.getResult() != null) {
+                    Log.d(LOG_LABEL, "Found location " + lastLocationTask.getResult());
+                    listener.locationFound(lastLocationTask.getResult());
+                }
+            });
+
+            return true;
+        }
+
+        return false;
     }
 
     /**

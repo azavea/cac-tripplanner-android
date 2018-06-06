@@ -14,10 +14,14 @@ import android.widget.TextView;
 
 import com.gophillygo.app.R;
 import com.gophillygo.app.adapters.PlacesListAdapter;
+import com.gophillygo.app.data.models.AttractionFlag;
 import com.gophillygo.app.data.models.AttractionInfo;
+import com.gophillygo.app.data.models.Destination;
 import com.gophillygo.app.data.models.DestinationInfo;
 import com.gophillygo.app.databinding.ActivityPlacesListBinding;
 import com.gophillygo.app.databinding.FilterButtonBarBinding;
+import com.gophillygo.app.tasks.AddGeofencesBroadcastReceiver;
+import com.gophillygo.app.tasks.RemoveGeofenceWorker;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,9 +70,14 @@ public class PlacesListActivity extends FilterableListActivity implements
     }
 
     public boolean clickedFlagOption(MenuItem item, AttractionInfo destinationInfo, Integer position) {
+        Boolean haveExistingGeofence = destinationInfo.getFlag().getOption()
+                .api_name.equals(AttractionFlag.Option.WantToGo.api_name);
+
         destinationInfo.updateAttractionFlag(item.getItemId());
         viewModel.updateAttractionFlag(destinationInfo.getFlag(), userUuid, getString(R.string.user_flag_post_api_key));
         placesListAdapter.notifyItemChanged(position);
+        Boolean settingGeofence = destinationInfo.getFlag().getOption().api_name.equals(AttractionFlag.Option.WantToGo.api_name);
+        addOrRemoveGeofence(destinationInfo, haveExistingGeofence, settingGeofence);
 	    return true;
     }
 

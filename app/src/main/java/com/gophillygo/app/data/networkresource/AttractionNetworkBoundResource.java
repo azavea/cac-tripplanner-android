@@ -65,8 +65,6 @@ abstract public class AttractionNetworkBoundResource<A extends Attraction, I ext
                 item.setDestination(null);
             }
             item.setTimestamp(timestamp);
-            // TODO: Remove
-            if (item.getDestination() != null && item.getDestination() == 20) { continue; }
             eventDao.save(item);
         }
     }

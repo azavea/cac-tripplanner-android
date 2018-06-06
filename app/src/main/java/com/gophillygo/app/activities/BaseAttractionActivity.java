@@ -1,6 +1,7 @@
 package com.gophillygo.app.activities;
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -10,11 +11,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.gophillygo.app.data.DestinationViewModel;
+import com.gophillygo.app.data.models.AttractionInfo;
 import com.gophillygo.app.data.models.Destination;
 import com.gophillygo.app.data.models.DestinationInfo;
 import com.gophillygo.app.data.models.DestinationLocation;
+import com.gophillygo.app.data.models.EventInfo;
 import com.gophillygo.app.data.networkresource.Status;
 import com.gophillygo.app.di.GpgViewModelFactory;
+import com.gophillygo.app.tasks.AddGeofenceWorker;
+import com.gophillygo.app.tasks.AddGeofencesBroadcastReceiver;
+import com.gophillygo.app.tasks.RemoveGeofenceWorker;
 import com.gophillygo.app.utils.GpgLocationUtils;
 import com.gophillygo.app.utils.UserUuidUtils;
 
@@ -56,6 +62,26 @@ public abstract class BaseAttractionActivity extends AppCompatActivity
     GpgViewModelFactory viewModelFactory;
     @SuppressWarnings("WeakerAccess")
     DestinationViewModel viewModel;
+
+    protected void addOrRemoveGeofence(AttractionInfo info, Boolean haveExistingGeofence, Boolean settingGeofence) {
+        if (settingGeofence) {
+            if (haveExistingGeofence) {
+                Log.d(LOG_LABEL, "No change to geofence");
+                return;
+            }
+            // add geofence
+            Log.d(LOG_LABEL, "Add attraction geofence");
+            if (info instanceof EventInfo) {
+                AddGeofencesBroadcastReceiver.addOneGeofence((EventInfo)info);
+            } else if (info instanceof DestinationInfo) {
+                AddGeofencesBroadcastReceiver.addOneGeofence(((DestinationInfo) info).getDestination());
+            }
+
+        } else if (haveExistingGeofence) {
+            Log.e(LOG_LABEL, "Removing attraction geofence");
+            RemoveGeofenceWorker.removeOneGeofence(info);
+        }
+    }
 
 
     private void setDefaultLocation() {
@@ -215,10 +241,23 @@ public abstract class BaseAttractionActivity extends AppCompatActivity
         if (requestCode == GpgLocationUtils.PERMISSION_REQUEST_ID) {
             if (grantResults.length > 0) {
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Log.d(LOG_LABEL, "Re-requesting location after getting permissions");
+                    Log.d(LOG_LABEL, "Re-requesting location after getting fine location permissions");
                     fetchLastLocationOrUseDefault();
                 } else if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
                     GpgLocationUtils.displayPermissionRequestRationale(getApplicationContext());
+                }
+            }
+        } else if (requestCode == GpgLocationUtils.LOCATION_SETTINGS_REQUEST_ID) {
+            if (grantResults.length > 0) {
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Log.d(LOG_LABEL, "Re-requesting location after getting location network permissions");
+                    fetchLastLocationOrUseDefault();
+                    Log.d(LOG_LABEL, "Attempting to register geofences from database again");
+                    Intent intent = new Intent(getApplicationContext(), AddGeofencesBroadcastReceiver.class);
+                    intent.setAction(AddGeofenceWorker.ACTION_GEOFENCE_TRANSITION);
+                    sendBroadcast(intent);
+                } else if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
+                    Log.w(LOG_LABEL, "Location network permissions not updated; geofencing may not work");
                 }
             }
         }
