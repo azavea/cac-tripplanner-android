@@ -24,14 +24,15 @@
                 android:id="@+id/place_detail_carousel"
                 android:layout_width="match_parent"
                 android:layout_height="200dp"
+                android:minHeight="200dp"
                 app:fillColor="@color/color_white"
+                app:indicatorGravity="bottom"
+                app:indicatorMarginHorizontal="5dp"
+                app:indicatorMarginVertical="10dp"
                 app:pageColor="@color/color_background_grey"
                 app:radius="3dp"
                 app:slideInterval="4000"
                 app:strokeColor="@color/color_background_grey"
-                app:indicatorGravity="bottom"
-                app:indicatorMarginVertical="10dp"
-                app:indicatorMarginHorizontal="5dp"
                 app:strokeWidth="0dp" />
 
             <TextView
@@ -72,116 +73,171 @@
 
             <TextView
                 android:id="@+id/place_detail_activities_list"
-                app:layout_constraintTop_toBottomOf="@id/place_detail_carousel"
                 style="@style/GpgDetailText"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
                 android:text="@{destination.getActivitiesString}"
+                android:textAppearance="@style/GpgDetailText"
+                android:textSize="14sp"
                 android:visibility="@{destination.hasActivities ? View.VISIBLE : View.GONE}"
-                android:textAlignment="center" />
-
-            <TextView
-                android:id="@+id/place_detail_cycling_label"
-                app:layout_constraintTop_toBottomOf="@id/place_detail_activities_list"
-                style="@style/GpgDetailText"
-                android:text="@string/bicycle_activity_label"
-                android:drawableStart="@drawable/ic_directions_bike_black_24dp"
-                android:paddingStart="10sp"
-                android:paddingEnd="10sp"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toLeftOf="@+id/place_detail_upcoming_events"
-                android:visibility="@{destination.isCycling ? View.VISIBLE : View.INVISIBLE}" />
-
-            <TextView
-                android:id="@+id/place_detail_upcoming_events"
-                app:layout_constraintTop_toBottomOf="@id/place_detail_activities_list"
                 app:layout_constraintRight_toRightOf="parent"
-                android:paddingStart="10sp"
-                android:paddingEnd="10sp"
-                android:drawableStart="@drawable/ic_event_black_24dp"
-                style="@style/GpgDetailText"
-                android:visibility="@{destinationInfo.hasEvents ? View.VISIBLE : View.INVISIBLE}"/>
+                app:layout_constraintTop_toBottomOf="@+id/place_detail_carousel" />
 
-            <include layout="@layout/detail_description"
-                android:id="@+id/place_detail_description_card"
-                android:layout_margin="10dp"
+            <android.support.constraint.ConstraintLayout
+                android:id="@+id/place_detail_cycling_and_events_bar"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:visibility="@{destination.isCycling || destinationInfo.hasEvents ? View.VISIBLE : View.GONE}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/place_detail_activities_list">
+
+                <TextView
+                    android:id="@+id/place_detail_cycling_label"
+                    style="@style/GpgDetailText"
+                    android:layout_height="wrap_content"
+                    android:drawableStart="@drawable/ic_directions_bike_black_16dp"
+                    android:paddingEnd="10sp"
+                    android:paddingStart="10sp"
+                    android:text="@string/bicycle_activity_label"
+                    android:textAppearance="@style/GpgDetailText"
+                    android:textSize="14sp"
+                    android:visibility="@{destination.isCycling ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintEnd_toStartOf="@+id/place_detail_upcoming_events"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    tools:layout_editor_absoluteY="3dp" />
+
+                <TextView
+                    android:id="@+id/place_detail_upcoming_events"
+                    style="@style/GpgDetailText"
+                    android:layout_height="wrap_content"
+                    android:drawableStart="@drawable/ic_event_black_16dp"
+                    android:paddingEnd="10sp"
+                    android:paddingStart="10sp"
+                    android:textAppearance="@style/GpgDetailText"
+                    android:textSize="14sp"
+                    android:visibility="@{destinationInfo.hasEvents ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/place_detail_cycling_label" />
+            </android.support.constraint.ConstraintLayout>
+
+            <include
+                android:id="@+id/place_detail_description_card"
+                layout="@layout/detail_description"
                 android:layout_width="match_parent"
-                app:layout_constraintTop_toBottomOf="@+id/place_detail_upcoming_events"
-                app:htmlDescription="@{destination.htmlDescription}" />
+                android:layout_height="wrap_content"
+                android:layout_margin="10dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                app:htmlDescription="@{destination.htmlDescription}"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/place_detail_cycling_and_events_bar" />
 
             <android.support.v7.widget.CardView
                 android:id="@+id/place_detail_flag_options_card"
-                app:layout_constraintTop_toBottomOf="@+id/place_detail_description_card"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
                 android:layout_marginTop="20dp"
-                android:layout_marginBottom="20dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                app:cardElevation="1dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/place_detail_description_card">
 
                 <TextView
                     android:id="@+id/place_options_flag_text"
-                    android:text="@string/place_details_been_want_to_go_label"
+                    style="@style/GpgDetailText"
                     android:layout_width="match_parent"
+                    android:layout_height="56dp"
                     android:drawableEnd="@{activity.getFlagImage(destinationInfo)}"
-                    style="@style/GpgDetailText" />
+                    android:gravity="center_vertical"
+                    android:padding="8dp"
+                    android:text="@string/place_details_been_want_to_go_label"
+                    android:textColor="?android:attr/colorForeground"
+                    android:textSize="15sp" />
 
             </android.support.v7.widget.CardView>
 
             <LinearLayout
                 android:id="@+id/place_detail_button_bar"
-                app:layout_constraintTop_toBottomOf="@+id/place_detail_flag_options_card"
-                android:paddingStart="6dp"
-                android:paddingEnd="6dp"
-                android:weightSum="3"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="20dp"
-                android:paddingBottom="20dp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:paddingEnd="8dp"
+                android:paddingStart="8dp"
+                android:weightSum="3"
+                app:layout_constraintTop_toBottomOf="@+id/place_detail_flag_options_card">
 
                 <android.support.v7.widget.AppCompatButton
                     android:id="@+id/place_detail_map_button"
-                    android:layout_gravity="start"
-                    android:layout_weight="1"
-                    android:drawableStart="@drawable/ic_map_black_24dp"
                     style="@style/BorderlessDetailButton"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="start"
+                    android:layout_margin="0dp"
+                    android:layout_weight="1"
+                    android:drawablePadding="8dp"
+                    android:drawableStart="@drawable/ic_map_blue_24dp"
                     android:onClick="@{activity::goToMap}"
-                    android:text="@string/place_detail_map_button" />
+                    android:text="@string/place_detail_map_button"
+                    android:textAlignment="textStart"
+                    android:textColor="?attr/colorPrimary"
+                    android:textSize="14sp" />
 
                 <android.support.v7.widget.AppCompatButton
                     android:id="@+id/place_detail_directions_button"
                     style="@style/BorderlessDetailButton"
+                    android:layout_height="match_parent"
                     android:layout_gravity="end"
+                    android:layout_margin="0dp"
                     android:layout_weight="1"
+                    android:drawablePadding="8dp"
+                    android:drawableStart="@drawable/ic_directions_blue_24dp"
                     android:onClick="@{activity::goToDirections}"
-                    android:drawableStart="@drawable/ic_directions_black_24dp"
-                    android:text="@string/place_detail_directions_button" />
+                    android:text="@string/place_detail_directions_button"
+                    android:textAlignment="textStart"
+                    android:textColor="?attr/colorPrimary"
+                    android:textSize="14sp" />
 
                 <android.support.v7.widget.AppCompatButton
                     android:id="@+id/place_detail_website_button"
-                    android:text="@string/place_detail_website_button"
-                    android:layout_weight="1"
-                    android:drawableStart="@drawable/ic_public_black_24dp"
-                    android:onClick="@{activity::goToWebsite}"
-                    android:visibility="@{destination.hasWebsite ? View.VISIBLE : View.GONE}"
                     style="@style/BorderlessDetailButton"
-                    android:layout_gravity="end" />
+                    android:layout_height="match_parent"
+                    android:layout_gravity="end"
+                    android:layout_margin="0dp"
+                    android:layout_weight="1"
+                    android:drawablePadding="8dp"
+                    android:drawableStart="@drawable/ic_public_blue_24dp"
+                    android:onClick="@{activity::goToWebsite}"
+                    android:text="@string/place_detail_website_button"
+                    android:textAlignment="textStart"
+                    android:textColor="?attr/colorPrimary"
+                    android:textSize="14sp"
+                    android:visibility="@{destination.hasWebsite ? View.VISIBLE : View.GONE}" />
             </LinearLayout>
 
             <ImageView
                 android:id="@+id/place_detail_watershed_alliance_icon"
-                android:src="@drawable/watershed_alliance_full_icon_300x104px"
-                app:layout_constraintTop_toBottomOf="@id/place_detail_button_bar"
-                android:paddingBottom="20dp"
-                android:visibility="@{destination.isWatershedAlliance ? View.VISIBLE : View.GONE}"
-                android:scaleType="centerInside"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginTop="16dp"
+                android:adjustViewBounds="true"
                 android:contentDescription="@string/watershed_alliance_label"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:scaleType="centerInside"
+                android:src="@drawable/watershed_alliance_full_icon_300x104px"
+                android:visibility="@{destination.isWatershedAlliance ? View.VISIBLE : View.GONE}"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/place_detail_button_bar" />
 
         </android.support.constraint.ConstraintLayout>
     </ScrollView>
