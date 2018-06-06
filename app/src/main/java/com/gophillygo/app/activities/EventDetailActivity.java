@@ -12,6 +12,7 @@ import android.support.v7.widget.CardView;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -26,6 +27,7 @@ import com.gophillygo.app.databinding.ActivityEventDetailBinding;
 import com.gophillygo.app.di.GpgViewModelFactory;
 import com.gophillygo.app.utils.FlagMenuUtils;
 import com.gophillygo.app.utils.UserUuidUtils;
+import com.synnapps.carouselview.CarouselView;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -38,7 +40,6 @@ import javax.inject.Inject;
 public class EventDetailActivity extends AttractionDetailActivity {
 
     public static final String EVENT_ID_KEY = "eventId";
-    protected final Class MAP_ACTIVITY = PlacesMapsActivity.class;
     private static final String LOG_LABEL = "EventDetail";
 
     private static final DateFormat timeFormat, monthDayFormat;
@@ -61,6 +62,7 @@ public class EventDetailActivity extends AttractionDetailActivity {
     EventViewModel viewModel;
     @SuppressWarnings("WeakerAccess")
     DestinationViewModel destinationViewModel;
+    private CarouselView carouselView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,6 +85,9 @@ public class EventDetailActivity extends AttractionDetailActivity {
             Log.e(LOG_LABEL, "Event not found when attempting to load detail view.");
             finish();
         }
+
+        carouselView = findViewById(R.id.event_detail_carousel);
+        carouselView.setIndicatorGravity(Gravity.CENTER_HORIZONTAL|Gravity.BOTTOM);
 
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(EventViewModel.class);
         destinationViewModel = ViewModelProviders.of(this, viewModelFactory).get(DestinationViewModel.class);
@@ -169,6 +174,8 @@ public class EventDetailActivity extends AttractionDetailActivity {
 
     @SuppressLint({"RestrictedApi", "RtlHardcoded"})
     private void displayEvent() {
+        setupCarousel(carouselView, eventInfo.getEvent());
+
         TextView descriptionToggle = findViewById(R.id.detail_description_toggle);
         descriptionToggle.setOnClickListener(toggleClickListener);
 

@@ -22,14 +22,19 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <ImageView
-                android:id="@+id/event_detail_image"
+            <com.synnapps.carouselview.CarouselView
+                android:id="@+id/event_detail_carousel"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:minHeight="200dp"
-                app:imageUrl="@{event.getWideImage}"
-                android:contentDescription="@{event.getName}"
-                android:scaleType="centerCrop" />
+                android:layout_height="200dp"
+                app:fillColor="@color/color_white"
+                app:pageColor="@color/color_background_grey"
+                app:radius="3dp"
+                app:slideInterval="4000"
+                app:strokeColor="@color/color_background_grey"
+                app:indicatorGravity="bottom"
+                app:indicatorMarginVertical="10dp"
+                app:indicatorMarginHorizontal="5dp"
+                app:strokeWidth="0dp" />
 
             <TextView
                 android:id="@+id/event_detail_item_name_label"
@@ -37,7 +42,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="start"
-                android:padding="10dp"
+                android:paddingBottom="2dp"
+                android:paddingEnd="10dp"
+                android:paddingStart="10dp"
                 android:text="@{event.getName}"
                 app:layout_constraintBottom_toTopOf="@+id/event_detail_item_distance_label" />
 
@@ -53,7 +60,7 @@
                 android:paddingStart="10dp"
                 android:text='@{eventInfo.formattedDistance}'
                 android:visibility="@{eventInfo.distance != null ? View.VISIBLE : View.GONE}"
-                app:layout_constraintBottom_toBottomOf="@+id/event_detail_image" />
+                app:layout_constraintBottom_toBottomOf="@+id/event_detail_carousel" />
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/event_detail_toolbar"
@@ -79,7 +86,7 @@
                 android:paddingEnd="10dp"
                 android:paddingStart="10dp"
                 android:text='@{eventInfo != null ? activity.getEventTimeString() : ""}'
-                app:layout_constraintTop_toBottomOf="@+id/event_detail_image" />
+                app:layout_constraintTop_toBottomOf="@+id/event_detail_carousel" />
 
             <TextView
                 android:id="@+id/event_detail_destination_name"

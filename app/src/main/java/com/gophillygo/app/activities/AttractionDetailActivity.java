@@ -1,5 +1,6 @@
 package com.gophillygo.app.activities;
 
+import android.arch.persistence.room.util.StringUtil;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -8,17 +9,22 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.gophillygo.app.R;
+import com.gophillygo.app.data.models.Attraction;
 import com.gophillygo.app.data.models.AttractionInfo;
 import com.gophillygo.app.data.models.DestinationInfo;
 import com.gophillygo.app.data.models.DestinationLocation;
+import com.synnapps.carouselview.CarouselView;
 
 abstract class AttractionDetailActivity extends AppCompatActivity {
     protected static final int COLLAPSED_LINE_COUNT = 4;
     protected static final int EXPANDED_MAX_LINES = 50;
+    private static final String LOG_LABEL = "AttractionDetail";
     protected DestinationInfo destinationInfo;
 
     protected View.OnClickListener toggleClickListener;
@@ -87,5 +93,24 @@ abstract class AttractionDetailActivity extends AppCompatActivity {
         if (attractionInfo == null) return null;
 
         return ContextCompat.getDrawable(this, attractionInfo.getFlagImage());
+    }
+
+    public void setupCarousel(CarouselView carouselView, Attraction attraction) {
+        carouselView.setImageListener((position, imageView) -> {
+            String url = null;
+            if (position == 0) {
+                url = attraction.getWideImage();
+            } else if (position <= attraction.getExtraWideImages().size()) {
+                url = attraction.getExtraWideImages().get(position - 1);
+            }
+            // Shouldn't be possible to reach this, but re-use the wide image if the extra images are blank
+            // or there aren't enough of them
+            if (url == null || url.equals("")) {
+                Log.e(LOG_LABEL, "Unexpected missing extra image for attraction: " + attraction.getId());
+                url = attraction.getWideImage();
+            }
+            Glide.with(this).load(url).into(imageView);
+        });
+        carouselView.setPageCount(attraction.getExtraWideImages().size() + 1);
     }
 }

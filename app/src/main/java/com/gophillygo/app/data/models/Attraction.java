@@ -9,9 +9,11 @@ import android.text.Html;
 import android.text.Spanned;
 
 import com.google.gson.annotations.SerializedName;
+import com.gophillygo.app.BuildConfig;
 import com.gophillygo.app.data.DestinationWebservice;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 
@@ -51,12 +53,17 @@ public class Attraction {
     @SerializedName("is_event")
     private final boolean isEvent;
 
+    @ColumnInfo(name = "extra_wide_images")
+    @SerializedName("extra_wide_images")
+    private final ArrayList<String> extraWideImages;
+
     // timestamp is not final, as it is set on database save, and not by serializer
     private long timestamp;
 
     public Attraction(int id, int placeID, String name, boolean accessible, String image,
                       boolean cycling, String description, int priority, String websiteUrl,
-                      String wideImage, boolean isEvent, ArrayList<String> activities) {
+                      String wideImage, boolean isEvent, ArrayList<String> activities,
+                      ArrayList<String> extraWideImages) {
         this.id = id;
         this.placeID = placeID;
         this.name = name;
@@ -66,10 +73,11 @@ public class Attraction {
         this.description = description;
         this.priority = priority;
         this.websiteUrl = websiteUrl;
-        this.wideImage = wideImage;
         this.isEvent = isEvent;
-
         this.activities = activities;
+
+        this.wideImage = wideImage;
+        this.extraWideImages = extraWideImages;
     }
 
 
@@ -81,6 +89,9 @@ public class Attraction {
      */
     private String addHostToPath(@NonNull String path) {
         if (!path.isEmpty() && !path.startsWith("http")) {
+            if (path.startsWith("/")) {
+                path = path.substring(1);
+            }
             return DestinationWebservice.WEBSERVICE_URL.concat(path);
         }
         return path;
@@ -141,11 +152,23 @@ public class Attraction {
     }
 
     public String getWideImage() {
-        return addHostToPath(wideImage);
+        return BuildConfig.DEBUG ? addHostToPath(wideImage) : wideImage;
     }
 
     public boolean isEvent() {
         return isEvent;
+    }
+
+    public ArrayList<String> getExtraWideImages() {
+        if (!BuildConfig.DEBUG) {
+            return extraWideImages;
+        }
+
+        ArrayList<String> imagesWithHost = new ArrayList<>(extraWideImages.size());
+        for (String url : extraWideImages) {
+            imagesWithHost.add(addHostToPath(url));
+        }
+        return imagesWithHost;
     }
 
     public long getTimestamp() {
@@ -208,7 +231,8 @@ public class Attraction {
                 Objects.equals(description, that.description) &&
                 Objects.equals(activities, that.activities) &&
                 Objects.equals(websiteUrl, that.websiteUrl) &&
-                Objects.equals(wideImage, that.wideImage);
+                Objects.equals(wideImage, that.wideImage) &&
+                Objects.equals(extraWideImages, that.extraWideImages);
     }
 
     @Override

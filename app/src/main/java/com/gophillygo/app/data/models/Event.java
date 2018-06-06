@@ -59,11 +59,11 @@ public class Event extends Attraction {
     public Event(int id, int placeID, String name, boolean accessible, String image,
                  boolean cycling, String description, int priority, String websiteUrl,
                  String wideImage, boolean isEvent, ArrayList<String> activities,
-                 Integer destination, String startDate, String endDate) {
+                 Integer destination, String startDate, String endDate, ArrayList<String> extraWideImages) {
 
         // initialize Attraction
         super(id, placeID, name, accessible, image, cycling, description, priority, websiteUrl,
-              wideImage, isEvent, activities);
+              wideImage, isEvent, activities, extraWideImages);
 
         this.destination = destination;
         this.startDate = startDate;

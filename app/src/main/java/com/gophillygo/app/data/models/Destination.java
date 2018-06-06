@@ -51,11 +51,11 @@ public class Destination extends Attraction {
                        int priority, String state, String address, DestinationLocation location,
                        DestinationAttributes attributes, boolean watershedAlliance, String websiteUrl,
                        String wideImage, boolean isEvent, ArrayList<String> activities,
-                       ArrayList<String> categories) {
+                       ArrayList<String> categories, ArrayList<String> extraWideImages) {
 
         // initialize Attraction
         super(id, placeID, name, accessible, image, cycling, description, priority, websiteUrl,
-              wideImage, isEvent, activities);
+              wideImage, isEvent, activities, extraWideImages);
 
         this.city = city;
         this.zipCode = zipCode;
