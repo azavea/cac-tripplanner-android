@@ -8,6 +8,9 @@ import com.google.android.gms.location.GeofencingClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.gophillygo.app.data.models.AttractionInfo;
+import com.gophillygo.app.data.models.DestinationInfo;
+import com.gophillygo.app.data.models.EventInfo;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -66,5 +69,11 @@ public class RemoveGeofenceWorker extends Worker {
         WorkRequest workRequest = workRequestBuilder.build();
         WorkManager.getInstance().enqueue(workRequest);
         Log.d(LOG_LABEL, "Enqueued new work request to remove one geofence");
+    }
+
+    public static void removeOneGeofence(AttractionInfo info) {
+        String prefix = info instanceof EventInfo ? "e" : "d";
+        String id = String.valueOf(info.getAttraction().getId());
+        removeOneGeofence(prefix + id);
     }
 }

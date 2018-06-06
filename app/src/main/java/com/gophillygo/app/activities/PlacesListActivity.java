@@ -76,20 +76,8 @@ public class PlacesListActivity extends FilterableListActivity implements
         destinationInfo.updateAttractionFlag(item.getItemId());
         viewModel.updateAttractionFlag(destinationInfo.getFlag(), userUuid, getString(R.string.user_flag_post_api_key));
         placesListAdapter.notifyItemChanged(position);
-
-        if (destinationInfo.getFlag().getOption().api_name.equals(AttractionFlag.Option.WantToGo.api_name)) {
-            if (haveExistingGeofence) {
-                Log.d(LOG_LABEL, "No change to geofence");
-                return true; // no change
-            }
-
-            // add geofence
-            Log.d(LOG_LABEL, "Add geofence from places list");
-            AddGeofencesBroadcastReceiver.addOneGeofence((Destination)destinationInfo.getAttraction());
-        } else if (haveExistingGeofence) {
-            Log.e(LOG_LABEL, "Removing geofence");
-            RemoveGeofenceWorker.removeOneGeofence(String.valueOf(destinationInfo.getAttraction().getId()));
-        }
+        Boolean settingGeofence = destinationInfo.getFlag().getOption().api_name.equals(AttractionFlag.Option.WantToGo.api_name);
+        addOrRemoveGeofence(destinationInfo, haveExistingGeofence, settingGeofence);
 	    return true;
     }
 

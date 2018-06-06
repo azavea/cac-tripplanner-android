@@ -193,19 +193,8 @@ public class EventDetailActivity extends AttractionDetailActivity {
 
                 eventInfo.updateAttractionFlag(item.getItemId());
                 viewModel.updateAttractionFlag(eventInfo.getFlag(), userUuid, getString(R.string.user_flag_post_api_key));
-
-                if (eventInfo.getFlag().getOption().api_name.equals(AttractionFlag.Option.WantToGo.api_name)) {
-                    if (haveExistingGeofence) {
-                        Log.d(LOG_LABEL, "No change to event geofence");
-                        return true; // no change
-                    }
-                    // add geofence
-                    Log.d(LOG_LABEL, "Add event geofence from event list");
-                    AddGeofencesBroadcastReceiver.addOneGeofence(eventInfo);
-                } else if (haveExistingGeofence) {
-                    Log.e(LOG_LABEL, "Removing geofence from event list");
-                    RemoveGeofenceWorker.removeOneGeofence(String.valueOf(eventInfo.getAttraction().getId()));
-                }
+                Boolean settingGeofence = destinationInfo.getFlag().getOption().api_name.equals(AttractionFlag.Option.WantToGo.api_name);
+                addOrRemoveGeofence(destinationInfo, haveExistingGeofence, settingGeofence);
                 return true;
             });
         });

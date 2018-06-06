@@ -156,26 +156,8 @@ public abstract class MapsActivity<T extends AttractionInfo> extends FilterableL
             viewModel.updateAttractionFlag(info.getFlag(), userUuid, getString(R.string.user_flag_post_api_key));
             popupBinding.setAttractionInfo(info);
             popupBinding.setAttraction(info.getAttraction());
-
-            if (info.getFlag().getOption().api_name.equals(AttractionFlag.Option.WantToGo.api_name)) {
-                if (haveExistingGeofence) {
-                    Log.d(LOG_LABEL, "No change to geofence");
-                    return true; // no change
-                }
-
-                // add geofence
-                Log.d(LOG_LABEL, "Add geofence from map");
-                if (info.getAttraction().isEvent()) {
-                    // event
-                    AddGeofencesBroadcastReceiver.addOneGeofence((EventInfo)info);
-                } else {
-                    // destination
-                    AddGeofencesBroadcastReceiver.addOneGeofence((Destination)info.getAttraction());
-                }
-            } else if (haveExistingGeofence) {
-                Log.e(LOG_LABEL, "Removing geofence");
-                RemoveGeofenceWorker.removeOneGeofence(String.valueOf(info.getAttraction().getId()));
-            }
+            Boolean settingGeofence = info.getFlag().getOption().api_name.equals(AttractionFlag.Option.WantToGo.api_name);
+            addOrRemoveGeofence(info, haveExistingGeofence, settingGeofence);
             return true;
         });
     }

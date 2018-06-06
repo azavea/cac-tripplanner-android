@@ -74,7 +74,7 @@ public class AddGeofencesBroadcastReceiver extends BroadcastReceiver {
 
             // Sanity check the data before starting the worker
             if (latitudes.length == 0 || latitudes.length != longitudes.length ||
-                    latitudes.length != labels.length) {
+                    latitudes.length != labels.length || latitudes.length != names.length) {
                 Log.e(LOG_LABEL, "Extras data of zero or mismatched length found");
                 return;
             }

@@ -75,19 +75,10 @@ public class EventsListActivity extends FilterableListActivity
         viewModel.updateAttractionFlag(eventInfo.getFlag(), userUuid, getString(R.string.user_flag_post_api_key));
         adapter.notifyItemChanged(position);
 
+        // do not attempt to add a geofence for an event with no location
         if (((EventInfo)eventInfo).hasDestinationName()) {
-            if (eventInfo.getFlag().getOption().api_name.equals(AttractionFlag.Option.WantToGo.api_name)) {
-                if (haveExistingGeofence) {
-                    Log.d(LOG_LABEL, "No change to event geofence");
-                    return true; // no change
-                }
-                // add geofence
-                Log.d(LOG_LABEL, "Add event geofence from event list");
-                AddGeofencesBroadcastReceiver.addOneGeofence((EventInfo)eventInfo);
-            } else if (haveExistingGeofence) {
-                Log.e(LOG_LABEL, "Removing geofence from event list");
-                RemoveGeofenceWorker.removeOneGeofence(String.valueOf(eventInfo.getAttraction().getId()));
-            }
+            Boolean settingGeofence = eventInfo.getFlag().getOption().api_name.equals(AttractionFlag.Option.WantToGo.api_name);
+            addOrRemoveGeofence(eventInfo, haveExistingGeofence, settingGeofence);
         } else {
             // TODO: notify user?
             Log.w(LOG_LABEL, "Cannot add geofence for an event without an associated destination");

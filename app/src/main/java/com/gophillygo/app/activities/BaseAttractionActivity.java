@@ -11,13 +11,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import com.gophillygo.app.data.DestinationViewModel;
+import com.gophillygo.app.data.models.AttractionInfo;
 import com.gophillygo.app.data.models.Destination;
 import com.gophillygo.app.data.models.DestinationInfo;
 import com.gophillygo.app.data.models.DestinationLocation;
+import com.gophillygo.app.data.models.EventInfo;
 import com.gophillygo.app.data.networkresource.Status;
 import com.gophillygo.app.di.GpgViewModelFactory;
 import com.gophillygo.app.tasks.AddGeofenceWorker;
 import com.gophillygo.app.tasks.AddGeofencesBroadcastReceiver;
+import com.gophillygo.app.tasks.RemoveGeofenceWorker;
 import com.gophillygo.app.utils.GpgLocationUtils;
 import com.gophillygo.app.utils.UserUuidUtils;
 
@@ -26,9 +29,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
-
-import androidx.work.Data;
-import androidx.work.WorkManager;
 
 /**
  * Base activity that requests last known location and destination data when opened;
@@ -62,6 +62,26 @@ public abstract class BaseAttractionActivity extends AppCompatActivity
     GpgViewModelFactory viewModelFactory;
     @SuppressWarnings("WeakerAccess")
     DestinationViewModel viewModel;
+
+    protected void addOrRemoveGeofence(AttractionInfo info, Boolean haveExistingGeofence, Boolean settingGeofence) {
+        if (settingGeofence) {
+            if (haveExistingGeofence) {
+                Log.d(LOG_LABEL, "No change to geofence");
+                return;
+            }
+            // add geofence
+            Log.d(LOG_LABEL, "Add attraction geofence");
+            if (info instanceof EventInfo) {
+                AddGeofencesBroadcastReceiver.addOneGeofence((EventInfo)info);
+            } else if (info instanceof DestinationInfo) {
+                AddGeofencesBroadcastReceiver.addOneGeofence(((DestinationInfo) info).getDestination());
+            }
+
+        } else if (haveExistingGeofence) {
+            Log.e(LOG_LABEL, "Removing attraction geofence");
+            RemoveGeofenceWorker.removeOneGeofence(info);
+        }
+    }
 
 
     private void setDefaultLocation() {

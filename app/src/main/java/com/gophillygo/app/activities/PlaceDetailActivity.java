@@ -11,15 +11,11 @@ import android.util.Log;
 import android.view.Gravity;
 import android.widget.TextView;
 
-import com.gophillygo.app.CarouselViewListener;
 import com.gophillygo.app.R;
 import com.gophillygo.app.data.DestinationViewModel;
 import com.gophillygo.app.data.models.AttractionFlag;
-import com.gophillygo.app.data.models.Destination;
 import com.gophillygo.app.databinding.ActivityPlaceDetailBinding;
 import com.gophillygo.app.di.GpgViewModelFactory;
-import com.gophillygo.app.tasks.AddGeofencesBroadcastReceiver;
-import com.gophillygo.app.tasks.RemoveGeofenceWorker;
 import com.gophillygo.app.utils.FlagMenuUtils;
 import com.gophillygo.app.utils.UserUuidUtils;
 import com.synnapps.carouselview.CarouselView;
@@ -120,19 +116,8 @@ public class PlaceDetailActivity extends AttractionDetailActivity {
 
                 destinationInfo.updateAttractionFlag(item.getItemId());
                 viewModel.updateAttractionFlag(destinationInfo.getFlag(), userUuid, getString(R.string.user_flag_post_api_key));
-                if (destinationInfo.getFlag().getOption().api_name.equals(AttractionFlag.Option.WantToGo.api_name)) {
-                    if (haveExistingGeofence) {
-                        Log.d(LOG_LABEL, "No change to geofence");
-                        return true; // no change
-                    }
-
-                    // add geofence
-                    Log.d(LOG_LABEL, "Add geofence from place detail");
-                    AddGeofencesBroadcastReceiver.addOneGeofence(destinationInfo.getAttraction());
-                } else if (haveExistingGeofence) {
-                    Log.e(LOG_LABEL, "Removing geofence");
-                    RemoveGeofenceWorker.removeOneGeofence(String.valueOf(destinationInfo.getAttraction().getId()));
-                }
+                Boolean settingGeofence = destinationInfo.getFlag().getOption().api_name.equals(AttractionFlag.Option.WantToGo.api_name);
+                addOrRemoveGeofence(destinationInfo, haveExistingGeofence, settingGeofence);
                 return true;
             });
         });

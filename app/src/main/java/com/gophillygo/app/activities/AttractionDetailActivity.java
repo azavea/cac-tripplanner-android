@@ -1,6 +1,5 @@
 package com.gophillygo.app.activities;
 
-import android.arch.persistence.room.util.StringUtil;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -19,18 +18,40 @@ import com.gophillygo.app.data.models.Attraction;
 import com.gophillygo.app.data.models.AttractionInfo;
 import com.gophillygo.app.data.models.DestinationInfo;
 import com.gophillygo.app.data.models.DestinationLocation;
+import com.gophillygo.app.data.models.EventInfo;
+import com.gophillygo.app.tasks.AddGeofencesBroadcastReceiver;
+import com.gophillygo.app.tasks.RemoveGeofenceWorker;
 import com.synnapps.carouselview.CarouselView;
 
 abstract class AttractionDetailActivity extends AppCompatActivity {
     protected static final int COLLAPSED_LINE_COUNT = 4;
     protected static final int EXPANDED_MAX_LINES = 50;
     private static final String LOG_LABEL = "AttractionDetail";
-    protected DestinationInfo destinationInfo;
 
+    protected DestinationInfo destinationInfo;
     protected View.OnClickListener toggleClickListener;
 
     protected abstract Class getMapActivity();
     protected abstract int getAttractionId();
+
+    protected void addOrRemoveGeofence(AttractionInfo info, Boolean haveExistingGeofence, Boolean settingGeofence) {
+        if (settingGeofence) {
+            if (haveExistingGeofence) {
+                Log.d(LOG_LABEL, "No change to geofence");
+                return;
+            }
+            // add geofence
+            Log.d(LOG_LABEL, "Add attraction geofence");
+            if (info instanceof EventInfo) {
+                AddGeofencesBroadcastReceiver.addOneGeofence((EventInfo)info);
+            } else if (info instanceof DestinationInfo) {
+                AddGeofencesBroadcastReceiver.addOneGeofence(((DestinationInfo) info).getDestination());
+            }
+        } else if (haveExistingGeofence) {
+            Log.e(LOG_LABEL, "Removing attraction geofence");
+            RemoveGeofenceWorker.removeOneGeofence(info);
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
