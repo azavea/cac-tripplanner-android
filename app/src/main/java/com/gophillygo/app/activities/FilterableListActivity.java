@@ -86,10 +86,6 @@ public abstract class FilterableListActivity extends BaseAttractionActivity
         } else {
             filterButton.setCompoundDrawablesWithIntrinsicBounds(filterIcon, null, null, null);
         }
-        String filterTitle = getResources()
-                .getQuantityString(R.plurals.filter_button_title, setFilterCount);
-        filterButton.setText(filterTitle);
-
     }
 
     @Override
