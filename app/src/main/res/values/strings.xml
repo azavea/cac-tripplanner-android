@@ -25,7 +25,12 @@
     <!-- filtering -->
     <string name="reset_button">Reset</string>
     <string name="done_button">Done</string>
-    <string name="filter_button_title">Filters</string>
+    <string name="single_filter_button_title">Filter</string>
+    <string name="many_filter_button_title">Filters</string>
+    <plurals name="filter_button_title">
+        <item quantity="one">@string/single_filter_button_title</item>
+        <item quantity="other">@string/many_filter_button_title</item>
+    </plurals>
     <string name="accessible_filter_button_title">Wheelchair accessible</string>
 
     <string name="watershed_alliance_label">Watershed Alliance</string>
@@ -38,8 +43,6 @@
     <!-- place details -->
     <plurals name="place_upcoming_activities_count">
         <item quantity="one">%d upcoming event</item>
-        <item quantity="many">%d upcoming events</item>
-        <item quantity="few">%d upcoming events</item>
         <item quantity="other">%d upcoming events</item>
     </plurals>
 

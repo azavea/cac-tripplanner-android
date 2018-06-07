@@ -86,7 +86,6 @@ public abstract class FilterableListActivity extends BaseAttractionActivity
         } else {
             filterButton.setCompoundDrawablesWithIntrinsicBounds(filterIcon, null, null, null);
         }
-
     }
 
     @Override

@@ -33,7 +33,7 @@
 
             <TextView
                 android:textColor="@color/color_white"
-                android:text="@string/filter_button_title"
+                android:text="@string/many_filter_button_title"
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:textAllCaps="true"
