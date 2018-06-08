@@ -2,6 +2,7 @@ package com.gophillygo.app.data.models;
 
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
+import android.util.SparseArray;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -76,7 +77,7 @@ public class Filter extends BaseObservable implements Serializable {
     }
 
     public boolean matches(DestinationInfo info) {
-        boolean categoryMatches = categoryMatches(info.getDestination().getCategories());
+        boolean categoryMatches = categoryMatches(info.getDestination().getCategoryFlags());
         boolean flagMatches = flagMatches(info.getFlag());
         boolean accessibleMatches = accessibleMatches(info.getDestination().isAccessible());
 
@@ -84,25 +85,21 @@ public class Filter extends BaseObservable implements Serializable {
     }
 
     public boolean matches(EventInfo info) {
-        boolean categoryMatches = categoryMatches(info.getDestinationCategories());
+        boolean categoryMatches = categoryMatches(info.getCategories());
         boolean flagMatches = flagMatches(info.getFlag());
         boolean accessibleMatches = accessibleMatches(info.getEvent().isAccessible());
 
         return categoryMatches && flagMatches && accessibleMatches;
     }
 
-    private boolean categoryMatches(List<String> destCategories) {
-        boolean categoryMatches = categories().isEmpty();
-        if (destCategories == null) {
-            return categoryMatches;
+    private boolean categoryMatches(DestinationCategories categories) {
+        // match all if not filtering by category
+        if (!nature && !exercise && !educational) {
+            return true;
         }
-
-        for (String category : categories()) {
-            if (destCategories.contains(category)) {
-                categoryMatches = true;
-            }
-        }
-        return categoryMatches;
+        // match on any filter category
+        return ((nature && categories.isNature()) || (educational && categories.isEducational()) ||
+                (exercise && categories.isExercise()));
     }
 
     private boolean flagMatches(AttractionFlag flag) {
@@ -121,21 +118,6 @@ public class Filter extends BaseObservable implements Serializable {
             accessibleMatches = false;
         }
         return accessibleMatches;
-    }
-
-    private List<String> categories() {
-        List<String> categories = new ArrayList<>();
-        if (nature) {
-            categories.add(NATURE_CATEGORY);
-        }
-        if (exercise) {
-            categories.add(EXERCISE_CATEGORY);
-        }
-        if (educational) {
-            categories.add(EDUCATIONAL_CATEGORY);
-        }
-        return categories;
-
     }
 
     private List<AttractionFlag.Option> flags() {

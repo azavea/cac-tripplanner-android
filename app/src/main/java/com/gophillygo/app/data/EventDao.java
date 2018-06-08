@@ -3,6 +3,7 @@ package com.gophillygo.app.data;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
+import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Transaction;
 
@@ -17,13 +18,14 @@ import java.util.List;
 
 @Dao
 public abstract class EventDao implements AttractionDao<Event> {
+    @Transaction
     @Query("SELECT event.*, destination.name AS destinationName, NULL AS distance, " +
             "destination.categories AS destinationCategories, attractionflag.option, " +
             "destination.x, destination.y, destination.distance " +
             "FROM event " +
             "LEFT JOIN destination ON destination.id = event.destination " +
             "LEFT JOIN attractionflag " +
-            "ON event.id = attractionflag.attractionID AND attractionflag.is_event = 1 " +
+            "ON event.id = attractionflag.attraction_id AND attractionflag.is_event = 1 " +
             "ORDER BY event.start_date ASC;")
     public abstract LiveData<List<EventInfo>> getAll();
 
@@ -33,7 +35,7 @@ public abstract class EventDao implements AttractionDao<Event> {
             "FROM event " +
             "LEFT JOIN destination ON destination.id = event.destination " +
             "LEFT JOIN attractionflag " +
-            "ON event.id = attractionflag.attractionID AND attractionflag.is_event = 1 " +
+            "ON event.id = attractionflag.attraction_id AND attractionflag.is_event = 1 " +
             "WHERE event.id = :eventId")
     public abstract LiveData<EventInfo> getEvent(long eventId);
 
@@ -62,7 +64,7 @@ public abstract class EventDao implements AttractionDao<Event> {
             "FROM event " +
             "INNER JOIN destination ON destination.id = event.destination " +
             "LEFT JOIN attractionflag " +
-            "ON event.id = attractionflag.attractionID AND attractionflag.is_event = 1 " +
+            "ON event.id = attractionflag.attraction_id AND attractionflag.is_event = 1 " +
             "WHERE attractionflag.option = :geofenceFlagCode")
     public abstract List<EventInfo> getGeofenceEvents(int geofenceFlagCode);
 
@@ -78,7 +80,7 @@ public abstract class EventDao implements AttractionDao<Event> {
             "FROM event " +
             "LEFT JOIN destination ON destination.id = event.destination " +
             "LEFT JOIN attractionflag " +
-            "ON event.id = attractionflag.attractionID AND attractionflag.is_event = 1 " +
+            "ON event.id = attractionflag.attraction_id AND attractionflag.is_event = 1 " +
             "WHERE event.id = :eventId")
     public abstract EventInfo getEventInBackground(long eventId);
 }

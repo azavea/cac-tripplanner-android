@@ -1,4 +1,4 @@
-package com.gophillygo.app;
+package com.gophillygo.app.utils;
 
 import android.content.Context;
 import android.databinding.BindingAdapter;

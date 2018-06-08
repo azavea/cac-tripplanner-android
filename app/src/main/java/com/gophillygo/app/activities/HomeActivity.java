@@ -1,26 +1,37 @@
 package com.gophillygo.app.activities;
 
+import android.arch.lifecycle.LiveData;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.GridView;
 
 import com.gophillygo.app.CarouselViewListener;
 import com.gophillygo.app.R;
 import com.gophillygo.app.adapters.PlaceCategoryGridAdapter;
+import com.gophillygo.app.data.DestinationRepository;
+import com.gophillygo.app.data.models.CategoryAttraction;
 import com.gophillygo.app.data.models.Destination;
 import com.synnapps.carouselview.CarouselView;
 
+import java.util.List;
 
-public class HomeActivity extends BaseAttractionActivity {
+
+public class HomeActivity extends BaseAttractionActivity implements DestinationRepository.CategoryAttractionCallback,
+PlaceCategoryGridAdapter.GridViewHolder.PlaceGridItemClickListener {
 
     private static final String LOG_LABEL = "HomeActivity";
 
     private CarouselView carouselView;
+    RecyclerView recyclerView;
+    PlaceCategoryGridAdapter gridAdapter;
+    private GridLayoutManager layoutManager;
 
 
     @Override
@@ -34,9 +45,11 @@ public class HomeActivity extends BaseAttractionActivity {
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
 
-        GridView gridView = findViewById(R.id.home_grid_view);
-        gridView.setAdapter(new PlaceCategoryGridAdapter(this));
-        gridView.setOnItemClickListener((parent, v, position, id) -> clickedGridItem(position));
+        recyclerView = findViewById(R.id.home_grid_view);
+        layoutManager = new GridLayoutManager(this, 2);
+        recyclerView.setLayoutManager(layoutManager);
+        gridAdapter = new PlaceCategoryGridAdapter(this, this);
+        recyclerView.setAdapter(gridAdapter);
 
         carouselView = findViewById(R.id.home_carousel);
         carouselView.setIndicatorGravity(Gravity.CENTER_HORIZONTAL|Gravity.BOTTOM);
@@ -45,7 +58,6 @@ public class HomeActivity extends BaseAttractionActivity {
 
         // initialize carousel if destinations already loaded
         locationOrDestinationsChanged();
-
     }
 
     @Override
@@ -54,6 +66,8 @@ public class HomeActivity extends BaseAttractionActivity {
         // set up carousel with nearest destinations
         if (getNearestDestinationSize() > 0) {
             setUpCarousel();
+            // request random images for the filter grid categories, and notify the adapter
+            viewModel.getCategoryAttractions(this);
         } else {
             Log.w(LOG_LABEL, "No nearest destinations yet in locationOrDestinationChanged");
         }
@@ -123,7 +137,8 @@ public class HomeActivity extends BaseAttractionActivity {
         carouselView.playCarousel();
     }
 
-    private void clickedGridItem(int position) {
+    @Override
+    public void clickedGridItem(int position) {
         Log.d(LOG_LABEL, "clicked grid view item: " + position);
 
         switch (position) {
@@ -136,5 +151,24 @@ public class HomeActivity extends BaseAttractionActivity {
                 // TODO: #18 filter list based on selected grid item
                 startActivity(new Intent(this, PlacesListActivity.class));
         }
+    }
+
+    @Override
+    public void gotCategoryAttractions(LiveData<List<CategoryAttraction>> categoryAttractions) {
+        Log.d(LOG_LABEL, "Getting category attractions");
+        categoryAttractions.observe(this, data -> {
+            recyclerView.post(() -> {
+                gridAdapter.submitList(data);
+                gridAdapter.notifyDataSetChanged();
+                Log.d(LOG_LABEL, "Got category attractions");
+                if (data == null || data.isEmpty()) {
+                    Log.e(LOG_LABEL, "Category attractions are missing");
+                    return;
+                }
+                for (CategoryAttraction category : data) {
+                    Log.d(LOG_LABEL, category.getCategory().displayName + " gets picture " + category.getImage());
+                }
+            });
+        });
     }
 }

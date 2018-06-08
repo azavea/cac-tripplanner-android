@@ -1,10 +1,12 @@
 package com.gophillygo.app.data.models;
 
+import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Embedded;
 import android.arch.persistence.room.Ignore;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class EventInfo extends AttractionInfo<Event> {
@@ -20,10 +22,17 @@ public class EventInfo extends AttractionInfo<Event> {
 
     // fetch fields of related destination from database into these properties
     private final String destinationName;
+
     private final ArrayList<String> destinationCategories;
 
     @Embedded
+    @Ignore
+    private final DestinationCategories categories;
+
+    @Embedded
     private final DestinationLocation location;
+
+    @ColumnInfo(index = true)
     private final Float distance;
     @Ignore
     private final String formattedDistance;
@@ -40,6 +49,14 @@ public class EventInfo extends AttractionInfo<Event> {
             this.formattedDistance = numberFormatter.format(distance.floatValue()) + " mi";
         } else {
             this.formattedDistance = "";
+        }
+
+        if (destinationCategories != null && !destinationCategories.isEmpty()) {
+            this.categories = new DestinationCategories(destinationCategories.contains(Filter.NATURE_CATEGORY),
+                    destinationCategories.contains(Filter.EXERCISE_CATEGORY),
+                    destinationCategories.contains(Filter.EDUCATIONAL_CATEGORY));
+        } else {
+            this.categories = new DestinationCategories(false, false, false);
         }
     }
 
@@ -77,6 +94,10 @@ public class EventInfo extends AttractionInfo<Event> {
 
     public ArrayList<String> getDestinationCategories() {
         return destinationCategories;
+    }
+
+    public DestinationCategories getCategories() {
+        return categories;
     }
 
     @Override

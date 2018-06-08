@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -16,12 +17,9 @@ import com.gophillygo.app.R;
 import com.gophillygo.app.adapters.PlacesListAdapter;
 import com.gophillygo.app.data.models.AttractionFlag;
 import com.gophillygo.app.data.models.AttractionInfo;
-import com.gophillygo.app.data.models.Destination;
 import com.gophillygo.app.data.models.DestinationInfo;
 import com.gophillygo.app.databinding.ActivityPlacesListBinding;
 import com.gophillygo.app.databinding.FilterButtonBarBinding;
-import com.gophillygo.app.tasks.AddGeofencesBroadcastReceiver;
-import com.gophillygo.app.tasks.RemoveGeofenceWorker;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +29,7 @@ public class PlacesListActivity extends FilterableListActivity implements
 
     private static final String LOG_LABEL = "PlacesList";
 
-    private LinearLayoutManager layoutManager;
+    private GridLayoutManager layoutManager;
     private RecyclerView placesListView;
     PlacesListAdapter placesListAdapter;
 
@@ -86,7 +84,7 @@ public class PlacesListActivity extends FilterableListActivity implements
         super.onCreate(savedInstanceState);
 
         // set up list of places
-        layoutManager = new LinearLayoutManager(this);
+        layoutManager = new GridLayoutManager(this, 2);
         placesListView = findViewById(R.id.places_list_recycler_view);
     }
 
