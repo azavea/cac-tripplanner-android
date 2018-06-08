@@ -207,7 +207,8 @@ public class Attraction {
             if (stringBuilder.length() > 0) {
                 stringBuilder.append(dot);
             }
-            stringBuilder.append(activity);
+            String capitalizedActivity = activity.substring(0, 1).toUpperCase() + activity.substring(1);
+            stringBuilder.append(capitalizedActivity);
         }
         return stringBuilder.toString();
     }
