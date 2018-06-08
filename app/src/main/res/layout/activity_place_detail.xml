@@ -27,12 +27,12 @@
                 android:minHeight="200dp"
                 app:fillColor="@color/color_white"
                 app:indicatorGravity="bottom"
-                app:indicatorMarginHorizontal="5dp"
-                app:indicatorMarginVertical="10dp"
-                app:pageColor="@color/color_background_grey"
+                app:indicatorMarginHorizontal="16dp"
+                app:indicatorMarginVertical="8dp"
+                app:pageColor="#66FFFFFF"
                 app:radius="3dp"
                 app:slideInterval="4000"
-                app:strokeColor="@color/color_background_grey"
+                app:strokeColor="#00FFFFFF"
                 app:strokeWidth="0dp" />
 
             <TextView
