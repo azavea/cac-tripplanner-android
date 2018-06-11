@@ -10,6 +10,7 @@
     android:id="@+id/relativeLayout">
 
     <android.support.constraint.ConstraintLayout
+        android:descendantFocusability="blocksDescendants"
         android:layout_height="wrap_content"
         android:layout_width="match_parent" >
 
