@@ -42,7 +42,7 @@
                 android:layout_marginStart="24dp"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="@string/filter_button_title"
+                android:text="@string/many_filter_button_title"
                 android:textAlignment="center"
                 android:textAllCaps="true"
                 android:textColor="@color/color_white" />

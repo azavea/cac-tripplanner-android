@@ -51,7 +51,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
             android:layout_marginLeft="16dp"
-            android:drawablePadding="8dp"
+            android:drawablePadding="6dp"
             android:drawableStart="@drawable/ic_place_white_16dp"
             android:text="@{destination.getFormattedDistance}"
             android:textColor="?android:attr/colorForegroundInverse"
