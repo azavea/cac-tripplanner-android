@@ -3,26 +3,26 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.gophillygo.app.activities.PlacesListActivity">
+
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-        <android.support.constraint.ConstraintLayout
-            android:id="@+id/relativeLayout2"
+        
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/places_list_app_bar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/places_list_toolbar"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/color_primary"
                 android:elevation="0dp"
                 android:fitsSystemWindows="true"
                 android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/empty_places_list"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/places_list_filter_button_bar"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
                 app:title="@string/places_list_title"
                 tools:targetApi="lollipop" />
@@ -30,31 +30,30 @@
             <include
                 android:id="@+id/places_list_filter_button_bar"
                 layout="@layout/filter_button_bar"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/places_list_toolbar" />
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/places_list_recycler_view"
-                android:layout_below="@id/places_list_filter_button_bar"
-                app:layout_constraintTop_toBottomOf="@id/places_list_filter_button_bar"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-            </android.support.v7.widget.RecyclerView>
-
-            <TextView
-                android:id="@+id/empty_places_list"
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="@string/filter_no_results"
-                android:visibility="gone"
+                app:layout_constraintBottom_toTopOf="@+id/places_list_recycler_view"
                 app:layout_constraintTop_toBottomOf="@+id/places_list_filter_button_bar" />
+        </android.support.design.widget.AppBarLayout>
 
-        </android.support.constraint.ConstraintLayout>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/places_list_recycler_view"
+            app:layout_constraintTop_toBottomOf="@id/places_list_app_bar"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </android.support.v7.widget.RecyclerView>
+
+        <TextView
+            android:id="@+id/empty_places_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/filter_no_results"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@+id/places_list_app_bar" />
     </android.support.design.widget.CoordinatorLayout>
 </layout>

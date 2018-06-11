@@ -102,9 +102,8 @@ public class AttractionListAdapter<T extends AttractionInfo> extends ListAdapter
 
     @Override
     public void submitList(List<T> list) {
-        super.submitList(list);
-        Log.d(LOG_LABEL, "got a list of length " + list.size());
         this.attractionList = list;
+        super.submitList(list);
     }
 
     @NonNull

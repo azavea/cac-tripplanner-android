@@ -78,6 +78,7 @@ public class PlacesListActivity extends FilterableListActivity implements
         // set up list of places
         layoutManager = new LinearLayoutManager(this);
         placesListView = findViewById(R.id.places_list_recycler_view);
+        placesListView.setLayoutManager(layoutManager);
 
         // If destinations were loaded before this activity showed, use them immediately.
         if (destinationInfos != null && !destinationInfos.isEmpty()) {
@@ -108,13 +109,14 @@ public class PlacesListActivity extends FilterableListActivity implements
             // must set the list before the adapter for the differ to initialize properly
             placesListAdapter.submitList(filteredDestinations);
             placesListView.setAdapter(placesListAdapter);
-            placesListView.setLayoutManager(layoutManager);
         } else {
             Log.d(LOG_LABEL, "submit list for diff");
             // Let the AsyncListDiffer find which have changed, and only update their view holders
             // https://developer.android.com/reference/android/support/v7/recyclerview/extensions/ListAdapter
             placesListAdapter.submitList(filteredDestinations);
         }
+        placesListAdapter.notifyDataSetChanged();
+        placesListView.requestLayout();
     }
 
     @Override
