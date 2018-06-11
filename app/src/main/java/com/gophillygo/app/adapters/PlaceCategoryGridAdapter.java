@@ -15,7 +15,6 @@ import com.gophillygo.app.BR;
 import com.gophillygo.app.R;
 import com.gophillygo.app.data.models.CategoryAttraction;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -26,7 +25,6 @@ public class PlaceCategoryGridAdapter extends ListAdapter<CategoryAttraction, Pl
 
     private List<CategoryAttraction> categoryAttractions;
 
-    private  Context context;
     private LayoutInflater inflater;
     private GridViewHolder.PlaceGridItemClickListener listener;
 
@@ -34,7 +32,6 @@ public class PlaceCategoryGridAdapter extends ListAdapter<CategoryAttraction, Pl
         private final ViewDataBinding binding;
 
         public interface PlaceGridItemClickListener {
-            // TODO: click callback
             void clickedGridItem(int position);
         }
 
@@ -44,7 +41,6 @@ public class PlaceCategoryGridAdapter extends ListAdapter<CategoryAttraction, Pl
             this.binding = binding;
         }
         public void bind(CategoryAttraction info) {
-            Log.d(LOG_LABEL, "Binding to " + info.getCategory().displayName);
             binding.setVariable(BR.category, info);
             binding.setVariable(BR.position, getAdapterPosition());
             binding.executePendingBindings();
@@ -55,7 +51,6 @@ public class PlaceCategoryGridAdapter extends ListAdapter<CategoryAttraction, Pl
         super(new DiffUtil.ItemCallback<CategoryAttraction>() {
             @Override
             public boolean areItemsTheSame(CategoryAttraction oldItem, CategoryAttraction newItem) {
-                Log.d(LOG_LABEL, "areTheSame");
                 if (oldItem == null) {
                     return newItem == null;
                 } else {
@@ -65,7 +60,6 @@ public class PlaceCategoryGridAdapter extends ListAdapter<CategoryAttraction, Pl
 
             @Override
             public boolean areContentsTheSame(CategoryAttraction oldItem, CategoryAttraction newItem) {
-                Log.d(LOG_LABEL, "areContentsTheSame");
                 return Objects.equals(oldItem, newItem);
             }
         });
@@ -73,17 +67,8 @@ public class PlaceCategoryGridAdapter extends ListAdapter<CategoryAttraction, Pl
 
     public PlaceCategoryGridAdapter(Context context, GridViewHolder.PlaceGridItemClickListener listener) {
         this();
-        this.context = context;
         this.inflater = LayoutInflater.from(context);
         this.listener = listener;
-
-        // FIXME
-        this.categoryAttractions = new ArrayList<>(CategoryAttraction.PlaceCategories.size());
-        for (CategoryAttraction.PlaceCategories placeCategory : CategoryAttraction.PlaceCategories.values()) {
-            categoryAttractions.add(placeCategory.code, new CategoryAttraction(placeCategory.code, ""));
-        }
-        Log.d(LOG_LABEL, "created category grid adapter");
-
     }
 
     @NonNull
@@ -101,12 +86,14 @@ public class PlaceCategoryGridAdapter extends ListAdapter<CategoryAttraction, Pl
     public void onBindViewHolder(@NonNull GridViewHolder holder, int position) {
         CategoryAttraction item = getItem(position);
         holder.bind(item);
-        Log.d(LOG_LABEL, "bound view holder to " + item.getCategory());
+        holder.itemView.setTag(item);
     }
 
     @Override
     protected CategoryAttraction getItem(int position) {
-        Log.d(LOG_LABEL, "getItem");
+        if (categoryAttractions == null) {
+            return null;
+        }
         return categoryAttractions.get(position);
     }
 
@@ -122,13 +109,11 @@ public class PlaceCategoryGridAdapter extends ListAdapter<CategoryAttraction, Pl
     @Override
     public void submitList(List<CategoryAttraction> list) {
         super.submitList(list);
-        Log.d(LOG_LABEL, "submitted list of size " + list.size());
         this.categoryAttractions = list;
     }
 
     @Override
     public int getItemCount() {
-        Log.d(LOG_LABEL, "Returning item count " + categoryAttractions.size());
-        return categoryAttractions.size();
+        return categoryAttractions == null ? 0 : categoryAttractions.size();
     }
 }

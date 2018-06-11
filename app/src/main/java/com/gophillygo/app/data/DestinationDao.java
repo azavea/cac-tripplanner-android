@@ -2,16 +2,15 @@ package com.gophillygo.app.data;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MediatorLiveData;
-import android.arch.lifecycle.MutableLiveData;
-import android.arch.lifecycle.Observer;
 import android.arch.persistence.room.Dao;
-import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Transaction;
-import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.gophillygo.app.data.models.Attraction;
+import com.gophillygo.app.data.models.AttractionFlag;
 import com.gophillygo.app.data.models.CategoryAttraction;
+import com.gophillygo.app.data.models.CategoryAttraction.PlaceCategories;
 import com.gophillygo.app.data.models.CategoryImage;
 import com.gophillygo.app.data.models.Destination;
 import com.gophillygo.app.data.models.DestinationInfo;
@@ -26,7 +25,7 @@ import java.util.List;
 @Dao
 public abstract class DestinationDao implements AttractionDao<Destination> {
 
-    public static final int NUM_DESTINATION_CATEGORIES = 5;
+    private static final String LOG_LABEL = "DestinationDao";
 
     @Transaction
     @Query("SELECT destination.*, COUNT(event.id) AS eventCount, attractionflag.option " +
@@ -60,6 +59,29 @@ public abstract class DestinationDao implements AttractionDao<Destination> {
     @Query("SELECT id AS attractionID, 1 AS is_event, image FROM event ORDER BY random() LIMIT 1")
     protected abstract LiveData<CategoryImage> getEventCategoryImage();
 
+    @Query("SELECT id AS attractionID, 0 AS is_event, destination.image AS image " +
+            "FROM destination " +
+            "LEFT JOIN attractionflag " +
+            "ON destination.id = attractionflag.attraction_id AND attractionflag.is_event = 0 " +
+            "WHERE attractionflag.option = :flag " +
+            "ORDER BY random() " +
+            "LIMIT 1")
+    public abstract LiveData<CategoryImage> getRandomImagesForFlag(int flag);
+
+    @Query("SELECT id AS attractionID, 0 AS is_event, destination.image AS image " +
+            "FROM destination " +
+            "WHERE nature = 1 " +
+            "ORDER BY random() " +
+            "LIMIT 1")
+    public abstract LiveData<CategoryImage> getRandomNatureImages();
+
+    @Query("SELECT id AS attractionID, 0 AS is_event, destination.image AS image " +
+            "FROM destination " +
+            "WHERE exercise = 1 " +
+            "ORDER BY random() " +
+            "LIMIT 1")
+    public abstract LiveData<CategoryImage> getRandomExerciseImages();
+
     /**
      * Find random representative images for each of the filter buttons on the home screen.
      * Must be called from background thread.
@@ -68,62 +90,63 @@ public abstract class DestinationDao implements AttractionDao<Destination> {
      * keep requests to a single transaction. The others are based on either destination category
      * or user flag.
      *
-     * Attempts to find a unique, randomized set of {@link Attraction} for each filter button,
-     * but may return duplicates.
+     * Gets a randomized set of {@link Attraction} for each filter button. May return duplicates.
      *
      * @return One randomized image for each of the home page grid of filter categories
      */
     @Transaction
     public LiveData<List<CategoryAttraction>> getCategoryImages() {
-        ArrayList<CategoryAttraction> categoryAttractions = new ArrayList<>(NUM_DESTINATION_CATEGORIES + 1);
-        // one query for event
-
-        // TODO: 5 queries for destinations: ORDER BY RANDOM() LIMIT 5
-        // TODO: order queries by result size, ascending
-        // TODO: pick first from each result set that hasn't already been used, or reuse last
-
+        ArrayList<CategoryAttraction> categoryAttractions = new ArrayList<>(CategoryAttraction.PlaceCategories.size());
+        for (CategoryAttraction.PlaceCategories placeCategory : CategoryAttraction.PlaceCategories.values()) {
+            categoryAttractions.add(placeCategory.code, new CategoryAttraction(placeCategory.code, ""));
+        }
+        Log.d(LOG_LABEL, "created category grid adapter");
 
         MediatorLiveData<List<CategoryAttraction>> data = new MediatorLiveData<>();
-        LiveData<CategoryImage> eventCategory = getEventCategoryImage();
-        data.addSource(eventCategory, categoryImage -> {
-            if (categoryImage == null) return;
-            CategoryAttraction attraction = new CategoryAttraction(CategoryAttraction.PlaceCategories.Events.code, categoryImage.getImage());
-            categoryAttractions.add(attraction);
+        LiveData<CategoryImage> event = getEventCategoryImage();
+        addSourceToRandomImagesLiveData(event, PlaceCategories.Events, categoryAttractions, data);
 
-            // FIXME: remove
-            String image = categoryImage.getImage();
-            CategoryAttraction one = new CategoryAttraction(CategoryAttraction.PlaceCategories.WantToGo.code, image);
-            CategoryAttraction two = new CategoryAttraction(CategoryAttraction.PlaceCategories.Liked.code, image);
-            CategoryAttraction three = new CategoryAttraction(CategoryAttraction.PlaceCategories.Nature.code, image);
-            CategoryAttraction four = new CategoryAttraction(CategoryAttraction.PlaceCategories.Exercise.code, image);
-            CategoryAttraction five = new CategoryAttraction(CategoryAttraction.PlaceCategories.Educational.code, image);
+        LiveData<CategoryImage> wantToGo = getRandomImagesForFlag(AttractionFlag.Option.WantToGo.code);
+        addSourceToRandomImagesLiveData(wantToGo, PlaceCategories.WantToGo, categoryAttractions, data);
 
-            categoryAttractions.add(one);
-            categoryAttractions.add(two);
-            categoryAttractions.add(three);
-            categoryAttractions.add(four);
-            categoryAttractions.add(five);
-            ///////////////////////////////////////
+        LiveData<CategoryImage> liked = getRandomImagesForFlag(AttractionFlag.Option.Liked.code);
+        addSourceToRandomImagesLiveData(liked, PlaceCategories.Liked, categoryAttractions, data);
 
-            data.postValue(categoryAttractions);
-            data.removeSource(eventCategory);
-        });
+        LiveData<CategoryImage> nature = getRandomNatureImages();
+        addSourceToRandomImagesLiveData(nature, PlaceCategories.Nature, categoryAttractions, data);
 
+        LiveData<CategoryImage> exercise = getRandomExerciseImages();
+        addSourceToRandomImagesLiveData(exercise, PlaceCategories.Exercise, categoryAttractions, data);
+
+        LiveData<CategoryImage> educational = getRandomExerciseImages();
+        addSourceToRandomImagesLiveData(educational, PlaceCategories.Educational, categoryAttractions, data);
         return data;
     }
 
     /**
+     * Helper method to build a synthesized `LiveData` object containing all categories
+     * for the home page grid of random images.
      *
-     * @return One random attraction per category
+     * @param source A `LiveData` result to add to the set of `LiveData`
+     * @param category Which category this is for
+     * @param categoryAttractions Set of results being built
+     * @param data The `MediatorLiveData` to attach this source to
      */
-    /* FIXME:
-    @Query("SELECT attractionflag.option, destination.image " +
-            "FROM destination " +
-            "LEFT JOIN attractionflag " +
-            "ON destination.id = attractionflag.attraction_id AND attractionflag.is_event = 0 " +
-            "GROUP BY attractionflag.option")
-    public abstract LiveData<String> getRandomLikedWantToGoImages();
-    */
+    private void addSourceToRandomImagesLiveData(LiveData<CategoryImage> source,
+                                                 PlaceCategories category,
+                                                 ArrayList<CategoryAttraction> categoryAttractions,
+                                                 MediatorLiveData<List<CategoryAttraction>> data) {
+
+        data.addSource(source, categoryImage -> {
+            if (categoryImage == null) {
+                return;
+            }
+            CategoryAttraction attraction = new CategoryAttraction(category.code, categoryImage.getImage());
+            categoryAttractions.set(category.code, attraction);
+            data.postValue(categoryAttractions);
+            data.removeSource(source);
+        });
+    }
 
     /**
      * Find those destinations with a given flag set, which are those that should be geofenced.

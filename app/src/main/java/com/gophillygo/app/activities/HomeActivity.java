@@ -19,6 +19,7 @@ import com.gophillygo.app.data.models.CategoryAttraction;
 import com.gophillygo.app.data.models.Destination;
 import com.synnapps.carouselview.CarouselView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -33,14 +34,14 @@ PlaceCategoryGridAdapter.GridViewHolder.PlaceGridItemClickListener {
     private CarouselView carouselView;
     RecyclerView recyclerView;
     PlaceCategoryGridAdapter gridAdapter;
-    private GridLayoutManager layoutManager;
-
+    List<CategoryAttraction> categories;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         Log.d(LOG_LABEL, "onCreate");
+        categories = new ArrayList<>(CategoryAttraction.PlaceCategories.size());
 
         Toolbar toolbar = findViewById(R.id.home_toolbar);
         // disable default app name title display
@@ -48,7 +49,7 @@ PlaceCategoryGridAdapter.GridViewHolder.PlaceGridItemClickListener {
         setSupportActionBar(toolbar);
 
         recyclerView = findViewById(R.id.home_grid_view);
-        layoutManager = new GridLayoutManager(this, NUM_COLUMNS);
+        GridLayoutManager layoutManager = new GridLayoutManager(this, NUM_COLUMNS);
         recyclerView.setLayoutManager(layoutManager);
         gridAdapter = new PlaceCategoryGridAdapter(this, this);
         recyclerView.setAdapter(gridAdapter);
@@ -160,15 +161,28 @@ PlaceCategoryGridAdapter.GridViewHolder.PlaceGridItemClickListener {
         Log.d(LOG_LABEL, "Getting category attractions");
         categoryAttractions.observe(this, data -> {
             recyclerView.post(() -> {
-                gridAdapter.submitList(data);
-                gridAdapter.notifyDataSetChanged();
                 Log.d(LOG_LABEL, "Got category attractions");
                 if (data == null || data.isEmpty()) {
                     Log.e(LOG_LABEL, "Category attractions are missing");
                     return;
                 }
-                for (CategoryAttraction category : data) {
-                    Log.d(LOG_LABEL, category.getCategory().displayName + " gets picture " + category.getImage());
+
+                // Submit `categories` list managed by this activity, rather than the `data` list
+                // owned by the DAO, in order to be able to remove categories with no entries
+                // (empty image). Do not destroy/recreate list here, so list differ will
+                // correctly recognize that the reference hasn't changed.
+
+                categories.clear();
+                categories.addAll(data);
+                gridAdapter.submitList(categories);
+                gridAdapter.notifyDataSetChanged();
+
+                for (CategoryAttraction attraction: data) {
+                    if (attraction.getImage().isEmpty()) {
+                        categories.remove(attraction);
+                        gridAdapter.submitList(categories);
+                        gridAdapter.notifyItemRemoved(attraction.getCategory().code);
+                    }
                 }
             });
         });
