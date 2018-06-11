@@ -22,11 +22,12 @@ import cn.nekocode.badge.BadgeDrawable;
 public abstract class FilterableListActivity extends BaseAttractionActivity
         implements FilterDialog.FilterChangeListener, ToolbarFilterListener {
 
+    public final String FILTER_KEY = "filter";
+
     private final int toolbarId;
 
     private Button filterButton;
     private Drawable filterIcon;
-    private Toolbar toolbar;
 
     protected Filter filter;
     private FilterButtonBarBinding filterBinding;
@@ -44,10 +45,11 @@ public abstract class FilterableListActivity extends BaseAttractionActivity
 
         filterBinding = setupDataBinding();
         filterBinding.setListener(this);
+        filter = new Filter();
         filterBinding.setFilter(filter);
 
         // set up toolbar
-        toolbar = findViewById(toolbarId);
+        Toolbar toolbar = findViewById(toolbarId);
         setSupportActionBar(toolbar);
         //noinspection ConstantConditions
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -55,7 +57,6 @@ public abstract class FilterableListActivity extends BaseAttractionActivity
         filterIcon = ContextCompat.getDrawable(this, R.drawable.ic_filter_list_white_24dp);
 
         // set up filter button
-        filter = new Filter();
         filterButton = findViewById(R.id.filter_bar_filter_button);
         filterButton.setOnClickListener(v -> {
             // Need to give the filter dialog a copy of the filter, or toggling the
@@ -63,10 +64,22 @@ public abstract class FilterableListActivity extends BaseAttractionActivity
             FilterDialog filterDialog = FilterDialog.newInstance(new Filter(filter));
             filterDialog.show(getSupportFragmentManager(), filterDialog.getTag());
         });
+
+        if (getIntent().hasExtra(FILTER_KEY)) {
+            filter = (Filter) getIntent().getSerializableExtra(FILTER_KEY);
+        } else if (savedInstanceState != null && savedInstanceState.containsKey(FILTER_KEY)) {
+            setFilter((Filter) savedInstanceState.getSerializable(FILTER_KEY));
+        }
     }
 
     @Override
-    public void filterChanged(Filter filter) {
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putSerializable(FILTER_KEY, filter);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void setFilter(Filter filter) {
         this.filter = filter;
         filterBinding.setFilter(filter);
         filterBinding.notifyPropertyChanged(BR.filter);
@@ -91,13 +104,13 @@ public abstract class FilterableListActivity extends BaseAttractionActivity
     @Override
     public void toggleLiked() {
         filter.setLiked(filterBinding.filterBarLikedButton.isChecked());
-        filterChanged(filter);
+        setFilter(filter);
     }
 
     @Override
     public void toggleWantToGo() {
         filter.setWantToGo(filterBinding.filterBarWantToGoButton.isChecked());
-        filterChanged(filter);
+        setFilter(filter);
     }
 
 }

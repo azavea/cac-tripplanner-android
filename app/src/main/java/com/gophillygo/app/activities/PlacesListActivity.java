@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -35,13 +34,6 @@ public class PlacesListActivity extends FilterableListActivity implements
 
     public PlacesListActivity() {
         super(R.id.places_list_toolbar);
-
-        // If destinations were loaded before this activity showed, use them immediately.
-        if (destinationInfos != null && !destinationInfos.isEmpty()) {
-            loadData();
-        } else {
-            Log.d(LOG_LABEL, "Have no destinations for the places list");
-        }
     }
 
     @Override
@@ -50,7 +42,7 @@ public class PlacesListActivity extends FilterableListActivity implements
         if (destinationInfos != null && !destinationInfos.isEmpty()) {
             loadData();
         } else {
-            Log.d(LOG_LABEL, "Have no destinations for the places list in locationOrDestinationsChanged");
+            Log.w(LOG_LABEL, "Have no destinations for the places list in locationOrDestinationsChanged");
         }
     }
 
@@ -86,6 +78,13 @@ public class PlacesListActivity extends FilterableListActivity implements
         // set up list of places
         layoutManager = new LinearLayoutManager(this);
         placesListView = findViewById(R.id.places_list_recycler_view);
+
+        // If destinations were loaded before this activity showed, use them immediately.
+        if (destinationInfos != null && !destinationInfos.isEmpty()) {
+            loadData();
+        } else {
+            Log.d(LOG_LABEL, "Have no destinations for the places list");
+        }
     }
 
     @Override
@@ -96,6 +95,7 @@ public class PlacesListActivity extends FilterableListActivity implements
 
     @Override
     protected void loadData() {
+        if (placesListView == null) return;
         Log.d(LOG_LABEL, "loadData");
         List<DestinationInfo> filteredDestinations = getFilteredDestinations();
 
@@ -146,6 +146,9 @@ public class PlacesListActivity extends FilterableListActivity implements
 
     @NonNull
     private ArrayList<DestinationInfo> getFilteredDestinations() {
+        if (destinationInfos == null) {
+            return new ArrayList<>(0);
+        }
         ArrayList<DestinationInfo> filteredDestinations = new ArrayList<>(destinationInfos.size());
         for (DestinationInfo info : destinationInfos) {
             if (filter.matches(info)) {

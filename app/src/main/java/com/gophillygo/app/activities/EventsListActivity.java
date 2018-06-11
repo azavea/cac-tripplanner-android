@@ -116,6 +116,7 @@ public class EventsListActivity extends FilterableListActivity
 
     @Override
     protected void loadData() {
+        if (eventsListView == null) return;
         List<EventInfo> filteredEvents = getFilteredEvents();
 
         TextView noDataView = findViewById(R.id.empty_events_list);
@@ -162,6 +163,7 @@ public class EventsListActivity extends FilterableListActivity
 
     @NonNull
     private List<EventInfo> getFilteredEvents() {
+        if (events == null) return new ArrayList<>(0);
         List<EventInfo> filteredEvents = new ArrayList<>(events.size());
         for (EventInfo info : events) {
             if (filter.matches(info)) {

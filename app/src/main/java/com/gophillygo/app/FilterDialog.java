@@ -20,7 +20,7 @@ public class FilterDialog extends BottomSheetDialogFragment {
     private FilterModalBinding binding;
 
     public interface FilterChangeListener {
-        void filterChanged(Filter filter);
+        void setFilter(Filter filter);
     }
 
     private static final String LOG_LABEL = "FilterDialog";
@@ -41,7 +41,7 @@ public class FilterDialog extends BottomSheetDialogFragment {
         Log.d(LOG_LABEL, "Selected " + String.valueOf(filter.count()) + " filters.");
         FilterChangeListener listener = (FilterChangeListener) getActivity();
         if (listener != null) {
-            listener.filterChanged(filter);
+            listener.setFilter(filter);
         }
 
         super.onDismiss(dialog);
