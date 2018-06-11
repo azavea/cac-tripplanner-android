@@ -6,44 +6,55 @@
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <RelativeLayout
+
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/relativeLayout2"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/places_list_toolbar"
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:fitsSystemWindows="true"
-                android:elevation="0dp"
                 android:background="@color/color_primary"
-                app:title="@string/places_list_title"
+                android:elevation="0dp"
+                android:fitsSystemWindows="true"
                 android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/empty_places_list"
                 app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                app:title="@string/places_list_title"
                 tools:targetApi="lollipop" />
 
-            <include layout="@layout/filter_button_bar"
+            <include
                 android:id="@+id/places_list_filter_button_bar"
-                android:layout_width="match_parent"
+                layout="@layout/filter_button_bar"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/places_list_toolbar" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/places_list_toolbar" />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/places_list_recycler_view"
                 android:layout_below="@id/places_list_filter_button_bar"
+                app:layout_constraintTop_toBottomOf="@id/places_list_filter_button_bar"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
             </android.support.v7.widget.RecyclerView>
 
             <TextView
                 android:id="@+id/empty_places_list"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:gravity="center"
+                android:text="@string/filter_no_results"
                 android:visibility="gone"
-                android:text="@string/filter_no_results" />
+                app:layout_constraintTop_toBottomOf="@+id/places_list_filter_button_bar" />
 
-        </RelativeLayout>
+        </android.support.constraint.ConstraintLayout>
     </android.support.design.widget.CoordinatorLayout>
 </layout>

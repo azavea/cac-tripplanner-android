@@ -4,7 +4,6 @@ import android.arch.lifecycle.LiveData;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -28,6 +27,9 @@ PlaceCategoryGridAdapter.GridViewHolder.PlaceGridItemClickListener {
 
     private static final String LOG_LABEL = "HomeActivity";
 
+    // how many columns to display in grid of filter buttons
+    private static final int NUM_COLUMNS = 2;
+
     private CarouselView carouselView;
     RecyclerView recyclerView;
     PlaceCategoryGridAdapter gridAdapter;
@@ -46,7 +48,7 @@ PlaceCategoryGridAdapter.GridViewHolder.PlaceGridItemClickListener {
         setSupportActionBar(toolbar);
 
         recyclerView = findViewById(R.id.home_grid_view);
-        layoutManager = new GridLayoutManager(this, 2);
+        layoutManager = new GridLayoutManager(this, NUM_COLUMNS);
         recyclerView.setLayoutManager(layoutManager);
         gridAdapter = new PlaceCategoryGridAdapter(this, this);
         recyclerView.setAdapter(gridAdapter);

@@ -29,7 +29,7 @@ public class PlacesListActivity extends FilterableListActivity implements
 
     private static final String LOG_LABEL = "PlacesList";
 
-    private GridLayoutManager layoutManager;
+    private LinearLayoutManager layoutManager;
     private RecyclerView placesListView;
     PlacesListAdapter placesListAdapter;
 
@@ -84,7 +84,7 @@ public class PlacesListActivity extends FilterableListActivity implements
         super.onCreate(savedInstanceState);
 
         // set up list of places
-        layoutManager = new GridLayoutManager(this, 2);
+        layoutManager = new LinearLayoutManager(this);
         placesListView = findViewById(R.id.places_list_recycler_view);
     }
 
