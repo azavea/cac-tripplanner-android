@@ -61,6 +61,8 @@ abstract public class AttractionNetworkBoundResource<A extends Attraction, I ext
                 item.setCategoryFlags(new DestinationCategories(categories.contains(Filter.NATURE_CATEGORY),
                         categories.contains(Filter.EXERCISE_CATEGORY),
                         categories.contains(Filter.EDUCATIONAL_CATEGORY)));
+            } else {
+                item.setCategoryFlags(new DestinationCategories(false, false, false));
             }
             destinationIds.add(item.getId());
             destinationDao.save(item);

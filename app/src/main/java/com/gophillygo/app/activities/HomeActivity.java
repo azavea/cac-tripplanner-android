@@ -17,10 +17,13 @@ import com.gophillygo.app.adapters.PlaceCategoryGridAdapter;
 import com.gophillygo.app.data.DestinationRepository;
 import com.gophillygo.app.data.models.CategoryAttraction;
 import com.gophillygo.app.data.models.Destination;
+import com.gophillygo.app.data.models.Filter;
 import com.synnapps.carouselview.CarouselView;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.gophillygo.app.activities.FilterableListActivity.FILTER_KEY;
 
 
 public class HomeActivity extends BaseAttractionActivity implements DestinationRepository.CategoryAttractionCallback,
@@ -152,8 +155,39 @@ PlaceCategoryGridAdapter.GridViewHolder.PlaceGridItemClickListener {
             default:
                 // go to places list
                 // TODO: #18 filter list based on selected grid item
-                startActivity(new Intent(this, PlacesListActivity.class));
+                if (categories == null || position >= categories.size()) {
+                    Log.e(LOG_LABEL, "Cannot go to filtered list because categories are missing");
+                    startActivity(new Intent(this, PlacesListActivity.class));
+                }
+                CategoryAttraction attraction = categories.get(position);
+                goToFilteredPlacesList(attraction.getCategory());
         }
+    }
+
+    private void goToFilteredPlacesList(CategoryAttraction.PlaceCategories category) {
+        Filter filter = new Filter();
+        switch (category) {
+            case WantToGo:
+                filter.setWantToGo(true);
+                break;
+            case Liked:
+                filter.setLiked(true);
+                break;
+            case Nature:
+                filter.setNature(true);
+                break;
+            case Exercise:
+                filter.setExercise(true);
+                break;
+            case Educational:
+                filter.setEducational(true);
+                break;
+            default:
+                Log.e(LOG_LABEL, "Unrecognized place category " + category.displayName);
+        }
+        Intent intent = new Intent(this, PlacesListActivity.class);
+        intent.putExtra(FILTER_KEY, filter);
+        startActivity(intent);
     }
 
     @Override

@@ -22,7 +22,7 @@ import cn.nekocode.badge.BadgeDrawable;
 public abstract class FilterableListActivity extends BaseAttractionActivity
         implements FilterDialog.FilterChangeListener, ToolbarFilterListener {
 
-    public final String FILTER_KEY = "filter";
+    public final static String FILTER_KEY = "filter";
 
     private final int toolbarId;
 
@@ -66,7 +66,7 @@ public abstract class FilterableListActivity extends BaseAttractionActivity
         });
 
         if (getIntent().hasExtra(FILTER_KEY)) {
-            filter = (Filter) getIntent().getSerializableExtra(FILTER_KEY);
+            setFilter((Filter) getIntent().getSerializableExtra(FILTER_KEY));
         } else if (savedInstanceState != null && savedInstanceState.containsKey(FILTER_KEY)) {
             setFilter((Filter) savedInstanceState.getSerializable(FILTER_KEY));
         }

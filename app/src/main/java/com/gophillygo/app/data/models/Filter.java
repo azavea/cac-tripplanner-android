@@ -2,16 +2,19 @@ package com.gophillygo.app.data.models;
 
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
-import android.util.SparseArray;
+import android.util.Log;
+
+import com.gophillygo.app.BR;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import com.gophillygo.app.BR;
-
 public class Filter extends BaseObservable implements Serializable {
+
+    private static final String LOG_LABEL = "Filter";
+
     public static final String NATURE_CATEGORY = "Nature";
     public static final String EXERCISE_CATEGORY = "Exercise";
     public static final String EDUCATIONAL_CATEGORY = "Educational";
@@ -77,7 +80,12 @@ public class Filter extends BaseObservable implements Serializable {
     }
 
     public boolean matches(DestinationInfo info) {
-        boolean categoryMatches = categoryMatches(info.getDestination().getCategoryFlags());
+        DestinationCategories flags = info.getDestination().getCategoryFlags();
+        if (flags == null) {
+            Log.e(LOG_LABEL, "Category flags are missing for destination " + info.getDestination().getName());
+            return false;
+        }
+        boolean categoryMatches = categoryMatches(flags);
         boolean flagMatches = flagMatches(info.getFlag());
         boolean accessibleMatches = accessibleMatches(info.getDestination().isAccessible());
 
