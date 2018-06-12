@@ -70,7 +70,7 @@
             android:fontFamily="sans-serif"
             android:gravity="start"
             android:text="@{attraction.getName}"
-            android:textColor="?android:attr/colorForeground"
+            android:textColor="@color/color_black"
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

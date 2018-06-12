@@ -54,7 +54,7 @@
             android:drawablePadding="6dp"
             android:drawableStart="@drawable/ic_place_white_16dp"
             android:text="@{destination.getFormattedDistance}"
-            android:textColor="?android:attr/colorForegroundInverse"
+            android:textColor="@color/color_white"
             android:textSize="15sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent" />

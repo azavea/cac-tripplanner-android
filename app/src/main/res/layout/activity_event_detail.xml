@@ -49,7 +49,7 @@
                 android:padding="0dp"
                 android:text="@{event.getName}"
                 android:textAlignment="textStart"
-                android:textColor="?android:attr/colorForegroundInverse"
+                android:textColor="@color/color_white"
                 android:textSize="22sp"
                 app:layout_constraintBottom_toTopOf="@+id/event_detail_item_distance_label"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -68,7 +68,7 @@
                 android:gravity="start"
                 android:text='@{eventInfo.formattedDistance}'
                 android:textAlignment="textStart"
-                android:textColor="?android:attr/colorForegroundInverse"
+                android:textColor="@color/color_white"
                 android:textSize="14sp"
                 android:visibility="@{eventInfo.distance != null ? View.VISIBLE : View.GONE}"
                 app:layout_constraintBottom_toBottomOf="@+id/event_detail_carousel"
@@ -97,7 +97,7 @@
                 android:layout_marginTop="16dp"
                 android:gravity="center"
                 android:text='@{eventInfo != null ? activity.getEventTimeString() : ""}'
-                android:textColor="?android:attr/colorForeground"
+                android:textColor="@color/color_black"
                 android:textSize="22sp"
                 android:textStyle="bold"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -113,7 +113,7 @@
                 android:layout_marginTop="16dp"
                 android:gravity="center"
                 android:text="@{eventInfo.destinationName}"
-                android:textColor="?android:attr/colorForeground"
+                android:textColor="@color/color_black"
                 android:textSize="20sp"
                 android:visibility="@{eventInfo.destinationName != null ? View.VISIBLE : View.GONE}"
                 app:autoSizeTextType="uniform"
@@ -161,7 +161,7 @@
                     android:padding="8dp"
                     android:paddingStart="16dp"
                     android:text="@string/event_details_been_want_to_go_label"
-                    android:textColor="?android:attr/colorForeground"
+                    android:textColor="@color/color_black"
                     android:textSize="15sp" />
 
             </android.support.v7.widget.CardView>

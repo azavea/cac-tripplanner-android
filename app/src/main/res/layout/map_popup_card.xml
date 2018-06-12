@@ -40,7 +40,7 @@
                 android:fontFamily="sans-serif"
                 android:padding="0dp"
                 android:text="@{attraction.name}"
-                android:textColor="?android:attr/colorForeground"
+                android:textColor="@color/color_black"
                 android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
