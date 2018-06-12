@@ -56,7 +56,7 @@ public abstract class MapsActivity<T extends AttractionInfo> extends FilterableL
     private static final int DEFAULT_ZOOM = 12;
     private static final int ATTRACTION_ZOOM = 14;
     private static final float DEFAULT_OPACITY = 1f, FILTERED_OPACITY = 0.5f;
-    private static final String LOCATION_SET_KEY = "locationSet";
+    private static final String LOCATION_SET_KEY = "location_set";
     private static final String LOG_LABEL = "MapsActivity";
 
     public static final String X = "x";
@@ -64,7 +64,7 @@ public abstract class MapsActivity<T extends AttractionInfo> extends FilterableL
     public static final String ATTRACTION_ID = "id";
 
     private Map<Integer, Marker> markers;
-    private Integer selectedAttractionId = null;
+    private int selectedAttractionId = -1;
     private boolean locationSet = false;
     protected GoogleMap googleMap;
     protected Map<Integer, T> attractions;
@@ -86,7 +86,7 @@ public abstract class MapsActivity<T extends AttractionInfo> extends FilterableL
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(mapId);
-        if (savedInstanceState != null) {
+        if (savedInstanceState != null && savedInstanceState.containsKey(LOCATION_SET_KEY)) {
             locationSet = savedInstanceState.getBoolean(LOCATION_SET_KEY);
         }
         if (savedInstanceState != null && savedInstanceState.containsKey(ATTRACTION_ID)) {
@@ -103,9 +103,7 @@ public abstract class MapsActivity<T extends AttractionInfo> extends FilterableL
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putBoolean(LOCATION_SET_KEY, locationSet);
-        if (selectedAttractionId != null) {
-            outState.putInt(ATTRACTION_ID, selectedAttractionId);
-        }
+        outState.putInt(ATTRACTION_ID, selectedAttractionId);
         super.onSaveInstanceState(outState);
     }
 
@@ -230,7 +228,7 @@ public abstract class MapsActivity<T extends AttractionInfo> extends FilterableL
                     markers.put(id, marker);
                 }
             }
-            if (selectedAttractionId != null) {
+            if (selectedAttractionId != -1) {
                 selectMarker(markers.get(selectedAttractionId));
             }
         } else {
@@ -248,7 +246,7 @@ public abstract class MapsActivity<T extends AttractionInfo> extends FilterableL
     }
 
     private void reloadSelectedAttraction() {
-        if (selectedAttractionId == null) { return; }
+        if (selectedAttractionId == -1) { return; }
 
         T attractionInfo = selectedAttractionInfo();
         popupBinding.setAttractionInfo(attractionInfo);
@@ -260,10 +258,11 @@ public abstract class MapsActivity<T extends AttractionInfo> extends FilterableL
     }
 
     private boolean selectMarker(Marker marker) {
-        if (selectedAttractionId != null) {
+        if (selectedAttractionId != -1) {
             Marker prevSelectedMarker = markers.get(selectedAttractionId);
             prevSelectedMarker.setIcon(markerIcon);
         }
+        //noinspection ConstantConditions
         selectedAttractionId = (Integer) marker.getTag();
         marker.setIcon(selectedMarkerIcon);
         showPopup();
