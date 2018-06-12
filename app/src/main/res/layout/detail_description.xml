@@ -46,7 +46,6 @@
                 android:textColor="@color/color_primary"
                 android:textSize="12sp"
                 android:textStyle="bold"
-                android:onClick="@{activity.toggleClickListener}"
                 app:layout_constraintTop_toBottomOf="@id/detail_description_text" />
         </android.support.constraint.ConstraintLayout>
 
