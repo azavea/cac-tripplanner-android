@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.crashlytics.android.Crashlytics;
 import com.gophillygo.app.R;
 import com.gophillygo.app.data.models.Attraction;
 import com.gophillygo.app.data.models.AttractionInfo;
@@ -22,6 +23,8 @@ import com.gophillygo.app.data.models.EventInfo;
 import com.gophillygo.app.tasks.AddGeofencesBroadcastReceiver;
 import com.gophillygo.app.tasks.RemoveGeofenceWorker;
 import com.synnapps.carouselview.CarouselView;
+
+import io.fabric.sdk.android.Fabric;
 
 abstract class AttractionDetailActivity extends AppCompatActivity {
     protected static final int COLLAPSED_LINE_COUNT = 4;
@@ -56,6 +59,7 @@ abstract class AttractionDetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Fabric.with(this, new Crashlytics());
         toggleClickListener = v -> {
             // click handler for toggling expanding/collapsing description card
             TextView descriptionView = findViewById(R.id.detail_description_text);

@@ -5,8 +5,10 @@ import android.app.Application;
 import android.content.BroadcastReceiver;
 import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
 import com.gophillygo.app.di.AppInjector;
 
+import io.fabric.sdk.android.Fabric;
 import javax.inject.Inject;
 
 import dagger.android.AndroidInjector;
@@ -35,6 +37,7 @@ public class GoPhillyGoApp extends Application implements HasActivityInjector, H
     @Override
     public void onCreate() {
         super.onCreate();
+        Fabric.with(this, new Crashlytics());
         if (BuildConfig.DEBUG) {
             Log.d(LOG_LABEL, "Running in debug mode");
         }

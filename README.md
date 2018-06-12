@@ -11,3 +11,7 @@ Copy API keys file for debug and release builds:
 Edit each to set the Android Maps key for both build flavors. See the comments in the example file for directions on how to create the keys.
 
 Also edit to set the server API key for posting user flags.
+
+Copy the example file for the Crashlytics configuration and set the API key.
+ - `cp example/crashlytics.properties crashlytics.properties`
+

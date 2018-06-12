@@ -61,7 +61,7 @@
 # removes such information by default, so configure it to keep all of it.
 -keepattributes Signature
 
-# For using GSON @Expose annotation
+# For using GSON @Expose annotation and for Fabric
 -keepattributes *Annotation*
 
 # Gson specific classes
@@ -76,3 +76,8 @@
 -keep class * implements com.google.gson.TypeAdapterFactory
 -keep class * implements com.google.gson.JsonSerializer
 -keep class * implements com.google.gson.JsonDeserializer
+
+# Fabric
+-keepattributes SourceFile,LineNumberTable
+-keep public class * extends java.lang.Exception
+-keepresourcexmlelements manifest/application/meta-data@name=io.fabric.ApiKey
