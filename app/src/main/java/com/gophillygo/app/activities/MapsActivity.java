@@ -56,13 +56,15 @@ public abstract class MapsActivity<T extends AttractionInfo> extends FilterableL
     private static final int DEFAULT_ZOOM = 12;
     private static final int ATTRACTION_ZOOM = 14;
     private static final float DEFAULT_OPACITY = 1f, FILTERED_OPACITY = 0.5f;
+    private static final String LOCATION_SET_KEY = "location_set";
     private static final String LOG_LABEL = "MapsActivity";
+
     public static final String X = "x";
     public static final String Y = "y";
     public static final String ATTRACTION_ID = "id";
 
     private Map<Integer, Marker> markers;
-    private Marker selectedMarker;
+    private int selectedAttractionId = -1;
     private boolean locationSet = false;
     protected GoogleMap googleMap;
     protected Map<Integer, T> attractions;
@@ -84,17 +86,32 @@ public abstract class MapsActivity<T extends AttractionInfo> extends FilterableL
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(mapId);
+        if (savedInstanceState != null && savedInstanceState.containsKey(LOCATION_SET_KEY)) {
+            locationSet = savedInstanceState.getBoolean(LOCATION_SET_KEY);
+        }
+        if (savedInstanceState != null && savedInstanceState.containsKey(ATTRACTION_ID)) {
+            selectedAttractionId = savedInstanceState.getInt(ATTRACTION_ID);
+        } else if (getIntent().hasExtra(ATTRACTION_ID)) {
+            selectedAttractionId = getIntent().getIntExtra(ATTRACTION_ID, 0);
+        }
         mapFragment.getMapAsync(this);
 
         markerIcon = vectorToBitmap(R.drawable.ic_map_marker);
         selectedMarkerIcon = vectorToBitmap(R.drawable.ic_selected_map_marker);
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putBoolean(LOCATION_SET_KEY, locationSet);
+        outState.putInt(ATTRACTION_ID, selectedAttractionId);
+        super.onSaveInstanceState(outState);
+    }
+
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
+     * This is where we can add markers or lines, add listeners or move the camera.
+     *
      * If Google Play services is not installed on the device, the user will be prompted to install
      * it inside the SupportMapFragment. This method will only be triggered once the user has
      * installed Google Play services and returned to the app.
@@ -103,6 +120,9 @@ public abstract class MapsActivity<T extends AttractionInfo> extends FilterableL
     public void onMapReady(GoogleMap googleMap) {
         this.googleMap = googleMap;
         googleMap.getUiSettings().setMapToolbarEnabled(false);
+        googleMap.setOnMarkerClickListener(this::selectMarker);
+
+        loadMarkers();
         panToLocation();
     }
 
@@ -168,8 +188,6 @@ public abstract class MapsActivity<T extends AttractionInfo> extends FilterableL
 
         loadMarkers();
         reloadSelectedAttraction();
-
-        googleMap.setOnMarkerClickListener(this::selectMarker);
     }
 
     public void openDetail(Attraction attraction) {
@@ -189,6 +207,10 @@ public abstract class MapsActivity<T extends AttractionInfo> extends FilterableL
 
     @SuppressLint("UseSparseArrays")
     private void loadMarkers() {
+        if (googleMap == null || attractions == null) {
+            return;
+        }
+
         if (markers == null) {
             markers = new HashMap<>(attractions.size());
             for (T attractionInfo : attractions.values()) {
@@ -206,9 +228,8 @@ public abstract class MapsActivity<T extends AttractionInfo> extends FilterableL
                     markers.put(id, marker);
                 }
             }
-            if (getIntent().hasExtra(ATTRACTION_ID)) {
-                Integer id = getIntent().getIntExtra(ATTRACTION_ID, 0);
-                selectMarker(markers.get(id));
+            if (selectedAttractionId != -1) {
+                selectMarker(markers.get(selectedAttractionId));
             }
         } else {
             for (Map.Entry<Integer, Marker> entry : markers.entrySet()) {
@@ -225,7 +246,7 @@ public abstract class MapsActivity<T extends AttractionInfo> extends FilterableL
     }
 
     private void reloadSelectedAttraction() {
-        if (selectedMarker == null) { return; }
+        if (selectedAttractionId == -1) { return; }
 
         T attractionInfo = selectedAttractionInfo();
         popupBinding.setAttractionInfo(attractionInfo);
@@ -233,15 +254,16 @@ public abstract class MapsActivity<T extends AttractionInfo> extends FilterableL
     }
 
     private T selectedAttractionInfo() {
-        Integer id = (Integer) selectedMarker.getTag();
-        return attractions.get(id);
+        return attractions.get(selectedAttractionId);
     }
 
     private boolean selectMarker(Marker marker) {
-        if (selectedMarker != null) {
-            selectedMarker.setIcon(markerIcon);
+        if (selectedAttractionId != -1) {
+            Marker prevSelectedMarker = markers.get(selectedAttractionId);
+            prevSelectedMarker.setIcon(markerIcon);
         }
-        selectedMarker = marker;
+        //noinspection ConstantConditions
+        selectedAttractionId = (Integer) marker.getTag();
         marker.setIcon(selectedMarkerIcon);
         showPopup();
         return false;
