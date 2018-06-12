@@ -93,8 +93,8 @@ public abstract class MapsActivity<T extends AttractionInfo> extends FilterableL
     /**
      * Manipulates the map once available.
      * This callback is triggered when the map is ready to be used.
-     * This is where we can add markers or lines, add listeners or move the camera. In this case,
-     * we just add a marker near Sydney, Australia.
+     * This is where we can add markers or lines, add listeners or move the camera.
+     *
      * If Google Play services is not installed on the device, the user will be prompted to install
      * it inside the SupportMapFragment. This method will only be triggered once the user has
      * installed Google Play services and returned to the app.
@@ -103,6 +103,9 @@ public abstract class MapsActivity<T extends AttractionInfo> extends FilterableL
     public void onMapReady(GoogleMap googleMap) {
         this.googleMap = googleMap;
         googleMap.getUiSettings().setMapToolbarEnabled(false);
+        googleMap.setOnMarkerClickListener(this::selectMarker);
+
+        loadMarkers();
         panToLocation();
     }
 
@@ -168,8 +171,6 @@ public abstract class MapsActivity<T extends AttractionInfo> extends FilterableL
 
         loadMarkers();
         reloadSelectedAttraction();
-
-        googleMap.setOnMarkerClickListener(this::selectMarker);
     }
 
     public void openDetail(Attraction attraction) {
@@ -189,6 +190,10 @@ public abstract class MapsActivity<T extends AttractionInfo> extends FilterableL
 
     @SuppressLint("UseSparseArrays")
     private void loadMarkers() {
+        if (googleMap == null || attractions == null) {
+            return;
+        }
+
         if (markers == null) {
             markers = new HashMap<>(attractions.size());
             for (T attractionInfo : attractions.values()) {
