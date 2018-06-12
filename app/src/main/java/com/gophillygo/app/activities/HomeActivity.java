@@ -154,7 +154,6 @@ PlaceCategoryGridAdapter.GridViewHolder.PlaceGridItemClickListener {
                 break;
             default:
                 // go to places list
-                // TODO: #18 filter list based on selected grid item
                 if (categories == null || position >= categories.size()) {
                     Log.e(LOG_LABEL, "Cannot go to filtered list because categories are missing");
                     startActivity(new Intent(this, PlacesListActivity.class));

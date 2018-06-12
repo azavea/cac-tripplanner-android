@@ -100,7 +100,6 @@ public class PlaceDetailActivity extends AttractionDetailActivity {
                 .getQuantityString(R.plurals.place_upcoming_activities_count, eventCount, eventCount);
         upcomingEventsView.setText(upcomingEventsText);
 
-        // TODO: #18 go to filtered event list with events for destination on click
         upcomingEventsView.setOnClickListener(v -> Log.d(LOG_LABEL,
                 "Clicked upcoming events for destination " +  destinationInfo.getDestination().getName()));
 

@@ -1,6 +1,11 @@
 package com.gophillygo.app.data.models;
 
+import android.content.Context;
+import android.support.annotation.IdRes;
+import android.support.annotation.IntDef;
 import android.util.SparseArray;
+
+import com.gophillygo.app.R;
 
 import java.util.Objects;
 
@@ -16,20 +21,21 @@ public class CategoryAttraction {
 
     // category grid cards that are not in the destination category string: two user flags,
     // and events
-    public static final String UPCOMING_EVENTS = "Upcoming events";
-    public static final String WANT_TO_GO = "Want to go";
-    public static final String LIKED = "Places you like";
+    public static final String EVENTS_DB_NAME = "events";
+    public static final String NATURE_DB_NAME = "nature";
+    public static final String EXERCISE_DB_NAME = "exercise";
+    public static final String EDUCATIONAL_DB_NAME = "educational";
 
 
     // FIXME: reference user-facing strings (displayName) as strings resources
 
     public enum PlaceCategories {
-        Events(0, UPCOMING_EVENTS, "events"),
-        WantToGo(1, WANT_TO_GO, AttractionFlag.Option.WantToGo.api_name),
-        Liked(2, LIKED, AttractionFlag.Option.Liked.api_name),
-        Nature(3, NATURE_CATEGORY, NATURE_CATEGORY.toLowerCase()),
-        Exercise(4, EXERCISE_CATEGORY, EXERCISE_CATEGORY.toLowerCase()),
-        Educational(5, EDUCATIONAL_CATEGORY, EDUCATIONAL_CATEGORY.toLowerCase());
+        Events(0, R.string.home_grid_events, EVENTS_DB_NAME),
+        WantToGo(1, R.string.place_want_to_go_option, AttractionFlag.Option.WantToGo.api_name),
+        Liked(2, R.string.place_liked_option, AttractionFlag.Option.Liked.api_name),
+        Nature(3, R.string.nature_category_label, NATURE_DB_NAME),
+        Exercise(4, R.string.exercise_category_label, EXERCISE_DB_NAME),
+        Educational(5, R.string.educational_category_label, EDUCATIONAL_DB_NAME);
 
         private static final SparseArray<PlaceCategories> map = new SparseArray<>();
         static {
@@ -39,10 +45,10 @@ public class CategoryAttraction {
         }
 
         public final int code;
-        public final String displayName;
+        public final @IdRes Integer displayName;
         public final String dbName;
 
-        PlaceCategories(int code, String displayName, String dbName) {
+        PlaceCategories(int code, Integer displayName, String dbName) {
             this.code = code;
             this.displayName = displayName;
             this.dbName = dbName;
@@ -73,7 +79,7 @@ public class CategoryAttraction {
         return category;
     }
 
-    public String getDisplayName() {
+    public Integer getDisplayName() {
         return category.displayName;
     }
 
@@ -88,7 +94,6 @@ public class CategoryAttraction {
 
     @Override
     public int hashCode() {
-
         return Objects.hash(category, image);
     }
 }
