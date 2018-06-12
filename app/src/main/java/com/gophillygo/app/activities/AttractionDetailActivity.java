@@ -48,7 +48,7 @@ abstract class AttractionDetailActivity extends AppCompatActivity {
                 AddGeofencesBroadcastReceiver.addOneGeofence(((DestinationInfo) info).getDestination());
             }
         } else if (haveExistingGeofence) {
-            Log.e(LOG_LABEL, "Removing attraction geofence");
+            Log.d(LOG_LABEL, "Removing attraction geofence");
             RemoveGeofenceWorker.removeOneGeofence(info);
         }
     }
