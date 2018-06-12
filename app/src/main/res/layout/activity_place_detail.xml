@@ -195,55 +195,58 @@
 
             </android.support.v7.widget.CardView>
 
-            <LinearLayout
+            <android.support.constraint.ConstraintLayout
                 android:id="@+id/place_detail_button_bar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:gravity="center"
-                android:orientation="horizontal"
-                android:paddingEnd="8dp"
-                android:paddingStart="8dp"
                 android:weightSum="3"
                 app:layout_constraintTop_toBottomOf="@+id/place_detail_flag_options_card">
 
                 <android.support.v7.widget.AppCompatButton
                     android:id="@+id/place_detail_map_button"
                     style="@style/BorderlessDetailButton"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="start"
+                    android:layout_height="wrap_content"
                     android:layout_margin="0dp"
-                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp"
                     android:drawablePadding="8dp"
                     android:drawableStart="@drawable/ic_map_blue_24dp"
                     android:onClick="@{activity::goToMap}"
                     android:text="@string/place_detail_map_button"
                     android:textAlignment="textStart"
                     android:textColor="@color/color_primary"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    app:layout_constraintBaseline_toBaselineOf="@+id/place_detail_directions_button"
+                    app:layout_constraintEnd_toStartOf="@+id/place_detail_directions_button"
+                    app:layout_constraintStart_toStartOf="parent" />
 
                 <android.support.v7.widget.AppCompatButton
                     android:id="@+id/place_detail_directions_button"
                     style="@style/BorderlessDetailButton"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="start"
+                    android:layout_height="wrap_content"
                     android:layout_margin="0dp"
-                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp"
                     android:drawablePadding="8dp"
                     android:drawableStart="@drawable/ic_directions_blue_24dp"
                     android:onClick="@{activity::goToDirections}"
                     android:text="@string/place_detail_directions_button"
                     android:textAlignment="textStart"
                     android:textColor="@color/color_primary"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/place_detail_website_button"
+                    app:layout_constraintStart_toEndOf="@+id/place_detail_map_button" />
 
                 <android.support.v7.widget.AppCompatButton
                     android:id="@+id/place_detail_website_button"
                     style="@style/BorderlessDetailButton"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="start"
+                    android:layout_height="wrap_content"
                     android:layout_margin="0dp"
-                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp"
                     android:drawablePadding="8dp"
                     android:drawableStart="@drawable/ic_public_blue_24dp"
                     android:onClick="@{activity::goToWebsite}"
@@ -251,8 +254,11 @@
                     android:textAlignment="textStart"
                     android:textColor="@color/color_primary"
                     android:textSize="14sp"
-                    android:visibility="@{destination.hasWebsite ? View.VISIBLE : View.GONE}" />
-            </LinearLayout>
+                    android:visibility="@{destination.hasWebsite ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintBaseline_toBaselineOf="@+id/place_detail_directions_button"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/place_detail_directions_button" />
+            </android.support.constraint.ConstraintLayout>
 
             <ImageView
                 android:id="@+id/place_detail_watershed_alliance_icon"

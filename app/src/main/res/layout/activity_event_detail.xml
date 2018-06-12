@@ -166,15 +166,12 @@
 
             </android.support.v7.widget.CardView>
 
-            <LinearLayout
+            <android.support.constraint.ConstraintLayout
                 android:id="@+id/event_detail_button_bar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
                 android:layout_marginTop="16dp"
                 android:gravity="center"
-                android:orientation="horizontal"
                 android:weightSum="3"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
@@ -183,10 +180,10 @@
                 <android.support.v7.widget.AppCompatButton
                     android:id="@+id/event_detail_map_button"
                     style="@style/BorderlessDetailButton"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="start"
+                    android:layout_height="wrap_content"
                     android:layout_margin="0dp"
-                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp"
                     android:drawablePadding="8dp"
                     android:drawableStart="@drawable/ic_map_blue_24dp"
                     android:onClick="@{activity::goToMap}"
@@ -194,15 +191,19 @@
                     android:textAlignment="textStart"
                     android:textColor="@color/color_primary"
                     android:textSize="14sp"
-                    android:visibility="@{destination != null ? View.VISIBLE : View.GONE}" />
+                    android:visibility="@{destination != null ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/event_detail_directions_button"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <android.support.v7.widget.AppCompatButton
                     android:id="@+id/event_detail_directions_button"
                     style="@style/BorderlessDetailButton"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="start"
+                    android:layout_height="wrap_content"
                     android:layout_margin="0dp"
-                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp"
                     android:drawablePadding="8dp"
                     android:drawableStart="@drawable/ic_directions_blue_24dp"
                     android:onClick="@{activity::goToDirections}"
@@ -210,15 +211,19 @@
                     android:textAlignment="textStart"
                     android:textColor="@color/color_primary"
                     android:textSize="14sp"
-                    android:visibility="@{destination != null ? View.VISIBLE : View.GONE}" />
+                    android:visibility="@{destination != null ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/event_detail_website_button"
+                    app:layout_constraintStart_toEndOf="@+id/event_detail_map_button"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <android.support.v7.widget.AppCompatButton
                     android:id="@+id/event_detail_website_button"
                     style="@style/BorderlessDetailButton"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="start"
+                    android:layout_height="wrap_content"
                     android:layout_margin="0dp"
-                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp"
                     android:drawablePadding="8dp"
                     android:drawableStart="@drawable/ic_public_blue_24dp"
                     android:onClick="@{activity::goToWebsite}"
@@ -226,9 +231,13 @@
                     android:textAlignment="textStart"
                     android:textColor="@color/color_primary"
                     android:textSize="14sp"
-                    android:visibility="@{event.hasWebsite ? View.VISIBLE : View.GONE}" />
+                    android:visibility="@{event.hasWebsite ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/event_detail_directions_button"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-            </LinearLayout>
+            </android.support.constraint.ConstraintLayout>
 
             <android.support.v7.widget.AppCompatButton
                 android:id="@+id/event_detail_calendar_button"
