@@ -56,6 +56,7 @@ public abstract class MapsActivity<T extends AttractionInfo> extends FilterableL
     private static final int DEFAULT_ZOOM = 12;
     private static final int ATTRACTION_ZOOM = 14;
     private static final float DEFAULT_OPACITY = 1f, FILTERED_OPACITY = 0.5f;
+    private static final String LOCATION_SET_KEY = "locationSet";
     private static final String LOG_LABEL = "MapsActivity";
     public static final String X = "x";
     public static final String Y = "y";
@@ -84,10 +85,19 @@ public abstract class MapsActivity<T extends AttractionInfo> extends FilterableL
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(mapId);
+        if (savedInstanceState != null) {
+            locationSet = savedInstanceState.getBoolean(LOCATION_SET_KEY);
+        }
         mapFragment.getMapAsync(this);
 
         markerIcon = vectorToBitmap(R.drawable.ic_map_marker);
         selectedMarkerIcon = vectorToBitmap(R.drawable.ic_selected_map_marker);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putBoolean(LOCATION_SET_KEY, locationSet);
+        super.onSaveInstanceState(outState);
     }
 
     /**
