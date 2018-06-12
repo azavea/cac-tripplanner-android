@@ -58,12 +58,13 @@ public abstract class MapsActivity<T extends AttractionInfo> extends FilterableL
     private static final float DEFAULT_OPACITY = 1f, FILTERED_OPACITY = 0.5f;
     private static final String LOCATION_SET_KEY = "locationSet";
     private static final String LOG_LABEL = "MapsActivity";
+
     public static final String X = "x";
     public static final String Y = "y";
     public static final String ATTRACTION_ID = "id";
 
     private Map<Integer, Marker> markers;
-    private Marker selectedMarker;
+    private Integer selectedAttractionId = null;
     private boolean locationSet = false;
     protected GoogleMap googleMap;
     protected Map<Integer, T> attractions;
@@ -88,6 +89,11 @@ public abstract class MapsActivity<T extends AttractionInfo> extends FilterableL
         if (savedInstanceState != null) {
             locationSet = savedInstanceState.getBoolean(LOCATION_SET_KEY);
         }
+        if (savedInstanceState != null && savedInstanceState.containsKey(ATTRACTION_ID)) {
+            selectedAttractionId = savedInstanceState.getInt(ATTRACTION_ID);
+        } else if (getIntent().hasExtra(ATTRACTION_ID)) {
+            selectedAttractionId = getIntent().getIntExtra(ATTRACTION_ID, 0);
+        }
         mapFragment.getMapAsync(this);
 
         markerIcon = vectorToBitmap(R.drawable.ic_map_marker);
@@ -97,6 +103,9 @@ public abstract class MapsActivity<T extends AttractionInfo> extends FilterableL
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putBoolean(LOCATION_SET_KEY, locationSet);
+        if (selectedAttractionId != null) {
+            outState.putInt(ATTRACTION_ID, selectedAttractionId);
+        }
         super.onSaveInstanceState(outState);
     }
 
@@ -221,9 +230,8 @@ public abstract class MapsActivity<T extends AttractionInfo> extends FilterableL
                     markers.put(id, marker);
                 }
             }
-            if (getIntent().hasExtra(ATTRACTION_ID)) {
-                Integer id = getIntent().getIntExtra(ATTRACTION_ID, 0);
-                selectMarker(markers.get(id));
+            if (selectedAttractionId != null) {
+                selectMarker(markers.get(selectedAttractionId));
             }
         } else {
             for (Map.Entry<Integer, Marker> entry : markers.entrySet()) {
@@ -240,7 +248,7 @@ public abstract class MapsActivity<T extends AttractionInfo> extends FilterableL
     }
 
     private void reloadSelectedAttraction() {
-        if (selectedMarker == null) { return; }
+        if (selectedAttractionId == null) { return; }
 
         T attractionInfo = selectedAttractionInfo();
         popupBinding.setAttractionInfo(attractionInfo);
@@ -248,15 +256,15 @@ public abstract class MapsActivity<T extends AttractionInfo> extends FilterableL
     }
 
     private T selectedAttractionInfo() {
-        Integer id = (Integer) selectedMarker.getTag();
-        return attractions.get(id);
+        return attractions.get(selectedAttractionId);
     }
 
     private boolean selectMarker(Marker marker) {
-        if (selectedMarker != null) {
-            selectedMarker.setIcon(markerIcon);
+        if (selectedAttractionId != null) {
+            Marker prevSelectedMarker = markers.get(selectedAttractionId);
+            prevSelectedMarker.setIcon(markerIcon);
         }
-        selectedMarker = marker;
+        selectedAttractionId = (Integer) marker.getTag();
         marker.setIcon(selectedMarkerIcon);
         showPopup();
         return false;
