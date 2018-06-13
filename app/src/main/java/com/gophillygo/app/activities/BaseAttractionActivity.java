@@ -10,6 +10,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
 import com.gophillygo.app.data.DestinationViewModel;
 import com.gophillygo.app.data.models.AttractionInfo;
 import com.gophillygo.app.data.models.Destination;
@@ -29,6 +30,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
+
+import io.fabric.sdk.android.Fabric;
 
 /**
  * Base activity that requests last known location and destination data when opened;
@@ -101,6 +104,8 @@ public abstract class BaseAttractionActivity extends AppCompatActivity
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Fabric.with(this, new Crashlytics());
+
         fetchLastLocationOrUseDefault();
 
         viewModel = ViewModelProviders.of(this, viewModelFactory)
