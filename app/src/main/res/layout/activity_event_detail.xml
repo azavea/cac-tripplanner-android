@@ -192,7 +192,7 @@
                     android:onClick="@{activity::goToMap}"
                     android:text="@string/event_detail_map_button"
                     android:textAlignment="textStart"
-                    android:textColor="?attr/colorPrimary"
+                    android:textColor="@color/color_primary"
                     android:textSize="14sp"
                     android:visibility="@{destination != null ? View.VISIBLE : View.GONE}" />
 
@@ -200,7 +200,7 @@
                     android:id="@+id/event_detail_directions_button"
                     style="@style/BorderlessDetailButton"
                     android:layout_height="match_parent"
-                    android:layout_gravity="center"
+                    android:layout_gravity="start"
                     android:layout_margin="0dp"
                     android:layout_weight="1"
                     android:drawablePadding="8dp"
@@ -208,7 +208,7 @@
                     android:onClick="@{activity::goToDirections}"
                     android:text="@string/event_detail_directions_button"
                     android:textAlignment="textStart"
-                    android:textColor="?attr/colorPrimary"
+                    android:textColor="@color/color_primary"
                     android:textSize="14sp"
                     android:visibility="@{destination != null ? View.VISIBLE : View.GONE}" />
 
@@ -216,7 +216,7 @@
                     android:id="@+id/event_detail_website_button"
                     style="@style/BorderlessDetailButton"
                     android:layout_height="match_parent"
-                    android:layout_gravity="end"
+                    android:layout_gravity="start"
                     android:layout_margin="0dp"
                     android:layout_weight="1"
                     android:drawablePadding="8dp"
@@ -224,7 +224,7 @@
                     android:onClick="@{activity::goToWebsite}"
                     android:text="@string/event_detail_website_button"
                     android:textAlignment="textStart"
-                    android:textColor="?attr/colorPrimary"
+                    android:textColor="@color/color_primary"
                     android:textSize="14sp"
                     android:visibility="@{event.hasWebsite ? View.VISIBLE : View.GONE}" />
 
@@ -233,7 +233,7 @@
             <android.support.v7.widget.AppCompatButton
                 android:id="@+id/event_detail_calendar_button"
                 style="@style/BorderlessDetailButton"
-                android:layout_gravity="center_horizontal"
+                android:layout_gravity="start"
                 android:layout_margin="10dp"
                 android:drawablePadding="8dp"
                 android:drawableStart="@drawable/ic_event_blue_24dp"
