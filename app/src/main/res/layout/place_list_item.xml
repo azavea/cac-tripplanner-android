@@ -48,8 +48,6 @@
 
         <ImageView
             android:id="@+id/place_list_watershed_alliance_marker"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
             android:layout_margin="8dp"
             android:background="@drawable/circular_badge_background"
             android:contentDescription="@string/watershed_alliance_label"
@@ -63,7 +61,6 @@
 
         <TextView
             android:id="@+id/place_list_item_name_label"
-            app:layout_constraintTop_toBottomOf="@+id/place_list_item_image"
             style="@style/Base.TextAppearance.AppCompat.Title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -83,7 +80,6 @@
             android:id="@+id/place_list_item_distance_label"
             android:text="@{attraction.getFormattedDistance}"
             style="@style/TextAppearance.AppCompat.Medium"
-            android:drawableStart="@drawable/ic_place_black_24dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="12dp"
@@ -92,7 +88,6 @@
             android:drawablePadding="6dp"
             android:drawableStart="@drawable/ic_place_gray_16dp"
             android:gravity="start"
-            android:text="@{attraction.getFormattedDistance}"
             android:textAlignment="textStart"
             android:textColor="@color/color_text_grey"
             android:textSize="13sp"
@@ -111,7 +106,6 @@
             android:onClick="@{(view) -> adapter.optionsButtonClick(view, attractionInfo, position)}"
             android:padding="0dp"
             android:src="@{adapter.getFlagImage(attractionInfo)}"
-            app:backgroundTint="@color/color_white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/place_list_item_name_label" />

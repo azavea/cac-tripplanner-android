@@ -20,7 +20,6 @@
                 app:pageColor="#66FFFFFF"
                 app:radius="3dp"
                 app:slideInterval="4000"
-                app:strokeColor="@color/color_background_grey"
                 app:indicatorGravity="bottom"
                 app:indicatorMarginVertical="8dp"
                 app:indicatorMarginHorizontal="16dp"
