@@ -11,13 +11,13 @@
         android:layout_width="match_parent"
         android:layout_height="200dp"
         app:fillColor="@color/color_white"
-        app:pageColor="@color/color_background_grey"
+        app:pageColor="#66FFFFFF"
         app:radius="3dp"
         app:slideInterval="4000"
-        app:strokeColor="@color/color_background_grey"
         app:indicatorGravity="bottom"
-        app:indicatorMarginVertical="10dp"
-        app:indicatorMarginHorizontal="5dp"
+        app:indicatorMarginVertical="8dp"
+        app:indicatorMarginHorizontal="16dp"
+        app:strokeColor="#00FFFFFF"
         app:strokeWidth="0dp" />
 
     <android.support.v7.widget.Toolbar
@@ -38,14 +38,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/home_carousel"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
-        android:paddingStart="10dp"
-        android:paddingEnd="10dp"
-        android:horizontalSpacing="10dp"
-        android:verticalSpacing="10dp"
-        android:stretchMode="columnWidth"
         android:gravity="center"
-        android:numColumns="2" />
+        android:horizontalSpacing="8dp"
+        android:numColumns="2"
+        android:padding="8dp"
+        android:stretchMode="columnWidth"
+        android:verticalSpacing="8dp" />
 
 </RelativeLayout>
