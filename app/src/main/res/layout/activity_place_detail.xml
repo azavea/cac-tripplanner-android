@@ -95,7 +95,7 @@
                 android:fontFamily="sans-serif"
                 android:gravity="center"
                 android:paddingTop="12dp"
-                android:text="@{destination.getActivitiesString}"
+                android:text="@{destination.getActivitiesString(context)}"
                 android:textAlignment="center"
                 android:textColor="?android:attr/colorForeground"
                 android:textSize="14sp"

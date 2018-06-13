@@ -40,6 +40,10 @@
     <string name="exercise_category_label">Exercise</string>
     <string name="educational_category_label">Educational</string>
 
+    <string name="hiking_activity_label">Hiking</string>
+    <string name="water_recreation_activity_label">Water recreation</string>
+    <string name="cycling_activity_label">Cycling</string>
+
     <!-- place details -->
     <plurals name="place_upcoming_activities_count">
         <item quantity="one">%d upcoming event</item>

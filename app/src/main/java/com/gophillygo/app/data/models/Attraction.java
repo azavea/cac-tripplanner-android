@@ -2,23 +2,32 @@ package com.gophillygo.app.data.models;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
+import android.content.Context;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.text.Html;
 import android.text.Spanned;
+import android.util.Log;
 
 import com.google.gson.annotations.SerializedName;
 import com.gophillygo.app.BuildConfig;
 import com.gophillygo.app.data.DestinationWebservice;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
+
+import static com.gophillygo.app.data.models.CategoryAttraction.Activities.Cycling;
+import static com.gophillygo.app.data.models.CategoryAttraction.Activities.Hiking;
+import static com.gophillygo.app.data.models.CategoryAttraction.Activities.WaterRecreation;
 
 
 @Entity
 public class Attraction {
+
+    @Ignore
+    private static final String LOG_LABEL = "Attraction";
 
     @PrimaryKey
     private final int id;
@@ -199,7 +208,7 @@ public class Attraction {
     }
 
     // get a dot-separated string listing all the activities available here
-    public String getActivitiesString() {
+    public String getActivitiesString(Context context) {
         StringBuilder stringBuilder = new StringBuilder("");
         // separate activities with dots
         String dot = getHtmlFromString("&nbsp;&#8226;&nbsp;").toString();
@@ -207,8 +216,16 @@ public class Attraction {
             if (stringBuilder.length() > 0) {
                 stringBuilder.append(dot);
             }
-            String capitalizedActivity = activity.substring(0, 1).toUpperCase() + activity.substring(1);
-            stringBuilder.append(capitalizedActivity);
+
+            if (activity.equals(Cycling.getApiName())) {
+                stringBuilder.append(context.getString(Cycling.getDisplayName()));
+            } else if (activity.equals(Hiking.getApiName())) {
+                stringBuilder.append(context.getString(Hiking.getDisplayName()));
+            } else if (activity.equals(WaterRecreation.getApiName())) {
+                stringBuilder.append(context.getString(WaterRecreation.getDisplayName()));
+            } else {
+                Log.e(LOG_LABEL, "Unrecognized activity " + activity);
+            }
         }
         return stringBuilder.toString();
     }
