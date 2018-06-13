@@ -1,97 +1,119 @@
 package com.gophillygo.app.adapters;
 
 import android.content.Context;
+import android.databinding.DataBindingUtil;
+import android.databinding.ViewDataBinding;
+import android.support.annotation.NonNull;
+import android.support.v7.recyclerview.extensions.ListAdapter;
+import android.support.v7.util.DiffUtil;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.GridView;
-import android.widget.ImageView;
-import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
+import com.gophillygo.app.BR;
 import com.gophillygo.app.R;
+import com.gophillygo.app.data.models.CategoryAttraction;
+
+import java.util.List;
+import java.util.Objects;
 
 
-public class PlaceCategoryGridAdapter extends BaseAdapter {
+public class PlaceCategoryGridAdapter extends ListAdapter<CategoryAttraction, PlaceCategoryGridAdapter.GridViewHolder> {
 
-    private final Context context;
-    private final LayoutInflater inflater;
+    private static final String LOG_LABEL = "GridAdapter";
 
-    private static class ViewHolder {
-        ImageView imageView;
-        TextView categoryNameView;
+    private List<CategoryAttraction> categoryAttractions;
+
+    private LayoutInflater inflater;
+    private GridViewHolder.PlaceGridItemClickListener listener;
+
+    public static class GridViewHolder extends RecyclerView.ViewHolder {
+        private final ViewDataBinding binding;
+
+        public interface PlaceGridItemClickListener {
+            void clickedGridItem(int position);
+        }
+
+        GridViewHolder(ViewDataBinding binding, final PlaceGridItemClickListener listener) {
+            super(binding.getRoot());
+            binding.getRoot().setOnClickListener(v -> listener.clickedGridItem(getAdapterPosition()));
+            this.binding = binding;
+        }
+        public void bind(CategoryAttraction info) {
+            binding.setVariable(BR.category, info);
+            binding.setVariable(BR.position, getAdapterPosition());
+            binding.executePendingBindings();
+        }
     }
 
-    private static final int CATEGORIES_COUNT = 6;
+    private PlaceCategoryGridAdapter() {
+        super(new DiffUtil.ItemCallback<CategoryAttraction>() {
+            @Override
+            public boolean areItemsTheSame(CategoryAttraction oldItem, CategoryAttraction newItem) {
+                if (oldItem == null) {
+                    return newItem == null;
+                } else {
+                    return newItem != null && oldItem.getCategory().equals(newItem.getCategory());
+                }
+            }
 
-    private static final String[] placeCategoryNames = {
-            "Upcoming events",
-            "Want to go",
-            "Nature",
-            "Places you like",
-            "Exercise",
-            "Educational"
-    };
+            @Override
+            public boolean areContentsTheSame(CategoryAttraction oldItem, CategoryAttraction newItem) {
+                return Objects.equals(oldItem, newItem);
+            }
+        });
+    }
 
-    private static final String[] placeCategoryImages = {
-            "https://cleanair-images-prod.s3.amazonaws.com/destinations/4c5f9e802b89495da7e485a4449df220.jpg",
-            "https://cleanair-images-prod.s3.amazonaws.com/destinations/60a86b43597a4b8f8e129f9d6435960a.jpg",
-            "https://cleanair-images-prod.s3.amazonaws.com/destinations/e6aa6bc0891247c4a4d651f22c028fe6.jpg",
-            "https://cleanair-images-prod.s3.amazonaws.com/destinations/874f2bd93b5f4bc692cf39d1aaba5ead.jpg",
-            "https://cleanair-images-prod.s3.amazonaws.com/destinations/4c5f9e802b89495da7e485a4449df220.jpg",
-            "https://cleanair-images-prod.s3.amazonaws.com/destinations/ad72d3d20dfb4197b76c7b4d211a8eef.jpg"
-    };
-
-    public PlaceCategoryGridAdapter(Context context) {
-        this.context = context;
+    public PlaceCategoryGridAdapter(Context context, GridViewHolder.PlaceGridItemClickListener listener) {
+        this();
         this.inflater = LayoutInflater.from(context);
+        this.listener = listener;
+    }
+
+    @NonNull
+    @Override
+    public GridViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        Log.d(LOG_LABEL, "onCreateViewHolder");
+
+        ViewDataBinding binding = DataBindingUtil.inflate(inflater,
+                R.layout.place_category_grid_item, parent, false);
+        binding.setVariable(BR.adapter, this);
+        return new GridViewHolder(binding, this.listener);
     }
 
     @Override
-    public int getCount() {
-        return CATEGORIES_COUNT;
+    public void onBindViewHolder(@NonNull GridViewHolder holder, int position) {
+        CategoryAttraction item = getItem(position);
+        holder.bind(item);
+        holder.itemView.setTag(item);
     }
 
     @Override
-    public Object getItem(int position) {
-        return null;
+    protected CategoryAttraction getItem(int position) {
+        if (categoryAttractions == null) {
+            return null;
+        }
+        return categoryAttractions.get(position);
     }
 
     @Override
     public long getItemId(int position) {
-        return 0;
+        CategoryAttraction attraction = getItem(position);
+        if (attraction == null) {
+            return -1;
+        }
+        return attraction.getCategory().code;
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public void submitList(List<CategoryAttraction> list) {
+        super.submitList(list);
+        this.categoryAttractions = list;
+    }
 
-        ViewHolder viewHolder;
-
-        if (convertView == null) {
-            convertView = inflater.inflate(R.layout.place_category_grid_item, parent, false);
-            viewHolder = new ViewHolder();
-            viewHolder.imageView = convertView.findViewById(R.id.place_category_grid_item_image);
-            viewHolder.categoryNameView = convertView.findViewById(R.id.place_category_grid_item_name);
-
-            // size the image to fill its square grid box
-            ViewGroup.LayoutParams params = viewHolder.imageView.getLayoutParams();
-            int columnSize = ((GridView) parent).getColumnWidth();
-            params.width = columnSize;
-            params.height = columnSize;
-
-            convertView.setTag(viewHolder);
-        } else {
-            viewHolder = (ViewHolder) convertView.getTag();
-        }
-
-        Glide.with(context)
-                .load(placeCategoryImages[position])
-                .into(viewHolder.imageView);
-
-        viewHolder.imageView.setContentDescription(placeCategoryNames[position]);
-        viewHolder.categoryNameView.setText(placeCategoryNames[position]);
-
-        return convertView;
+    @Override
+    public int getItemCount() {
+        return categoryAttractions == null ? 0 : categoryAttractions.size();
     }
 }

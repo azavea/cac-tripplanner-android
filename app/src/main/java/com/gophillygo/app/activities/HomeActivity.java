@@ -1,42 +1,61 @@
 package com.gophillygo.app.activities;
 
+import android.arch.lifecycle.LiveData;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.GridView;
 
 import com.gophillygo.app.CarouselViewListener;
 import com.gophillygo.app.R;
 import com.gophillygo.app.adapters.PlaceCategoryGridAdapter;
+import com.gophillygo.app.data.DestinationRepository;
+import com.gophillygo.app.data.models.CategoryAttraction;
 import com.gophillygo.app.data.models.Destination;
+import com.gophillygo.app.data.models.Filter;
 import com.synnapps.carouselview.CarouselView;
 
+import java.util.ArrayList;
+import java.util.List;
 
-public class HomeActivity extends BaseAttractionActivity {
+import static com.gophillygo.app.activities.FilterableListActivity.FILTER_KEY;
+
+
+public class HomeActivity extends BaseAttractionActivity implements DestinationRepository.CategoryAttractionCallback,
+PlaceCategoryGridAdapter.GridViewHolder.PlaceGridItemClickListener {
 
     private static final String LOG_LABEL = "HomeActivity";
 
-    private CarouselView carouselView;
+    // how many columns to display in grid of filter buttons
+    private static final int NUM_COLUMNS = 2;
 
+    private CarouselView carouselView;
+    RecyclerView recyclerView;
+    PlaceCategoryGridAdapter gridAdapter;
+    List<CategoryAttraction> categories;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         Log.d(LOG_LABEL, "onCreate");
+        categories = new ArrayList<>(CategoryAttraction.PlaceCategories.size());
 
         Toolbar toolbar = findViewById(R.id.home_toolbar);
         // disable default app name title display
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
 
-        GridView gridView = findViewById(R.id.home_grid_view);
-        gridView.setAdapter(new PlaceCategoryGridAdapter(this));
-        gridView.setOnItemClickListener((parent, v, position, id) -> clickedGridItem(position));
+        recyclerView = findViewById(R.id.home_grid_view);
+        GridLayoutManager layoutManager = new GridLayoutManager(this, NUM_COLUMNS);
+        recyclerView.setLayoutManager(layoutManager);
+        gridAdapter = new PlaceCategoryGridAdapter(this, this);
+        recyclerView.setAdapter(gridAdapter);
 
         carouselView = findViewById(R.id.home_carousel);
         carouselView.setIndicatorGravity(Gravity.CENTER_HORIZONTAL|Gravity.BOTTOM);
@@ -45,7 +64,6 @@ public class HomeActivity extends BaseAttractionActivity {
 
         // initialize carousel if destinations already loaded
         locationOrDestinationsChanged();
-
     }
 
     @Override
@@ -54,6 +72,8 @@ public class HomeActivity extends BaseAttractionActivity {
         // set up carousel with nearest destinations
         if (getNearestDestinationSize() > 0) {
             setUpCarousel();
+            // request random images for the filter grid categories, and notify the adapter
+            viewModel.getCategoryAttractions(this);
         } else {
             Log.w(LOG_LABEL, "No nearest destinations yet in locationOrDestinationChanged");
         }
@@ -123,7 +143,8 @@ public class HomeActivity extends BaseAttractionActivity {
         carouselView.playCarousel();
     }
 
-    private void clickedGridItem(int position) {
+    @Override
+    public void clickedGridItem(int position) {
         Log.d(LOG_LABEL, "clicked grid view item: " + position);
 
         switch (position) {
@@ -133,8 +154,70 @@ public class HomeActivity extends BaseAttractionActivity {
                 break;
             default:
                 // go to places list
-                // TODO: #18 filter list based on selected grid item
-                startActivity(new Intent(this, PlacesListActivity.class));
+                if (categories == null || position >= categories.size()) {
+                    Log.e(LOG_LABEL, "Cannot go to filtered list because categories are missing");
+                    startActivity(new Intent(this, PlacesListActivity.class));
+                }
+                CategoryAttraction attraction = categories.get(position);
+                goToFilteredPlacesList(attraction.getCategory());
         }
+    }
+
+    private void goToFilteredPlacesList(CategoryAttraction.PlaceCategories category) {
+        Filter filter = new Filter();
+        switch (category) {
+            case WantToGo:
+                filter.setWantToGo(true);
+                break;
+            case Liked:
+                filter.setLiked(true);
+                break;
+            case Nature:
+                filter.setNature(true);
+                break;
+            case Exercise:
+                filter.setExercise(true);
+                break;
+            case Educational:
+                filter.setEducational(true);
+                break;
+            default:
+                Log.e(LOG_LABEL, "Unrecognized place category " + category.displayName);
+        }
+        Intent intent = new Intent(this, PlacesListActivity.class);
+        intent.putExtra(FILTER_KEY, filter);
+        startActivity(intent);
+    }
+
+    @Override
+    public void gotCategoryAttractions(LiveData<List<CategoryAttraction>> categoryAttractions) {
+        Log.d(LOG_LABEL, "Getting category attractions");
+        categoryAttractions.observe(this, data -> {
+            recyclerView.post(() -> {
+                Log.d(LOG_LABEL, "Got category attractions");
+                if (data == null || data.isEmpty()) {
+                    Log.e(LOG_LABEL, "Category attractions are missing");
+                    return;
+                }
+
+                // Submit `categories` list managed by this activity, rather than the `data` list
+                // owned by the DAO, in order to be able to remove categories with no entries
+                // (empty image). Do not destroy/recreate list here, so list differ will
+                // correctly recognize that the reference hasn't changed.
+
+                categories.clear();
+                categories.addAll(data);
+                gridAdapter.submitList(categories);
+                gridAdapter.notifyDataSetChanged();
+
+                for (CategoryAttraction attraction: data) {
+                    if (attraction.getImage().isEmpty()) {
+                        categories.remove(attraction);
+                        gridAdapter.submitList(categories);
+                        gridAdapter.notifyItemRemoved(attraction.getCategory().code);
+                    }
+                }
+            });
+        });
     }
 }

@@ -102,8 +102,8 @@ public class AttractionListAdapter<T extends AttractionInfo> extends ListAdapter
 
     @Override
     public void submitList(List<T> list) {
-        super.submitList(list);
         this.attractionList = list;
+        super.submitList(list);
     }
 
     @NonNull

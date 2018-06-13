@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.gophillygo.app.data.models.AttractionFlag;
+import com.gophillygo.app.data.models.CategoryAttraction;
 import com.gophillygo.app.data.models.Destination;
 import com.gophillygo.app.data.models.DestinationInfo;
 import com.gophillygo.app.data.models.Event;
@@ -32,7 +33,12 @@ import retrofit2.Response;
  * https://developer.android.com/topic/libraries/architecture/guide.html
  */
 
-class DestinationRepository {
+public class DestinationRepository {
+
+    public interface CategoryAttractionCallback {
+        void gotCategoryAttractions(LiveData<List<CategoryAttraction>> categoryAttractions);
+    }
+
     private static final String LOG_LABEL = "DestinationRepository";
 
     private final DestinationWebservice webservice;
@@ -108,7 +114,6 @@ class DestinationRepository {
                 Log.e(LOG_LABEL, "Request to POST user flag failed: " + t.toString());
             }
         });
-
     }
 
     @SuppressLint("StaticFieldLeak")
@@ -150,5 +155,22 @@ class DestinationRepository {
                 return eventDao.getAll();
             }
         }.getAsLiveData();
+    }
+
+    @SuppressLint("StaticFieldLeak")
+    public void loadCategoryAttractions(CategoryAttractionCallback callback) {
+        Log.d(LOG_LABEL, "going to load category attractions");
+        new AsyncTask<Void, Void, LiveData<List<CategoryAttraction>>>() {
+            @Override
+            protected void onPostExecute(LiveData<List<CategoryAttraction>> categories) {
+                Log.d(LOG_LABEL, "finished loading category attractions");
+                callback.gotCategoryAttractions(categories);
+            }
+
+            @Override
+            protected LiveData<List<CategoryAttraction>> doInBackground(Void... voids) {
+                return destinationDao.getCategoryImages();
+            }
+        }.execute();
     }
 }

@@ -10,8 +10,10 @@ import com.gophillygo.app.data.EventDao;
 import com.gophillygo.app.data.models.Attraction;
 import com.gophillygo.app.data.models.AttractionInfo;
 import com.gophillygo.app.data.models.Destination;
+import com.gophillygo.app.data.models.DestinationCategories;
 import com.gophillygo.app.data.models.DestinationQueryResponse;
 import com.gophillygo.app.data.models.Event;
+import com.gophillygo.app.data.models.Filter;
 
 import java.util.HashSet;
 import java.util.List;
@@ -54,6 +56,14 @@ abstract public class AttractionNetworkBoundResource<A extends Attraction, I ext
         Set<Integer> destinationIds = new HashSet<>(destinations.size());
         for (Destination item : destinations) {
             item.setTimestamp(timestamp);
+            List<String> categories = item.getCategories();
+            if (categories != null && !categories.isEmpty()) {
+                item.setCategoryFlags(new DestinationCategories(categories.contains(Filter.NATURE_CATEGORY),
+                        categories.contains(Filter.EXERCISE_CATEGORY),
+                        categories.contains(Filter.EDUCATIONAL_CATEGORY)));
+            } else {
+                item.setCategoryFlags(new DestinationCategories(false, false, false));
+            }
             destinationIds.add(item.getId());
             destinationDao.save(item);
         }

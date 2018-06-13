@@ -3,6 +3,7 @@ package com.gophillygo.app.data;
 import android.arch.lifecycle.LiveData;
 
 import com.gophillygo.app.data.models.AttractionFlag;
+import com.gophillygo.app.data.models.CategoryAttraction;
 import com.gophillygo.app.data.models.Destination;
 import com.gophillygo.app.data.models.DestinationInfo;
 import com.gophillygo.app.data.networkresource.Resource;
@@ -41,5 +42,9 @@ public class DestinationViewModel extends AttractionViewModel {
 
     public LiveData<Resource<List<DestinationInfo>>> getDestinations() {
         return destinations;
+    }
+
+    public void getCategoryAttractions(DestinationRepository.CategoryAttractionCallback listener) {
+        destinationRepository.loadCategoryAttractions(listener);
     }
 }

@@ -2,6 +2,7 @@ package com.gophillygo.app.data.models;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Index;
 import android.arch.persistence.room.TypeConverter;
 import android.arch.persistence.room.TypeConverters;
 import android.support.annotation.DrawableRes;
@@ -13,7 +14,8 @@ import com.gophillygo.app.R;
 
 import java.util.Objects;
 
-@Entity(primaryKeys = {"attractionID", "is_event"})
+@Entity(primaryKeys = {"attraction_id", "is_event"},
+        indices = {@Index(value = {"is_event", "option"})})
 public class AttractionFlag {
 
     public enum Option {
@@ -47,7 +49,7 @@ public class AttractionFlag {
         }
     }
 
-    @ColumnInfo(index = true)
+    @ColumnInfo(name = "attraction_id", index = true)
     private final int attractionID;
 
     @ColumnInfo(name = "is_event", index = true)
@@ -55,6 +57,7 @@ public class AttractionFlag {
     private final boolean isEvent;
 
     @TypeConverters(OptionConverter.class)
+    @ColumnInfo(index = true)
     private final Option option;
 
     public AttractionFlag(int attractionID, boolean isEvent, Option option) {
@@ -99,7 +102,6 @@ public class AttractionFlag {
 
     @Override
     public int hashCode() {
-
         return Objects.hash(attractionID, isEvent, option);
     }
 }

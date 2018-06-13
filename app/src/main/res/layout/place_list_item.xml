@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
@@ -16,11 +18,15 @@
         android:paddingBottom="10dp"
         android:layout_margin="10dp">
 
+        <!-- 1.7 aspect ratio of 680x400 wide image -->
         <ImageView
             android:id="@+id/place_list_item_image"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:minHeight="170dp"
+            android:layout_height="0dp"
+            app:layout_constrainedHeight="true"
+            app:layout_constraintDimensionRatio="H,17:10"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:imageUrl="@{attraction.getWideImage}"
             android:contentDescription="@{attraction.getName}"
             android:scaleType="centerCrop" />

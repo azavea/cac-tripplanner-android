@@ -2,15 +2,19 @@ package com.gophillygo.app.data.models;
 
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
+import android.util.Log;
+
+import com.gophillygo.app.BR;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import com.gophillygo.app.BR;
-
 public class Filter extends BaseObservable implements Serializable {
+
+    private static final String LOG_LABEL = "Filter";
+
     public static final String NATURE_CATEGORY = "Nature";
     public static final String EXERCISE_CATEGORY = "Exercise";
     public static final String EDUCATIONAL_CATEGORY = "Educational";
@@ -76,7 +80,12 @@ public class Filter extends BaseObservable implements Serializable {
     }
 
     public boolean matches(DestinationInfo info) {
-        boolean categoryMatches = categoryMatches(info.getDestination().getCategories());
+        DestinationCategories flags = info.getDestination().getCategoryFlags();
+        if (flags == null) {
+            Log.e(LOG_LABEL, "Category flags are missing for destination " + info.getDestination().getName());
+            return false;
+        }
+        boolean categoryMatches = categoryMatches(flags);
         boolean flagMatches = flagMatches(info.getFlag());
         boolean accessibleMatches = accessibleMatches(info.getDestination().isAccessible());
 
@@ -84,25 +93,21 @@ public class Filter extends BaseObservable implements Serializable {
     }
 
     public boolean matches(EventInfo info) {
-        boolean categoryMatches = categoryMatches(info.getDestinationCategories());
+        boolean categoryMatches = categoryMatches(info.getCategories());
         boolean flagMatches = flagMatches(info.getFlag());
         boolean accessibleMatches = accessibleMatches(info.getEvent().isAccessible());
 
         return categoryMatches && flagMatches && accessibleMatches;
     }
 
-    private boolean categoryMatches(List<String> destCategories) {
-        boolean categoryMatches = categories().isEmpty();
-        if (destCategories == null) {
-            return categoryMatches;
+    private boolean categoryMatches(DestinationCategories categories) {
+        // match all if not filtering by category
+        if (!nature && !exercise && !educational) {
+            return true;
         }
-
-        for (String category : categories()) {
-            if (destCategories.contains(category)) {
-                categoryMatches = true;
-            }
-        }
-        return categoryMatches;
+        // match on any filter category
+        return ((nature && categories.isNature()) || (educational && categories.isEducational()) ||
+                (exercise && categories.isExercise()));
     }
 
     private boolean flagMatches(AttractionFlag flag) {
@@ -121,21 +126,6 @@ public class Filter extends BaseObservable implements Serializable {
             accessibleMatches = false;
         }
         return accessibleMatches;
-    }
-
-    private List<String> categories() {
-        List<String> categories = new ArrayList<>();
-        if (nature) {
-            categories.add(NATURE_CATEGORY);
-        }
-        if (exercise) {
-            categories.add(EXERCISE_CATEGORY);
-        }
-        if (educational) {
-            categories.add(EDUCATIONAL_CATEGORY);
-        }
-        return categories;
-
     }
 
     private List<AttractionFlag.Option> flags() {

@@ -16,6 +16,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
+                android:minHeight="?attr/actionBarSize"
                 android:fitsSystemWindows="true"
                 android:elevation="0dp"
                 android:background="@color/color_primary"
@@ -41,8 +42,11 @@
                 android:id="@+id/empty_events_list"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="center"
                 android:visibility="gone"
+                android:layout_marginTop="20dp"
+                android:textAlignment="center"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"
+                android:layout_below="@+id/events_list_filter_button_bar"
                 android:text="@string/filter_no_results" />
 
         </RelativeLayout>

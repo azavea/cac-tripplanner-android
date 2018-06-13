@@ -16,12 +16,9 @@ import com.gophillygo.app.R;
 import com.gophillygo.app.adapters.PlacesListAdapter;
 import com.gophillygo.app.data.models.AttractionFlag;
 import com.gophillygo.app.data.models.AttractionInfo;
-import com.gophillygo.app.data.models.Destination;
 import com.gophillygo.app.data.models.DestinationInfo;
 import com.gophillygo.app.databinding.ActivityPlacesListBinding;
 import com.gophillygo.app.databinding.FilterButtonBarBinding;
-import com.gophillygo.app.tasks.AddGeofencesBroadcastReceiver;
-import com.gophillygo.app.tasks.RemoveGeofenceWorker;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,19 +28,11 @@ public class PlacesListActivity extends FilterableListActivity implements
 
     private static final String LOG_LABEL = "PlacesList";
 
-    private LinearLayoutManager layoutManager;
     private RecyclerView placesListView;
     PlacesListAdapter placesListAdapter;
 
     public PlacesListActivity() {
         super(R.id.places_list_toolbar);
-
-        // If destinations were loaded before this activity showed, use them immediately.
-        if (destinationInfos != null && !destinationInfos.isEmpty()) {
-            loadData();
-        } else {
-            Log.d(LOG_LABEL, "Have no destinations for the places list");
-        }
     }
 
     @Override
@@ -52,7 +41,7 @@ public class PlacesListActivity extends FilterableListActivity implements
         if (destinationInfos != null && !destinationInfos.isEmpty()) {
             loadData();
         } else {
-            Log.d(LOG_LABEL, "Have no destinations for the places list in locationOrDestinationsChanged");
+            Log.w(LOG_LABEL, "Have no destinations for the places list in locationOrDestinationsChanged");
         }
     }
 
@@ -86,8 +75,16 @@ public class PlacesListActivity extends FilterableListActivity implements
         super.onCreate(savedInstanceState);
 
         // set up list of places
-        layoutManager = new LinearLayoutManager(this);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         placesListView = findViewById(R.id.places_list_recycler_view);
+        placesListView.setLayoutManager(layoutManager);
+
+        // If destinations were loaded before this activity showed, use them immediately.
+        if (destinationInfos != null && !destinationInfos.isEmpty()) {
+            loadData();
+        } else {
+            Log.d(LOG_LABEL, "Have no destinations for the places list");
+        }
     }
 
     @Override
@@ -98,6 +95,7 @@ public class PlacesListActivity extends FilterableListActivity implements
 
     @Override
     protected void loadData() {
+        if (placesListView == null) return;
         Log.d(LOG_LABEL, "loadData");
         List<DestinationInfo> filteredDestinations = getFilteredDestinations();
 
@@ -110,13 +108,14 @@ public class PlacesListActivity extends FilterableListActivity implements
             // must set the list before the adapter for the differ to initialize properly
             placesListAdapter.submitList(filteredDestinations);
             placesListView.setAdapter(placesListAdapter);
-            placesListView.setLayoutManager(layoutManager);
         } else {
             Log.d(LOG_LABEL, "submit list for diff");
             // Let the AsyncListDiffer find which have changed, and only update their view holders
             // https://developer.android.com/reference/android/support/v7/recyclerview/extensions/ListAdapter
             placesListAdapter.submitList(filteredDestinations);
         }
+        placesListAdapter.notifyDataSetChanged();
+        placesListView.requestLayout();
     }
 
     @Override
@@ -148,6 +147,9 @@ public class PlacesListActivity extends FilterableListActivity implements
 
     @NonNull
     private ArrayList<DestinationInfo> getFilteredDestinations() {
+        if (destinationInfos == null) {
+            return new ArrayList<>(0);
+        }
         ArrayList<DestinationInfo> filteredDestinations = new ArrayList<>(destinationInfos.size());
         for (DestinationInfo info : destinationInfos) {
             if (filter.matches(info)) {

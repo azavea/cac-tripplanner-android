@@ -32,7 +32,6 @@ public class PlaceDetailActivity extends AttractionDetailActivity {
 
     private ActivityPlaceDetailBinding binding;
     private CarouselView carouselView;
-    private Toolbar toolbar;
 
     @SuppressWarnings("WeakerAccess")
     @Inject
@@ -46,7 +45,7 @@ public class PlaceDetailActivity extends AttractionDetailActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_place_detail);
         binding.setActivity(this);
 
-        toolbar = findViewById(R.id.place_detail_toolbar);
+        Toolbar toolbar = findViewById(R.id.place_detail_toolbar);
         // disable default app name title display
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
@@ -101,7 +100,6 @@ public class PlaceDetailActivity extends AttractionDetailActivity {
                 .getQuantityString(R.plurals.place_upcoming_activities_count, eventCount, eventCount);
         upcomingEventsView.setText(upcomingEventsText);
 
-        // TODO: #18 go to filtered event list with events for destination on click
         upcomingEventsView.setOnClickListener(v -> Log.d(LOG_LABEL,
                 "Clicked upcoming events for destination " +  destinationInfo.getDestination().getName()));
 

@@ -4,6 +4,7 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Embedded;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.Index;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -12,9 +13,11 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 
-@Entity(inheritSuperIndices = true)
+@Entity(inheritSuperIndices = true,
+        indices = {@Index("educational"), @Index("nature"), @Index("exercise")})
 public class Destination extends Attraction {
 
+    private static final String LOG_LABEL = "DestinationModel";
     private static final NumberFormat numberFormatter = NumberFormat.getNumberInstance();
     static {
         numberFormatter.setMinimumFractionDigits(0);
@@ -27,10 +30,14 @@ public class Destination extends Attraction {
 
     private final ArrayList<String> categories;
 
+    // convenience boolean flags for whether categories are set
+    @Embedded
+    private DestinationCategories categoryFlags;
+
     @Embedded
     private final DestinationLocation location;
 
-    @ColumnInfo(name = "watershed_alliance")
+    @ColumnInfo(name = "watershed_alliance", index = true)
     @SerializedName("watershed_alliance")
     private final boolean watershedAlliance;
 
@@ -42,6 +49,7 @@ public class Destination extends Attraction {
     private final String zipCode;
 
     // convenience property to track distance to each destination
+    @ColumnInfo(index = true)
     private float distance;
     @Ignore
     private String formattedDistance;
@@ -70,7 +78,12 @@ public class Destination extends Attraction {
 
     public void setDistance(float distance) {
         this.distance = distance;
+        // FIXME: move string constant to resources
         this.formattedDistance = numberFormatter.format(distance) + " mi";
+    }
+
+    public void setCategoryFlags(DestinationCategories categoryFlags) {
+        this.categoryFlags = categoryFlags;
     }
 
     public String getCity() {
@@ -111,6 +124,10 @@ public class Destination extends Attraction {
 
     public ArrayList<String> getCategories() {
         return categories;
+    }
+
+    public DestinationCategories getCategoryFlags() {
+        return categoryFlags;
     }
 
     @Override
