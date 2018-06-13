@@ -77,7 +77,7 @@ abstract class AttractionDetailActivity extends AppCompatActivity {
                 // disable clicking links to also disable scrolling
                 descriptionView.setMovementMethod(null);
                 // must reset click listener after unsetting movement method
-                descriptionView.setOnClickListener(toggleClickListener);
+                v.setOnClickListener(toggleClickListener);
                 // set text again, to make ellipsize run
                 descriptionView.setText(descriptionView.getText());
                 view.setText(R.string.detail_description_expand);
