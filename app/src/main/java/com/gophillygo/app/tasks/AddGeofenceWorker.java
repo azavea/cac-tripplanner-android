@@ -114,12 +114,18 @@ public class AddGeofenceWorker extends Worker {
             geofencingClient.addGeofences(builder.build(), pendingIntent);
             return WorkerResult.SUCCESS;
         } catch (SecurityException ex) {
-            Log.e(LOG_LABEL, "Missing permissions to add geofences");
+            String message = "Missing permissions to add geofences";
+            Log.e(LOG_LABEL, message);
+            Crashlytics.log(message);
+            Crashlytics.logException(ex);
             ex.printStackTrace();
             return WorkerResult.FAILURE;
         } catch (Exception ex) {
-            Log.e(LOG_LABEL, "Failed to add geofences");
+            String message = "Failed to add geofences";
+            Log.e(LOG_LABEL, message);
+            Crashlytics.log(message);
             ex.printStackTrace();
+            Crashlytics.logException(ex);
             return WorkerResult.FAILURE;
         }
 
