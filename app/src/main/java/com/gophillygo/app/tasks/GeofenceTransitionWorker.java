@@ -15,6 +15,7 @@ import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofenceStatusCodes;
 import com.gophillygo.app.R;
@@ -87,7 +88,9 @@ public class GeofenceTransitionWorker extends Worker {
                 String notificationTag = isEvent ? "e" : "d";
 
                 if (enteredGeofence) {
-                    Log.d(LOG_LABEL, "Entered geofence ID " + geofenceLabel + " for " + placeName);
+                    String message = "Entered geofence ID " + geofenceLabel + " for " + placeName;
+                    Crashlytics.log(message);
+                    Log.d(LOG_LABEL, message);
 
                     handler.post(() -> {
                         // Get intent for the detail view to open on notification click.
@@ -127,7 +130,9 @@ public class GeofenceTransitionWorker extends Worker {
                     });
 
                 } else {
-                    Log.d(LOG_LABEL, "Exited geofence ID " + geofenceLabel);
+                    String message = "Exited geofence ID " + geofenceLabel;
+                    Crashlytics.log(message);
+                    Log.d(LOG_LABEL, message);
                     handler.post(() -> {
                         Log.d(LOG_LABEL, "Removing notification for geofence");
                         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
@@ -143,7 +148,9 @@ public class GeofenceTransitionWorker extends Worker {
 
             return WorkerResult.SUCCESS;
         } else {
-            Log.w(LOG_LABEL, "Received a geofence transition event with no triggering geofences.");
+            String message = "Received a geofence transition event with no triggering geofences.";
+            Crashlytics.log(message);
+            Log.w(LOG_LABEL, message);
             return WorkerResult.SUCCESS;
         }
     }
@@ -170,15 +177,21 @@ public class GeofenceTransitionWorker extends Worker {
                     Log.d(LOG_LABEL, "Creating new notification channel for app:");
                     notificationManager.createNotificationChannel(channel);
                 } else {
-                    Log.d(LOG_LABEL, "Have notification channel set up already");
+                    String message = "Have notification channel set up already";
+                    Crashlytics.log(message);
+                    Log.d(LOG_LABEL, message);
                 }
             } else {
-                Log.e(LOG_LABEL, "Failed to get notification manager");
+                String message = "Failed to get notification manager";
+                Crashlytics.log(message);
+                Log.e(LOG_LABEL, message);
             }
         }
     }
 
     private WorkerResult handleError(int error) {
+        String message = "";
+        WorkerResult result = WorkerResult.FAILURE;
         // https://developers.google.com/android/reference/com/google/android/gms/location/GeofenceStatusCodes
         switch (error) {
             case GeofenceStatusCodes.GEOFENCE_NOT_AVAILABLE:
@@ -190,36 +203,42 @@ public class GeofenceTransitionWorker extends Worker {
                 // what to fence.
                 break;
             case GeofenceStatusCodes.GEOFENCE_TOO_MANY_GEOFENCES:
-                Log.e(LOG_LABEL, "Too many geofences!");
+                message = "Too many geofences!";
                 break;
             case GeofenceStatusCodes.TIMEOUT:
-                Log.w(LOG_LABEL, "Geofence timeout");
-                return WorkerResult.RETRY;
+                message = "Geofence timeout; retrying";
+                result = WorkerResult.RETRY;
+                break;
             case GeofenceStatusCodes.GEOFENCE_TOO_MANY_PENDING_INTENTS:
-                Log.e(LOG_LABEL, "Too many pending intents to addGeofence. Max is 5.");
-                return  WorkerResult.RETRY;
+                message = "Too many pending intents to addGeofence. Max is 5.";
+                result =  WorkerResult.RETRY;
+                break;
             case GeofenceStatusCodes.API_NOT_CONNECTED:
-                Log.e(LOG_LABEL, "Geofencing prevented because API not connected");
-                return WorkerResult.RETRY;
+                message = "Geofencing prevented because API not connected";
+                result = WorkerResult.RETRY;
+                break;
             case GeofenceStatusCodes.CANCELED:
-                Log.w(LOG_LABEL, "Geofencing cancelled");
+                message = "Geofencing cancelled";
                 break;
             case GeofenceStatusCodes.ERROR:
-                Log.w(LOG_LABEL, "Geofencing error");
+                message = "Geofencing error";
                 break;
             case GeofenceStatusCodes.DEVELOPER_ERROR:
-                Log.e(LOG_LABEL, "Geofencing encountered a developer error");
+                message = "Geofencing encountered a developer error";
                 break;
             case GeofenceStatusCodes.INTERNAL_ERROR:
-                Log.e(LOG_LABEL, "Geofencing encountered an internal error");
+                message = "Geofencing encountered an internal error";
                 break;
             case GeofenceStatusCodes.INTERRUPTED:
-                Log.w(LOG_LABEL, "Geofencing interrupted");
-                return  WorkerResult.RETRY;
+                message = "Geofencing interrupted";
+                result = WorkerResult.RETRY;
+                break;
             default:
-                Log.w(LOG_LABEL, "Unrecognized GeofenceStatusCodes value: " + error);
+                message = "Unrecognized GeofenceStatusCodes error value: " + error;
         }
-        return WorkerResult.FAILURE;
+        Log.e(LOG_LABEL, message);
+        Crashlytics.log(message);
+        return result;
     }
 
 }

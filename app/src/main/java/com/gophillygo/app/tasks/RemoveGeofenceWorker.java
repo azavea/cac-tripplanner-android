@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.location.GeofencingClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -38,12 +39,18 @@ public class RemoveGeofenceWorker extends Worker {
             Log.d(LOG_LABEL, "Going to remove " + removeGeofences.length + " geofences");
             geofencingClient.removeGeofences(new ArrayList<>(Arrays.asList(removeGeofences))).addOnSuccessListener(aVoid -> {
                 Log.d(LOG_LABEL, removeGeofences.length + " geofence(s) removed successfully");
+                Crashlytics.log("Removed geofences");
             }).addOnFailureListener(e -> {
-                Log.d(LOG_LABEL, "Failed to remove " + removeGeofences.length + " geofences.");
+                String errorMsg = "Failed to remove " + removeGeofences.length + " geofences.";
+                Log.d(LOG_LABEL, errorMsg);
+                Crashlytics.log(errorMsg);
+                Crashlytics.logException(e);
             });
             return WorkerResult.SUCCESS;
         } else {
-            Log.e(LOG_LABEL, "Did not receive data for geofences to remove");
+            String errorMsg = "Did not receive data for geofences to remove";
+            Log.e(LOG_LABEL, errorMsg);
+            Crashlytics.log(errorMsg);
             return WorkerResult.FAILURE;
         }
     }
