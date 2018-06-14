@@ -139,11 +139,6 @@ public class GeofenceTransitionWorker extends Worker {
                         notificationManager.cancel(notificationTag, geofenceId);
                     });
                 }
-
-                Log.d(LOG_LABEL, "Re-registering geofence after transition");
-                // remove and re-register geofence, or else it will ignore future events
-                RemoveGeofenceWorker.removeOneGeofence(geofenceLabel);
-                AddGeofencesBroadcastReceiver.addOneGeofence(longitude, latitude, geofenceLabel, placeName);
             }
 
             return WorkerResult.SUCCESS;
