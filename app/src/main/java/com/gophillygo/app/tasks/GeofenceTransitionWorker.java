@@ -37,6 +37,7 @@ public class GeofenceTransitionWorker extends Worker {
     public static final String EVENT_PREFIX = "e";
 
     private static final String CHANNEL_ID = "gophillygo-nearby-places";
+    private static final String GROUP_ID = "gophillygo-entered-geofence";
 
     private static final String LOG_LABEL = "GeofenceTransition";
 
@@ -82,8 +83,6 @@ public class GeofenceTransitionWorker extends Worker {
                 // Need a unique int we can find later, for the notification
                 String geofenceLabel = geofences[i];
                 String placeName = geofencePlaceNames[i];
-                double latitude = latitudes[i];
-                double longitude = longitudes[i];
 
                 // Geofence string ID is "d" for destination or "e" for event, followed by the
                 // destination or event integer ID.
@@ -124,13 +123,18 @@ public class GeofenceTransitionWorker extends Worker {
                                 .setContentTitle(placeName)
                                 .setContentText(context.getString(R.string.place_nearby_notification, placeName))
                                 .setContentIntent(resultPendingIntent)
-                                .setAutoCancel(true) // close notifcation when tapped
-                                .setPriority(NotificationCompat.PRIORITY_HIGH);
+                                .setAutoCancel(true) // close notification when tapped
+                                .setGroup(GROUP_ID)
+                                // alert for all notifications
+                                .setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_ALL)
+                                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                                .setStyle(new NotificationCompat.InboxStyle().addLine(placeName));
 
                         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
 
                         // The pair of notification string tag and int must be unique for the app
                         notificationManager.notify(notificationTag, geofenceId, mBuilder.build());
+
                     });
 
                 } else {
