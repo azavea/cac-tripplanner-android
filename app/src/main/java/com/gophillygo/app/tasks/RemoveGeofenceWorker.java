@@ -1,16 +1,12 @@
 package com.gophillygo.app.tasks;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.location.GeofencingClient;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.gophillygo.app.data.models.AttractionInfo;
-import com.gophillygo.app.data.models.DestinationInfo;
 import com.gophillygo.app.data.models.EventInfo;
 
 import java.util.ArrayList;
@@ -21,6 +17,9 @@ import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 import androidx.work.WorkRequest;
 import androidx.work.Worker;
+
+import static com.gophillygo.app.tasks.GeofenceTransitionWorker.DESTINATION_PREFIX;
+import static com.gophillygo.app.tasks.GeofenceTransitionWorker.EVENT_PREFIX;
 
 public class RemoveGeofenceWorker extends Worker {
 
@@ -79,7 +78,7 @@ public class RemoveGeofenceWorker extends Worker {
     }
 
     public static void removeOneGeofence(AttractionInfo info) {
-        String prefix = info instanceof EventInfo ? "e" : "d";
+        String prefix = info instanceof EventInfo ? EVENT_PREFIX : DESTINATION_PREFIX;
         String id = String.valueOf(info.getAttraction().getId());
         removeOneGeofence(prefix + id);
     }

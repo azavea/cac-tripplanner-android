@@ -26,6 +26,9 @@ import androidx.work.WorkManager;
 import androidx.work.WorkRequest;
 import dagger.android.AndroidInjection;
 
+import static com.gophillygo.app.tasks.GeofenceTransitionWorker.DESTINATION_PREFIX;
+import static com.gophillygo.app.tasks.GeofenceTransitionWorker.EVENT_PREFIX;
+
 public class GeofenceTransitionBroadcastReceiver extends BroadcastReceiver {
 
     @Inject
@@ -91,7 +94,7 @@ public class GeofenceTransitionBroadcastReceiver extends BroadcastReceiver {
                             // Geofence string ID is "d" for destination or "e" for event, followed by the
                             // destination or event integer ID.
                             int geofenceId = Integer.valueOf(fenceId.substring(1));
-                            boolean isEvent = fenceId.startsWith("e");
+                            boolean isEvent = fenceId.startsWith(EVENT_PREFIX);
 
                             // query for each event or destination synchronously from the database
                             if (isEvent) {
@@ -100,7 +103,7 @@ public class GeofenceTransitionBroadcastReceiver extends BroadcastReceiver {
                                     Log.e(LOG_LABEL, "Could not find event for geofence " + geofenceId);
                                     continue;
                                 }
-                                labels[i] = "e" + String.valueOf(eventInfo.getAttraction().getId());
+                                labels[i] = EVENT_PREFIX + String.valueOf(eventInfo.getAttraction().getId());
                                 names[i] = eventInfo.getEvent().getName();
                                 DestinationLocation location = eventInfo.getLocation();
                                 latitudes[i] = location.getY();
@@ -110,7 +113,7 @@ public class GeofenceTransitionBroadcastReceiver extends BroadcastReceiver {
                                 if (destination == null) {
                                     Log.e(LOG_LABEL, "Could not find destination for geofence " + geofenceId);
                                 }
-                                labels[i] = "d" + String.valueOf(destination.getId());
+                                labels[i] = DESTINATION_PREFIX + String.valueOf(destination.getId());
                                 names[i] = destination.getName();
                                 DestinationLocation location = destination.getLocation();
                                 latitudes[i] = location.getY();

@@ -32,6 +32,10 @@ public class GeofenceTransitionWorker extends Worker {
     public static final String TRANSITION_KEY = "transition";
     public static final String TRIGGERING_GEOFENCES_KEY = "triggering_geofences";
 
+    // use a one-character prefix to the geofence ID strings to disambiguate attraction IDs
+    public static final String DESTINATION_PREFIX = "d";
+    public static final String EVENT_PREFIX = "e";
+
     private static final String CHANNEL_ID = "gophillygo-nearby-places";
 
     private static final String LOG_LABEL = "GeofenceTransition";
@@ -84,8 +88,8 @@ public class GeofenceTransitionWorker extends Worker {
                 // Geofence string ID is "d" for destination or "e" for event, followed by the
                 // destination or event integer ID.
                 int geofenceId = Integer.valueOf(geofenceLabel.substring(1));
-                boolean isEvent = geofenceLabel.startsWith("e");
-                String notificationTag = isEvent ? "e" : "d";
+                boolean isEvent = geofenceLabel.startsWith(EVENT_PREFIX);
+                String notificationTag = isEvent ? EVENT_PREFIX : DESTINATION_PREFIX;
 
                 if (enteredGeofence) {
                     String message = "Entered geofence ID " + geofenceLabel + " for " + placeName;
