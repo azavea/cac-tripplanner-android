@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingClient;
 import com.google.android.gms.location.GeofencingRequest;
@@ -35,10 +36,10 @@ public class AddGeofenceWorker extends Worker {
     // Send alert roughly after device has been in geofence for this long.
     // When we are using the DWELL filter, this is about when we will receive notifications.
     // In development (DEBUG build), use no delay.
-    private static final int GEOFENCE_LOITERING_DELAY = BuildConfig.DEBUG ? 0 : 300000; // 5 minutes
+    private static final int GEOFENCE_LOITERING_DELAY = BuildConfig.DEBUG ? 60000 : 180000; // 1 or 3 minutes
 
     // Set responsiveness high to save battery
-    private static final int GEOFENCE_RESPONSIVENESS = BuildConfig.DEBUG ? 0 : 300000; // 5 minutes
+    private static final int GEOFENCE_RESPONSIVENESS = BuildConfig.DEBUG ? 180000 : 300000; // 3 or 5 minutes
 
     private static final String LOG_LABEL = "AddGeofenceWorker";
     private static final int TRANSITION_BROADCAST_REQUEST_CODE = 42;
@@ -76,13 +77,17 @@ public class AddGeofenceWorker extends Worker {
             geofenceLabels = data.getStringArray(GEOFENCE_LABELS_KEY);
             geofenceNames = data.getStringArray(GEOFENCE_NAMES_KEY);
         } else {
-            Log.e(LOG_LABEL, "Data missing for geofences to add");
+            String message = "Data missing for geofences to add";
+            Crashlytics.log(message);
+            Log.e(LOG_LABEL, message);
             return  WorkerResult.FAILURE;
         }
 
         if (latitudes.length != longitudes.length || latitudes.length != geofenceLabels.length ||
                 latitudes.length != geofenceNames.length) {
-            Log.e(LOG_LABEL, "Location data for geofences to add should be arrays of the same length.");
+            String message = "Location data for geofences to add should be arrays of the same length.";
+            Crashlytics.log(message);
+            Log.e(LOG_LABEL, message);
             return WorkerResult.FAILURE;
         }
 
