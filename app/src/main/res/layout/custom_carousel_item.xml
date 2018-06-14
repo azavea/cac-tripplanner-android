@@ -32,13 +32,9 @@
 
         <TextView
             android:id="@+id/carousel_item_place_name"
-            style="@style/Base.TextAppearance.AppCompat.Title.Inverse"
+            style="@style/ItemDetailName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="6dp"
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="16dp"
-            android:fontFamily="sans-serif"
             android:text="@{destination.getAddress}"
             app:layout_constraintBottom_toTopOf="@+id/carousel_item_distance_label"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -46,16 +42,10 @@
 
         <TextView
             android:id="@+id/carousel_item_distance_label"
-            style="@style/Base.TextAppearance.AppCompat.Title.Inverse"
+            style="@style/ItemDetailDistance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:layout_marginLeft="16dp"
-            android:drawablePadding="6dp"
-            android:drawableStart="@drawable/ic_place_white_16dp"
             android:text="@{destination.getFormattedDistance}"
-            android:textColor="@color/color_white"
-            android:textSize="15sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent" />
 

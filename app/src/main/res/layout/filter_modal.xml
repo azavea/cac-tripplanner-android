@@ -12,9 +12,9 @@
     </data>
 
     <RelativeLayout
+        style="@style/FilterModal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/color_background_grey">
+        android:layout_height="wrap_content">
 
         <LinearLayout
             android:id="@+id/filter_modal_top"
@@ -29,23 +29,17 @@
                 style="@style/BorderlessButton"
                 android:layout_width="0dp"
                 android:layout_weight="1"
-                android:fontFamily="sans-serif"
                 android:onClick="@{dialog::resetFilters}"
-                android:text="@string/reset_button"
-                android:textAllCaps="false" />
+                android:text="@string/reset_button" />
 
             <TextView
+                style="@style/FilterModalTitle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginEnd="24dp"
-                android:layout_marginStart="24dp"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="@string/many_filter_button_title"
-                android:textAlignment="center"
-                android:textAllCaps="true"
-                android:textColor="@color/color_white" />
+                android:text="@string/many_filter_button_title" />
 
             <android.support.v7.widget.AppCompatButton
                 android:id="@+id/filter_modal_done_button"
@@ -53,8 +47,7 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:onClick="@{v -> dialog.dismiss()}"
-                android:text="@string/done_button"
-                android:textAllCaps="false" />
+                android:text="@string/done_button" />
         </LinearLayout>
 
         <android.support.v7.widget.ButtonBarLayout

@@ -15,15 +15,7 @@
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/places_list_toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/color_primary"
-                android:elevation="0dp"
-                android:fitsSystemWindows="true"
-                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toTopOf="@+id/places_list_filter_button_bar"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+                style="@style/ToolbarOpaque"
                 app:title="@string/places_list_title"
                 tools:targetApi="lollipop" />
 

@@ -9,13 +9,9 @@
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/filter_button_bar"
+        style="@style/FilterButtonBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/color_primary"
-        android:paddingBottom="4dp"
-        android:paddingLeft="8dp"
-        android:paddingRight="8dp"
-        android:paddingTop="4dp"
         android:weightSum="4">
 
         <android.support.v7.widget.AppCompatButton
