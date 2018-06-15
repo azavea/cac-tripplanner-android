@@ -96,6 +96,7 @@ public class PlaceDetailActivity extends AttractionDetailActivity {
             // set up data binding object
             binding.setDestination(destinationInfo.getDestination());
             binding.setDestinationInfo(destinationInfo);
+            binding.placeDetailDescriptionCard.detailDescriptionToggle.setOnClickListener(toggleClickListener);
             displayDestination();
         });
     }

@@ -138,6 +138,7 @@ public class EventDetailActivity extends AttractionDetailActivity {
             // set up data binding object
             binding.setEvent(eventInfo.getEvent());
             binding.setEventInfo(eventInfo);
+            binding.eventDetailDescriptionCard.detailDescriptionToggle.setOnClickListener(toggleClickListener);
             displayEvent();
         });
     }
@@ -193,9 +194,6 @@ public class EventDetailActivity extends AttractionDetailActivity {
     @SuppressLint({"RestrictedApi", "RtlHardcoded"})
     private void displayEvent() {
         setupCarousel(carouselView, eventInfo.getEvent());
-
-        TextView descriptionToggle = findViewById(R.id.detail_description_toggle);
-        descriptionToggle.setOnClickListener(toggleClickListener);
 
         // show popover for flag options (been, want to go, etc.)
         CardView flagOptionsCard = findViewById(R.id.event_detail_flag_options_card);
