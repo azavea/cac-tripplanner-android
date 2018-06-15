@@ -15,8 +15,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/color_white"
+        android:elevation="2dp"
         android:paddingBottom="10dp"
-        android:layout_margin="10dp">
+        android:layout_margin="8dp">
 
         <!-- 1.7 aspect ratio of 680x400 wide image -->
         <ImageView
@@ -33,61 +34,80 @@
 
         <ImageView
             android:id="@+id/place_list_cycling_activity_marker"
-            android:padding="5dp"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_margin="8dp"
+            android:background="@drawable/circular_badge_background"
+            android:contentDescription="@string/bicycle_activity_label"
             android:scaleType="centerInside"
-            app:layout_constraintTop_toTopOf="parent"
+            android:src="@drawable/ic_directions_bike_white_24dp"
+            android:visibility="@{attraction.isCycling ? View.VISIBLE : View.GONE}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintEnd_toStartOf="@id/place_list_watershed_alliance_marker"
-            android:src="@drawable/ic_directions_bike_white_24dp"
-            android:contentDescription="@string/bicycle_activity_label"
-            android:visibility="@{attraction.isCycling ? View.VISIBLE : View.GONE}"
-            android:layout_width="32dp"
-            android:layout_height="32dp" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/place_list_watershed_alliance_marker"
-            android:padding="5dp"
+            android:layout_margin="8dp"
+            android:background="@drawable/circular_badge_background"
+            android:contentDescription="@string/watershed_alliance_label"
             android:scaleType="centerInside"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:src="@drawable/ic_watershed_alliance"
-            android:contentDescription="@string/watershed_alliance_label"
             android:visibility="@{attraction.isWatershedAlliance ? View.VISIBLE : View.GONE}"
             android:layout_width="32dp"
             android:layout_height="32dp" />
 
         <TextView
             android:id="@+id/place_list_item_name_label"
-            app:layout_constraintTop_toBottomOf="@+id/place_list_item_image"
             style="@style/Base.TextAppearance.AppCompat.Title"
-            android:padding="10dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="12dp"
+            android:fontFamily="sans-serif"
             android:gravity="start"
             android:text="@{attraction.getName}"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:textColor="?android:attr/colorForeground"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/place_list_item_image" />
 
         <TextView
             android:id="@+id/place_list_item_distance_label"
             android:text="@{attraction.getFormattedDistance}"
             style="@style/TextAppearance.AppCompat.Medium"
-            android:drawableStart="@drawable/ic_place_black_24dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@+id/place_list_item_name_label"
-            android:paddingBottom="2dp"
-            android:paddingStart="10dp"
-            android:paddingEnd="10dp"
+            android:layout_marginBottom="12dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:drawablePadding="6dp"
+            android:drawableStart="@drawable/ic_place_gray_16dp"
             android:gravity="start"
-            app:layout_constraintBottom_toBottomOf="parent" />
+            android:textAlignment="textStart"
+            android:textColor="@color/color_text_grey"
+            android:textSize="13sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/place_list_item_name_label" />
 
         <android.support.v7.widget.AppCompatImageButton
             app:backgroundTint="@color/color_white"
             android:id="@+id/place_list_item_options_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="8dp"
             android:onClick="@{(view) -> adapter.optionsButtonClick(view, attractionInfo, position)}"
+            android:padding="0dp"
+            android:src="@{adapter.getFlagImage(attractionInfo)}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:src="@{adapter.getFlagImage(attractionInfo)}"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            app:layout_constraintTop_toBottomOf="@+id/place_list_item_name_label" />
     </android.support.constraint.ConstraintLayout>
 </layout>

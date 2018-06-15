@@ -31,11 +31,13 @@
         <TextView
             android:id="@+id/place_category_grid_item_name"
             style="@style/Base.TextAppearance.AppCompat.Title.Inverse"
-            android:paddingBottom="10dp"
-            android:paddingStart="10dp"
-            android:paddingEnd="10dp"
+            android:layout_marginBottom="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:textSize="16sp"
             android:text="@{context.getString(safeUnbox(category.getDisplayName()))}"
-            android:layout_width="wrap_content"
+            android:background="@drawable/image_scrim"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="parent" />

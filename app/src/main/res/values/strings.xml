@@ -40,6 +40,10 @@
     <string name="exercise_category_label">Exercise</string>
     <string name="educational_category_label">Educational</string>
 
+    <string name="hiking_activity_label">Hiking</string>
+    <string name="water_recreation_activity_label">Water recreation</string>
+    <string name="cycling_activity_label">Cycling</string>
+
     <!-- place details -->
     <plurals name="place_upcoming_activities_count">
         <item quantity="one">%d upcoming event</item>
@@ -69,7 +73,7 @@
     <string name="detail_description_collapse">SHOW LESS</string>
 
     <!-- event list -->
-    <string name="event_list_item_time_range">%s - %s</string>
+    <string name="event_list_item_time_range">%s – %s</string>
     <string name="location_requires_gps">Device does not have GPS, which is needed to get location. Please use a different device.</string>
     <string name="location_gps_needed_rationale">GPS needs to be enabled to find destinations near you.</string>
     <string name="location_fine_permission_rationale">Device location permission needed.</string>

@@ -44,6 +44,7 @@
                 android:layout_height="match_parent"
                 android:visibility="gone"
                 android:layout_marginTop="20dp"
+                android:textColor="@color/color_text_dark_grey"
                 android:textAlignment="center"
                 android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"
                 android:layout_below="@+id/events_list_filter_button_bar"
