@@ -25,8 +25,12 @@ import com.gophillygo.app.activities.PlaceDetailActivity;
 import androidx.work.Data;
 import androidx.work.Worker;
 
+import static com.gophillygo.app.activities.AttractionDetailActivity.GEOFENCE_ID_KEY;
+import static com.gophillygo.app.activities.AttractionDetailActivity.NOTIFICATION_ID_KEY;
+
 public class GeofenceTransitionWorker extends Worker {
 
+    public static final String MARK_BEEN_KEY = "mark_been";
     public static final String HAS_ERROR_KEY = "has_error";
     public static final String ERROR_CODE_KEY = "error_code";
     public static final String TRANSITION_KEY = "transition";
@@ -98,14 +102,24 @@ public class GeofenceTransitionWorker extends Worker {
                     handler.post(() -> {
                         // Get intent for the detail view to open on notification click.
                         Intent intent;
+                        Intent beenIntent;
                         if (isEvent) {
                             intent = new Intent(context, EventDetailActivity.class);
                             intent.putExtra(EventDetailActivity.EVENT_ID_KEY, (long)geofenceId);
+                            beenIntent = new Intent(context, EventDetailActivity.class);
+                            beenIntent.putExtra(EventDetailActivity.EVENT_ID_KEY, (long)geofenceId);
                         } else {
                             intent = new Intent(context, PlaceDetailActivity.class);
                             intent.putExtra(PlaceDetailActivity.DESTINATION_ID_KEY, (long)geofenceId);
+                            beenIntent = new Intent(context, PlaceDetailActivity.class);
+                            beenIntent.putExtra(PlaceDetailActivity.DESTINATION_ID_KEY, (long)geofenceId);
                         }
 
+                        // When opening detail activity from 'been' button, pass key to tell
+                        // activity to mark its model as 'been' and the notification ID, to close it
+                        beenIntent.putExtra(MARK_BEEN_KEY, true);
+                        beenIntent.putExtra(NOTIFICATION_ID_KEY, notificationTag);
+                        beenIntent.putExtra(GEOFENCE_ID_KEY, geofenceId);
 
                         // Add the intent to the stack builder, which inflates the back stack
                         TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
@@ -113,6 +127,14 @@ public class GeofenceTransitionWorker extends Worker {
                         // Get the PendingIntent containing the entire back stack
                         PendingIntent resultPendingIntent =
                                 stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                        // Create pending intent for marking place "been"
+                        // Add the intent to the stack builder, which inflates the back stack
+                        TaskStackBuilder beenStackBuilder = TaskStackBuilder.create(context);
+                        beenStackBuilder.addNextIntentWithParentStack(beenIntent);
+                        // Get the PendingIntent containing the entire back stack
+                        PendingIntent beenPendingIntent =
+                                beenStackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
 
                         createNotificationChannel(context);
                         // show on UI thread
@@ -126,8 +148,12 @@ public class GeofenceTransitionWorker extends Worker {
                                 .setAutoCancel(true) // close notification when tapped
                                 .setGroup(GROUP_ID)
                                 // alert for all notifications
-                                .setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_ALL)
+                                .setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_SUMMARY)
                                 .setPriority(NotificationCompat.PRIORITY_HIGH)
+                                .addAction(R.drawable.ic_beenhere_blue_24dp,
+                                        context.getString(R.string.place_been_option),
+                                        beenPendingIntent)
+                                .setGroupSummary(true)
                                 .setStyle(new NotificationCompat.InboxStyle().addLine(placeName));
 
                         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
