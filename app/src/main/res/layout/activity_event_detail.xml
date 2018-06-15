@@ -28,26 +28,36 @@
                 android:layout_width="match_parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/event_detail_item_name_label"
-                style="@style/ItemDetailName"
-                android:layout_width="0dp"
+            <android.support.constraint.ConstraintLayout
+                style="@style/ItemDetailInfo"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@{event.getName}"
-                app:layout_constraintBottom_toTopOf="@+id/event_detail_item_distance_label"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent" />
-
-            <TextView
-                android:id="@+id/event_detail_item_distance_label"
-                style="@style/ItemDetailDistance"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text='@{eventInfo.formattedDistance}'
-                android:visibility="@{eventInfo.distance != null ? View.VISIBLE : View.GONE}"
                 app:layout_constraintBottom_toBottomOf="@+id/event_detail_carousel"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent">
+
+                <TextView
+                    android:id="@+id/event_detail_item_name_label"
+                    style="@style/ItemDetailName"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@{event.getName}"
+                    app:layout_constraintBottom_toTopOf="@+id/event_detail_item_distance_label"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/event_detail_item_distance_label"
+                    style="@style/ItemDetailDistance"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text='@{eventInfo.formattedDistance}'
+                    android:visibility="@{eventInfo.distance != null ? View.VISIBLE : View.GONE}"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent" />
+            </android.support.constraint.ConstraintLayout>
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/event_detail_toolbar"

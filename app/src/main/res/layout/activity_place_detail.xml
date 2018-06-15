@@ -27,24 +27,35 @@
                 app:layout_constraintBottom_toTopOf="@+id/place_detail_activities_list"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/place_detail_name_label"
-                style="@style/ItemDetailName"
-                android:layout_width="0dp"
+            <android.support.constraint.ConstraintLayout
+                style="@style/ItemDetailInfo"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@{destination.getAddress}"
-                app:layout_constraintBottom_toTopOf="@+id/place_detail_distance_label"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent" />
-
-            <TextView
-                android:id="@+id/place_detail_distance_label"
-                style="@style/ItemDetailDistance"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@{destination.getFormattedDistance}"
                 app:layout_constraintBottom_toBottomOf="@+id/place_detail_carousel"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent">
+
+                <TextView
+                    android:id="@+id/place_detail_name_label"
+                    style="@style/ItemDetailName"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@{destination.getAddress}"
+                    app:layout_constraintBottom_toTopOf="@+id/place_detail_distance_label"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/place_detail_distance_label"
+                    style="@style/ItemDetailDistance"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@{destination.getFormattedDistance}"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"/>
+            </android.support.constraint.ConstraintLayout>
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/place_detail_toolbar"
