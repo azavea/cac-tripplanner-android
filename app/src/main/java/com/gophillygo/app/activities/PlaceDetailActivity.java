@@ -6,12 +6,12 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.widget.PopupMenu;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 
 import com.crashlytics.android.Crashlytics;
+import com.gophillygo.app.BR;
 import com.gophillygo.app.R;
 import com.gophillygo.app.data.DestinationViewModel;
 import com.gophillygo.app.data.models.AttractionFlag;
@@ -30,8 +30,6 @@ public class PlaceDetailActivity extends AttractionDetailActivity {
     private static final String LOG_LABEL = "PlaceDetail";
 
     private long placeId = -1;
-    private String userUuid;
-
     private ActivityPlaceDetailBinding binding;
 
     @SuppressWarnings("WeakerAccess")
@@ -125,6 +123,7 @@ public class PlaceDetailActivity extends AttractionDetailActivity {
         viewModel.updateAttractionFlag(destinationInfo.getFlag(), userUuid, getString(R.string.user_flag_post_api_key));
         Boolean settingGeofence = itemId  == AttractionFlag.Option.WantToGo.code;
         addOrRemoveGeofence(destinationInfo, haveExistingGeofence, settingGeofence);
+        binding.notifyPropertyChanged(BR.destinationInfo);
     }
 
     // TODO: go to list of events, filtered to this destination?

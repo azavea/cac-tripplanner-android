@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
+import com.gophillygo.app.BR;
 import com.gophillygo.app.R;
 import com.gophillygo.app.data.DestinationViewModel;
 import com.gophillygo.app.data.EventViewModel;
@@ -208,6 +209,7 @@ public class EventDetailActivity extends AttractionDetailActivity {
         viewModel.updateAttractionFlag(eventInfo.getFlag(), userUuid, getString(R.string.user_flag_post_api_key));
         Boolean settingGeofence = eventInfo.getFlag().getOption().api_name.equals(AttractionFlag.Option.WantToGo.api_name);
         addOrRemoveGeofence(eventInfo, haveExistingGeofence, settingGeofence);
+        binding.notifyPropertyChanged(BR.destinationInfo);
     }
 
     public String getEventTimeString() {
