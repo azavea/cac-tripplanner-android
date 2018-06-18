@@ -19,7 +19,6 @@ import com.gophillygo.app.data.models.DestinationInfo;
 import com.gophillygo.app.databinding.ActivityPlaceDetailBinding;
 import com.gophillygo.app.di.GpgViewModelFactory;
 import com.gophillygo.app.utils.FlagMenuUtils;
-import com.gophillygo.app.utils.UserUuidUtils;
 
 import javax.inject.Inject;
 
@@ -65,9 +64,6 @@ public class PlaceDetailActivity extends AttractionDetailActivity {
         binding.placeDetailCarousel.setIndicatorGravity(Gravity.CENTER_HORIZONTAL|Gravity.BOTTOM);
         binding.placeDetailCarousel.setImageClickListener(position ->
                 Log.d(LOG_LABEL, "Clicked item: "+ position));
-
-        // Get or create unique, random UUID for app install for posting user flags
-        userUuid = UserUuidUtils.getUserUuid(getApplicationContext());
 
         viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(DestinationViewModel.class);

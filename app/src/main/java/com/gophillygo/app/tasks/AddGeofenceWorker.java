@@ -49,6 +49,9 @@ public class AddGeofenceWorker extends Worker {
     public static final String GEOFENCE_LABELS_KEY = "geofence_labels";
     public static final String GEOFENCE_NAMES_KEY = "geofence_names";
 
+    // event identifiers used for custom Crashlytics event to note a geofence was added
+    private static final String ADD_GEOFENCE_EVENT = "add_geofence";
+
     @NonNull
     @Override
     public WorkerResult doWork() {
@@ -101,6 +104,8 @@ public class AddGeofenceWorker extends Worker {
                     .setNotificationResponsiveness(GEOFENCE_RESPONSIVENESS)
                     .setTransitionTypes(GEOFENCE_ENTER_TRIGGER | Geofence.GEOFENCE_TRANSITION_EXIT)
                     .build());
+
+            Crashlytics.log(ADD_GEOFENCE_EVENT);
         }
 
         // Location access permissions prompting is handled by `GpgLocationUtils`.

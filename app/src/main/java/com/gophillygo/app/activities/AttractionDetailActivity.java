@@ -23,6 +23,7 @@ import com.gophillygo.app.data.models.DestinationLocation;
 import com.gophillygo.app.data.models.EventInfo;
 import com.gophillygo.app.tasks.AddGeofencesBroadcastReceiver;
 import com.gophillygo.app.tasks.RemoveGeofenceWorker;
+import com.gophillygo.app.utils.UserUuidUtils;
 import com.synnapps.carouselview.CarouselView;
 
 import io.fabric.sdk.android.Fabric;
@@ -37,6 +38,7 @@ public abstract class AttractionDetailActivity extends AppCompatActivity {
     private static final String LOG_LABEL = "AttractionDetail";
 
     protected DestinationInfo destinationInfo;
+    protected String userUuid;
     public View.OnClickListener toggleClickListener;
 
     protected abstract Class getMapActivity();
@@ -65,6 +67,9 @@ public abstract class AttractionDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Fabric.with(this, new Crashlytics());
+        // Get or create unique, random UUID for app install for posting user flags
+        userUuid = UserUuidUtils.getUserUuid(getApplicationContext());
+        Crashlytics.setUserIdentifier(userUuid);
         toggleClickListener = v -> {
             // click handler for toggling expanding/collapsing description card
             TextView descriptionView = findViewById(R.id.detail_description_text);

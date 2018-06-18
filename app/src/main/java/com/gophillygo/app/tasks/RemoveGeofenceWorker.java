@@ -27,6 +27,9 @@ public class RemoveGeofenceWorker extends Worker {
     private static final String REMOVE_GEOFENCE_TAG = "gpg-remove-geofences";
     private static final String LOG_LABEL = "RemoveGeofenceWorker";
 
+    // event identifier used for custom Crashlytics event to note a geofence was removed
+    private static final String REMOVE_GEOFENCE_EVENT = "remove_geofence";
+
     @NonNull
     @Override
     public WorkerResult doWork() {
@@ -38,7 +41,7 @@ public class RemoveGeofenceWorker extends Worker {
             Log.d(LOG_LABEL, "Going to remove " + removeGeofences.length + " geofences");
             geofencingClient.removeGeofences(new ArrayList<>(Arrays.asList(removeGeofences))).addOnSuccessListener(aVoid -> {
                 Log.d(LOG_LABEL, removeGeofences.length + " geofence(s) removed successfully");
-                Crashlytics.log("Removed geofences");
+                Crashlytics.log(REMOVE_GEOFENCE_EVENT);
             }).addOnFailureListener(e -> {
                 String errorMsg = "Failed to remove " + removeGeofences.length + " geofences.";
                 Log.d(LOG_LABEL, errorMsg);

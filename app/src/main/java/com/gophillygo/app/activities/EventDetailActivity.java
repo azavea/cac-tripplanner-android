@@ -14,7 +14,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
@@ -28,7 +27,6 @@ import com.gophillygo.app.data.models.EventInfo;
 import com.gophillygo.app.databinding.ActivityEventDetailBinding;
 import com.gophillygo.app.di.GpgViewModelFactory;
 import com.gophillygo.app.utils.FlagMenuUtils;
-import com.gophillygo.app.utils.UserUuidUtils;
 import com.synnapps.carouselview.CarouselView;
 
 import java.text.DateFormat;
@@ -55,7 +53,6 @@ public class EventDetailActivity extends AttractionDetailActivity {
 
     private long eventId = -1;
     private EventInfo eventInfo;
-    private String userUuid;
 
     private ActivityEventDetailBinding binding;
 
@@ -92,9 +89,6 @@ public class EventDetailActivity extends AttractionDetailActivity {
 
         carouselView = findViewById(R.id.event_detail_carousel);
         carouselView.setIndicatorGravity(Gravity.CENTER_HORIZONTAL|Gravity.BOTTOM);
-
-        // Get or create unique, random UUID for app install for posting user flags
-        userUuid = UserUuidUtils.getUserUuid(getApplicationContext());
 
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(EventViewModel.class);
         destinationViewModel = ViewModelProviders.of(this, viewModelFactory).get(DestinationViewModel.class);
