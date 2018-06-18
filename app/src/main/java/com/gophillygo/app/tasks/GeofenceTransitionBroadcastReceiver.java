@@ -12,7 +12,6 @@ import com.google.android.gms.location.GeofencingEvent;
 import com.gophillygo.app.data.DestinationDao;
 import com.gophillygo.app.data.EventDao;
 import com.gophillygo.app.data.models.Destination;
-import com.gophillygo.app.data.models.DestinationLocation;
 import com.gophillygo.app.data.models.EventInfo;
 
 import java.util.List;
@@ -31,13 +30,17 @@ import static com.gophillygo.app.tasks.GeofenceTransitionWorker.EVENT_PREFIX;
 
 public class GeofenceTransitionBroadcastReceiver extends BroadcastReceiver {
 
+
     @Inject
     DestinationDao destinationDao;
 
     @Inject
     EventDao eventDao;
 
+    public static final String GEOFENCE_IMAGES_KEY = "geofence_images";
+
     private static final String LOG_LABEL = "GeofenceTransitionBR";
+
     @SuppressLint("StaticFieldLeak")
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -82,10 +85,9 @@ public class GeofenceTransitionBroadcastReceiver extends BroadcastReceiver {
                     protected Data doInBackground(Void... voids) {
 
                         // send arrays of combined values for destinations and events
-                        double[] latitudes = new double[numGeofences];
-                        double[] longitudes = new double[numGeofences];
                         String[] labels = new String[numGeofences];
                         String[] names = new String[numGeofences];
+                        String[] images = new String[numGeofences];
 
                         for (int i = 0; i < numGeofences; i++) {
                             Geofence fence = triggeringGeofences.get(i);
@@ -105,9 +107,7 @@ public class GeofenceTransitionBroadcastReceiver extends BroadcastReceiver {
                                 }
                                 labels[i] = EVENT_PREFIX + String.valueOf(eventInfo.getAttraction().getId());
                                 names[i] = eventInfo.getEvent().getName();
-                                DestinationLocation location = eventInfo.getLocation();
-                                latitudes[i] = location.getY();
-                                latitudes[i] = location.getX();
+                                images[i] = eventInfo.getEvent().getImage();
                             } else {
                                 Destination destination = destinationDao.getDestinationInBackground(geofenceId);
                                 if (destination == null) {
@@ -115,17 +115,14 @@ public class GeofenceTransitionBroadcastReceiver extends BroadcastReceiver {
                                 }
                                 labels[i] = DESTINATION_PREFIX + String.valueOf(destination.getId());
                                 names[i] = destination.getName();
-                                DestinationLocation location = destination.getLocation();
-                                latitudes[i] = location.getY();
-                                longitudes[i] = location.getX();
+                                images[i] = destination.getImage();
                             }
                         }
 
-                        return builder.putDoubleArray(AddGeofenceWorker.LATITUDES_KEY, latitudes)
-                               .putDoubleArray(AddGeofenceWorker.LONGITUDES_KEY, longitudes)
-                               .putStringArray(GeofenceTransitionWorker.TRIGGERING_GEOFENCES_KEY, labels)
-                               .putStringArray(AddGeofenceWorker.GEOFENCE_NAMES_KEY, names)
-                               .build();
+                        return builder.putStringArray(GeofenceTransitionWorker.TRIGGERING_GEOFENCES_KEY, labels)
+                                .putStringArray(AddGeofenceWorker.GEOFENCE_NAMES_KEY, names)
+                                .putStringArray(GEOFENCE_IMAGES_KEY, images)
+                                .build();
                     }
                 }.execute();
 

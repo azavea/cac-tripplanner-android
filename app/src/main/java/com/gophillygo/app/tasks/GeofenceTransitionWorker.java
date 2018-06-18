@@ -6,6 +6,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
@@ -15,6 +16,7 @@ import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 
+import com.bumptech.glide.Glide;
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofenceStatusCodes;
@@ -22,11 +24,14 @@ import com.gophillygo.app.R;
 import com.gophillygo.app.activities.EventDetailActivity;
 import com.gophillygo.app.activities.PlaceDetailActivity;
 
+import java.util.concurrent.ExecutionException;
+
 import androidx.work.Data;
 import androidx.work.Worker;
 
 import static com.gophillygo.app.activities.AttractionDetailActivity.GEOFENCE_ID_KEY;
 import static com.gophillygo.app.activities.AttractionDetailActivity.NOTIFICATION_ID_KEY;
+import static com.gophillygo.app.tasks.GeofenceTransitionBroadcastReceiver.GEOFENCE_IMAGES_KEY;
 
 public class GeofenceTransitionWorker extends Worker {
 
@@ -44,6 +49,10 @@ public class GeofenceTransitionWorker extends Worker {
     private static final String GROUP_ID = "gophillygo-entered-geofence";
 
     private static final String LOG_LABEL = "GeofenceTransition";
+
+    // big picture style notification image should be 2:1 aspect ratio
+    private static final int NOTIFICATION_IMAGE_WIDTH = 512;
+    private static final int NOTIFICATION_IMAGE_HEIGHT = 256;
 
     @NonNull
     @Override
@@ -68,14 +77,13 @@ public class GeofenceTransitionWorker extends Worker {
         Boolean enteredGeofence = geofenceTransition == AddGeofenceWorker.GEOFENCE_ENTER_TRIGGER;
         String[] geofences = data.getStringArray(TRIGGERING_GEOFENCES_KEY);
         String[] geofencePlaceNames = data.getStringArray(AddGeofenceWorker.GEOFENCE_NAMES_KEY);
-        double[] latitudes = data.getDoubleArray(AddGeofenceWorker.LATITUDES_KEY);
-        double[] longitudes = data.getDoubleArray(AddGeofenceWorker.LONGITUDES_KEY);
+        String[] geofenceImageUrls = data.getStringArray(GEOFENCE_IMAGES_KEY);
+
         Log.d(LOG_LABEL, "Got geofence transition worker data");
 
         int geofencesCount = geofences.length;
         Log.d(LOG_LABEL, "Have " + geofencesCount + " geofence transitions to process");
-        if (geofencePlaceNames.length != geofences.length || geofences.length != latitudes.length ||
-                geofences.length != longitudes.length) {
+        if (geofencePlaceNames.length != geofences.length || geofences.length != geofenceImageUrls.length) {
             Log.e(LOG_LABEL, "Got geofence worker data arrays of differing lengths");
             return WorkerResult.FAILURE;
         }
@@ -87,6 +95,7 @@ public class GeofenceTransitionWorker extends Worker {
                 // Need a unique int we can find later, for the notification
                 String geofenceLabel = geofences[i];
                 String placeName = geofencePlaceNames[i];
+                String imageUrl = geofenceImageUrls[i];
 
                 // Geofence string ID is "d" for destination or "e" for event, followed by the
                 // destination or event integer ID.
@@ -99,51 +108,65 @@ public class GeofenceTransitionWorker extends Worker {
                     Crashlytics.log(message);
                     Log.d(LOG_LABEL, message);
 
+                    final Bitmap imageBitmap;
+                    Bitmap tmpBitmap = null;
+                    try {
+                        tmpBitmap = Glide.with(context).asBitmap().load(imageUrl)
+                                .submit(NOTIFICATION_IMAGE_WIDTH, NOTIFICATION_IMAGE_HEIGHT).get();
+                    } catch (InterruptedException | ExecutionException e) {
+                        e.printStackTrace();
+                        Crashlytics.logException(e);
+                    } finally {
+                        imageBitmap = tmpBitmap; // initialize nullable final variable
+                    }
+
+                    // Get intent for the detail view to open on notification click.
+                    Intent intent;
+                    Intent beenIntent;
+                    if (isEvent) {
+                        intent = new Intent(context, EventDetailActivity.class);
+                        intent.putExtra(EventDetailActivity.EVENT_ID_KEY, (long) geofenceId);
+                        beenIntent = new Intent(context, EventDetailActivity.class);
+                        beenIntent.putExtra(EventDetailActivity.EVENT_ID_KEY, (long) geofenceId);
+                    } else {
+                        intent = new Intent(context, PlaceDetailActivity.class);
+                        intent.putExtra(PlaceDetailActivity.DESTINATION_ID_KEY, (long) geofenceId);
+                        beenIntent = new Intent(context, PlaceDetailActivity.class);
+                        beenIntent.putExtra(PlaceDetailActivity.DESTINATION_ID_KEY, (long) geofenceId);
+                    }
+
+                    // When opening detail activity from 'been' button, pass key to tell
+                    // activity to mark its model as 'been' and the notification ID, to close it
+                    beenIntent.putExtra(MARK_BEEN_KEY, true);
+                    beenIntent.putExtra(NOTIFICATION_ID_KEY, notificationTag);
+                    beenIntent.putExtra(GEOFENCE_ID_KEY, geofenceId);
+
+                    // Add the intent to the stack builder, which inflates the back stack
+                    TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
+                    stackBuilder.addNextIntentWithParentStack(intent);
+                    // Get the PendingIntent containing the entire back stack
+                    PendingIntent resultPendingIntent =
+                            stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                    // Create pending intent for marking place "been"
+                    // Add the intent to the stack builder, which inflates the back stack
+                    TaskStackBuilder beenStackBuilder = TaskStackBuilder.create(context);
+                    beenStackBuilder.addNextIntentWithParentStack(beenIntent);
+                    // Get the PendingIntent containing the entire back stack
+                    PendingIntent beenPendingIntent =
+                            beenStackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                    // Show notification on UI thread
                     handler.post(() -> {
-                        // Get intent for the detail view to open on notification click.
-                        Intent intent;
-                        Intent beenIntent;
-                        if (isEvent) {
-                            intent = new Intent(context, EventDetailActivity.class);
-                            intent.putExtra(EventDetailActivity.EVENT_ID_KEY, (long)geofenceId);
-                            beenIntent = new Intent(context, EventDetailActivity.class);
-                            beenIntent.putExtra(EventDetailActivity.EVENT_ID_KEY, (long)geofenceId);
-                        } else {
-                            intent = new Intent(context, PlaceDetailActivity.class);
-                            intent.putExtra(PlaceDetailActivity.DESTINATION_ID_KEY, (long)geofenceId);
-                            beenIntent = new Intent(context, PlaceDetailActivity.class);
-                            beenIntent.putExtra(PlaceDetailActivity.DESTINATION_ID_KEY, (long)geofenceId);
-                        }
-
-                        // When opening detail activity from 'been' button, pass key to tell
-                        // activity to mark its model as 'been' and the notification ID, to close it
-                        beenIntent.putExtra(MARK_BEEN_KEY, true);
-                        beenIntent.putExtra(NOTIFICATION_ID_KEY, notificationTag);
-                        beenIntent.putExtra(GEOFENCE_ID_KEY, geofenceId);
-
-                        // Add the intent to the stack builder, which inflates the back stack
-                        TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
-                        stackBuilder.addNextIntentWithParentStack(intent);
-                        // Get the PendingIntent containing the entire back stack
-                        PendingIntent resultPendingIntent =
-                                stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-
-                        // Create pending intent for marking place "been"
-                        // Add the intent to the stack builder, which inflates the back stack
-                        TaskStackBuilder beenStackBuilder = TaskStackBuilder.create(context);
-                        beenStackBuilder.addNextIntentWithParentStack(beenIntent);
-                        // Get the PendingIntent containing the entire back stack
-                        PendingIntent beenPendingIntent =
-                                beenStackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-
+                        String nearbyNotice = context.getString(R.string.place_nearby_notification, placeName);
                         createNotificationChannel(context);
-                        // show on UI thread
-                        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context, CHANNEL_ID)
+
+                        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context, CHANNEL_ID)
                                 // TODO: use app icon of some sort
                                 .setSmallIcon(R.drawable.ic_flag_blue_24dp)
                                 .setOnlyAlertOnce(false)
                                 .setContentTitle(placeName)
-                                .setContentText(context.getString(R.string.place_nearby_notification, placeName))
+                                .setContentText(nearbyNotice)
                                 .setContentIntent(resultPendingIntent)
                                 .setAutoCancel(true) // close notification when tapped
                                 .setGroup(GROUP_ID)
@@ -153,13 +176,18 @@ public class GeofenceTransitionWorker extends Worker {
                                 .addAction(R.drawable.ic_beenhere_blue_24dp,
                                         context.getString(R.string.place_been_option),
                                         beenPendingIntent)
-                                .setGroupSummary(true)
-                                .setStyle(new NotificationCompat.InboxStyle().addLine(placeName));
+                                .setGroupSummary(true);
 
+                        if (imageBitmap != null) {
+                            notificationBuilder = notificationBuilder.setStyle(new NotificationCompat.BigPictureStyle()
+                                    .bigPicture(imageBitmap));
+                        } else {
+                            notificationBuilder = notificationBuilder.setStyle(new NotificationCompat.InboxStyle().addLine(nearbyNotice));
+                        }
                         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
 
                         // The pair of notification string tag and int must be unique for the app
-                        notificationManager.notify(notificationTag, geofenceId, mBuilder.build());
+                        notificationManager.notify(notificationTag, geofenceId, notificationBuilder.build());
 
                     });
 
