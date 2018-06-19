@@ -178,7 +178,7 @@ public class GeofenceTransitionWorker extends Worker {
                                 .setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_SUMMARY)
                                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                                 .addAction(R.drawable.ic_beenhere_blue_24dp,
-                                        context.getString(R.string.place_been_option),
+                                        context.getString(R.string.place_nearby_been_button),
                                         beenPendingIntent)
                                 .setGroupSummary(true);
 
