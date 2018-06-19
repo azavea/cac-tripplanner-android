@@ -51,8 +51,9 @@ public class GeofenceTransitionWorker extends Worker {
     private static final String LOG_LABEL = "GeofenceTransition";
 
     // big picture style notification image should be 2:1 aspect ratio
-    private static final int NOTIFICATION_IMAGE_WIDTH = 512;
-    private static final int NOTIFICATION_IMAGE_HEIGHT = 256;
+    // https://materialdoc.com/patterns/notifications/
+    private static final int NOTIFICATION_IMAGE_WIDTH = 1024;
+    private static final int NOTIFICATION_IMAGE_HEIGHT = 512;
 
     @NonNull
     @Override

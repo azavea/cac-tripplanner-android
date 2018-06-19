@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingEvent;
 import com.gophillygo.app.data.DestinationDao;
@@ -107,15 +108,18 @@ public class GeofenceTransitionBroadcastReceiver extends BroadcastReceiver {
                                 }
                                 labels[i] = EVENT_PREFIX + String.valueOf(eventInfo.getAttraction().getId());
                                 names[i] = eventInfo.getEvent().getName();
-                                images[i] = eventInfo.getEvent().getImage();
+                                images[i] = eventInfo.getEvent().getWideImage();
                             } else {
                                 Destination destination = destinationDao.getDestinationInBackground(geofenceId);
                                 if (destination == null) {
-                                    Log.e(LOG_LABEL, "Could not find destination for geofence " + geofenceId);
+                                    String message = "Could not find destination for geofence " + geofenceId;
+                                    Log.e(LOG_LABEL, message);
+                                    Crashlytics.log(message);
+                                } else {
+                                    labels[i] = DESTINATION_PREFIX + String.valueOf(destination.getId());
+                                    names[i] = destination.getName();
+                                    images[i] = destination.getWideImage();
                                 }
-                                labels[i] = DESTINATION_PREFIX + String.valueOf(destination.getId());
-                                names[i] = destination.getName();
-                                images[i] = destination.getImage();
                             }
                         }
 
