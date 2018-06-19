@@ -55,6 +55,9 @@ public class GeofenceTransitionWorker extends Worker {
     private static final int NOTIFICATION_IMAGE_WIDTH = 1024;
     private static final int NOTIFICATION_IMAGE_HEIGHT = 512;
 
+    private static final int BEEN_PENDING_INTENT_CODE = 101;
+    private static final int DETAIL_PENDING_INTENT_CODE = 102;
+
     @NonNull
     @Override
     @SuppressLint("StringFormatInvalid")
@@ -147,7 +150,7 @@ public class GeofenceTransitionWorker extends Worker {
                     stackBuilder.addNextIntentWithParentStack(intent);
                     // Get the PendingIntent containing the entire back stack
                     PendingIntent resultPendingIntent =
-                            stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+                            stackBuilder.getPendingIntent(DETAIL_PENDING_INTENT_CODE, PendingIntent.FLAG_UPDATE_CURRENT);
 
                     // Create pending intent for marking place "been"
                     // Add the intent to the stack builder, which inflates the back stack
@@ -155,7 +158,7 @@ public class GeofenceTransitionWorker extends Worker {
                     beenStackBuilder.addNextIntentWithParentStack(beenIntent);
                     // Get the PendingIntent containing the entire back stack
                     PendingIntent beenPendingIntent =
-                            beenStackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
+                            beenStackBuilder.getPendingIntent(BEEN_PENDING_INTENT_CODE, PendingIntent.FLAG_UPDATE_CURRENT);
 
                     // Show notification on UI thread
                     handler.post(() -> {
