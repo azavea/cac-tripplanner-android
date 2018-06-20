@@ -32,7 +32,7 @@ public class RemoveGeofenceWorker extends Worker {
 
     @NonNull
     @Override
-    public WorkerResult doWork() {
+    public Result doWork() {
         GeofencingClient geofencingClient = LocationServices.getGeofencingClient(getApplicationContext());
 
         Data data = getInputData();
@@ -48,12 +48,12 @@ public class RemoveGeofenceWorker extends Worker {
                 Crashlytics.log(errorMsg);
                 Crashlytics.logException(e);
             });
-            return WorkerResult.SUCCESS;
+            return Result.SUCCESS;
         } else {
             String errorMsg = "Did not receive data for geofences to remove";
             Log.e(LOG_LABEL, errorMsg);
             Crashlytics.log(errorMsg);
-            return WorkerResult.FAILURE;
+            return Result.FAILURE;
         }
     }
 

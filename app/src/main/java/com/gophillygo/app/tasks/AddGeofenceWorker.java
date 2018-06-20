@@ -54,7 +54,7 @@ public class AddGeofenceWorker extends Worker {
 
     @NonNull
     @Override
-    public WorkerResult doWork() {
+    public Result doWork() {
         Log.d(LOG_LABEL, "Starting add geofence worker");
 
         Context context = getApplicationContext();
@@ -83,7 +83,7 @@ public class AddGeofenceWorker extends Worker {
             String message = "Data missing for geofences to add";
             Crashlytics.log(message);
             Log.e(LOG_LABEL, message);
-            return  WorkerResult.FAILURE;
+            return Result.FAILURE;
         }
 
         if (latitudes.length != longitudes.length || latitudes.length != geofenceLabels.length ||
@@ -91,7 +91,7 @@ public class AddGeofenceWorker extends Worker {
             String message = "Location data for geofences to add should be arrays of the same length.";
             Crashlytics.log(message);
             Log.e(LOG_LABEL, message);
-            return WorkerResult.FAILURE;
+            return Result.FAILURE;
         }
 
         for (int i = 0; i < latitudes.length; i++) {
@@ -117,22 +117,21 @@ public class AddGeofenceWorker extends Worker {
 
         try {
             geofencingClient.addGeofences(builder.build(), pendingIntent);
-            return WorkerResult.SUCCESS;
+            return Result.SUCCESS;
         } catch (SecurityException ex) {
             String message = "Missing permissions to add geofences";
             Log.e(LOG_LABEL, message);
             Crashlytics.log(message);
             Crashlytics.logException(ex);
             ex.printStackTrace();
-            return WorkerResult.FAILURE;
+            return Result.FAILURE;
         } catch (Exception ex) {
             String message = "Failed to add geofences";
             Log.e(LOG_LABEL, message);
             Crashlytics.log(message);
             ex.printStackTrace();
             Crashlytics.logException(ex);
-            return WorkerResult.FAILURE;
+            return Result.FAILURE;
         }
-
     }
 }
