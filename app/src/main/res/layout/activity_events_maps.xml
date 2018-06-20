@@ -14,15 +14,8 @@
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/events_map_toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:fitsSystemWindows="true"
-                android:elevation="0dp"
-                android:background="@color/color_primary"
+                style="@style/ToolbarOpaque"
                 app:title="@string/title_activity_events_maps"
-                android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
                 tools:targetApi="lollipop" />
 
             <include layout="@layout/filter_button_bar"

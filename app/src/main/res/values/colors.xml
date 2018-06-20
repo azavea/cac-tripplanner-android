@@ -6,6 +6,7 @@
     <color name="color_secondary">#f0942f</color>
     <color name="color_background_grey">#e1e5e9</color>
     <color name="color_white">#ffffff</color>
+    <color name="color_black">#000000</color>
     <color name="color_text_dark_grey">#263238</color>
     <color name="color_text_grey">#555555</color>
     <color name="color_text_light_grey">#727E84</color>

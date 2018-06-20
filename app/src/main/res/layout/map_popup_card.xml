@@ -13,68 +13,48 @@
 
     <android.support.v7.widget.CardView
         android:id="@+id/map_popup_card"
+        style="@style/MapPopupCard"
         android:clickable="true"
         android:focusable="true"
         android:onClick="@{v -> activity.openDetail(attraction)}"
         android:visibility="@{attractionInfo == null ? View.GONE : View.VISIBLE}"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:layout_marginBottom="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp">
+        android:layout_gravity="bottom">
 
         <android.support.constraint.ConstraintLayout
             android:id="@+id/ConstraintLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="0dp">
+            android:layout_height="wrap_content">
 
             <TextView
                 android:id="@+id/map_popup_title"
+                style="@style/PlaceListItemName"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="16dp"
-                android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
-                android:fontFamily="sans-serif"
-                android:padding="0dp"
                 android:text="@{attraction.name}"
-                android:textColor="?android:attr/colorForeground"
-                android:textSize="18sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/map_popup_distance_label"
-                style="@style/TextAppearance.AppCompat.Medium"
+                style="@style/PlaceListItemDistance"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:drawablePadding="6dp"
-                android:drawableStart="@drawable/ic_place_gray_16dp"
-                android:gravity="start"
-                android:padding="0dp"
                 android:text='@{attractionInfo.formattedDistance}'
-                android:textColor="@color/color_text_grey"
-                android:textSize="13sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/map_popup_title" />
 
             <android.support.v7.widget.AppCompatImageButton
                 android:id="@+id/map_popup_options_button"
+                style="@style/OptionsButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginEnd="8dp"
                 android:onClick="@{(view) -> activity.optionsButtonClick(view, attractionInfo)}"
-                android:padding="0dp"
                 android:src="@{activity.getFlagImage(attractionInfo)}"
-                app:backgroundTint="@color/color_white"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent" />
 

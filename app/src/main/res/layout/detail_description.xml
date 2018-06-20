@@ -9,12 +9,11 @@
     </data>
 
     <android.support.v7.widget.CardView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:layout_gravity="center"
         app:cardBackgroundColor="#00FFFFFF"
-        app:cardCornerRadius="0dp"
-        app:cardElevation="0dp">
+        app:cardCornerRadius="1dp"
+        app:cardElevation="0dp"
+        app:cardMaxElevation="0dp">
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
@@ -22,28 +21,23 @@
 
             <TextView
                 android:id="@+id/detail_description_text"
-                style="@style/GpgDetailText"
-                android:ellipsize="end"
-                android:fontFamily="sans-serif"
-                android:lineSpacingMultiplier="1.2"
-                android:maxLines="4"
-                android:padding="0dp"
+                style="@style/ItemDetailDescription"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:text="@{htmlDescription}"
-                android:textColor="?android:attr/colorForeground"
-                android:textSize="13sp" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/detail_description_toggle"
+                style="@style/ItemDetailDescriptionToggle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="sans-serif"
-                android:paddingTop="8dp"
                 android:text="@string/detail_description_expand"
-                android:textAlignment="center"
-                android:textColor="?attr/colorPrimary"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                android:onClick="@{activity.toggleClickListener}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/detail_description_text" />
         </android.support.constraint.ConstraintLayout>
 

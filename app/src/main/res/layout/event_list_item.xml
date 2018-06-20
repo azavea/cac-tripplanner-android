@@ -11,25 +11,16 @@
     </data>
 
     <android.support.constraint.ConstraintLayout
+        style="@style/ListItem"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:background="@color/color_white">
+        android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/event_month_label"
-            style="@style/Base.TextAppearance.AppCompat.Title"
+            style="@style/EventListItemMonth"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:padding="0dp"
             android:text="@{adapter.monthFormat.format(attraction.getStart())}"
-            android:textAlignment="center"
-            android:textAllCaps="true"
-            android:textColor="?android:attr/colorForeground"
-            android:textSize="13sp"
             app:layout_constraintBottom_toTopOf="@+id/event_day_of_month_label"
             app:layout_constraintEnd_toStartOf="@+id/event_list_item_name_label"
             app:layout_constraintStart_toStartOf="parent"
@@ -37,18 +28,10 @@
 
         <TextView
             android:id="@+id/event_day_of_month_label"
-            style="@style/Base.TextAppearance.AppCompat.Title"
+            style="@style/EventListItemDayOfMonth"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="16dp"
-            android:layout_marginStart="8dp"
-            android:fontFamily="sans-serif"
-            android:gravity="start"
-            android:padding="0dp"
             android:text="@{adapter.dayOfMonthFormat.format(attraction.getStart())}"
-            android:textAlignment="center"
-            android:textColor="?android:attr/colorForeground"
-            android:textSize="32sp"
             app:layout_constraintBottom_toTopOf="@+id/event_day_of_week_label"
             app:layout_constraintEnd_toStartOf="@+id/event_list_item_name_label"
             app:layout_constraintStart_toStartOf="parent"
@@ -56,19 +39,10 @@
 
         <TextView
             android:id="@+id/event_day_of_week_label"
-            style="@style/Base.TextAppearance.AppCompat.Title"
+            style="@style/EventListItemDayOfWeek"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginStart="8dp"
-            android:fontFamily="sans-serif"
-            android:padding="0dp"
             android:text="@{adapter.dayOfWeekFormat.format(attraction.getStart())}"
-            android:textAlignment="center"
-            android:textAllCaps="true"
-            android:textColor="@color/color_text_light_grey"
-            android:textSize="13sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/event_list_item_name_label"
             app:layout_constraintStart_toStartOf="parent"
@@ -76,35 +50,20 @@
 
         <TextView
             android:id="@+id/event_list_item_name_label"
-            style="@style/Base.TextAppearance.AppCompat.Title"
+            style="@style/EventListItemName"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="72dp"
-            android:layout_marginTop="8dp"
-            android:fontFamily="sans-serif"
-            android:gravity="start"
             android:text="@{attraction.getName}"
-            android:textColor="?android:attr/colorForeground"
-            android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/event_list_destination_name"
-            style="@style/TextAppearance.AppCompat.Medium"
+            style="@style/EventListItemDestination"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="72dp"
-            android:layout_marginTop="8dp"
-            android:fontFamily="sans-serif"
-            android:gravity="start"
             android:text="@{attractionInfo.destinationName}"
-            android:textAlignment="textStart"
-            android:textColor="?android:attr/colorForeground"
-            android:textSize="13sp"
             android:visibility="@{attractionInfo.hasDestinationName ? View.VISIBLE : View.INVISIBLE}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -112,33 +71,22 @@
 
         <TextView
             android:id="@+id/event_list_item_time"
-            style="@style/TextAppearance.AppCompat.Medium"
+            style="@style/EventListItemTime"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="128dp"
-            android:layout_marginStart="72dp"
-            android:layout_marginTop="8dp"
-            android:padding="0dp"
             android:text="@{adapter.getEventTimeString(attraction)}"
-            android:textColor="@color/color_text_light_grey"
-            android:textSize="13sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/event_list_destination_name"
-            app:layout_constraintVertical_bias="0.100000024" />
+            app:layout_constraintTop_toBottomOf="@id/event_list_destination_name" />
 
         <android.support.v7.widget.AppCompatImageButton
             android:id="@+id/event_list_item_options_button"
+            style="@style/OptionsButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
             android:onClick="@{(view) -> adapter.optionsButtonClick(view, attractionInfo, position)}"
-            android:padding="0dp"
             android:src="@{adapter.getFlagImage(attractionInfo)}"
-            app:backgroundTint="@color/color_white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
