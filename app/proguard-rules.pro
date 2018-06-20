@@ -21,7 +21,7 @@
 #-renamesourcefileattribute SourceFile
 
 ## This app
--keep class com.gophillygo.** { *; }
+-keep class org.gophillygo.** { *; }
 
 ## CarouselView
 -keep class com.synnapps.carouselview.** { *; }

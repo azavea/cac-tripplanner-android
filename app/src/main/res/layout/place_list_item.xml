@@ -5,10 +5,10 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
-        <variable name="attraction" type="com.gophillygo.app.data.models.Destination"/>
-        <variable name="attractionInfo" type="com.gophillygo.app.data.models.DestinationInfo"/>
+        <variable name="attraction" type="org.gophillygo.app.data.models.Destination"/>
+        <variable name="attractionInfo" type="org.gophillygo.app.data.models.DestinationInfo"/>
         <variable name="position" type="Integer" />
-        <variable name="adapter" type="com.gophillygo.app.adapters.PlacesListAdapter" />
+        <variable name="adapter" type="org.gophillygo.app.adapters.PlacesListAdapter" />
         <import type="android.view.View"/>
     </data>
     <android.support.constraint.ConstraintLayout

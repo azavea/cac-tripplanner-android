@@ -3,13 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:fillViewport="true"
-    tools:context="com.gophillygo.app.activities.EventDetailActivity">
+    tools:context="org.gophillygo.app.activities.EventDetailActivity">
     <data>
         <!-- set up data binding to event -->
-        <variable name="event" type="com.gophillygo.app.data.models.Event"/>
-        <variable name="eventInfo" type="com.gophillygo.app.data.models.EventInfo"/>
-        <variable name="destination" type="com.gophillygo.app.data.models.Destination"/>
-        <variable name="activity" type="com.gophillygo.app.activities.EventDetailActivity" />
+        <variable name="event" type="org.gophillygo.app.data.models.Event"/>
+        <variable name="eventInfo" type="org.gophillygo.app.data.models.EventInfo"/>
+        <variable name="destination" type="org.gophillygo.app.data.models.Destination"/>
+        <variable name="activity" type="org.gophillygo.app.activities.EventDetailActivity" />
         <!-- imports to allow referencing within data binding expressions -->
         <import type="android.view.View"/>
     </data>

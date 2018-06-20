@@ -3,8 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android">
     <data>
-        <variable name="filter" type="com.gophillygo.app.data.models.Filter" />
-        <variable name="listener" type="com.gophillygo.app.activities.ToolbarFilterListener" />
+        <variable name="filter" type="org.gophillygo.app.data.models.Filter" />
+        <variable name="listener" type="org.gophillygo.app.activities.ToolbarFilterListener" />
     </data>
 
     <android.support.constraint.ConstraintLayout
@@ -33,7 +33,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
-        <com.gophillygo.app.GpgToolbarToggleButton
+        <org.gophillygo.app.GpgToolbarToggleButton
             android:id="@+id/filter_bar_liked_button"
             style="@style/FilterBarButton"
             android:layout_width="wrap_content"
@@ -49,7 +49,7 @@
             tools:layout_conversion_absoluteHeight="32dp"
             tools:layout_conversion_absoluteWidth="69dp" />
 
-        <com.gophillygo.app.GpgToolbarToggleButton
+        <org.gophillygo.app.GpgToolbarToggleButton
             android:id="@+id/filter_bar_want_to_go_button"
             style="@style/FilterBarButton"
             android:layout_width="wrap_content"

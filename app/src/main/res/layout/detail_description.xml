@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="@layout/activity_place_detail">
     <data>
-        <variable name="activity" type="com.gophillygo.app.activities.AttractionDetailActivity" />
+        <variable name="activity" type="org.gophillygo.app.activities.AttractionDetailActivity" />
         <variable name="htmlDescription" type="android.text.Spanned" />
     </data>
 

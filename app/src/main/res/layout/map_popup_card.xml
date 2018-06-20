@@ -4,9 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="@layout/activity_places_maps">
     <data>
-        <variable name="attractionInfo" type="com.gophillygo.app.data.models.AttractionInfo" />
-        <variable name="attraction" type="com.gophillygo.app.data.models.Attraction" />
-        <variable name="activity" type="com.gophillygo.app.activities.MapsActivity" />
+        <variable name="attractionInfo" type="org.gophillygo.app.data.models.AttractionInfo" />
+        <variable name="attraction" type="org.gophillygo.app.data.models.Attraction" />
+        <variable name="activity" type="org.gophillygo.app.activities.MapsActivity" />
         <!-- imports to allow referencing within data binding expressions -->
         <import type="android.view.View"/>
     </data>

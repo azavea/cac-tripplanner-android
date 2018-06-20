@@ -18,7 +18,7 @@ apply plugin: 'io.fabric'
 android {
     compileSdkVersion 27
     defaultConfig {
-        applicationId "com.gophillygo.app"
+        applicationId "org.gophillygo.app"
         minSdkVersion 19
         targetSdkVersion 27
         versionCode 3
