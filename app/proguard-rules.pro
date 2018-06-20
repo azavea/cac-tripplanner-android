@@ -34,9 +34,6 @@
   public *;
 }
 
-# for DexGuard only
--keepresourcexmlelements manifest/application/meta-data@value=GlideModule
-
 ## Retrofit
 # Platform calls Class.forName on types which do not exist on Android to determine platform.
 -dontnote retrofit2.Platform
@@ -48,6 +45,9 @@
 -keepattributes Exceptions
 
 ## Okio (used by Retrofit)
+-keep class okhttp3.** { *; }
+-keep interface okhttp3.** { *; }
+-dontwarn okhttp3.**
 -dontwarn okio.**
 
 ## Dagger
@@ -80,4 +80,7 @@
 # Fabric
 -keepattributes SourceFile,LineNumberTable
 -keep public class * extends java.lang.Exception
--keepresourcexmlelements manifest/application/meta-data@name=io.fabric.ApiKey
+
+# Networking
+-keep class android.net.** { *; }
+-dontwarn androidx.work.impl.**
