@@ -1,6 +1,7 @@
 # API keys
 !examples/*
 crashlytics.properties
+fabric.properties
 app/**/api_keys.xml
 app/**/google_maps_api.xml
 app/src/debug/

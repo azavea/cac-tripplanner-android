@@ -6,6 +6,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
@@ -15,30 +16,52 @@ import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.app.TaskStackBuilder;
 import android.util.Log;
 
+import com.bumptech.glide.Glide;
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofenceStatusCodes;
 import com.gophillygo.app.R;
 import com.gophillygo.app.activities.EventDetailActivity;
 import com.gophillygo.app.activities.PlaceDetailActivity;
 
+import java.util.concurrent.ExecutionException;
+
 import androidx.work.Data;
 import androidx.work.Worker;
 
+import static com.gophillygo.app.activities.AttractionDetailActivity.GEOFENCE_ID_KEY;
+import static com.gophillygo.app.activities.AttractionDetailActivity.NOTIFICATION_ID_KEY;
+import static com.gophillygo.app.tasks.GeofenceTransitionBroadcastReceiver.GEOFENCE_IMAGES_KEY;
+
 public class GeofenceTransitionWorker extends Worker {
 
+    public static final String MARK_BEEN_KEY = "mark_been";
     public static final String HAS_ERROR_KEY = "has_error";
     public static final String ERROR_CODE_KEY = "error_code";
     public static final String TRANSITION_KEY = "transition";
     public static final String TRIGGERING_GEOFENCES_KEY = "triggering_geofences";
 
+    // use a one-character prefix to the geofence ID strings to disambiguate attraction IDs
+    public static final String DESTINATION_PREFIX = "d";
+    public static final String EVENT_PREFIX = "e";
+
     private static final String CHANNEL_ID = "gophillygo-nearby-places";
+    private static final String GROUP_ID = "gophillygo-entered-geofence";
 
     private static final String LOG_LABEL = "GeofenceTransition";
+
+    // big picture style notification image should be 2:1 aspect ratio
+    // https://materialdoc.com/patterns/notifications/
+    private static final int NOTIFICATION_IMAGE_WIDTH = 1024;
+    private static final int NOTIFICATION_IMAGE_HEIGHT = 512;
+
+    private static final int BEEN_PENDING_INTENT_CODE = 101;
+    private static final int DETAIL_PENDING_INTENT_CODE = 102;
 
     @NonNull
     @Override
     @SuppressLint("StringFormatInvalid")
-    public WorkerResult doWork() {
+    public Result doWork() {
         Log.d(LOG_LABEL, "Starting geofence transition worker");
 
         // Geofence event data passed along as primitives
@@ -58,16 +81,15 @@ public class GeofenceTransitionWorker extends Worker {
         Boolean enteredGeofence = geofenceTransition == AddGeofenceWorker.GEOFENCE_ENTER_TRIGGER;
         String[] geofences = data.getStringArray(TRIGGERING_GEOFENCES_KEY);
         String[] geofencePlaceNames = data.getStringArray(AddGeofenceWorker.GEOFENCE_NAMES_KEY);
-        double[] latitudes = data.getDoubleArray(AddGeofenceWorker.LATITUDES_KEY);
-        double[] longitudes = data.getDoubleArray(AddGeofenceWorker.LONGITUDES_KEY);
+        String[] geofenceImageUrls = data.getStringArray(GEOFENCE_IMAGES_KEY);
+
         Log.d(LOG_LABEL, "Got geofence transition worker data");
 
         int geofencesCount = geofences.length;
         Log.d(LOG_LABEL, "Have " + geofencesCount + " geofence transitions to process");
-        if (geofencePlaceNames.length != geofences.length || geofences.length != latitudes.length ||
-                geofences.length != longitudes.length) {
+        if (geofencePlaceNames.length != geofences.length || geofences.length != geofenceImageUrls.length) {
             Log.e(LOG_LABEL, "Got geofence worker data arrays of differing lengths");
-            return WorkerResult.FAILURE;
+            return Result.FAILURE;
         }
 
         if (geofencesCount > 0) {
@@ -77,74 +99,120 @@ public class GeofenceTransitionWorker extends Worker {
                 // Need a unique int we can find later, for the notification
                 String geofenceLabel = geofences[i];
                 String placeName = geofencePlaceNames[i];
-                double latitude = latitudes[i];
-                double longitude = longitudes[i];
+                String imageUrl = geofenceImageUrls[i];
 
                 // Geofence string ID is "d" for destination or "e" for event, followed by the
                 // destination or event integer ID.
                 int geofenceId = Integer.valueOf(geofenceLabel.substring(1));
-                boolean isEvent = geofenceLabel.startsWith("e");
-                String notificationTag = isEvent ? "e" : "d";
+                boolean isEvent = geofenceLabel.startsWith(EVENT_PREFIX);
+                String notificationTag = isEvent ? EVENT_PREFIX : DESTINATION_PREFIX;
 
                 if (enteredGeofence) {
-                    Log.d(LOG_LABEL, "Entered geofence ID " + geofenceLabel + " for " + placeName);
+                    String message = "Entered geofence ID " + geofenceLabel + " for " + placeName;
+                    Crashlytics.log(message);
+                    Log.d(LOG_LABEL, message);
 
+                    final Bitmap imageBitmap;
+                    Bitmap tmpBitmap = null;
+                    try {
+                        tmpBitmap = Glide.with(context).asBitmap().load(imageUrl)
+                                .submit(NOTIFICATION_IMAGE_WIDTH, NOTIFICATION_IMAGE_HEIGHT).get();
+                    } catch (InterruptedException | ExecutionException e) {
+                        e.printStackTrace();
+                        Crashlytics.logException(e);
+                    } finally {
+                        imageBitmap = tmpBitmap; // initialize nullable final variable
+                    }
+
+                    // Get intent for the detail view to open on notification click.
+                    Intent intent;
+                    Intent beenIntent;
+                    if (isEvent) {
+                        intent = new Intent(context, EventDetailActivity.class);
+                        intent.putExtra(EventDetailActivity.EVENT_ID_KEY, (long) geofenceId);
+                        beenIntent = new Intent(context, EventDetailActivity.class);
+                        beenIntent.putExtra(EventDetailActivity.EVENT_ID_KEY, (long) geofenceId);
+                    } else {
+                        intent = new Intent(context, PlaceDetailActivity.class);
+                        intent.putExtra(PlaceDetailActivity.DESTINATION_ID_KEY, (long) geofenceId);
+                        beenIntent = new Intent(context, PlaceDetailActivity.class);
+                        beenIntent.putExtra(PlaceDetailActivity.DESTINATION_ID_KEY, (long) geofenceId);
+                    }
+
+                    // When opening detail activity from 'been' button, pass key to tell
+                    // activity to mark its model as 'been' and the notification ID, to close it
+                    beenIntent.putExtra(MARK_BEEN_KEY, true);
+                    beenIntent.putExtra(NOTIFICATION_ID_KEY, notificationTag);
+                    beenIntent.putExtra(GEOFENCE_ID_KEY, geofenceId);
+
+                    // Add the intent to the stack builder, which inflates the back stack
+                    TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
+                    stackBuilder.addNextIntentWithParentStack(intent);
+                    // Get the PendingIntent containing the entire back stack
+                    PendingIntent resultPendingIntent =
+                            stackBuilder.getPendingIntent(DETAIL_PENDING_INTENT_CODE, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                    // Create pending intent for marking place "been"
+                    // Add the intent to the stack builder, which inflates the back stack
+                    TaskStackBuilder beenStackBuilder = TaskStackBuilder.create(context);
+                    beenStackBuilder.addNextIntentWithParentStack(beenIntent);
+                    // Get the PendingIntent containing the entire back stack
+                    PendingIntent beenPendingIntent =
+                            beenStackBuilder.getPendingIntent(BEEN_PENDING_INTENT_CODE, PendingIntent.FLAG_UPDATE_CURRENT);
+
+                    // Show notification on UI thread
                     handler.post(() -> {
-                        // Get intent for the detail view to open on notification click.
-                        Intent intent;
-                        if (isEvent) {
-                            intent = new Intent(context, EventDetailActivity.class);
-                            intent.putExtra(EventDetailActivity.EVENT_ID_KEY, (long)geofenceId);
-                        } else {
-                            intent = new Intent(context, PlaceDetailActivity.class);
-                            intent.putExtra(PlaceDetailActivity.DESTINATION_ID_KEY, (long)geofenceId);
-                        }
-
-
-                        // Add the intent to the stack builder, which inflates the back stack
-                        TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
-                        stackBuilder.addNextIntentWithParentStack(intent);
-                        // Get the PendingIntent containing the entire back stack
-                        PendingIntent resultPendingIntent =
-                                stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
-
+                        String nearbyNotice = context.getString(R.string.place_nearby_notification, placeName);
                         createNotificationChannel(context);
-                        // show on UI thread
-                        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(context, CHANNEL_ID)
+
+                        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context, CHANNEL_ID)
                                 // TODO: use app icon of some sort
                                 .setSmallIcon(R.drawable.ic_flag_blue_24dp)
                                 .setOnlyAlertOnce(false)
                                 .setContentTitle(placeName)
-                                .setContentText(context.getString(R.string.place_nearby_notification, placeName))
+                                .setContentText(nearbyNotice)
                                 .setContentIntent(resultPendingIntent)
-                                .setAutoCancel(true) // close notifcation when tapped
-                                .setPriority(NotificationCompat.PRIORITY_HIGH);
+                                .setAutoCancel(true) // close notification when tapped
+                                .setGroup(GROUP_ID)
+                                // alert for all notifications
+                                .setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_SUMMARY)
+                                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                                .addAction(R.drawable.ic_beenhere_blue_24dp,
+                                        context.getString(R.string.place_nearby_been_button),
+                                        beenPendingIntent)
+                                .setGroupSummary(true);
 
+                        if (imageBitmap != null) {
+                            notificationBuilder = notificationBuilder.setStyle(new NotificationCompat.BigPictureStyle()
+                                    .bigPicture(imageBitmap));
+                        } else {
+                            notificationBuilder = notificationBuilder.setStyle(new NotificationCompat.InboxStyle().addLine(nearbyNotice));
+                        }
                         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
 
                         // The pair of notification string tag and int must be unique for the app
-                        notificationManager.notify(notificationTag, geofenceId, mBuilder.build());
+                        notificationManager.notify(notificationTag, geofenceId, notificationBuilder.build());
+
                     });
 
                 } else {
-                    Log.d(LOG_LABEL, "Exited geofence ID " + geofenceLabel);
+                    String message = "Exited geofence ID " + geofenceLabel;
+                    Crashlytics.log(message);
+                    Log.d(LOG_LABEL, message);
                     handler.post(() -> {
                         Log.d(LOG_LABEL, "Removing notification for geofence");
                         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
                         notificationManager.cancel(notificationTag, geofenceId);
                     });
                 }
-
-                Log.d(LOG_LABEL, "Re-registering geofence after transition");
-                // remove and re-register geofence, or else it will ignore future events
-                RemoveGeofenceWorker.removeOneGeofence(geofenceLabel);
-                AddGeofencesBroadcastReceiver.addOneGeofence(longitude, latitude, geofenceLabel, placeName);
             }
 
-            return WorkerResult.SUCCESS;
+            return Result.SUCCESS;
         } else {
-            Log.w(LOG_LABEL, "Received a geofence transition event with no triggering geofences.");
-            return WorkerResult.SUCCESS;
+            String message = "Received a geofence transition event with no triggering geofences.";
+            Crashlytics.log(message);
+            Log.w(LOG_LABEL, message);
+            return Result.SUCCESS;
         }
     }
 
@@ -170,15 +238,21 @@ public class GeofenceTransitionWorker extends Worker {
                     Log.d(LOG_LABEL, "Creating new notification channel for app:");
                     notificationManager.createNotificationChannel(channel);
                 } else {
-                    Log.d(LOG_LABEL, "Have notification channel set up already");
+                    String message = "Have notification channel set up already";
+                    Crashlytics.log(message);
+                    Log.d(LOG_LABEL, message);
                 }
             } else {
-                Log.e(LOG_LABEL, "Failed to get notification manager");
+                String message = "Failed to get notification manager";
+                Crashlytics.log(message);
+                Log.e(LOG_LABEL, message);
             }
         }
     }
 
-    private WorkerResult handleError(int error) {
+    private Result handleError(int error) {
+        String message = "";
+        Result result = Result.FAILURE;
         // https://developers.google.com/android/reference/com/google/android/gms/location/GeofenceStatusCodes
         switch (error) {
             case GeofenceStatusCodes.GEOFENCE_NOT_AVAILABLE:
@@ -190,36 +264,42 @@ public class GeofenceTransitionWorker extends Worker {
                 // what to fence.
                 break;
             case GeofenceStatusCodes.GEOFENCE_TOO_MANY_GEOFENCES:
-                Log.e(LOG_LABEL, "Too many geofences!");
+                message = "Too many geofences!";
                 break;
             case GeofenceStatusCodes.TIMEOUT:
-                Log.w(LOG_LABEL, "Geofence timeout");
-                return WorkerResult.RETRY;
+                message = "Geofence timeout; retrying";
+                result = Result.RETRY;
+                break;
             case GeofenceStatusCodes.GEOFENCE_TOO_MANY_PENDING_INTENTS:
-                Log.e(LOG_LABEL, "Too many pending intents to addGeofence. Max is 5.");
-                return  WorkerResult.RETRY;
+                message = "Too many pending intents to addGeofence. Max is 5.";
+                result =  Result.RETRY;
+                break;
             case GeofenceStatusCodes.API_NOT_CONNECTED:
-                Log.e(LOG_LABEL, "Geofencing prevented because API not connected");
-                return WorkerResult.RETRY;
+                message = "Geofencing prevented because API not connected";
+                result = Result.RETRY;
+                break;
             case GeofenceStatusCodes.CANCELED:
-                Log.w(LOG_LABEL, "Geofencing cancelled");
+                message = "Geofencing cancelled";
                 break;
             case GeofenceStatusCodes.ERROR:
-                Log.w(LOG_LABEL, "Geofencing error");
+                message = "Geofencing error";
                 break;
             case GeofenceStatusCodes.DEVELOPER_ERROR:
-                Log.e(LOG_LABEL, "Geofencing encountered a developer error");
+                message = "Geofencing encountered a developer error";
                 break;
             case GeofenceStatusCodes.INTERNAL_ERROR:
-                Log.e(LOG_LABEL, "Geofencing encountered an internal error");
+                message = "Geofencing encountered an internal error";
                 break;
             case GeofenceStatusCodes.INTERRUPTED:
-                Log.w(LOG_LABEL, "Geofencing interrupted");
-                return  WorkerResult.RETRY;
+                message = "Geofencing interrupted";
+                result = Result.RETRY;
+                break;
             default:
-                Log.w(LOG_LABEL, "Unrecognized GeofenceStatusCodes value: " + error);
+                message = "Unrecognized GeofenceStatusCodes error value: " + error;
         }
-        return WorkerResult.FAILURE;
+        Log.e(LOG_LABEL, message);
+        Crashlytics.log(message);
+        return result;
     }
 
 }

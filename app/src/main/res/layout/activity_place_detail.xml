@@ -146,6 +146,8 @@
                     android:textAppearance="@style/GpgDetailText"
                     android:textSize="14sp"
                     android:visibility="@{destinationInfo.hasEvents ? View.VISIBLE : View.GONE}"
+                    android:text="@{@plurals/place_upcoming_activities_count(destinationInfo.getEventCount(), destinationInfo.getEventCount())}"
+                    android:onClick="@{activity::goToEvents}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
@@ -166,6 +168,7 @@
 
             <android.support.v7.widget.CardView
                 android:id="@+id/place_detail_flag_options_card"
+                android:onClick="@{activity::userFlagChanged}"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"

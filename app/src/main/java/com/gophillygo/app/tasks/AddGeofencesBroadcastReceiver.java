@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
 import com.gophillygo.app.data.DestinationDao;
 import com.gophillygo.app.data.EventDao;
 import com.gophillygo.app.data.models.AttractionFlag;
@@ -26,6 +27,9 @@ import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 import androidx.work.WorkRequest;
 import dagger.android.AndroidInjection;
+
+import static com.gophillygo.app.tasks.GeofenceTransitionWorker.DESTINATION_PREFIX;
+import static com.gophillygo.app.tasks.GeofenceTransitionWorker.EVENT_PREFIX;
 
 /**
  * Add geofences by scheduling one-time worker job.
@@ -75,7 +79,9 @@ public class AddGeofencesBroadcastReceiver extends BroadcastReceiver {
             // Sanity check the data before starting the worker
             if (latitudes.length == 0 || latitudes.length != longitudes.length ||
                     latitudes.length != labels.length || latitudes.length != names.length) {
-                Log.e(LOG_LABEL, "Extras data of zero or mismatched length found");
+                String message = "Extras data of zero or mismatched length found";
+                Log.e(LOG_LABEL, message);
+                Crashlytics.log(message);
                 return;
             }
 
@@ -117,7 +123,9 @@ public class AddGeofencesBroadcastReceiver extends BroadcastReceiver {
                     // initializing null lists
                     if ((events == null || events.isEmpty()) &&
                             (destinations == null || destinations.isEmpty())) {
-                        Log.d(LOG_LABEL, "Have no destinations or events with geofences to add.");
+                        String message = "Have no destinations or events with geofences to add.";
+                        Crashlytics.log(message);
+                        Log.d(LOG_LABEL, message);
                         return null;
                     } else if (events == null) {
                         events = new ArrayList<>(0);
@@ -129,7 +137,9 @@ public class AddGeofencesBroadcastReceiver extends BroadcastReceiver {
                     int geofencesCount = destinationsCount + events.size();
                     if (geofencesCount > MAX_GEOFENCES) {
                         // FIXME: handle having too many geofences
-                        Log.e(LOG_LABEL, "Too many destinations with geofences to add.");
+                        String message = "Too many destinations with geofences to add.";
+                        Log.e(LOG_LABEL, message);
+                        Crashlytics.log(message);
                         return null;
                     }
 
@@ -142,7 +152,7 @@ public class AddGeofencesBroadcastReceiver extends BroadcastReceiver {
                     // add destinations to the beginning
                     for (int i = 0; i < destinationsCount; i++) {
                         Destination destination = destinations.get(i);
-                        labels[i] = "d" + String.valueOf(destination.getId());
+                        labels[i] = DESTINATION_PREFIX + String.valueOf(destination.getId());
                         names[i] = destination.getName();
                         DestinationLocation location = destination.getLocation();
                         latitudes[i] = location.getY();
@@ -153,7 +163,7 @@ public class AddGeofencesBroadcastReceiver extends BroadcastReceiver {
                     for (int i = 0; i < events.size(); i++) {
                         int combinedIndex = i + destinationsCount;
                         EventInfo eventInfo = events.get(i);
-                        labels[combinedIndex] = "e" + String.valueOf(eventInfo.getAttraction().getId());
+                        labels[combinedIndex] = EVENT_PREFIX + String.valueOf(eventInfo.getAttraction().getId());
                         names[combinedIndex] = eventInfo.getEvent().getName();
                         DestinationLocation location = eventInfo.getLocation();
                         latitudes[combinedIndex] = location.getY();
@@ -182,7 +192,7 @@ public class AddGeofencesBroadcastReceiver extends BroadcastReceiver {
      */
     public static void addOneGeofence(@NonNull Destination destination) {
         addOneGeofence(destination.getLocation().getX(), destination.getLocation().getY(),
-                "d" + String.valueOf(destination.getId()), String.valueOf(destination.getName()));
+                DESTINATION_PREFIX + String.valueOf(destination.getId()), String.valueOf(destination.getName()));
     }
 
     public static void addOneGeofence(@NonNull EventInfo eventInfo) {
@@ -190,7 +200,7 @@ public class AddGeofencesBroadcastReceiver extends BroadcastReceiver {
         if (location != null) {
             Event event = eventInfo.getEvent();
             addOneGeofence(location.getX(), location.getY(),
-                    "e" + String.valueOf(event.getId()), event.getName());
+                    EVENT_PREFIX + String.valueOf(event.getId()), event.getName());
         } else {
             Log.e(LOG_LABEL, "Cannot add geofence for event without associated location.");
         }

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingClient;
 import com.google.android.gms.location.GeofencingRequest;
@@ -35,10 +36,10 @@ public class AddGeofenceWorker extends Worker {
     // Send alert roughly after device has been in geofence for this long.
     // When we are using the DWELL filter, this is about when we will receive notifications.
     // In development (DEBUG build), use no delay.
-    private static final int GEOFENCE_LOITERING_DELAY = BuildConfig.DEBUG ? 0 : 300000; // 5 minutes
+    private static final int GEOFENCE_LOITERING_DELAY = BuildConfig.DEBUG ? 60000 : 180000; // 1 or 3 minutes
 
     // Set responsiveness high to save battery
-    private static final int GEOFENCE_RESPONSIVENESS = BuildConfig.DEBUG ? 0 : 300000; // 5 minutes
+    private static final int GEOFENCE_RESPONSIVENESS = BuildConfig.DEBUG ? 180000 : 300000; // 3 or 5 minutes
 
     private static final String LOG_LABEL = "AddGeofenceWorker";
     private static final int TRANSITION_BROADCAST_REQUEST_CODE = 42;
@@ -48,9 +49,12 @@ public class AddGeofenceWorker extends Worker {
     public static final String GEOFENCE_LABELS_KEY = "geofence_labels";
     public static final String GEOFENCE_NAMES_KEY = "geofence_names";
 
+    // event identifiers used for custom Crashlytics event to note a geofence was added
+    private static final String ADD_GEOFENCE_EVENT = "add_geofence";
+
     @NonNull
     @Override
-    public WorkerResult doWork() {
+    public Result doWork() {
         Log.d(LOG_LABEL, "Starting add geofence worker");
 
         Context context = getApplicationContext();
@@ -76,14 +80,18 @@ public class AddGeofenceWorker extends Worker {
             geofenceLabels = data.getStringArray(GEOFENCE_LABELS_KEY);
             geofenceNames = data.getStringArray(GEOFENCE_NAMES_KEY);
         } else {
-            Log.e(LOG_LABEL, "Data missing for geofences to add");
-            return  WorkerResult.FAILURE;
+            String message = "Data missing for geofences to add";
+            Crashlytics.log(message);
+            Log.e(LOG_LABEL, message);
+            return Result.FAILURE;
         }
 
         if (latitudes.length != longitudes.length || latitudes.length != geofenceLabels.length ||
                 latitudes.length != geofenceNames.length) {
-            Log.e(LOG_LABEL, "Location data for geofences to add should be arrays of the same length.");
-            return WorkerResult.FAILURE;
+            String message = "Location data for geofences to add should be arrays of the same length.";
+            Crashlytics.log(message);
+            Log.e(LOG_LABEL, message);
+            return Result.FAILURE;
         }
 
         for (int i = 0; i < latitudes.length; i++) {
@@ -96,6 +104,8 @@ public class AddGeofenceWorker extends Worker {
                     .setNotificationResponsiveness(GEOFENCE_RESPONSIVENESS)
                     .setTransitionTypes(GEOFENCE_ENTER_TRIGGER | Geofence.GEOFENCE_TRANSITION_EXIT)
                     .build());
+
+            Crashlytics.log(ADD_GEOFENCE_EVENT);
         }
 
         // Location access permissions prompting is handled by `GpgLocationUtils`.
@@ -107,16 +117,21 @@ public class AddGeofenceWorker extends Worker {
 
         try {
             geofencingClient.addGeofences(builder.build(), pendingIntent);
-            return WorkerResult.SUCCESS;
+            return Result.SUCCESS;
         } catch (SecurityException ex) {
-            Log.e(LOG_LABEL, "Missing permissions to add geofences");
+            String message = "Missing permissions to add geofences";
+            Log.e(LOG_LABEL, message);
+            Crashlytics.log(message);
+            Crashlytics.logException(ex);
             ex.printStackTrace();
-            return WorkerResult.FAILURE;
+            return Result.FAILURE;
         } catch (Exception ex) {
-            Log.e(LOG_LABEL, "Failed to add geofences");
+            String message = "Failed to add geofences";
+            Log.e(LOG_LABEL, message);
+            Crashlytics.log(message);
             ex.printStackTrace();
-            return WorkerResult.FAILURE;
+            Crashlytics.logException(ex);
+            return Result.FAILURE;
         }
-
     }
 }

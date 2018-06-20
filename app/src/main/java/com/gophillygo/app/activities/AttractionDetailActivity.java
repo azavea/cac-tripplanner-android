@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -22,17 +23,23 @@ import com.gophillygo.app.data.models.DestinationLocation;
 import com.gophillygo.app.data.models.EventInfo;
 import com.gophillygo.app.tasks.AddGeofencesBroadcastReceiver;
 import com.gophillygo.app.tasks.RemoveGeofenceWorker;
+import com.gophillygo.app.utils.UserUuidUtils;
 import com.synnapps.carouselview.CarouselView;
 
 import io.fabric.sdk.android.Fabric;
 
-abstract class AttractionDetailActivity extends AppCompatActivity {
+public abstract class AttractionDetailActivity extends AppCompatActivity {
+
+    public static final String NOTIFICATION_ID_KEY = "launching_notification_id";
+    public static final String GEOFENCE_ID_KEY = "launching_geofence_id";
+
     protected static final int COLLAPSED_LINE_COUNT = 4;
     protected static final int EXPANDED_MAX_LINES = 50;
     private static final String LOG_LABEL = "AttractionDetail";
 
     protected DestinationInfo destinationInfo;
-    protected View.OnClickListener toggleClickListener;
+    protected String userUuid;
+    public View.OnClickListener toggleClickListener;
 
     protected abstract Class getMapActivity();
     protected abstract int getAttractionId();
@@ -60,6 +67,9 @@ abstract class AttractionDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Fabric.with(this, new Crashlytics());
+        // Get or create unique, random UUID for app install for posting user flags
+        userUuid = UserUuidUtils.getUserUuid(getApplicationContext());
+        Crashlytics.setUserIdentifier(userUuid);
         toggleClickListener = v -> {
             // click handler for toggling expanding/collapsing description card
             TextView descriptionView = findViewById(R.id.detail_description_text);
@@ -76,13 +86,26 @@ abstract class AttractionDetailActivity extends AppCompatActivity {
                 descriptionView.setEllipsize(TextUtils.TruncateAt.END);
                 // disable clicking links to also disable scrolling
                 descriptionView.setMovementMethod(null);
-                // must reset click listener after unsetting movement method
+                // must reset click listener after un-setting movement method
                 v.setOnClickListener(toggleClickListener);
                 // set text again, to make ellipsize run
                 descriptionView.setText(descriptionView.getText());
                 view.setText(R.string.detail_description_expand);
             }
         };
+
+        // cancel launching notification, if any
+        if (getIntent().hasExtra(NOTIFICATION_ID_KEY)) {
+            String notificationId = getIntent().getStringExtra(NOTIFICATION_ID_KEY);
+            int geofenceId = getIntent().getIntExtra(GEOFENCE_ID_KEY, -1);
+            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+
+            if (notificationId != null && !notificationId.isEmpty() && geofenceId > -1) {
+                notificationManager.cancel(notificationId, geofenceId);
+                Log.d(LOG_LABEL, "Closing notification after launching detail view");
+            }
+        }
+
     }
 
     // open map when user clicks map button

@@ -7,12 +7,12 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingEvent;
 import com.gophillygo.app.data.DestinationDao;
 import com.gophillygo.app.data.EventDao;
 import com.gophillygo.app.data.models.Destination;
-import com.gophillygo.app.data.models.DestinationLocation;
 import com.gophillygo.app.data.models.EventInfo;
 
 import java.util.List;
@@ -26,7 +26,11 @@ import androidx.work.WorkManager;
 import androidx.work.WorkRequest;
 import dagger.android.AndroidInjection;
 
+import static com.gophillygo.app.tasks.GeofenceTransitionWorker.DESTINATION_PREFIX;
+import static com.gophillygo.app.tasks.GeofenceTransitionWorker.EVENT_PREFIX;
+
 public class GeofenceTransitionBroadcastReceiver extends BroadcastReceiver {
+
 
     @Inject
     DestinationDao destinationDao;
@@ -34,7 +38,10 @@ public class GeofenceTransitionBroadcastReceiver extends BroadcastReceiver {
     @Inject
     EventDao eventDao;
 
+    public static final String GEOFENCE_IMAGES_KEY = "geofence_images";
+
     private static final String LOG_LABEL = "GeofenceTransitionBR";
+
     @SuppressLint("StaticFieldLeak")
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -79,10 +86,9 @@ public class GeofenceTransitionBroadcastReceiver extends BroadcastReceiver {
                     protected Data doInBackground(Void... voids) {
 
                         // send arrays of combined values for destinations and events
-                        double[] latitudes = new double[numGeofences];
-                        double[] longitudes = new double[numGeofences];
                         String[] labels = new String[numGeofences];
                         String[] names = new String[numGeofences];
+                        String[] images = new String[numGeofences];
 
                         for (int i = 0; i < numGeofences; i++) {
                             Geofence fence = triggeringGeofences.get(i);
@@ -91,7 +97,7 @@ public class GeofenceTransitionBroadcastReceiver extends BroadcastReceiver {
                             // Geofence string ID is "d" for destination or "e" for event, followed by the
                             // destination or event integer ID.
                             int geofenceId = Integer.valueOf(fenceId.substring(1));
-                            boolean isEvent = fenceId.startsWith("e");
+                            boolean isEvent = fenceId.startsWith(EVENT_PREFIX);
 
                             // query for each event or destination synchronously from the database
                             if (isEvent) {
@@ -100,29 +106,27 @@ public class GeofenceTransitionBroadcastReceiver extends BroadcastReceiver {
                                     Log.e(LOG_LABEL, "Could not find event for geofence " + geofenceId);
                                     continue;
                                 }
-                                labels[i] = "e" + String.valueOf(eventInfo.getAttraction().getId());
+                                labels[i] = EVENT_PREFIX + String.valueOf(eventInfo.getAttraction().getId());
                                 names[i] = eventInfo.getEvent().getName();
-                                DestinationLocation location = eventInfo.getLocation();
-                                latitudes[i] = location.getY();
-                                latitudes[i] = location.getX();
+                                images[i] = eventInfo.getEvent().getWideImage();
                             } else {
                                 Destination destination = destinationDao.getDestinationInBackground(geofenceId);
                                 if (destination == null) {
-                                    Log.e(LOG_LABEL, "Could not find destination for geofence " + geofenceId);
+                                    String message = "Could not find destination for geofence " + geofenceId;
+                                    Log.e(LOG_LABEL, message);
+                                    Crashlytics.log(message);
+                                } else {
+                                    labels[i] = DESTINATION_PREFIX + String.valueOf(destination.getId());
+                                    names[i] = destination.getName();
+                                    images[i] = destination.getWideImage();
                                 }
-                                labels[i] = "d" + String.valueOf(destination.getId());
-                                names[i] = destination.getName();
-                                DestinationLocation location = destination.getLocation();
-                                latitudes[i] = location.getY();
-                                longitudes[i] = location.getX();
                             }
                         }
 
-                        return builder.putDoubleArray(AddGeofenceWorker.LATITUDES_KEY, latitudes)
-                               .putDoubleArray(AddGeofenceWorker.LONGITUDES_KEY, longitudes)
-                               .putStringArray(GeofenceTransitionWorker.TRIGGERING_GEOFENCES_KEY, labels)
-                               .putStringArray(AddGeofenceWorker.GEOFENCE_NAMES_KEY, names)
-                               .build();
+                        return builder.putStringArray(GeofenceTransitionWorker.TRIGGERING_GEOFENCES_KEY, labels)
+                                .putStringArray(AddGeofenceWorker.GEOFENCE_NAMES_KEY, names)
+                                .putStringArray(GEOFENCE_IMAGES_KEY, images)
+                                .build();
                     }
                 }.execute();
 

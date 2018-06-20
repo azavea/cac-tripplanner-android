@@ -14,9 +14,10 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
+import com.gophillygo.app.BR;
 import com.gophillygo.app.R;
 import com.gophillygo.app.data.DestinationViewModel;
 import com.gophillygo.app.data.EventViewModel;
@@ -26,10 +27,7 @@ import com.gophillygo.app.data.models.Event;
 import com.gophillygo.app.data.models.EventInfo;
 import com.gophillygo.app.databinding.ActivityEventDetailBinding;
 import com.gophillygo.app.di.GpgViewModelFactory;
-import com.gophillygo.app.tasks.AddGeofencesBroadcastReceiver;
-import com.gophillygo.app.tasks.RemoveGeofenceWorker;
 import com.gophillygo.app.utils.FlagMenuUtils;
-import com.gophillygo.app.utils.UserUuidUtils;
 import com.synnapps.carouselview.CarouselView;
 
 import java.text.DateFormat;
@@ -40,9 +38,11 @@ import java.util.Locale;
 
 import javax.inject.Inject;
 
+import static com.gophillygo.app.tasks.GeofenceTransitionWorker.MARK_BEEN_KEY;
+
 public class EventDetailActivity extends AttractionDetailActivity {
 
-    public static final String EVENT_ID_KEY = "eventId";
+    public static final String EVENT_ID_KEY = "event_id";
     private static final String LOG_LABEL = "EventDetail";
 
     private static final DateFormat timeFormat, monthDayFormat;
@@ -54,7 +54,6 @@ public class EventDetailActivity extends AttractionDetailActivity {
 
     private long eventId = -1;
     private EventInfo eventInfo;
-    private String userUuid;
 
     private ActivityEventDetailBinding binding;
 
@@ -97,7 +96,9 @@ public class EventDetailActivity extends AttractionDetailActivity {
         viewModel.getEvent(eventId).observe(this, eventInfo -> {
             // TODO: #61 handle if event not found (go to list of events?)
             if (eventInfo == null || eventInfo.getEvent() == null) {
-                Log.e(LOG_LABEL, "No matching event found for ID " + eventId);
+                String message = "No matching event found for ID " + eventId;
+                Log.e(LOG_LABEL, message);
+                Crashlytics.log(message);
                 return;
             }
 
@@ -110,21 +111,31 @@ public class EventDetailActivity extends AttractionDetailActivity {
                     if (destinationInfo != null) {
                         binding.setDestination(destinationInfo.getDestination());
                     } else {
-                        Log.e(LOG_LABEL, "No matching destination found for ID " + destinationId);
+                        String message = "No matching destination found for ID " + destinationId;
+                        Crashlytics.log(message);
+                        Log.e(LOG_LABEL, message);
                     }
                     // Since we call `getDestination(...).observe(...)` every time the event is updated,
                     // we need to remove destination observer every time it is called
                     data.removeObservers(this);
+
+                    // Check if flag set by notification to mark event as "been" and set flag if so
+                    if (getIntent().hasExtra(MARK_BEEN_KEY)) {
+                        if(getIntent().getBooleanExtra(MARK_BEEN_KEY, false) &&
+                                !eventInfo.getFlag().getOption().id.equals(AttractionFlag.Option.Been.id)) {
+
+                            updateFlag(AttractionFlag.Option.Been.id);
+                        }
+                    }
                 });
             }
+
             // set up data binding object
             binding.setEvent(eventInfo.getEvent());
             binding.setEventInfo(eventInfo);
+            binding.eventDetailDescriptionCard.detailDescriptionToggle.setOnClickListener(toggleClickListener);
             displayEvent();
         });
-
-        // Get or create unique, random UUID for app install for posting user flags
-        userUuid = UserUuidUtils.getUserUuid(getApplicationContext());
     }
 
     @Override
@@ -179,25 +190,26 @@ public class EventDetailActivity extends AttractionDetailActivity {
     private void displayEvent() {
         setupCarousel(carouselView, eventInfo.getEvent());
 
-        TextView descriptionToggle = findViewById(R.id.detail_description_toggle);
-        descriptionToggle.setOnClickListener(toggleClickListener);
-
         // show popover for flag options (been, want to go, etc.)
         CardView flagOptionsCard = findViewById(R.id.event_detail_flag_options_card);
         flagOptionsCard.setOnClickListener(v -> {
             Log.d(LOG_LABEL, "Clicked flags button");
             PopupMenu menu = FlagMenuUtils.getFlagPopupMenu(this, flagOptionsCard, eventInfo.getFlag());
             menu.setOnMenuItemClickListener(item -> {
-                Boolean haveExistingGeofence = eventInfo.getFlag().getOption()
-                        .api_name.equals(AttractionFlag.Option.WantToGo.api_name);
-
-                eventInfo.updateAttractionFlag(item.getItemId());
-                viewModel.updateAttractionFlag(eventInfo.getFlag(), userUuid, getString(R.string.user_flag_post_api_key));
-                Boolean settingGeofence = eventInfo.getFlag().getOption().api_name.equals(AttractionFlag.Option.WantToGo.api_name);
-                addOrRemoveGeofence(eventInfo, haveExistingGeofence, settingGeofence);
+                updateFlag(item.getItemId());
                 return true;
             });
         });
+    }
+
+    private void updateFlag(int itemId) {
+        boolean haveExistingGeofence = eventInfo.getFlag().getOption()
+                .api_name.equals(AttractionFlag.Option.WantToGo.api_name);
+        eventInfo.updateAttractionFlag(itemId);
+        viewModel.updateAttractionFlag(eventInfo.getFlag(), userUuid, getString(R.string.user_flag_post_api_key));
+        Boolean settingGeofence = eventInfo.getFlag().getOption().api_name.equals(AttractionFlag.Option.WantToGo.api_name);
+        addOrRemoveGeofence(eventInfo, haveExistingGeofence, settingGeofence);
+        binding.notifyPropertyChanged(BR.destinationInfo);
     }
 
     public String getEventTimeString() {

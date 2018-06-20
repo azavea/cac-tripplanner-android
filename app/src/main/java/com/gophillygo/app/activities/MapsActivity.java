@@ -29,26 +29,14 @@ import com.gophillygo.app.R;
 import com.gophillygo.app.data.models.Attraction;
 import com.gophillygo.app.data.models.AttractionFlag;
 import com.gophillygo.app.data.models.AttractionInfo;
-import com.gophillygo.app.data.models.Destination;
 import com.gophillygo.app.data.models.DestinationLocation;
-import com.gophillygo.app.data.models.EventInfo;
 import com.gophillygo.app.databinding.MapPopupCardBinding;
-import com.gophillygo.app.tasks.AddGeofenceWorker;
-import com.gophillygo.app.tasks.AddGeofencesBroadcastReceiver;
-import com.gophillygo.app.tasks.RemoveGeofenceWorker;
 import com.gophillygo.app.utils.FlagMenuUtils;
 import com.gophillygo.app.utils.GpgLocationUtils;
 
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
-
-import androidx.work.Data;
-import androidx.work.OneTimeWorkRequest;
-import androidx.work.WorkManager;
-import androidx.work.WorkRequest;
-
-import static com.gophillygo.app.tasks.AddGeofencesBroadcastReceiver.ADD_GEOFENCE_TAG;
 
 public abstract class MapsActivity<T extends AttractionInfo> extends FilterableListActivity
         implements OnMapReadyCallback {
