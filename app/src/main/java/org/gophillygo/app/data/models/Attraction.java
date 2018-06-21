@@ -163,7 +163,7 @@ public class Attraction {
     }
 
     public String getWideImage() {
-        return BuildConfig.DEBUG ? addHostToPath(wideImage) : wideImage;
+        return addHostToPath(wideImage);
     }
 
     public boolean isEvent() {
@@ -171,10 +171,6 @@ public class Attraction {
     }
 
     public ArrayList<String> getExtraWideImages() {
-        if (!BuildConfig.DEBUG) {
-            return extraWideImages;
-        }
-
         ArrayList<String> imagesWithHost = new ArrayList<>(extraWideImages.size());
         for (String url : extraWideImages) {
             imagesWithHost.add(addHostToPath(url));
