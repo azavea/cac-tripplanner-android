@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="org.gophillygo.app">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <!--
+    Allows Glide to monitor connectivity status and restart failed requests if users go from a
+    a disconnected to a connected network state.
+    -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <!-- Listen for reboot to set up geofences again -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
+    <application
+        android:name=".GoPhillyGoApp"
+        android:allowBackup="true"
+        android:fullBackupContent="@xml/backup_descriptor"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/GpgAppTheme"
+        android:value="GlideModule">
+        <activity android:name=".activities.HomeActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <!-- Accepts only the top-level URI "https://gophillygo.org” -->
+                <data
+                    android:host="gophillygo.org"
+                    android:path="/"
+                    android:scheme="https" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activities.PlacesListActivity"
+            android:label="@string/places_list_title"
+            android:parentActivityName=".activities.HomeActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="org.gophillygo.app.activities.HomeActivity" />
+        </activity>
+        <activity
+            android:name=".activities.PlaceDetailActivity"
+            android:parentActivityName=".activities.PlacesListActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="org.gophillygo.app.activities.PlacesListActivity" />
+        </activity>
+        <activity
+            android:name=".activities.EventsListActivity"
+            android:label="@string/events_list_title"
+            android:parentActivityName=".activities.HomeActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="org.gophillygo.app.activities.HomeActivity" />
+        </activity>
+        <activity
+            android:name=".activities.EventDetailActivity"
+            android:parentActivityName=".activities.EventsListActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="org.gophillygo.app.activities.EventsListActivity" />
+        </activity>
+        <activity
+            android:name=".activities.PlacesMapsActivity"
+            android:label="@string/title_activity_places_maps">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="org.gophillygo.app.activities.HomeActivity" />
+        </activity>
+        <activity
+            android:name=".activities.EventsMapsActivity"
+            android:label="@string/title_activity_events_maps">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="org.gophillygo.app.activities.HomeActivity" />
+        </activity>
+        <!--
+             The API key for Google Maps-based APIs is defined as a string resource.
+             (See the file "res/values/api_keys.xml").
+             Note that the API key is linked to the encryption key used to sign the APK.
+             You need a different API key for each encryption key, including the release key that is used to
+             sign the APK for publishing.
+             You can define the keys for the debug and release targets in src/debug/ and src/release/. 
+        -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
+
+        <!-- Set up geofences again after reboot or location provider changes -->
+        <receiver android:name=".tasks.AddGeofencesBroadcastReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Listen to geofence transitions. -->
+        <receiver android:name=".tasks.GeofenceTransitionBroadcastReceiver"
+            android:exported="false" android:enabled="true">
+            <intent-filter>
+                <action android:name="org.gophillygo.app.tasks.ACTION_GEOFENCE_TRANSITION" />
+            </intent-filter>
+        </receiver>
+    </application>
+
+</manifest>

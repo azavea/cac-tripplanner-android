@@ -1,0 +1,99 @@
+<resources>
+    <string name="app_name">GoPhillyGo</string>
+
+    <!-- menu action titles -->
+    <string name="menu_search_action">Search</string>
+    <string name="menu_action_settings">Settings</string>
+    <string name="menu_action_about">About</string>
+    <string name="menu_action_logout">Sign out</string>
+    <string name="menu_action_events">Go to events</string>
+    <string name="menu_action_places">Go to places</string>
+    <string name="menu_action_map">See map</string>
+    <string name="menu_action_event_place">View Destination</string>
+
+    <!-- place option menu items -->
+    <string name="place_not_interested_option">Not interested</string>
+    <string name="place_liked_option">Liked</string>
+    <string name="place_been_option">Been</string>
+    <string name="place_want_to_go_option">Want to go</string>
+
+    <string name="carousel_nearby_label">Nearby</string>
+
+    <string name="places_list_title">Places</string>
+    <string name="events_list_title">Events</string>
+
+    <!-- filtering -->
+    <string name="reset_button">Reset</string>
+    <string name="done_button">Done</string>
+    <string name="single_filter_button_title">Filter</string>
+    <string name="many_filter_button_title">Filters</string>
+    <plurals name="filter_button_title">
+        <item quantity="one">@string/single_filter_button_title</item>
+        <item quantity="other">@string/many_filter_button_title</item>
+    </plurals>
+    <string name="accessible_filter_button_title">Wheelchair accessible</string>
+
+    <string name="watershed_alliance_label">Watershed Alliance</string>
+    <string name="bicycle_activity_label">Cycling</string>
+
+    <string name="nature_category_label">Nature</string>
+    <string name="exercise_category_label">Exercise</string>
+    <string name="educational_category_label">Educational</string>
+
+    <string name="hiking_activity_label">Hiking</string>
+    <string name="water_recreation_activity_label">Water recreation</string>
+    <string name="cycling_activity_label">Cycling</string>
+
+    <!-- place details -->
+    <plurals name="place_upcoming_activities_count">
+        <item quantity="one">%d upcoming event</item>
+        <item quantity="other">%d upcoming events</item>
+    </plurals>
+
+    <string name="place_details_been_want_to_go_label">Been here? Want to go?</string>
+
+    <string name="place_detail_map_button">Map</string>
+    <string name="place_detail_directions_button">Directions</string>
+    <string name="place_detail_website_button">Website</string>
+
+    <!-- event details -->
+    <string name="event_details_been_want_to_go_label">Want to go?</string>
+
+    <string name="event_detail_map_button">Map</string>
+    <string name="event_detail_directions_button">Directions</string>
+    <string name="event_detail_website_button">Website</string>
+
+    <string name="event_detail_single_day_time_range">%s • %s - %s</string>
+    <string name="event_detail_date_range">%s - %s</string>
+    <string name="event_detail_add_to_calendar">Add to calendar</string>
+    <string name="event_detail_no_calendar">No calendar application is installed.</string>
+
+    <!-- Details description -->
+    <string name="detail_description_expand">SHOW MORE</string>
+    <string name="detail_description_collapse">SHOW LESS</string>
+
+    <!-- event list -->
+    <string name="event_list_item_time_range">%s – %s</string>
+    <string name="location_requires_gps">Device does not have GPS, which is needed to get location. Please use a different device.</string>
+    <string name="location_gps_needed_rationale">GPS needs to be enabled to find destinations near you.</string>
+    <string name="location_fine_permission_rationale">Device location permission needed.</string>
+    <string name="filter_no_results">No results</string>
+    <string name="title_activity_maps">Map</string>
+
+    <!-- map -->
+    <string name="map_menu_action_view_list">View list</string>
+    <string name="title_activity_places_maps">Places</string>
+    <string name="title_activity_events_maps">Events</string>
+
+    <!-- shared resources for user UUID -->
+
+    <!-- the name of the shared preferences file -->
+    <string name="user_uuid_shared_preferences_file">gophillygo_user_uuid_shared_preferences</string>
+    <!-- the key to the UUID within the shared preferences file -->
+    <string name="user_uuid_shared_preferences_key">gophillygo_user_uuid</string>
+    <string name="location_network_permission_rationale">Please set location mode to \"High Accuracy\" to receive notifications when places you want to go are nearby.</string>
+    <string name="channel_description">Nearby GoPhillyGo destinations you want to go visit</string>
+    <string name="place_nearby_notification">Are you visiting %1$s now? Learn more.</string>
+    <string name="place_nearby_been_button">I\'m there now</string>
+    <string name="home_grid_events">Upcoming events</string>
+</resources>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="org.gophillygo.app.activities.PlacesListActivity">
+
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/places_list_app_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/places_list_toolbar"
+                style="@style/ToolbarOpaque"
+                app:title="@string/places_list_title"
+                tools:targetApi="lollipop" />
+
+            <include
+                android:id="@+id/places_list_filter_button_bar"
+                layout="@layout/filter_button_bar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toTopOf="@+id/places_list_recycler_view"
+                app:layout_constraintTop_toBottomOf="@+id/places_list_filter_button_bar" />
+        </android.support.design.widget.AppBarLayout>
+
+        <TextView
+            android:id="@+id/empty_places_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:textColor="@color/color_text_dark_grey"
+            android:textAlignment="center"
+            android:text="@string/filter_no_results"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"
+            android:visibility="gone"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            app:layout_constraintTop_toBottomOf="@+id/places_list_app_bar" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/places_list_recycler_view"
+            app:layout_constraintTop_toBottomOf="@id/places_list_app_bar"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </android.support.v7.widget.RecyclerView>
+
+    </android.support.design.widget.CoordinatorLayout>
+</layout>

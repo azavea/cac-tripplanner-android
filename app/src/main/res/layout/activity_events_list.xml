@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="org.gophillygo.app.activities.EventsListActivity">
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/events_list_toolbar"
+                style="@style/ToolbarOpaque"
+                app:title="@string/events_list_title"
+                tools:targetApi="lollipop" />
+
+            <include layout="@layout/filter_button_bar"
+                android:id="@+id/events_list_filter_button_bar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/events_list_toolbar" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/events_list_recycler_view"
+                android:layout_below="@id/events_list_filter_button_bar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            </android.support.v7.widget.RecyclerView>
+
+            <TextView
+                android:id="@+id/empty_events_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone"
+                android:layout_marginTop="20dp"
+                android:textColor="@color/color_text_dark_grey"
+                android:textAlignment="center"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"
+                android:layout_below="@+id/events_list_filter_button_bar"
+                android:text="@string/filter_no_results" />
+
+        </RelativeLayout>
+    </android.support.design.widget.CoordinatorLayout>
+</layout>

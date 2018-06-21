@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context="org.gophillygo.app.activities.HomeActivity">
+    <data>
+        <!-- set up data binding to destination -->
+        <variable name="destination" type="org.gophillygo.app.data.models.Destination"/>
+        <variable name="showNearbyLabel" type="boolean" />
+        <!-- imports to allow referencing within data binding expressions -->
+        <import type="android.view.View"/>
+    </data>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/color_background_grey"
+        android:gravity="center">
+
+        <ImageView
+            android:id="@+id/carousel_item_image"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:imageUrl="@{destination.getWideImage}"
+            android:contentDescription="@{destination.getAddress}"
+            android:scaleType="centerCrop" />
+
+        <android.support.constraint.ConstraintLayout
+            style="@style/ItemDetailInfo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <TextView
+                android:id="@+id/carousel_item_place_name"
+                style="@style/ItemDetailName"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@{destination.getAddress}"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@+id/carousel_item_distance_label"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent" />
+
+            <TextView
+                android:id="@+id/carousel_item_distance_label"
+                style="@style/ItemDetailDistance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@{destination.getFormattedDistance}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent" />
+
+            <TextView
+                android:id="@+id/carousel_item_nearby_label"
+                style="@style/Base.TextAppearance.AppCompat.Title.Inverse"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:layout_marginRight="16dp"
+                android:text="@string/carousel_nearby_label"
+                android:textAlignment="textEnd"
+                android:textSize="12sp"
+                android:visibility="@{showNearbyLabel ? View.VISIBLE : View.GONE}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintRight_toRightOf="parent" />
+        </android.support.constraint.ConstraintLayout>
+    </android.support.constraint.ConstraintLayout>
+</layout>

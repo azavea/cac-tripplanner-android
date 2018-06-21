@@ -1,3 +1,13 @@
+# API keys
+!examples/*
+crashlytics.properties
+fabric.properties
+app/**/api_keys.xml
+app/**/google_maps_api.xml
+app/src/debug/
+app/src/release/
+release.properties
+
 # Built application files
 *.apk
 *.ap_
@@ -12,6 +22,7 @@
 bin/
 gen/
 out/
+release/
 
 # Gradle files
 .gradle/
@@ -39,9 +50,13 @@ captures/
 .idea/gradle.xml
 .idea/dictionaries
 .idea/libraries
+.idea/modules.xml
+.idea/caches/
+.idea/assetWizardSettings.xml
 
 # Keystore files
 *.jks
+*.keystore
 
 # External native build folder generated in Android Studio 2.2 and later
 .externalNativeBuild

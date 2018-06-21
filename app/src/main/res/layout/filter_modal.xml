@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:fillViewport="true"
+    tools:context="org.gophillygo.app.FilterDialog">
+    <data>
+        <!-- set up data binding to filter and dialog fragment -->
+        <variable name="filter" type="org.gophillygo.app.data.models.Filter"/>
+        <variable name="dialog" type="org.gophillygo.app.FilterDialog"/>
+        <!-- imports to allow referencing within data binding expressions -->
+        <import type="android.view.View"/>
+    </data>
+
+    <RelativeLayout
+        style="@style/FilterModal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/filter_modal_top"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:background="@color/color_primary"
+            android:weightSum="3">
+
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/filter_modal_reset_button"
+                style="@style/BorderlessButton"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:onClick="@{dialog::resetFilters}"
+                android:text="@string/reset_button" />
+
+            <TextView
+                style="@style/FilterModalTitle"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="@string/many_filter_button_title" />
+
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/filter_modal_done_button"
+                style="@style/BorderlessButton"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:onClick="@{v -> dialog.dismiss()}"
+                android:text="@string/done_button" />
+        </LinearLayout>
+
+        <android.support.v7.widget.ButtonBarLayout
+            android:id="@+id/filter_modal_category_button_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/filter_modal_top"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
+            android:weightSum="3">
+
+            <org.gophillygo.app.GpgToggleButton
+                android:id="@+id/filter_modal_nature_category_button"
+                style="@style/ToggleFilterButton"
+                android:checked="@{filter.nature}"
+                android:onCheckedChanged="@{(v, checked) -> filter.setNature(checked)}"
+                android:text="@string/nature_category_label" />
+
+            <org.gophillygo.app.GpgToggleButton
+                android:id="@+id/filter_modal_excercise_category_button"
+                style="@style/ToggleFilterButton"
+                android:checked="@{filter.exercise}"
+                android:onCheckedChanged="@{(v, checked) -> filter.setExercise(checked)}"
+                android:text="@string/exercise_category_label" />
+
+            <org.gophillygo.app.GpgToggleButton
+                android:id="@+id/filter_modal_educational_category_button"
+                style="@style/ToggleFilterButton"
+                android:checked="@{filter.educational}"
+                android:onCheckedChanged="@{(v, checked) -> filter.setEducational(checked)}"
+                android:text="@string/educational_category_label" />
+        </android.support.v7.widget.ButtonBarLayout>
+
+        <android.support.v7.widget.ButtonBarLayout
+            android:id="@+id/filter_modal_options_button_bar_1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/filter_modal_category_button_bar"
+            android:layout_marginTop="8dp"
+            android:weightSum="2">
+
+            <org.gophillygo.app.GpgToggleButton
+                android:id="@+id/filter_modal_been_button"
+                style="@style/ToggleFilterButton"
+                android:checked="@{filter.been}"
+                android:onCheckedChanged="@{(v, checked) -> filter.setBeen(checked)}"
+                android:text="@string/place_been_option" />
+
+            <org.gophillygo.app.GpgToggleButton
+                android:id="@+id/filter_modal_want_to_go_button"
+                style="@style/ToggleFilterButton"
+                android:checked="@{filter.wantToGo}"
+                android:onCheckedChanged="@{(v, checked) -> filter.setWantToGo(checked)}"
+                android:text="@string/place_want_to_go_option" />
+        </android.support.v7.widget.ButtonBarLayout>
+
+        <android.support.v7.widget.ButtonBarLayout
+            android:id="@+id/filter_modal_options_button_bar_2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/filter_modal_options_button_bar_1"
+            android:layout_marginBottom="8dp"
+            android:weightSum="2">
+
+            <org.gophillygo.app.GpgToggleButton
+                android:id="@+id/filter_modal_not_interested_button"
+                style="@style/ToggleFilterButton"
+                android:checked="@{filter.notInterested}"
+                android:onCheckedChanged="@{(v, checked) -> filter.setNotInterested(checked)}"
+                android:text="@string/place_not_interested_option" />
+
+            <org.gophillygo.app.GpgToggleButton
+                android:id="@+id/filter_modal_liked_button"
+                style="@style/ToggleFilterButton"
+                android:checked="@{filter.liked}"
+                android:onCheckedChanged="@{(v, checked) -> filter.setLiked(checked)}"
+                android:text="@string/place_liked_option" />
+        </android.support.v7.widget.ButtonBarLayout>
+
+        <android.support.v7.widget.ButtonBarLayout
+            android:id="@+id/filter_modal_options_accessible_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/filter_modal_options_button_bar_2"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
+            android:weightSum="1">
+
+            <org.gophillygo.app.GpgToggleButton
+                android:id="@+id/filter_modal_accessible_button"
+                style="@style/ToggleFilterButton"
+                android:checked="@{filter.accessible}"
+                android:onCheckedChanged="@{(v, checked) -> filter.setAccessible(checked)}"
+                android:text="@string/accessible_filter_button_title" />
+        </android.support.v7.widget.ButtonBarLayout>
+
+    </RelativeLayout>
+</layout>
