@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools" >
 
     <data>
-        <variable name="category" type="com.gophillygo.app.data.models.CategoryAttraction"/>
+        <variable name="category" type="org.gophillygo.app.data.models.CategoryAttraction"/>
         <variable name="position" type="Integer" />
         <import type="android.view.View"/>
     </data>

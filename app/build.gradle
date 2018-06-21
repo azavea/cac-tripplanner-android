@@ -16,15 +16,17 @@ repositories {
 apply plugin: 'io.fabric'
 
 android {
+    signingConfigs {
+        release
+    }
     compileSdkVersion 27
     defaultConfig {
-        applicationId "com.gophillygo.app"
+        applicationId "org.gophillygo.app"
         minSdkVersion 19
         targetSdkVersion 27
-        versionCode 2
-        versionName "1.0.1-beta"
+        versionCode 3
+        versionName "1.0.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-
         javaCompileOptions {
             annotationProcessorOptions {
                 arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
@@ -32,63 +34,91 @@ android {
         }
     }
     buildTypes {
-        release {
+        debug {
+            debuggable true
             minifyEnabled false
+            shrinkResources false
+        }
+        release {
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
         }
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-
     dataBinding {
         enabled = true
+    }
+    aaptOptions {
+        cruncherEnabled = false
+    }
+    productFlavors {
     }
 }
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
+
     // Firebase
     implementation 'com.google.firebase:firebase-core:16.0.1'
     implementation 'com.crashlytics.sdk.android:crashlytics:2.9.4'
+
     // Architecture Components
     def archComponentsVersion = '1.1.1'
     def roomVersion = '1.1.1'
+
     // ViewModel and LiveData
     implementation "android.arch.lifecycle:extensions:$archComponentsVersion"
+
     // Java8 support for Lifecycles
     implementation "android.arch.lifecycle:common-java8:$archComponentsVersion"
+
     // Room
     implementation "android.arch.persistence.room:runtime:$roomVersion"
     implementation 'com.android.support:appcompat-v7:27.1.1'
     annotationProcessor "android.arch.persistence.room:compiler:$roomVersion"
+
     // Android UI libraries
     def supportVersion = '27.1.1'
     implementation "com.android.support:appcompat-v7:$supportVersion"
     implementation "com.android.support:cardview-v7:$supportVersion"
     implementation "com.android.support:design:$supportVersion"
     implementation 'com.android.support.constraint:constraint-layout:1.1.2'
+
     // Android Play services libraries
     def playServicesVersion = '15.0.1'
     implementation "com.google.android.gms:play-services-location:$playServicesVersion"
     implementation "com.google.android.gms:play-services-maps:$playServicesVersion"
+
     // Android WorkManager
-    implementation "android.arch.work:work-runtime:1.0.0-alpha03"
+    implementation 'android.arch.work:work-runtime:1.0.0-alpha03'
+
     // Carousel
     implementation 'com.github.flibbertigibbet:carouselview:1.0.5'
+
     // Badges
     implementation 'com.github.nekocode:Badge:2.0'
+
     // Glide
-    implementation 'com.github.bumptech.glide:glide:4.6.1'
+    implementation('com.github.bumptech.glide:glide:4.6.1') {
+        exclude group: "com.android.support"
+    }
     annotationProcessor 'com.github.bumptech.glide:compiler:4.6.1'
+
     // Retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.3.0'
+
     // Gson converter for Retrofit
     implementation 'com.google.code.gson:gson:2.8.2'
     implementation 'com.squareup.retrofit2:converter-gson:2.3.0'
+
     // Okio log interceptor
     implementation 'com.squareup.okhttp3:logging-interceptor:3.6.0'
+
     // Dagger 2
     def daggerVersion = '2.15'
     implementation "com.google.dagger:dagger:$daggerVersion"
@@ -97,14 +127,28 @@ dependencies {
     implementation "com.google.dagger:dagger-android-support:$daggerVersion"
     annotationProcessor "com.google.dagger:dagger-android-processor:$daggerVersion"
     annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
+
     // testing
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+
     // Test helpers for LiveData
     testImplementation "android.arch.core:core-testing:$archComponentsVersion"
+
     // Test helpers for Room
     testImplementation "android.arch.persistence.room:testing:$roomVersion"
+}
+
+if (project.file("release.properties").exists()) {
+    def props = new Properties()
+    props.load(new FileInputStream(project.file("release.properties")))
+    android.signingConfigs.release.storeFile project.file(props.keyStore)
+    android.signingConfigs.release.storePassword props.keyStorePassword
+    android.signingConfigs.release.keyAlias props.keyAlias
+    android.signingConfigs.release.keyPassword props.keyAliasPassword
+} else {
+    logger.info("release.properties signing configuration file not found in app directory")
 }
 
 apply plugin: 'com.google.gms.google-services'

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.gophillygo.app">
+    package="org.gophillygo.app">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
@@ -47,14 +47,14 @@
             android:parentActivityName=".activities.HomeActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.gophillygo.app.activities.HomeActivity" />
+                android:value="org.gophillygo.app.activities.HomeActivity" />
         </activity>
         <activity
             android:name=".activities.PlaceDetailActivity"
             android:parentActivityName=".activities.PlacesListActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.gophillygo.app.activities.PlacesListActivity" />
+                android:value="org.gophillygo.app.activities.PlacesListActivity" />
         </activity>
         <activity
             android:name=".activities.EventsListActivity"
@@ -62,28 +62,28 @@
             android:parentActivityName=".activities.HomeActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.gophillygo.app.activities.HomeActivity" />
+                android:value="org.gophillygo.app.activities.HomeActivity" />
         </activity>
         <activity
             android:name=".activities.EventDetailActivity"
             android:parentActivityName=".activities.EventsListActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.gophillygo.app.activities.EventsListActivity" />
+                android:value="org.gophillygo.app.activities.EventsListActivity" />
         </activity>
         <activity
             android:name=".activities.PlacesMapsActivity"
             android:label="@string/title_activity_places_maps">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.gophillygo.app.activities.HomeActivity" />
+                android:value="org.gophillygo.app.activities.HomeActivity" />
         </activity>
         <activity
             android:name=".activities.EventsMapsActivity"
             android:label="@string/title_activity_events_maps">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.gophillygo.app.activities.HomeActivity" />
+                android:value="org.gophillygo.app.activities.HomeActivity" />
         </activity>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
@@ -108,7 +108,7 @@
         <receiver android:name=".tasks.GeofenceTransitionBroadcastReceiver"
             android:exported="false" android:enabled="true">
             <intent-filter>
-                <action android:name="com.gophillygo.app.tasks.ACTION_GEOFENCE_TRANSITION" />
+                <action android:name="org.gophillygo.app.tasks.ACTION_GEOFENCE_TRANSITION" />
             </intent-filter>
         </receiver>
     </application>
