@@ -85,7 +85,6 @@
 -keep class android.net.** { *; }
 -dontwarn androidx.work.impl.**
 
-
 # Crashlytics
 -keep class com.google.android.gms.** { *; }
 -keep class com.crashlytics.android.** { *; }

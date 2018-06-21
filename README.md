@@ -20,3 +20,10 @@ These can be found under the [organization settings](https://www.fabric.io/setti
 
 Configure Firebase for the crash reporting plugin to function. The Firebase configuration file can be found under the [Firebase console](https://console.firebase.google.com). Copy the `google-services.json` Firebase configuration file to the `app` directory.
 
+
+## Release
+
+ - Copy the example file for the release build configuration to `/app` and set the passwords
+ - Also copy the keystore file used for signing uploads to `/app`
+ - Bump the app version number and string
+ - Generate a signed release build
