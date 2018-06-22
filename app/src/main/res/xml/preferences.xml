@@ -19,7 +19,8 @@
             android:title="@string/preferences_licences">
             <intent
                 android:action="android.intent.action.VIEW"
-                android:targetClass="OssLicensesMenuActivity.class" />
+                android:targetPackage="org.gophillygo.app"
+                android:targetClass="com.google.android.gms.oss.licenses.OssLicensesMenuActivity" />
         </Preference>
     </PreferenceCategory>
 
