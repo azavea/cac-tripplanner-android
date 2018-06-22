@@ -133,8 +133,16 @@ public abstract class AttractionDetailActivity extends AppCompatActivity {
 
     // open website for destination in browser
     public void goToWebsite(View view) {
-        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(destinationInfo.getDestination().getWebsiteUrl()));
-        startActivity(intent);
+        String url = destinationInfo.getDestination().getWebsiteUrl();
+        if (url != null && !url.isEmpty()) {
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+            startActivity(intent);
+        } else {
+            String message = "Not opening website for attraction because it is missing a link";
+            Log.e(LOG_LABEL, message);
+            Crashlytics.log(message);
+        }
+
     }
 
     public Drawable getFlagImage(AttractionInfo attractionInfo) {
