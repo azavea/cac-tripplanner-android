@@ -19,7 +19,6 @@ import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.integration.recyclerview.RecyclerViewPreloader;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.util.FixedPreloadSizeProvider;
-import com.bumptech.glide.util.ViewPreloadSizeProvider;
 import com.synnapps.carouselview.CarouselView;
 
 import org.gophillygo.app.CarouselViewListener;
@@ -29,12 +28,14 @@ import org.gophillygo.app.data.DestinationRepository;
 import org.gophillygo.app.data.models.CategoryAttraction;
 import org.gophillygo.app.data.models.Destination;
 import org.gophillygo.app.data.models.Filter;
+import org.gophillygo.app.fragments.GpgPreferenceFragment;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import static org.gophillygo.app.activities.FilterableListActivity.FILTER_KEY;
+import static org.gophillygo.app.activities.PlaceDetailActivity.DESTINATION_ID_KEY;
 
 
 public class HomeActivity extends BaseAttractionActivity implements DestinationRepository.CategoryAttractionCallback,
@@ -121,7 +122,7 @@ PlaceCategoryGridAdapter.GridViewHolder.PlaceGridItemClickListener {
         Log.d(LOG_LABEL, "set up carousel with size: " + getNearestDestinationSize());
 
         carouselView.pauseCarousel();
-        carouselView.setViewListener(new CarouselViewListener(this, true) {
+        carouselView.setViewListener(new CarouselViewListener(this) {
             @Override
             public Destination getDestinationAt(int position) {
                 return getNearestDestination(position);
@@ -136,6 +137,17 @@ PlaceCategoryGridAdapter.GridViewHolder.PlaceGridItemClickListener {
         } else {
             Log.d(LOG_LABEL, "Nearest destinations collection empty; nothing to put in carousel.");
         }
+
+        // Go to place detail view on carousel interaction
+        carouselView.setImageClickListener(position -> {
+            Log.d(LOG_LABEL, "Clicked item at " + position);
+            Destination destination = getNearestDestination(position);
+            if (destination != null) {
+                Intent intent = new Intent(this, PlaceDetailActivity.class);
+                intent.putExtra(DESTINATION_ID_KEY, (long)destination.getId());
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -154,12 +166,8 @@ PlaceCategoryGridAdapter.GridViewHolder.PlaceGridItemClickListener {
                 break;
             case R.id.action_settings:
                 Log.d(LOG_LABEL, "Clicked settings action");
-                break;
-            case R.id.action_about:
-                Log.d(LOG_LABEL, "Clicked about action");
-                break;
-            case R.id.action_logout:
-                Log.d(LOG_LABEL, "Clicked logout action");
+                Intent intent = new Intent(this, GpgPreferenceActivity.class);
+                startActivity(intent);
                 break;
             default:
                 Log.w(LOG_LABEL, "Unrecognized menu option selected: " + itemId);

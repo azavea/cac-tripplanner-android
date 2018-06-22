@@ -6,9 +6,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="org.gophillygo.app.activities.HomeActivity"
-    android:id="@+id/relativeLayout">
+    android:id="@+id/home_activity_scrollview">
 
     <android.support.constraint.ConstraintLayout
+        android:id="@+id/home_activity_main_content"
         android:layout_height="wrap_content"
         android:layout_width="match_parent" >
 

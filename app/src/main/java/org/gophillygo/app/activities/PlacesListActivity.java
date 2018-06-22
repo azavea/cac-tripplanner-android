@@ -4,13 +4,21 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
+import android.widget.ImageView;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.ListPreloader;
+import com.bumptech.glide.RequestBuilder;
+import com.bumptech.glide.integration.recyclerview.RecyclerViewPreloader;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.util.ViewPreloadSizeProvider;
 
 import org.gophillygo.app.R;
 import org.gophillygo.app.adapters.PlacesListAdapter;
@@ -21,6 +29,7 @@ import org.gophillygo.app.databinding.ActivityPlacesListBinding;
 import org.gophillygo.app.databinding.FilterButtonBarBinding;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class PlacesListActivity extends FilterableListActivity implements
@@ -30,6 +39,7 @@ public class PlacesListActivity extends FilterableListActivity implements
 
     private RecyclerView placesListView;
     PlacesListAdapter placesListAdapter;
+    ActivityPlacesListBinding binding;
 
     public PlacesListActivity() {
         super(R.id.places_list_toolbar);
@@ -89,7 +99,7 @@ public class PlacesListActivity extends FilterableListActivity implements
 
     @Override
     protected FilterButtonBarBinding setupDataBinding() {
-        ActivityPlacesListBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_places_list);
+        binding = DataBindingUtil.setContentView(this, R.layout.activity_places_list);
         return binding.placesListFilterButtonBar;
     }
 
@@ -99,8 +109,7 @@ public class PlacesListActivity extends FilterableListActivity implements
         Log.d(LOG_LABEL, "loadData");
         List<DestinationInfo> filteredDestinations = getFilteredDestinations();
 
-        TextView noDataView = findViewById(R.id.empty_places_list);
-        noDataView.setVisibility(filteredDestinations.isEmpty() ? View.VISIBLE : View.GONE);
+        binding.emptyPlacesList.setVisibility(filteredDestinations.isEmpty() ? View.VISIBLE : View.GONE);
 
         // Reset list adapter if either it isn't set up, or if a filter was applied/removed.
         if (placesListAdapter == null || filteredDestinations.size() != placesListAdapter.getItemCount()) {
@@ -108,6 +117,7 @@ public class PlacesListActivity extends FilterableListActivity implements
             // must set the list before the adapter for the differ to initialize properly
             placesListAdapter.submitList(filteredDestinations);
             placesListView.setAdapter(placesListAdapter);
+            addScrollListener();
         } else {
             Log.d(LOG_LABEL, "submit list for diff");
             // Let the AsyncListDiffer find which have changed, and only update their view holders
@@ -116,6 +126,31 @@ public class PlacesListActivity extends FilterableListActivity implements
         }
         placesListAdapter.notifyDataSetChanged();
         placesListView.requestLayout();
+    }
+
+    private void addScrollListener() {
+
+        ImageView imageView = placesListView.findViewById(R.id.place_list_item_image);
+        if (imageView == null) {
+            Log.e(LOG_LABEL, "image view not found; not setting up scroll listener");
+            return;
+        }
+
+        placesListView.addOnScrollListener(new RecyclerViewPreloader<>(Glide.with(this),
+                new ListPreloader.PreloadModelProvider<DestinationInfo>() {
+                    @NonNull
+                    @Override
+                    public List<DestinationInfo> getPreloadItems(int position) {
+                        return Collections.singletonList(destinationInfos.get(position));
+                    }
+
+                    @Nullable
+                    @Override
+                    public RequestBuilder<?> getPreloadRequestBuilder(@NonNull DestinationInfo item) {
+                        RequestOptions options = new RequestOptions().centerCrop().encodeQuality(100);
+                        return Glide.with(PlacesListActivity.this).load(item.getDestination().getWideImage()).apply(options);
+                    }
+                }, new ViewPreloadSizeProvider<>(imageView), 6));
     }
 
     @Override

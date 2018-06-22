@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="@string/general_preference_category"
+        android:key="@string/general_preferences_key">
+        <Preference
+            android:title="@string/general_preference_notifications" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/preferences_fine_print"
+        android:key="@string/preferences_fine_print_key">
+        <Preference
+            android:title="@string/preferences_app_info" />
+        <Preference
+            android:title="@string/preferences_terms_of_service" />
+        <Preference
+            android:title="@string/preferences_privacy" />
+        <Preference
+            android:title="@string/preferences_licences">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:targetPackage="org.gophillygo.app"
+                android:targetClass="com.google.android.gms.oss.licenses.OssLicensesMenuActivity" />
+        </Preference>
+    </PreferenceCategory>
+
+</PreferenceScreen>

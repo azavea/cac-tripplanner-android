@@ -3,6 +3,7 @@ package org.gophillygo.app.di;
 import android.app.Application;
 
 import org.gophillygo.app.GoPhillyGoApp;
+import org.gophillygo.app.activities.GpgPreferenceActivity;
 
 import javax.inject.Singleton;
 
@@ -28,6 +29,9 @@ import dagger.android.AndroidInjectionModule;
         PlacesListActivityModule.class,
         EventsMapsActivityModule.class,
         PlacesMapsActivityModule.class,
+        GpgPreferenceActivityModule.class,
+        OssLicensesMenuActivityModule.class,
+        OssLicensesActivityModule.class,
 
         // Broadcast Receivers
         AddGeofenceBroadcastReceiverModule.class,

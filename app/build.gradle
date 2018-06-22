@@ -7,13 +7,15 @@ buildscript {
         classpath 'io.fabric.tools:gradle:1.+'
     }
 }
-apply plugin: 'com.android.application'
 
 repositories {
     maven { url 'https://maven.fabric.io/public' }
 }
 
+apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
+apply plugin: 'com.google.gms.oss.licenses.plugin'
+
 
 android {
     signingConfigs {
@@ -130,6 +132,9 @@ dependencies {
     implementation "com.google.dagger:dagger-android-support:$daggerVersion"
     annotationProcessor "com.google.dagger:dagger-android-processor:$daggerVersion"
     annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
+
+    // OSS licensing
+    implementation 'com.google.android.gms:play-services-oss-licenses:15.0.1'
 
     // testing
     testImplementation 'junit:junit:4.12'
