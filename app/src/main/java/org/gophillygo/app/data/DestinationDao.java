@@ -55,10 +55,10 @@ public abstract class DestinationDao implements AttractionDao<Destination> {
         }
     }
 
-    @Query("SELECT id AS attractionID, 1 AS is_event, image FROM event ORDER BY random() LIMIT 1")
+    @Query("SELECT id AS attractionID, 1 AS is_event, wide_image AS image FROM event ORDER BY random() LIMIT 1")
     protected abstract LiveData<CategoryImage> getEventCategoryImage();
 
-    @Query("SELECT id AS attractionID, 0 AS is_event, destination.image AS image " +
+    @Query("SELECT id AS attractionID, 0 AS is_event, destination.wide_image AS image " +
             "FROM destination " +
             "LEFT JOIN attractionflag " +
             "ON destination.id = attractionflag.attraction_id AND attractionflag.is_event = 0 " +
@@ -67,14 +67,14 @@ public abstract class DestinationDao implements AttractionDao<Destination> {
             "LIMIT 1")
     public abstract LiveData<CategoryImage> getRandomImagesForFlag(int flag);
 
-    @Query("SELECT id AS attractionID, 0 AS is_event, destination.image AS image " +
+    @Query("SELECT id AS attractionID, 0 AS is_event, destination.wide_image AS image " +
             "FROM destination " +
             "WHERE nature = 1 " +
             "ORDER BY random() " +
             "LIMIT 1")
     public abstract LiveData<CategoryImage> getRandomNatureImages();
 
-    @Query("SELECT id AS attractionID, 0 AS is_event, destination.image AS image " +
+    @Query("SELECT id AS attractionID, 0 AS is_event, destination.wide_image AS image " +
             "FROM destination " +
             "WHERE exercise = 1 " +
             "ORDER BY random() " +
