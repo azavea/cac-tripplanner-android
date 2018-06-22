@@ -85,6 +85,12 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="org.gophillygo.app.activities.HomeActivity" />
         </activity>
+        <activity android:name=".activities.GpgPreferenceActivity"
+            android:label="@string/preferences">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="org.gophillygo.app.activities.GpgPreferenceActivity" />
+        </activity>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/api_keys.xml").

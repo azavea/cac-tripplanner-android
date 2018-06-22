@@ -20,7 +20,6 @@ import com.bumptech.glide.integration.recyclerview.RecyclerViewPreloader;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.util.FixedPreloadSizeProvider;
 import com.synnapps.carouselview.CarouselView;
-import com.synnapps.carouselview.ImageClickListener;
 
 import org.gophillygo.app.CarouselViewListener;
 import org.gophillygo.app.R;
@@ -29,6 +28,7 @@ import org.gophillygo.app.data.DestinationRepository;
 import org.gophillygo.app.data.models.CategoryAttraction;
 import org.gophillygo.app.data.models.Destination;
 import org.gophillygo.app.data.models.Filter;
+import org.gophillygo.app.fragments.GpgPreferenceFragment;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -166,9 +166,8 @@ PlaceCategoryGridAdapter.GridViewHolder.PlaceGridItemClickListener {
                 break;
             case R.id.action_settings:
                 Log.d(LOG_LABEL, "Clicked settings action");
-                break;
-            case R.id.action_about:
-                Log.d(LOG_LABEL, "Clicked about action");
+                Intent intent = new Intent(this, GpgPreferenceActivity.class);
+                startActivity(intent);
                 break;
             default:
                 Log.w(LOG_LABEL, "Unrecognized menu option selected: " + itemId);

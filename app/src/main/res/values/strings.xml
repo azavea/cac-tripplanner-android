@@ -95,4 +95,18 @@
     <string name="place_nearby_notification">Are you visiting %1$s now? Learn more.</string>
     <string name="place_nearby_been_button">I\'m there now</string>
     <string name="home_grid_events">Upcoming events</string>
+    <string name="general_preference_category">General</string>
+
+    <!-- shared preferences settings key -->
+    <string name="general_preferences_key" translatable="false">gophillygo_general_preferences</string>
+    <string name="preferences_fine_print_key" translatable="false">gophillygo_preferences_fine_print</string>
+
+    <!-- settings -->
+    <string name="general_preference_notifications">Notifications</string>
+    <string name="preferences_fine_print">Fine print</string>
+    <string name="preferences_app_info">App info</string>
+    <string name="preferences_licences">Licenses</string>
+    <string name="preferences_privacy">Privacy</string>
+    <string name="preferences_terms_of_service">Terms of service</string>
+    <string name="preferences">Settings</string>
 </resources>
