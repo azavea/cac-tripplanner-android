@@ -20,6 +20,7 @@ import com.bumptech.glide.integration.recyclerview.RecyclerViewPreloader;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.util.FixedPreloadSizeProvider;
 import com.synnapps.carouselview.CarouselView;
+import com.synnapps.carouselview.ImageClickListener;
 
 import org.gophillygo.app.CarouselViewListener;
 import org.gophillygo.app.R;
@@ -34,6 +35,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.gophillygo.app.activities.FilterableListActivity.FILTER_KEY;
+import static org.gophillygo.app.activities.PlaceDetailActivity.DESTINATION_ID_KEY;
 
 
 public class HomeActivity extends BaseAttractionActivity implements DestinationRepository.CategoryAttractionCallback,
@@ -135,6 +137,17 @@ PlaceCategoryGridAdapter.GridViewHolder.PlaceGridItemClickListener {
         } else {
             Log.d(LOG_LABEL, "Nearest destinations collection empty; nothing to put in carousel.");
         }
+
+        // Go to place detail view on carousel interaction
+        carouselView.setImageClickListener(position -> {
+            Log.d(LOG_LABEL, "Clicked item at " + position);
+            Destination destination = getNearestDestination(position);
+            if (destination != null) {
+                Intent intent = new Intent(this, PlaceDetailActivity.class);
+                intent.putExtra(DESTINATION_ID_KEY, (long)destination.getId());
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
