@@ -19,7 +19,6 @@ import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.integration.recyclerview.RecyclerViewPreloader;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.util.FixedPreloadSizeProvider;
-import com.bumptech.glide.util.ViewPreloadSizeProvider;
 import com.synnapps.carouselview.CarouselView;
 
 import org.gophillygo.app.CarouselViewListener;
@@ -121,7 +120,7 @@ PlaceCategoryGridAdapter.GridViewHolder.PlaceGridItemClickListener {
         Log.d(LOG_LABEL, "set up carousel with size: " + getNearestDestinationSize());
 
         carouselView.pauseCarousel();
-        carouselView.setViewListener(new CarouselViewListener(this, true) {
+        carouselView.setViewListener(new CarouselViewListener(this) {
             @Override
             public Destination getDestinationAt(int position) {
                 return getNearestDestination(position);

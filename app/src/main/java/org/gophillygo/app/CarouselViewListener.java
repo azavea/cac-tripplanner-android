@@ -18,12 +18,10 @@ public abstract class CarouselViewListener implements ViewListener {
 
     private final LayoutInflater inflater;
     private final Activity activity;
-    private final boolean showNearbyLabel;
 
-    public CarouselViewListener(Activity activity, boolean showNearbyLabel) {
+    public CarouselViewListener(Activity activity) {
         this.activity = activity;
         this.inflater = this.activity.getLayoutInflater();
-        this.showNearbyLabel = showNearbyLabel;
     }
 
     /**
@@ -43,7 +41,6 @@ public abstract class CarouselViewListener implements ViewListener {
                 null,
                 false);
         binding.setDestination(destination);
-        binding.setShowNearbyLabel(showNearbyLabel);
         return binding.getRoot();
     }
 }
