@@ -170,9 +170,6 @@ PlaceCategoryGridAdapter.GridViewHolder.PlaceGridItemClickListener {
             case R.id.action_about:
                 Log.d(LOG_LABEL, "Clicked about action");
                 break;
-            case R.id.action_logout:
-                Log.d(LOG_LABEL, "Clicked logout action");
-                break;
             default:
                 Log.w(LOG_LABEL, "Unrecognized menu option selected: " + itemId);
                 return super.onOptionsItemSelected(item);

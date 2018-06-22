@@ -19,10 +19,4 @@
         android:orderInCategory="3"
         app:showAsAction="never"
         android:title="@string/menu_action_about"/>
-
-    <item
-        android:id="@+id/action_logout"
-        android:orderInCategory="4"
-        app:showAsAction="never"
-        android:title="@string/menu_action_logout"/>
 </menu>
