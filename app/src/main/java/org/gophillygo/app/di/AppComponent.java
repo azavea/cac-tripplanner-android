@@ -30,6 +30,8 @@ import dagger.android.AndroidInjectionModule;
         EventsMapsActivityModule.class,
         PlacesMapsActivityModule.class,
         GpgPreferenceActivityModule.class,
+        OssLicensesMenuActivityModule.class,
+        OssLicensesActivityModule.class,
 
         // Broadcast Receivers
         AddGeofenceBroadcastReceiverModule.class,

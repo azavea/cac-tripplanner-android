@@ -16,7 +16,11 @@
         <Preference
             android:title="@string/preferences_privacy" />
         <Preference
-            android:title="@string/preferences_licences" />
+            android:title="@string/preferences_licences">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:targetClass="OssLicensesMenuActivity.class" />
+        </Preference>
     </PreferenceCategory>
 
 </PreferenceScreen>
