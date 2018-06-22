@@ -34,8 +34,6 @@ import org.gophillygo.app.databinding.MapPopupCardBinding;
 import org.gophillygo.app.utils.FlagMenuUtils;
 import org.gophillygo.app.utils.GpgLocationUtils;
 
-import org.gophillygo.app.utils.GpgLocationUtils;
-
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
@@ -238,12 +236,17 @@ public abstract class MapsActivity<T extends AttractionInfo> extends FilterableL
     private void reloadSelectedAttraction() {
         if (selectedAttractionId == -1) { return; }
 
-        T attractionInfo = selectedAttractionInfo();
-        popupBinding.setAttractionInfo(attractionInfo);
-        popupBinding.setAttraction(attractionInfo.getAttraction());
+        T attractionInfo = getSelectedAttractionInfo();
+        if (attractionInfo != null) {
+            popupBinding.setAttractionInfo(attractionInfo);
+            popupBinding.setAttraction(attractionInfo.getAttraction());
+        }
     }
 
-    private T selectedAttractionInfo() {
+    private T getSelectedAttractionInfo() {
+        if (attractions == null || attractions.isEmpty() || !attractions.containsKey(selectedAttractionId)) {
+            return null;
+        }
         return attractions.get(selectedAttractionId);
     }
 
@@ -260,9 +263,11 @@ public abstract class MapsActivity<T extends AttractionInfo> extends FilterableL
     }
 
     private void showPopup() {
-        T attractionInfo = selectedAttractionInfo();
-        popupBinding.setAttractionInfo(attractionInfo);
-        popupBinding.setAttraction(attractionInfo.getAttraction());
+        T attractionInfo = getSelectedAttractionInfo();
+        if (attractionInfo != null) {
+            popupBinding.setAttractionInfo(attractionInfo);
+            popupBinding.setAttraction(attractionInfo.getAttraction());
+        }
 
         // Need to set map padding so "Google" logo is above popup, but we need to wait until the
         // popup is visible in order to measure it's height.
