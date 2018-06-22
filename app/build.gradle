@@ -24,8 +24,8 @@ android {
         applicationId "org.gophillygo.app"
         minSdkVersion 19
         targetSdkVersion 27
-        versionCode 3
-        versionName "1.0.2"
+        versionCode 4
+        versionName "1.0.3"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         javaCompileOptions {
             annotationProcessorOptions {
@@ -106,6 +106,9 @@ dependencies {
     // Glide
     implementation('com.github.bumptech.glide:glide:4.6.1') {
         exclude group: "com.android.support"
+    }
+    implementation ("com.github.bumptech.glide:recyclerview-integration:4.7.1") {
+        transitive = false
     }
     annotationProcessor 'com.github.bumptech.glide:compiler:4.6.1'
 

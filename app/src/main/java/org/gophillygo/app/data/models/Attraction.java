@@ -83,7 +83,7 @@ public class Attraction {
         this.cycling = cycling;
         this.description = description;
         this.priority = priority;
-        this.websiteUrl = websiteUrl;
+        this.websiteUrl = websiteUrl != null ? websiteUrl : "";
         this.isEvent = isEvent;
         this.activities = activities;
 
@@ -159,7 +159,7 @@ public class Attraction {
     }
 
     public boolean hasWebsite() {
-        return !websiteUrl.isEmpty();
+        return websiteUrl != null && !websiteUrl.isEmpty();
     }
 
     public String getWideImage() {

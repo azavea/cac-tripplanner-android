@@ -3,6 +3,8 @@ package org.gophillygo.app.activities;
 import android.arch.lifecycle.LiveData;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -11,6 +13,13 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.ListPreloader;
+import com.bumptech.glide.RequestBuilder;
+import com.bumptech.glide.integration.recyclerview.RecyclerViewPreloader;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.util.FixedPreloadSizeProvider;
+import com.bumptech.glide.util.ViewPreloadSizeProvider;
 import com.synnapps.carouselview.CarouselView;
 
 import org.gophillygo.app.CarouselViewListener;
@@ -22,6 +31,7 @@ import org.gophillygo.app.data.models.Destination;
 import org.gophillygo.app.data.models.Filter;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static org.gophillygo.app.activities.FilterableListActivity.FILTER_KEY;
@@ -34,6 +44,7 @@ PlaceCategoryGridAdapter.GridViewHolder.PlaceGridItemClickListener {
 
     // how many columns to display in grid of filter buttons
     private static final int NUM_COLUMNS = 2;
+    private static final int IMAGE_SIZE = 400;
 
     private CarouselView carouselView;
     RecyclerView recyclerView;
@@ -57,6 +68,7 @@ PlaceCategoryGridAdapter.GridViewHolder.PlaceGridItemClickListener {
         recyclerView.setLayoutManager(layoutManager);
         gridAdapter = new PlaceCategoryGridAdapter(this, this);
         recyclerView.setAdapter(gridAdapter);
+        addScrollListener();
 
         carouselView = findViewById(R.id.home_carousel);
         carouselView.setIndicatorGravity(Gravity.CENTER_HORIZONTAL|Gravity.BOTTOM);
@@ -78,6 +90,31 @@ PlaceCategoryGridAdapter.GridViewHolder.PlaceGridItemClickListener {
         } else {
             Log.w(LOG_LABEL, "No nearest destinations yet in locationOrDestinationChanged");
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(LOG_LABEL, "onResume");
+        addScrollListener();
+    }
+
+    private void addScrollListener() {
+        recyclerView.addOnScrollListener(new RecyclerViewPreloader<>(Glide.with(this),
+                new ListPreloader.PreloadModelProvider<CategoryAttraction>() {
+                    @NonNull
+                    @Override
+                    public List<CategoryAttraction> getPreloadItems(int position) {
+                        return Collections.singletonList(categories.get(position));
+                    }
+
+                    @Nullable
+                    @Override
+                    public RequestBuilder<?> getPreloadRequestBuilder(@NonNull CategoryAttraction item) {
+                        RequestOptions options = new RequestOptions().centerCrop().override(IMAGE_SIZE, IMAGE_SIZE).encodeQuality(100);
+                        return Glide.with(HomeActivity.this).load(item.getImage()).apply(options);
+                    }
+                }, new FixedPreloadSizeProvider<>(IMAGE_SIZE, IMAGE_SIZE), categories.size()));
     }
 
     private void setUpCarousel() {
