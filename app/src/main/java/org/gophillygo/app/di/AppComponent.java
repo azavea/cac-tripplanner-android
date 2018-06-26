@@ -4,6 +4,7 @@ import android.app.Application;
 
 import org.gophillygo.app.GoPhillyGoApp;
 import org.gophillygo.app.activities.GpgPreferenceActivity;
+import org.gophillygo.app.activities.SearchActivity;
 
 import javax.inject.Singleton;
 
@@ -32,6 +33,7 @@ import dagger.android.AndroidInjectionModule;
         GpgPreferenceActivityModule.class,
         OssLicensesMenuActivityModule.class,
         OssLicensesActivityModule.class,
+        SearchActivityModule.class,
 
         // Broadcast Receivers
         AddGeofenceBroadcastReceiverModule.class,

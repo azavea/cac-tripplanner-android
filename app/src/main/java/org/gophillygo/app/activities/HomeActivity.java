@@ -28,7 +28,6 @@ import org.gophillygo.app.data.DestinationRepository;
 import org.gophillygo.app.data.models.CategoryAttraction;
 import org.gophillygo.app.data.models.Destination;
 import org.gophillygo.app.data.models.Filter;
-import org.gophillygo.app.fragments.GpgPreferenceFragment;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -161,7 +160,7 @@ PlaceCategoryGridAdapter.GridViewHolder.PlaceGridItemClickListener {
         int itemId = item.getItemId();
 
         switch (itemId) {
-            case R.id.action_search:
+            case R.id.action_place_list_search:
                 Log.d(LOG_LABEL, "Clicked search action");
                 break;
             case R.id.action_settings:

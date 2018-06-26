@@ -390,4 +390,8 @@
         <item name="android:src">@drawable/watershed_alliance_full_icon_300x104px</item>
         <item name="android:contentDescription">Watershed Alliance</item>
     </style>
+
+    <style name="GpgAppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="GpgAppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

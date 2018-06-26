@@ -1,5 +1,7 @@
 package org.gophillygo.app.activities;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -7,7 +9,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
+import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,6 +23,7 @@ import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.integration.recyclerview.RecyclerViewPreloader;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.util.ViewPreloadSizeProvider;
+import com.crashlytics.android.Crashlytics;
 
 import org.gophillygo.app.R;
 import org.gophillygo.app.adapters.PlacesListAdapter;
@@ -33,11 +38,12 @@ import java.util.Collections;
 import java.util.List;
 
 public class PlacesListActivity extends FilterableListActivity implements
-        PlacesListAdapter.AttractionListItemClickListener {
+        PlacesListAdapter.AttractionListItemClickListener, SearchView.OnQueryTextListener {
 
     private static final String LOG_LABEL = "PlacesList";
 
     private RecyclerView placesListView;
+    private Menu menu;
     PlacesListAdapter placesListAdapter;
     ActivityPlacesListBinding binding;
 
@@ -156,6 +162,7 @@ public class PlacesListActivity extends FilterableListActivity implements
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.places_list_menu, menu);
+        this.menu = menu;
         return true;
     }
 
@@ -163,15 +170,65 @@ public class PlacesListActivity extends FilterableListActivity implements
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
         switch (itemId) {
-            case R.id.action_events:
+            case R.id.action_place_list_events:
                 Log.d(LOG_LABEL, "Selected events menu item");
                 break;
-            case R.id.action_map:
+            case R.id.action_place_list_map:
                 Log.d(LOG_LABEL, "Selected map menu item");
                 startActivity(new Intent(this, PlacesMapsActivity.class));
                 break;
-            case R.id.action_search:
+            case R.id.action_place_list_search:
                 Log.d(LOG_LABEL, "Selected search menu item");
+
+                // TODO: search
+
+                if (menu == null) {
+                    String message = "Cannot go to search because menu is null";
+                    Log.e(LOG_LABEL, message);
+                    Crashlytics.log(message);
+                    return false;
+                }
+                // Get the SearchView and set the searchable configuration
+                SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+                SearchView searchView = (SearchView) menu.findItem(R.id.action_place_list_search)
+                        .getActionView();
+                if (searchView != null && searchManager != null) {
+                    // Assumes current activity is the searchable activity
+                    searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+                    // Do not iconify the widget; expand it by default
+                    searchView.setIconifiedByDefault(false);
+                    searchView.setOnQueryTextListener(this);
+
+                    searchView.setOnSearchClickListener(v -> {
+                        Log.d(LOG_LABEL, "on search click");
+
+                        /*
+                        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+                        findViewById(R.id.places_list_filter_button_bar).setVisibility(View.GONE);
+                        menu.getItem(0).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+                        menu.getItem(1).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
+                        */
+                    });
+
+                    // FIXME: does not fire
+                    searchView.setOnCloseListener(() -> {
+                        Log.d(LOG_LABEL, "on search close");
+                        /*
+                        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+                        findViewById(R.id.places_list_filter_button_bar).setVisibility(View.VISIBLE);
+                        menu.getItem(0).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+                        menu.getItem(1).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+                        */
+                        return false;
+                    });
+
+                    searchView.setSubmitButtonEnabled(true);
+
+                } else if (searchManager == null) {
+                    Log.e(LOG_LABEL, "Failed to find search manager");
+                } else {
+                    Log.e(LOG_LABEL, "Failed to find search activity");
+                }
                 break;
             default:
                 Log.w(LOG_LABEL, "Unrecognized menu item selected: " + String.valueOf(itemId));
@@ -192,5 +249,17 @@ public class PlacesListActivity extends FilterableListActivity implements
             }
         }
         return filteredDestinations;
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        Log.d(LOG_LABEL, "onQueryTextSubmit " + query);
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        Log.d(LOG_LABEL, "onQueryTextChange " + newText);
+        return false;
     }
 }

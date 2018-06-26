@@ -88,3 +88,6 @@
 # Crashlytics
 -keep class com.google.android.gms.** { *; }
 -keep class com.crashlytics.android.** { *; }
+
+# Search
+-keep class android.support.v7.widget.SearchView { *; }

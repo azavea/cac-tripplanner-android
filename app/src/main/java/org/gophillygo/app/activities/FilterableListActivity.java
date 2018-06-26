@@ -4,7 +4,9 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.widget.Button;
+import android.widget.SearchView;
 
 import org.gophillygo.app.BR;
 import org.gophillygo.app.FilterDialog;
@@ -23,6 +25,8 @@ public abstract class FilterableListActivity extends BaseAttractionActivity
         implements FilterDialog.FilterChangeListener, ToolbarFilterListener {
 
     public final static String FILTER_KEY = "filter";
+
+    private static final String LOG_LABEL = "FilterableActivity";
 
     private final int toolbarId;
 
@@ -112,5 +116,4 @@ public abstract class FilterableListActivity extends BaseAttractionActivity
         filter.setWantToGo(filterBinding.filterBarWantToGoButton.isChecked());
         setFilter(filter);
     }
-
 }
