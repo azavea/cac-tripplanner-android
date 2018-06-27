@@ -181,53 +181,10 @@ public class PlacesListActivity extends FilterableListActivity implements
                 Log.d(LOG_LABEL, "Selected search menu item");
 
                 // TODO: search
-
-                if (menu == null) {
-                    String message = "Cannot go to search because menu is null";
-                    Log.e(LOG_LABEL, message);
-                    Crashlytics.log(message);
-                    return false;
-                }
-                // Get the SearchView and set the searchable configuration
-                SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-                SearchView searchView = (SearchView) menu.findItem(R.id.action_place_list_search)
-                        .getActionView();
-                if (searchView != null && searchManager != null) {
-                    // Assumes current activity is the searchable activity
-                    searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-                    // Do not iconify the widget; expand it by default
-                    searchView.setIconifiedByDefault(false);
-                    searchView.setOnQueryTextListener(this);
-
-                    searchView.setOnSearchClickListener(v -> {
-                        Log.d(LOG_LABEL, "on search click");
-
-                        /*
-                        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-                        findViewById(R.id.places_list_filter_button_bar).setVisibility(View.GONE);
-                        menu.getItem(0).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
-                        menu.getItem(1).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
-                        */
-                    });
-
-                    // FIXME: does not fire
-                    searchView.setOnCloseListener(() -> {
-                        Log.d(LOG_LABEL, "on search close");
-                        /*
-                        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-                        findViewById(R.id.places_list_filter_button_bar).setVisibility(View.VISIBLE);
-                        menu.getItem(0).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-                        menu.getItem(1).setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-                        */
-                        return false;
-                    });
-
-                    searchView.setSubmitButtonEnabled(true);
-
-                } else if (searchManager == null) {
-                    Log.e(LOG_LABEL, "Failed to find search manager");
+                if (super.onSearchRequested()) {
+                    Log.d(LOG_LABEL, "search requested!");
                 } else {
-                    Log.e(LOG_LABEL, "Failed to find search activity");
+                    Log.w(LOG_LABEL, "no search reqeusted?");
                 }
                 break;
             default:

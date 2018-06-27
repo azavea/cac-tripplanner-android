@@ -23,6 +23,19 @@
         android:supportsRtl="true"
         android:theme="@style/GpgAppTheme"
         android:value="GlideModule">
+        <activity
+            android:name=".activities.SearchActivity"
+            android:label="@string/title_activity_search"
+            android:launchMode="singleTop"
+            android:theme="@style/GpgAppTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable" />
+        </activity>
         <activity android:name=".activities.HomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -40,15 +53,15 @@
                     android:path="/"
                     android:scheme="https" />
             </intent-filter>
-            <meta-data android:name="android.app.searchable"
-                android:resource="@xml/searchable"/>
+            <meta-data android:name="android.app.default_searchable"
+                android:value="org.gophillygo.app.activities.SearchActivity"/>
         </activity>
         <activity
             android:name=".activities.PlacesListActivity"
             android:label="@string/places_list_title"
             android:parentActivityName=".activities.HomeActivity">
-            <meta-data android:name="android.app.searchable"
-                android:resource="@xml/searchable"/>
+            <meta-data android:name="android.app.default_searchable"
+                android:value="org.gophillygo.app.activities.SearchActivity"/>
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="org.gophillygo.app.activities.HomeActivity" />
@@ -56,8 +69,6 @@
         <activity
             android:name=".activities.PlaceDetailActivity"
             android:parentActivityName=".activities.PlacesListActivity">
-            <meta-data android:name="android.app.searchable"
-                android:resource="@xml/searchable"/>
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="org.gophillygo.app.activities.PlacesListActivity" />
@@ -66,8 +77,8 @@
             android:name=".activities.EventsListActivity"
             android:label="@string/events_list_title"
             android:parentActivityName=".activities.HomeActivity">
-            <meta-data android:name="android.app.searchable"
-                android:resource="@xml/searchable"/>
+            <meta-data android:name="android.app.default_searchable"
+                android:value="org.gophillygo.app.activities.SearchActivity"/>
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="org.gophillygo.app.activities.HomeActivity" />
@@ -75,8 +86,6 @@
         <activity
             android:name=".activities.EventDetailActivity"
             android:parentActivityName=".activities.EventsListActivity">
-            <meta-data android:name="android.app.searchable"
-                android:resource="@xml/searchable"/>
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="org.gophillygo.app.activities.EventsListActivity" />
@@ -84,8 +93,8 @@
         <activity
             android:name=".activities.PlacesMapsActivity"
             android:label="@string/title_activity_places_maps">
-            <meta-data android:name="android.app.searchable"
-                android:resource="@xml/searchable"/>
+            <meta-data android:name="android.app.default_searchable"
+                android:value="org.gophillygo.app.activities.SearchActivity"/>
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="org.gophillygo.app.activities.HomeActivity" />
@@ -93,8 +102,8 @@
         <activity
             android:name=".activities.EventsMapsActivity"
             android:label="@string/title_activity_events_maps">
-            <meta-data android:name="android.app.searchable"
-                android:resource="@xml/searchable"/>
+            <meta-data android:name="android.app.default_searchable"
+                android:value="org.gophillygo.app.activities.SearchActivity"/>
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="org.gophillygo.app.activities.HomeActivity" />
@@ -122,19 +131,6 @@
         <activity
             android:name=".activities.GpgPreferenceActivity"
             android:label="@string/preferences">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="org.gophillygo.app.activities.HomeActivity" />
-        </activity>
-        <activity
-            android:name=".activities.SearchActivity"
-            android:label="@string/title_activity_search"
-            android:launchMode="singleTop"
-            android:parentActivityName=".activities.HomeActivity"
-            android:theme="@style/GpgAppTheme">
-            <intent-filter>
-                <action android:name="android.intent.action.SEARCH" />
-            </intent-filter>
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="org.gophillygo.app.activities.HomeActivity" />
