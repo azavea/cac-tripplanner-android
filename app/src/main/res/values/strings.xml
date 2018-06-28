@@ -111,4 +111,5 @@
     <string name="preferences">Settings</string>
     <string name="title_activity_search">Search GoPhillyGo</string>
     <string name="search_hint">Place or event in GoPhillyGo</string>
+    <string name="search_provider_description">Places and Events around Greater Philadelphia</string>
 </resources>

@@ -12,17 +12,11 @@ import android.text.Spanned;
 import android.util.Log;
 
 import com.google.gson.annotations.SerializedName;
-import org.gophillygo.app.BuildConfig;
-import org.gophillygo.app.data.DestinationWebservice;
 
-import org.gophillygo.app.BuildConfig;
+import org.gophillygo.app.data.DestinationWebservice;
 
 import java.util.ArrayList;
 import java.util.Objects;
-
-import static org.gophillygo.app.data.models.CategoryAttraction.Activities.Cycling;
-import static org.gophillygo.app.data.models.CategoryAttraction.Activities.Hiking;
-import static org.gophillygo.app.data.models.CategoryAttraction.Activities.WaterRecreation;
 
 
 @Entity

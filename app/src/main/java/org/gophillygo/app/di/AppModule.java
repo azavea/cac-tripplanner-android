@@ -29,6 +29,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 @Module(includes = ViewModelModule.class)
 class AppModule {
 
+    protected static final String DATABASE_NAME = "gpg-database";
+
     // Data services
 
     @Singleton
@@ -56,7 +58,7 @@ class AppModule {
     @Singleton
     @Provides
     GpgDatabase provideDatabase(Application app) {
-        return Room.databaseBuilder(app, GpgDatabase.class, "gpg-database")
+        return Room.databaseBuilder(app, GpgDatabase.class, DATABASE_NAME)
                 .fallbackToDestructiveMigration()
                 .build();
     }

@@ -3,6 +3,7 @@ package org.gophillygo.app.di;
 import android.app.Application;
 
 import org.gophillygo.app.GoPhillyGoApp;
+import org.gophillygo.app.GoPhillyGoContentProvider_MembersInjector;
 import org.gophillygo.app.activities.GpgPreferenceActivity;
 import org.gophillygo.app.activities.SearchActivity;
 
@@ -37,7 +38,10 @@ import dagger.android.AndroidInjectionModule;
 
         // Broadcast Receivers
         AddGeofenceBroadcastReceiverModule.class,
-        GeofenceTransitionBroadcastReceiverModule.class
+        GeofenceTransitionBroadcastReceiverModule.class,
+
+        // Content Providers
+        GoPhillyGoContentProviderModule.class
 })
 public interface AppComponent {
     @Component.Builder
