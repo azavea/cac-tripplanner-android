@@ -2,7 +2,6 @@ package org.gophillygo.app.data;
 
 import android.annotation.SuppressLint;
 import android.arch.lifecycle.LiveData;
-import android.database.Cursor;
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -65,10 +64,6 @@ public class DestinationRepository {
 
     public LiveData<EventInfo> getEvent(long eventId) {
         return eventDao.getEvent(eventId);
-    }
-
-    public Cursor searchAttractions(String search) {
-        return destinationDao.searchAttractions(search);
     }
 
     @SuppressLint("StaticFieldLeak")

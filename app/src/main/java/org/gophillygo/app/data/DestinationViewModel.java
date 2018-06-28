@@ -1,7 +1,6 @@
 package org.gophillygo.app.data;
 
 import android.arch.lifecycle.LiveData;
-import android.database.Cursor;
 
 import org.gophillygo.app.data.models.Destination;
 import org.gophillygo.app.data.models.DestinationInfo;
@@ -24,10 +23,6 @@ public class DestinationViewModel extends AttractionViewModel {
 
     public LiveData<DestinationInfo> getDestination(long destinationId) {
         return destinationRepository.getDestination(destinationId);
-    }
-
-    public Cursor searchAttractions(String search) {
-        return destinationRepository.searchAttractions(search);
     }
 
     public void updateDestination(Destination destination) {

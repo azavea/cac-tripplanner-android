@@ -61,10 +61,18 @@ public class GoPhillyGoContentProvider extends ContentProvider {
             return null;
         }
 
-        String query = uri.getLastPathSegment().toLowerCase();
+        String query = uri.getLastPathSegment();
         Log.d(LOG_LABEL, "Content provider got query: " + query);
 
-        return destinationDao.searchAttractions(query);
+        Cursor cursor = destinationDao.searchAttractions('%' + query + '%');
+
+        Uri testResource = Uri.parse("android.resource://org.gophillygo.app/" + R.drawable.ic_event_black_24dp);
+        Log.d(LOG_LABEL, testResource.toString());
+
+        //Log.d(LOG_LABEL, "found " + cursor.getCount() + " search results");
+
+
+        return cursor;
     }
 
     @Override

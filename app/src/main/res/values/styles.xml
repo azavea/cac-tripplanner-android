@@ -2,7 +2,6 @@
 
     <!-- Base application theme -->
     <style name="GpgAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- TODO: change app colors from these defaults -->
         <item name="colorPrimary">@color/color_primary</item>
         <item name="colorPrimaryDark">@color/color_primary_dark</item>
 
@@ -12,6 +11,19 @@
         <!-- action bar overlaps content (do not use windowActionBarOverlay) -->
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:textColorPrimary">@color/text_color_primary</item>
+
+        <item name="android:dropDownItemStyle">@style/GpgItemDropdownStyle</item>
+        <item name="android:dropDownListViewStyle">@style/GpgListViewDropdownStyle</item>
+    </style>
+
+    <style name="GpgListViewDropdownStyle" parent="Base.Widget.AppCompat.ListView.DropDown">
+        <item name="android:background">@color/color_white</item>
+    </style>
+
+    <style name="GpgItemDropdownStyle" parent="Base.TextAppearance.AppCompat.Widget.DropDownItem">
+        <item name="android:textColor">@color/color_text_dark_grey</item>
+        <item name="android:paddingStart">32dp</item>
+        <item name="android:paddingEnd">8dp</item>
     </style>
 
     <style name="GpgDarkTextTheme" parent="Base.Theme.AppCompat.Light.DarkActionBar">

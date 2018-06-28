@@ -17,8 +17,15 @@ import java.util.List;
 
 interface AttractionDao<T> {
 
-    @Query("SELECT * FROM destination, event " +
-            "WHERE destination.name LIKE :search OR event.name LIKE :search")
+    @Query("SELECT destination._id, destination.name AS suggest_text_1, " +
+            "'android.resource://org.gophillygo.app/2131165333' AS suggest_icon_1 " +
+            "FROM destination " +
+            "WHERE destination.name LIKE :search " +
+            "UNION " +
+            "SELECT event._id, event.name AS suggest_text_1, " +
+            "'android.resource://org.gophillygo.app/2131165314' AS suggest_icon_1 " +
+            "FROM event " +
+            "WHERE event.name LIKE :search ")
     Cursor searchAttractions(String search);
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)

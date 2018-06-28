@@ -6,6 +6,7 @@ import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 import android.content.Context;
 import android.os.Build;
+import android.provider.BaseColumns;
 import android.support.annotation.NonNull;
 import android.text.Html;
 import android.text.Spanned;
@@ -26,7 +27,9 @@ public class Attraction {
     private static final String LOG_LABEL = "Attraction";
 
     @PrimaryKey
-    private final int id;
+    @ColumnInfo(index = true)
+    @SerializedName("id")
+    private final int _id;
 
     @ColumnInfo(index = true)
     private final int placeID;
@@ -65,11 +68,11 @@ public class Attraction {
     // timestamp is not final, as it is set on database save, and not by serializer
     private long timestamp;
 
-    public Attraction(int id, int placeID, String name, boolean accessible, String image,
+    public Attraction(int _id, int placeID, String name, boolean accessible, String image,
                       boolean cycling, String description, int priority, String websiteUrl,
                       String wideImage, boolean isEvent, ArrayList<String> activities,
                       ArrayList<String> extraWideImages) {
-        this.id = id;
+        this._id = _id;
         this.placeID = placeID;
         this.name = name;
         this.accessible = accessible;
@@ -113,7 +116,7 @@ public class Attraction {
     }
 
     public int getId() {
-        return id;
+        return _id;
     }
 
     public int getPlaceID() {
@@ -229,7 +232,7 @@ public class Attraction {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Attraction that = (Attraction) o;
-        return id == that.id &&
+        return _id == that._id &&
                 placeID == that.placeID &&
                 accessible == that.accessible &&
                 cycling == that.cycling &&
@@ -248,6 +251,6 @@ public class Attraction {
     @Override
     public int hashCode() {
 
-        return Objects.hash(id, placeID, name, accessible, image, cycling, description, priority, activities, websiteUrl, wideImage, isEvent, timestamp);
+        return Objects.hash(_id, placeID, name, accessible, image, cycling, description, priority, activities, websiteUrl, wideImage, isEvent, timestamp);
     }
 }

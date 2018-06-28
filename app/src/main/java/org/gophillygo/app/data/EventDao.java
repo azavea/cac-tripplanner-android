@@ -22,9 +22,9 @@ public abstract class EventDao implements AttractionDao<Event> {
             "destination.categories AS destinationCategories, attractionflag.option, " +
             "destination.x, destination.y, destination.distance " +
             "FROM event " +
-            "LEFT JOIN destination ON destination.id = event.destination " +
+            "LEFT JOIN destination ON destination._id = event.destination " +
             "LEFT JOIN attractionflag " +
-            "ON event.id = attractionflag.attraction_id AND attractionflag.is_event = 1 " +
+            "ON event._id = attractionflag.attraction_id AND attractionflag.is_event = 1 " +
             "ORDER BY event.start_date ASC;")
     public abstract LiveData<List<EventInfo>> getAll();
 
@@ -32,10 +32,10 @@ public abstract class EventDao implements AttractionDao<Event> {
             "destination.categories AS destinationCategories, attractionflag.option, " +
             "destination.x, destination.y, destination.distance " +
             "FROM event " +
-            "LEFT JOIN destination ON destination.id = event.destination " +
+            "LEFT JOIN destination ON destination._id = event.destination " +
             "LEFT JOIN attractionflag " +
-            "ON event.id = attractionflag.attraction_id AND attractionflag.is_event = 1 " +
-            "WHERE event.id = :eventId")
+            "ON event._id = attractionflag.attraction_id AND attractionflag.is_event = 1 " +
+            "WHERE event._id = :eventId")
     public abstract LiveData<EventInfo> getEvent(long eventId);
 
     @Query("DELETE FROM event")
@@ -61,9 +61,9 @@ public abstract class EventDao implements AttractionDao<Event> {
             "destination.categories AS destinationCategories, attractionflag.option, " +
             "destination.x, destination.y, destination.distance " +
             "FROM event " +
-            "INNER JOIN destination ON destination.id = event.destination " +
+            "INNER JOIN destination ON destination._id = event.destination " +
             "LEFT JOIN attractionflag " +
-            "ON event.id = attractionflag.attraction_id AND attractionflag.is_event = 1 " +
+            "ON event._id = attractionflag.attraction_id AND attractionflag.is_event = 1 " +
             "WHERE attractionflag.option = :geofenceFlagCode")
     public abstract List<EventInfo> getGeofenceEvents(int geofenceFlagCode);
 
@@ -77,9 +77,9 @@ public abstract class EventDao implements AttractionDao<Event> {
             "destination.categories AS destinationCategories, attractionflag.option, " +
             "destination.x, destination.y, destination.distance " +
             "FROM event " +
-            "LEFT JOIN destination ON destination.id = event.destination " +
+            "LEFT JOIN destination ON destination._id = event.destination " +
             "LEFT JOIN attractionflag " +
-            "ON event.id = attractionflag.attraction_id AND attractionflag.is_event = 1 " +
-            "WHERE event.id = :eventId")
+            "ON event._id = attractionflag.attraction_id AND attractionflag.is_event = 1 " +
+            "WHERE event._id = :eventId")
     public abstract EventInfo getEventInBackground(long eventId);
 }

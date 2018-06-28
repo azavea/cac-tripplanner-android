@@ -8,7 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 
-
 import org.gophillygo.app.R;
 
 public class SearchActivity extends AppCompatActivity {
@@ -23,8 +22,6 @@ public class SearchActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.search_toolbar);
         setSupportActionBar(toolbar);
-        //noinspection ConstantConditions
-        getActionBar().setDisplayHomeAsUpEnabled(true);
 
         Log.d(LOG_LABEL, "Search activity created");
         handleSearch();
@@ -52,7 +49,7 @@ public class SearchActivity extends AppCompatActivity {
             listView.setAdapter(adapter);
             */
 
-        }else if(Intent.ACTION_VIEW.equals(intent.getAction())) {
+        } else if(Intent.ACTION_VIEW.equals(intent.getAction())) {
             String selectedSuggestionRowId =  intent.getDataString();
             //execution comes here when an item is selected from search suggestions
             //you can continue from here with user selected search item

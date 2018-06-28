@@ -1,0 +1,546 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 12,
+    "identityHash": "27b10c74340e06a416d06b3817362f6e",
+    "entities": [
+      {
+        "tableName": "AttractionFlag",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`attraction_id` INTEGER NOT NULL, `is_event` INTEGER NOT NULL, `option` INTEGER, PRIMARY KEY(`attraction_id`, `is_event`))",
+        "fields": [
+          {
+            "fieldPath": "attractionID",
+            "columnName": "attraction_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isEvent",
+            "columnName": "is_event",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "option",
+            "columnName": "option",
+            "affinity": "INTEGER",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "attraction_id",
+            "is_event"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [
+          {
+            "name": "index_AttractionFlag_is_event_option",
+            "unique": false,
+            "columnNames": [
+              "is_event",
+              "option"
+            ],
+            "createSql": "CREATE  INDEX `index_AttractionFlag_is_event_option` ON `${TABLE_NAME}` (`is_event`, `option`)"
+          },
+          {
+            "name": "index_AttractionFlag_attraction_id",
+            "unique": false,
+            "columnNames": [
+              "attraction_id"
+            ],
+            "createSql": "CREATE  INDEX `index_AttractionFlag_attraction_id` ON `${TABLE_NAME}` (`attraction_id`)"
+          },
+          {
+            "name": "index_AttractionFlag_is_event",
+            "unique": false,
+            "columnNames": [
+              "is_event"
+            ],
+            "createSql": "CREATE  INDEX `index_AttractionFlag_is_event` ON `${TABLE_NAME}` (`is_event`)"
+          },
+          {
+            "name": "index_AttractionFlag_option",
+            "unique": false,
+            "columnNames": [
+              "option"
+            ],
+            "createSql": "CREATE  INDEX `index_AttractionFlag_option` ON `${TABLE_NAME}` (`option`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "Destination",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`city` TEXT, `state` TEXT, `address` TEXT, `categories` TEXT, `watershed_alliance` INTEGER NOT NULL, `zipcode` TEXT, `distance` REAL NOT NULL, `_id` INTEGER NOT NULL, `placeID` INTEGER NOT NULL, `name` TEXT, `accessible` INTEGER NOT NULL, `image` TEXT, `cycling` INTEGER NOT NULL, `description` TEXT, `priority` INTEGER NOT NULL, `activities` TEXT, `website_url` TEXT, `wide_image` TEXT, `is_event` INTEGER NOT NULL, `extra_wide_images` TEXT, `timestamp` INTEGER NOT NULL, `nature` INTEGER, `exercise` INTEGER, `educational` INTEGER, `x` REAL, `y` REAL, `street_address` TEXT, PRIMARY KEY(`_id`))",
+        "fields": [
+          {
+            "fieldPath": "city",
+            "columnName": "city",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "state",
+            "columnName": "state",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "address",
+            "columnName": "address",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "categories",
+            "columnName": "categories",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "watershedAlliance",
+            "columnName": "watershed_alliance",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "zipCode",
+            "columnName": "zipcode",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "distance",
+            "columnName": "distance",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "_id",
+            "columnName": "_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "placeID",
+            "columnName": "placeID",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "accessible",
+            "columnName": "accessible",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "image",
+            "columnName": "image",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "cycling",
+            "columnName": "cycling",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "description",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "priority",
+            "columnName": "priority",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "activities",
+            "columnName": "activities",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "websiteUrl",
+            "columnName": "website_url",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "wideImage",
+            "columnName": "wide_image",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "isEvent",
+            "columnName": "is_event",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "extraWideImages",
+            "columnName": "extra_wide_images",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "timestamp",
+            "columnName": "timestamp",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "categoryFlags.nature",
+            "columnName": "nature",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "categoryFlags.exercise",
+            "columnName": "exercise",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "categoryFlags.educational",
+            "columnName": "educational",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "location.x",
+            "columnName": "x",
+            "affinity": "REAL",
+            "notNull": false
+          },
+          {
+            "fieldPath": "location.y",
+            "columnName": "y",
+            "affinity": "REAL",
+            "notNull": false
+          },
+          {
+            "fieldPath": "attributes.streetAddress",
+            "columnName": "street_address",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "_id"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [
+          {
+            "name": "index_Destination_educational",
+            "unique": false,
+            "columnNames": [
+              "educational"
+            ],
+            "createSql": "CREATE  INDEX `index_Destination_educational` ON `${TABLE_NAME}` (`educational`)"
+          },
+          {
+            "name": "index_Destination_nature",
+            "unique": false,
+            "columnNames": [
+              "nature"
+            ],
+            "createSql": "CREATE  INDEX `index_Destination_nature` ON `${TABLE_NAME}` (`nature`)"
+          },
+          {
+            "name": "index_Destination_exercise",
+            "unique": false,
+            "columnNames": [
+              "exercise"
+            ],
+            "createSql": "CREATE  INDEX `index_Destination_exercise` ON `${TABLE_NAME}` (`exercise`)"
+          },
+          {
+            "name": "index_Destination_watershed_alliance",
+            "unique": false,
+            "columnNames": [
+              "watershed_alliance"
+            ],
+            "createSql": "CREATE  INDEX `index_Destination_watershed_alliance` ON `${TABLE_NAME}` (`watershed_alliance`)"
+          },
+          {
+            "name": "index_Destination_distance",
+            "unique": false,
+            "columnNames": [
+              "distance"
+            ],
+            "createSql": "CREATE  INDEX `index_Destination_distance` ON `${TABLE_NAME}` (`distance`)"
+          },
+          {
+            "name": "index_Destination__id",
+            "unique": false,
+            "columnNames": [
+              "_id"
+            ],
+            "createSql": "CREATE  INDEX `index_Destination__id` ON `${TABLE_NAME}` (`_id`)"
+          },
+          {
+            "name": "index_Destination_placeID",
+            "unique": false,
+            "columnNames": [
+              "placeID"
+            ],
+            "createSql": "CREATE  INDEX `index_Destination_placeID` ON `${TABLE_NAME}` (`placeID`)"
+          },
+          {
+            "name": "index_Destination_name",
+            "unique": false,
+            "columnNames": [
+              "name"
+            ],
+            "createSql": "CREATE  INDEX `index_Destination_name` ON `${TABLE_NAME}` (`name`)"
+          },
+          {
+            "name": "index_Destination_accessible",
+            "unique": false,
+            "columnNames": [
+              "accessible"
+            ],
+            "createSql": "CREATE  INDEX `index_Destination_accessible` ON `${TABLE_NAME}` (`accessible`)"
+          },
+          {
+            "name": "index_Destination_cycling",
+            "unique": false,
+            "columnNames": [
+              "cycling"
+            ],
+            "createSql": "CREATE  INDEX `index_Destination_cycling` ON `${TABLE_NAME}` (`cycling`)"
+          },
+          {
+            "name": "index_Destination_activities",
+            "unique": false,
+            "columnNames": [
+              "activities"
+            ],
+            "createSql": "CREATE  INDEX `index_Destination_activities` ON `${TABLE_NAME}` (`activities`)"
+          }
+        ],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "Event",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`destination` INTEGER, `start_date` TEXT, `end_date` TEXT, `_id` INTEGER NOT NULL, `placeID` INTEGER NOT NULL, `name` TEXT, `accessible` INTEGER NOT NULL, `image` TEXT, `cycling` INTEGER NOT NULL, `description` TEXT, `priority` INTEGER NOT NULL, `activities` TEXT, `website_url` TEXT, `wide_image` TEXT, `is_event` INTEGER NOT NULL, `extra_wide_images` TEXT, `timestamp` INTEGER NOT NULL, PRIMARY KEY(`_id`), FOREIGN KEY(`destination`) REFERENCES `Destination`(`_id`) ON UPDATE NO ACTION ON DELETE SET NULL DEFERRABLE INITIALLY DEFERRED)",
+        "fields": [
+          {
+            "fieldPath": "destination",
+            "columnName": "destination",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "startDate",
+            "columnName": "start_date",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "endDate",
+            "columnName": "end_date",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "_id",
+            "columnName": "_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "placeID",
+            "columnName": "placeID",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "accessible",
+            "columnName": "accessible",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "image",
+            "columnName": "image",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "cycling",
+            "columnName": "cycling",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "description",
+            "columnName": "description",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "priority",
+            "columnName": "priority",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "activities",
+            "columnName": "activities",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "websiteUrl",
+            "columnName": "website_url",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "wideImage",
+            "columnName": "wide_image",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "isEvent",
+            "columnName": "is_event",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "extraWideImages",
+            "columnName": "extra_wide_images",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "timestamp",
+            "columnName": "timestamp",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "_id"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [
+          {
+            "name": "index_Event_destination",
+            "unique": false,
+            "columnNames": [
+              "destination"
+            ],
+            "createSql": "CREATE  INDEX `index_Event_destination` ON `${TABLE_NAME}` (`destination`)"
+          },
+          {
+            "name": "index_Event_start_date",
+            "unique": false,
+            "columnNames": [
+              "start_date"
+            ],
+            "createSql": "CREATE  INDEX `index_Event_start_date` ON `${TABLE_NAME}` (`start_date`)"
+          },
+          {
+            "name": "index_Event_end_date",
+            "unique": false,
+            "columnNames": [
+              "end_date"
+            ],
+            "createSql": "CREATE  INDEX `index_Event_end_date` ON `${TABLE_NAME}` (`end_date`)"
+          },
+          {
+            "name": "index_Event__id",
+            "unique": false,
+            "columnNames": [
+              "_id"
+            ],
+            "createSql": "CREATE  INDEX `index_Event__id` ON `${TABLE_NAME}` (`_id`)"
+          },
+          {
+            "name": "index_Event_placeID",
+            "unique": false,
+            "columnNames": [
+              "placeID"
+            ],
+            "createSql": "CREATE  INDEX `index_Event_placeID` ON `${TABLE_NAME}` (`placeID`)"
+          },
+          {
+            "name": "index_Event_name",
+            "unique": false,
+            "columnNames": [
+              "name"
+            ],
+            "createSql": "CREATE  INDEX `index_Event_name` ON `${TABLE_NAME}` (`name`)"
+          },
+          {
+            "name": "index_Event_accessible",
+            "unique": false,
+            "columnNames": [
+              "accessible"
+            ],
+            "createSql": "CREATE  INDEX `index_Event_accessible` ON `${TABLE_NAME}` (`accessible`)"
+          },
+          {
+            "name": "index_Event_cycling",
+            "unique": false,
+            "columnNames": [
+              "cycling"
+            ],
+            "createSql": "CREATE  INDEX `index_Event_cycling` ON `${TABLE_NAME}` (`cycling`)"
+          },
+          {
+            "name": "index_Event_activities",
+            "unique": false,
+            "columnNames": [
+              "activities"
+            ],
+            "createSql": "CREATE  INDEX `index_Event_activities` ON `${TABLE_NAME}` (`activities`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "Destination",
+            "onDelete": "SET NULL",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "destination"
+            ],
+            "referencedColumns": [
+              "_id"
+            ]
+          }
+        ]
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, \"27b10c74340e06a416d06b3817362f6e\")"
+    ]
+  }
+}
