@@ -17,6 +17,9 @@ public class GoPhillyGoContentProvider extends ContentProvider {
 
     private static final String LOG_LABEL = "GPGContentProvider";
 
+    // SQL LIKE match wildcard
+    private static final Character WILDCARD = '%';
+
     @SuppressWarnings("WeakerAccess")
     @Inject
     DestinationDao destinationDao;
@@ -33,14 +36,13 @@ public class GoPhillyGoContentProvider extends ContentProvider {
 
     @Override
     public String getType(@NonNull Uri uri) {
-        // TODO: Implement this to handle requests for the MIME type of the data
-        // at the given URI.
+        // Implement this to handle requests for the MIME type of the data at the given URI.
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
     @Override
     public Uri insert(@NonNull Uri uri, ContentValues values) {
-        // TODO: Implement this to handle requests to insert a new row.
+        // Implement this to handle requests to insert a new row.
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
@@ -61,23 +63,13 @@ public class GoPhillyGoContentProvider extends ContentProvider {
         }
 
         String query = uri.getLastPathSegment();
-        Log.d(LOG_LABEL, "Content provider got query: " + query);
-
-        Cursor cursor = destinationDao.searchAttractions('%' + query + '%');
-
-        Uri testResource = Uri.parse("android.resource://org.gophillygo.app/" + R.drawable.ic_event_black_24dp);
-        Log.d(LOG_LABEL, testResource.toString());
-
-        //Log.d(LOG_LABEL, "found " + cursor.getCount() + " search results");
-
-
-        return cursor;
+        return destinationDao.searchAttractions(WILDCARD + query + WILDCARD);
     }
 
     @Override
     public int update(@NonNull Uri uri, ContentValues values, String selection,
                       String[] selectionArgs) {
-        // TODO: Implement this to handle requests to update one or more rows.
+        // Implement this to handle requests to update one or more rows.
         throw new UnsupportedOperationException("Not yet implemented");
     }
 }

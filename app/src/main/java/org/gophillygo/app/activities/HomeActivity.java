@@ -142,9 +142,7 @@ PlaceCategoryGridAdapter.GridViewHolder.PlaceGridItemClickListener {
             Log.d(LOG_LABEL, "Clicked item at " + position);
             Destination destination = getNearestDestination(position);
             if (destination != null) {
-                Intent intent = new Intent(this, PlaceDetailActivity.class);
-                intent.putExtra(DESTINATION_ID_KEY, (long)destination.getId());
-                startActivity(intent);
+                goToPlace((long)destination.getId());
             }
         });
     }
@@ -152,6 +150,7 @@ PlaceCategoryGridAdapter.GridViewHolder.PlaceGridItemClickListener {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.home_menu, menu);
+        setupSearch(menu, R.id.action_home_search);
         return true;
     }
 

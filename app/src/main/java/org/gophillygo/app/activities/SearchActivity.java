@@ -42,6 +42,8 @@ public class SearchActivity extends AppCompatActivity {
 
             Log.d(LOG_LABEL, "TODO: set up search adapter for query " + searchQuery);
 
+            // FIXME: do we need this?
+
             /*
             CustomSearchAdapter adapter = new CustomSearchAdapter(this,
                     android.R.layout.simple_dropdown_item_1line,

@@ -57,6 +57,7 @@ public class EventsMapsActivity extends MapsActivity<EventInfo> {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.events_map_menu, menu);
+        setupSearch(menu, R.id.events_map_action_map_search);
         return true;
     }
 
