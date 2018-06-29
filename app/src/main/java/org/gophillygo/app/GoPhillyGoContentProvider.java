@@ -8,7 +8,6 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import org.gophillygo.app.data.DestinationDao;
-import org.gophillygo.app.data.GpgDatabase;
 
 import javax.inject.Inject;
 

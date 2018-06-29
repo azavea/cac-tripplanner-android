@@ -3,15 +3,16 @@ package org.gophillygo.app.activities;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.CursorAdapter;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
-import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,7 +24,6 @@ import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.integration.recyclerview.RecyclerViewPreloader;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.util.ViewPreloadSizeProvider;
-import com.crashlytics.android.Crashlytics;
 
 import org.gophillygo.app.R;
 import org.gophillygo.app.adapters.PlacesListAdapter;
@@ -37,13 +37,14 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static android.app.SearchManager.SUGGEST_COLUMN_INTENT_DATA;
+
 public class PlacesListActivity extends FilterableListActivity implements
         PlacesListAdapter.AttractionListItemClickListener, SearchView.OnQueryTextListener {
 
     private static final String LOG_LABEL = "PlacesList";
 
     private RecyclerView placesListView;
-    private Menu menu;
     PlacesListAdapter placesListAdapter;
     ActivityPlacesListBinding binding;
 
@@ -69,8 +70,36 @@ public class PlacesListActivity extends FilterableListActivity implements
     public void clickedAttraction(int position) {
         // Get database ID for place clicked, based on positional offset, and pass it along
         long detailId = placesListView.getAdapter().getItemId(position);
+        goToPlace(detailId);
+    }
+
+    private void goToAttractionForPosition(CursorAdapter adapter, int position) {
+        Log.d(LOG_LABEL, "onSuggestionClick " + position);
+        long itemId = adapter.getItemId(position);
+
+        Cursor cursor = (Cursor)adapter.getItem(position);
+        cursor.move(position);
+        int columnIndex = cursor.getColumnIndex(SUGGEST_COLUMN_INTENT_DATA);
+        int isEvent = cursor.getInt(columnIndex);
+
+        if (isEvent == 0) {
+            goToPlace(itemId);
+        } else {
+            goToEvent(itemId);
+        }
+    }
+
+    private void goToPlace(long detailId) {
+        Log.d(LOG_LABEL, "going to detail view for place ID " + detailId);
         Intent intent = new Intent(this, PlaceDetailActivity.class);
         intent.putExtra(PlaceDetailActivity.DESTINATION_ID_KEY, detailId);
+        startActivity(intent);
+    }
+
+    private void goToEvent(long detailId) {
+        Log.d(LOG_LABEL, "going to detail view for event ID " + detailId);
+        Intent intent = new Intent(this, EventDetailActivity.class);
+        intent.putExtra(EventDetailActivity.EVENT_ID_KEY, detailId);
         startActivity(intent);
     }
 
@@ -162,7 +191,6 @@ public class PlacesListActivity extends FilterableListActivity implements
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.places_list_menu, menu);
-        this.menu = menu;
 
         // Get the SearchView and set the searchable configuration
         SearchManager searchManager = (SearchManager)getSystemService(Context.SEARCH_SERVICE);
@@ -170,6 +198,24 @@ public class PlacesListActivity extends FilterableListActivity implements
         // Assumes current activity is the searchable activity
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
 
+        // handle opening detail intent from search
+        // https://developer.android.com/reference/android/widget/SearchView.OnSuggestionListener
+        searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
+            CursorAdapter adapter = searchView.getSuggestionsAdapter();
+
+            @Override
+            public boolean onSuggestionSelect(int position) {
+                Log.d(LOG_LABEL, "onSuggestionSelect " + position);
+                goToAttractionForPosition(adapter, position);
+                return true;
+            }
+
+            @Override
+            public boolean onSuggestionClick(int position) {
+                goToAttractionForPosition(adapter, position);
+                return true;
+            }
+        });
         return true;
     }
 
