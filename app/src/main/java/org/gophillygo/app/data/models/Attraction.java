@@ -26,6 +26,7 @@ public class Attraction {
     @Ignore
     private static final String LOG_LABEL = "Attraction";
 
+    // Use _ID for the internal primary column name, to ease mapping to a Cursor.
     @PrimaryKey
     @ColumnInfo(index = true)
     @SerializedName("id")

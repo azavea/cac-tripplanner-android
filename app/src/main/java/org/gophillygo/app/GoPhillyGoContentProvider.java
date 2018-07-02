@@ -48,7 +48,6 @@ public class GoPhillyGoContentProvider extends ContentProvider {
 
     @Override
     public boolean onCreate() {
-        Log.d(LOG_LABEL, "onCreate");
         AndroidInjection.inject(this);
         return true;
     }

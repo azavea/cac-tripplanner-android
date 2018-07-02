@@ -176,7 +176,8 @@
             android:name=".GoPhillyGoContentProvider"
             android:authorities="org.gophillygo.app.provider"
             android:enabled="true"
-            android:exported="true"></provider>
+            android:exported="true">
+        </provider>
     </application>
 
 </manifest>

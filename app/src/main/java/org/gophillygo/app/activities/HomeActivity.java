@@ -34,7 +34,6 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.gophillygo.app.activities.FilterableListActivity.FILTER_KEY;
-import static org.gophillygo.app.activities.PlaceDetailActivity.DESTINATION_ID_KEY;
 
 
 public class HomeActivity extends BaseAttractionActivity implements DestinationRepository.CategoryAttractionCallback,

@@ -12,6 +12,7 @@
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:textColorPrimary">@color/text_color_primary</item>
 
+        <!-- search widget and its dropdown -->
         <item name="android:dropDownItemStyle">@style/GpgItemDropdownStyle</item>
         <item name="android:dropDownListViewStyle">@style/GpgListViewDropdownStyle</item>
     </style>

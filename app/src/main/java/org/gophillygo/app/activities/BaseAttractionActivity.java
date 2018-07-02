@@ -41,8 +41,6 @@ import javax.inject.Inject;
 
 import io.fabric.sdk.android.Fabric;
 
-import static android.app.SearchManager.SUGGEST_COLUMN_INTENT_DATA;
-
 /**
  * Base activity that requests last known location and destination data when opened;
  * if either change, updates the distances to the destinations and calls
@@ -316,16 +314,9 @@ public abstract class BaseAttractionActivity extends AppCompatActivity
 
     protected void goToAttractionForPosition(CursorAdapter adapter, int position) {
         long itemId = adapter.getItemId(position);
-
         Cursor cursor = adapter.getCursor();
-        if (position >= cursor.getCount()) {
-            Log.e(LOG_LABEL, "Got out-of-range cursor position: " + position);
-            return;
-        }
         cursor.moveToPosition(position);
-
         int isEvent = cursor.getInt(SUGGEST_COLUMN_INDEX);
-
         if (isEvent == 0) {
             goToPlace(itemId);
         } else {
