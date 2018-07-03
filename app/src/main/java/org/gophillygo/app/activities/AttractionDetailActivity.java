@@ -19,6 +19,7 @@ import com.synnapps.carouselview.CarouselView;
 
 import org.gophillygo.app.R;
 import org.gophillygo.app.data.models.Attraction;
+import org.gophillygo.app.data.models.AttractionFlag;
 import org.gophillygo.app.data.models.AttractionInfo;
 import org.gophillygo.app.data.models.DestinationInfo;
 import org.gophillygo.app.data.models.DestinationLocation;
@@ -168,5 +169,26 @@ public abstract class AttractionDetailActivity extends AppCompatActivity {
             Glide.with(this).load(url).into(imageView);
         });
         carouselView.setPageCount(attraction.getExtraWideImages().size() + 1);
+    }
+
+    /**
+     * Gets the user-presentable detail string for a user flag (been, want to go, etc.)
+     *
+     * @param info AttractionInfo object for a place or event
+     * @return String from string resources; varies for places and events
+     */
+    public String getFlagLabel(AttractionInfo info) {
+        if (info == null || info.getAttraction() == null) {
+            String msg = "Cannot get flag label for missing object";
+            Log.e(LOG_LABEL, msg);
+            Crashlytics.log(msg);
+            return getString(R.string.place_detail_unset);
+        }
+
+        AttractionFlag flag = info.getFlag();
+        getString(R.string.place_detail_unset);
+        return info.getAttraction().isEvent() ?
+                getString(flag.getOption().eventLabel) :
+                getString(flag.getOption().placeLabel);
     }
 }

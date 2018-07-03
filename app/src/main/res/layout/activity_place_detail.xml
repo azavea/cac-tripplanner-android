@@ -7,6 +7,7 @@
         <!-- set up data binding to destination -->
         <variable name="destination" type="org.gophillygo.app.data.models.Destination"/>
         <variable name="destinationInfo" type="org.gophillygo.app.data.models.DestinationInfo"/>
+        <variable name="attractionInfo" type="org.gophillygo.app.data.models.AttractionInfo"/>
         <variable name="activity" type="org.gophillygo.app.activities.PlaceDetailActivity" />
         <variable name="context" type="android.content.Context" />
         <!-- imports to allow referencing within data binding expressions -->
@@ -139,7 +140,7 @@
                     style="@style/ItemDetailFlag"
                     android:layout_width="match_parent"
                     android:drawableEnd="@{activity.getFlagImage(destinationInfo)}"
-                    android:text="@string/place_details_been_want_to_go_label" />
+                    android:text="@{activity.getFlagLabel(attractionInfo)}" />
 
             </android.support.v7.widget.CardView>
 

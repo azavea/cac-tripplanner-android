@@ -50,8 +50,8 @@ public class CategoryAttraction {
      */
     public enum PlaceCategories {
         Events(0, R.string.home_grid_events, EVENTS_API_NAME),
-        WantToGo(1, R.string.place_want_to_go_option, AttractionFlag.Option.WantToGo.api_name),
-        Liked(2, R.string.place_liked_option, AttractionFlag.Option.Liked.api_name),
+        WantToGo(1, R.string.place_want_to_go_option, AttractionFlag.Option.WantToGo.apiName),
+        Liked(2, R.string.place_liked_option, AttractionFlag.Option.Liked.apiName),
         Nature(3, R.string.nature_category_label, NATURE_API_NAME),
         Exercise(4, R.string.exercise_category_label, EXERCISE_API_NAME),
         Educational(5, R.string.educational_category_label, EDUCATIONAL_API_NAME);

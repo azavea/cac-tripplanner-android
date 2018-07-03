@@ -7,6 +7,7 @@ import android.arch.persistence.room.TypeConverter;
 import android.arch.persistence.room.TypeConverters;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.IdRes;
+import android.support.annotation.StringRes;
 import android.util.SparseArray;
 
 import com.google.gson.annotations.SerializedName;
@@ -19,11 +20,16 @@ import java.util.Objects;
 public class AttractionFlag {
 
     public enum Option {
-        NotSelected (0, R.drawable.ic_add_black_24dp, null, ""),
-        Liked (1, R.drawable.ic_thumb_up_blue_24dp, R.id.place_option_liked, "liked"),
-        NotInterested (2, R.drawable.ic_not_interested_blue_24dp, R.id.place_option_not_interested, "not_interested"),
-        Been (3, R.drawable.ic_beenhere_blue_24dp, R.id.place_option_been, "been"),
-        WantToGo (4, R.drawable.ic_flag_blue_24dp, R.id.place_option_want_to_go, "want_to_go");
+        NotSelected (0, R.drawable.ic_add_black_24dp, null, "",
+                R.string.place_detail_unset, R.string.event_detail_unset),
+        Liked (1, R.drawable.ic_thumb_up_blue_24dp, R.id.place_option_liked, "liked",
+                R.string.place_detail_liked, R.string.event_detail_liked),
+        NotInterested (2, R.drawable.ic_not_interested_blue_24dp, R.id.place_option_not_interested, "not_interested",
+                R.string.place_detail_not_interested, R.string.event_detail_not_interested),
+        Been (3, R.drawable.ic_beenhere_blue_24dp, R.id.place_option_been, "been",
+                R.string.place_detail_been, R.string.event_detail_been),
+        WantToGo (4, R.drawable.ic_flag_blue_24dp, R.id.place_option_want_to_go, "want_to_go",
+                R.string.place_detail_want_to_go, R.string.event_detail_want_to_go);
 
         private static final SparseArray<Option> map = new SparseArray<>();
         static {
@@ -35,13 +41,18 @@ public class AttractionFlag {
         public final int code;
         public final @DrawableRes int drawable;
         public final @IdRes Integer id;
-        public final String api_name;
+        public final String apiName;
+        public final @StringRes Integer placeLabel;
+        public final @StringRes Integer eventLabel;
 
-        Option(int code, @DrawableRes int drawable, @IdRes Integer id, String api_name) {
+        Option(int code, @DrawableRes int drawable, @IdRes Integer id, String apiName,
+               @StringRes Integer placeLabel, @StringRes Integer eventLabel) {
             this.code = code;
             this.drawable = drawable;
             this.id = id;
-            this.api_name = api_name;
+            this.apiName = apiName;
+            this.placeLabel = placeLabel;
+            this.eventLabel = eventLabel;
         }
 
         public static Option valueOf(int code) {

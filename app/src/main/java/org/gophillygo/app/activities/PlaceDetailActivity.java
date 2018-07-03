@@ -24,8 +24,6 @@ import org.gophillygo.app.tasks.GeofenceTransitionWorker;
 
 import javax.inject.Inject;
 
-import static org.gophillygo.app.tasks.GeofenceTransitionWorker.MARK_BEEN_KEY;
-
 public class PlaceDetailActivity extends AttractionDetailActivity {
 
     public static final String DESTINATION_ID_KEY = "place_id";
@@ -92,6 +90,7 @@ public class PlaceDetailActivity extends AttractionDetailActivity {
             // set up data binding object
             binding.setDestination(destinationInfo.getDestination());
             binding.setDestinationInfo(destinationInfo);
+            binding.setAttractionInfo(destinationInfo);
             binding.setActivity(this);
             binding.setContext(this);
             binding.placeDetailDescriptionCard.detailDescriptionToggle.setOnClickListener(toggleClickListener);
@@ -122,7 +121,7 @@ public class PlaceDetailActivity extends AttractionDetailActivity {
             return;
         }
         Boolean haveExistingGeofence = destinationInfo.getFlag().getOption()
-                .api_name.equals(AttractionFlag.Option.WantToGo.api_name);
+                .apiName.equals(AttractionFlag.Option.WantToGo.apiName);
         destinationInfo.updateAttractionFlag(itemId);
         viewModel.updateAttractionFlag(destinationInfo.getFlag(), userUuid, getString(R.string.user_flag_post_api_key));
         Boolean settingGeofence = itemId  == AttractionFlag.Option.WantToGo.code;
