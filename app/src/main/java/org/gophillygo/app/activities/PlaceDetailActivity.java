@@ -128,9 +128,9 @@ public class PlaceDetailActivity extends AttractionDetailActivity {
         binding.notifyPropertyChanged(BR.destinationInfo);
     }
 
-    // TODO: go to list of events, filtered to this destination?
+    // TODO: #113 scroll to bottom, where events are listed inline with the view
     public void goToEvents(View view) {
-        Log.d(LOG_LABEL, "Clicked events in destination. TODO: goToEvents");
+        Log.d(LOG_LABEL, "Clicked events in destination. TODO: #113");
     }
 
     @Override

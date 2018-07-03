@@ -103,6 +103,8 @@
                     style="@style/PlaceDetailActivity"
                     android:drawableStart="@drawable/ic_event_black_16dp"
                     android:visibility="@{destinationInfo.hasEvents ? View.VISIBLE : View.GONE}"
+                    android:text="@{@plurals/place_upcoming_activities_count(destinationInfo.getEventCount(), destinationInfo.getEventCount())}"
+                    android:onClick="@{activity::goToEvents}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
