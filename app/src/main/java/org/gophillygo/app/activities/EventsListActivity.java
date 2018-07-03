@@ -25,10 +25,6 @@ import org.gophillygo.app.data.networkresource.Status;
 import org.gophillygo.app.databinding.ActivityEventsListBinding;
 import org.gophillygo.app.databinding.FilterButtonBarBinding;
 import org.gophillygo.app.di.GpgViewModelFactory;
-import org.gophillygo.app.tasks.AddGeofencesBroadcastReceiver;
-import org.gophillygo.app.tasks.RemoveGeofenceWorker;
-
-import org.gophillygo.app.data.models.EventInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,9 +60,7 @@ public class EventsListActivity extends FilterableListActivity
         // Get database ID for event clicked, based on positional offset, and pass it along
         long eventId = eventsListView.getAdapter().getItemId(position);
         Log.d(LOG_LABEL, "Clicked event with ID: " + eventId);
-        Intent intent = new Intent(this, EventDetailActivity.class);
-        intent.putExtra(EventDetailActivity.EVENT_ID_KEY, eventId);
-        startActivity(intent);
+        goToEvent(eventId);
     }
 
     public boolean clickedFlagOption(MenuItem item, AttractionInfo eventInfo, Integer position) {
@@ -139,6 +133,7 @@ public class EventsListActivity extends FilterableListActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.events_list_menu, menu);
+        setupSearch(menu, R.id.action_event_search);
         return true;
     }
 

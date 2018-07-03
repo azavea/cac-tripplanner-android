@@ -34,6 +34,7 @@ public class PlacesMapsActivity extends MapsActivity<DestinationInfo> {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.places_map_menu, menu);
+        setupSearch(menu, R.id.places_map_action_map_search);
         return true;
     }
 

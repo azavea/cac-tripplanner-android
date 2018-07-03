@@ -28,14 +28,12 @@ import org.gophillygo.app.data.DestinationRepository;
 import org.gophillygo.app.data.models.CategoryAttraction;
 import org.gophillygo.app.data.models.Destination;
 import org.gophillygo.app.data.models.Filter;
-import org.gophillygo.app.fragments.GpgPreferenceFragment;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import static org.gophillygo.app.activities.FilterableListActivity.FILTER_KEY;
-import static org.gophillygo.app.activities.PlaceDetailActivity.DESTINATION_ID_KEY;
 
 
 public class HomeActivity extends BaseAttractionActivity implements DestinationRepository.CategoryAttractionCallback,
@@ -143,9 +141,7 @@ PlaceCategoryGridAdapter.GridViewHolder.PlaceGridItemClickListener {
             Log.d(LOG_LABEL, "Clicked item at " + position);
             Destination destination = getNearestDestination(position);
             if (destination != null) {
-                Intent intent = new Intent(this, PlaceDetailActivity.class);
-                intent.putExtra(DESTINATION_ID_KEY, (long)destination.getId());
-                startActivity(intent);
+                goToPlace((long)destination.getId());
             }
         });
     }
@@ -153,6 +149,7 @@ PlaceCategoryGridAdapter.GridViewHolder.PlaceGridItemClickListener {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.home_menu, menu);
+        setupSearch(menu, R.id.action_home_search);
         return true;
     }
 
@@ -161,7 +158,7 @@ PlaceCategoryGridAdapter.GridViewHolder.PlaceGridItemClickListener {
         int itemId = item.getItemId();
 
         switch (itemId) {
-            case R.id.action_search:
+            case R.id.action_place_list_search:
                 Log.d(LOG_LABEL, "Clicked search action");
                 break;
             case R.id.action_settings:

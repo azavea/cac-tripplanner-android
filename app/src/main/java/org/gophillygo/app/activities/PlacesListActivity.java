@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -33,7 +34,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class PlacesListActivity extends FilterableListActivity implements
-        PlacesListAdapter.AttractionListItemClickListener {
+        PlacesListAdapter.AttractionListItemClickListener, SearchView.OnQueryTextListener {
 
     private static final String LOG_LABEL = "PlacesList";
 
@@ -63,9 +64,7 @@ public class PlacesListActivity extends FilterableListActivity implements
     public void clickedAttraction(int position) {
         // Get database ID for place clicked, based on positional offset, and pass it along
         long detailId = placesListView.getAdapter().getItemId(position);
-        Intent intent = new Intent(this, PlaceDetailActivity.class);
-        intent.putExtra(PlaceDetailActivity.DESTINATION_ID_KEY, detailId);
-        startActivity(intent);
+        goToPlace(detailId);
     }
 
     public boolean clickedFlagOption(MenuItem item, AttractionInfo destinationInfo, Integer position) {
@@ -156,6 +155,7 @@ public class PlacesListActivity extends FilterableListActivity implements
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.places_list_menu, menu);
+        setupSearch(menu, R.id.action_place_list_search);
         return true;
     }
 
@@ -163,15 +163,22 @@ public class PlacesListActivity extends FilterableListActivity implements
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
         switch (itemId) {
-            case R.id.action_events:
+            case R.id.action_place_list_events:
                 Log.d(LOG_LABEL, "Selected events menu item");
                 break;
-            case R.id.action_map:
+            case R.id.action_place_list_map:
                 Log.d(LOG_LABEL, "Selected map menu item");
                 startActivity(new Intent(this, PlacesMapsActivity.class));
                 break;
-            case R.id.action_search:
+            case R.id.action_place_list_search:
                 Log.d(LOG_LABEL, "Selected search menu item");
+
+                // TODO: search
+                if (super.onSearchRequested()) {
+                    Log.d(LOG_LABEL, "search requested!");
+                } else {
+                    Log.w(LOG_LABEL, "no search reqeusted?");
+                }
                 break;
             default:
                 Log.w(LOG_LABEL, "Unrecognized menu item selected: " + String.valueOf(itemId));
@@ -192,5 +199,17 @@ public class PlacesListActivity extends FilterableListActivity implements
             }
         }
         return filteredDestinations;
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        Log.d(LOG_LABEL, "onQueryTextSubmit " + query);
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        Log.d(LOG_LABEL, "onQueryTextChange " + newText);
+        return false;
     }
 }

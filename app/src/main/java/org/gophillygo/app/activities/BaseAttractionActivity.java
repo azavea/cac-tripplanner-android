@@ -1,14 +1,21 @@
 package org.gophillygo.app.activities;
 
+import android.app.SearchManager;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.CursorAdapter;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
+import android.view.Menu;
 
 import com.crashlytics.android.Crashlytics;
 
@@ -53,6 +60,7 @@ public abstract class BaseAttractionActivity extends AppCompatActivity
     // City Hall
     private static final double DEFAULT_LATITUDE = 39.954888;
     private static final double DEFAULT_LONGITUDE = -75.163206;
+    private static final int SUGGEST_COLUMN_INDEX = 3;
 
     private Location currentLocation;
     private boolean locationHasChanged = false; // true if distances to new location not yet set
@@ -268,5 +276,65 @@ public abstract class BaseAttractionActivity extends AppCompatActivity
                 }
             }
         }
+    }
+
+    /**
+     * Set up a search widget in the activity app bar.
+     *
+     * @param menu Options menu
+     * @param searchItem Item in the options menu for searching
+     */
+    protected void setupSearch(Menu menu, @IdRes int searchItem) {
+        // Get the SearchView and set the searchable configuration
+        SearchManager searchManager = (SearchManager)getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) menu.findItem(searchItem).getActionView();
+        // Assumes current activity is the searchable activity
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+
+        // handle opening detail intent from search
+        // https://developer.android.com/reference/android/widget/SearchView.OnSuggestionListener
+        searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
+            CursorAdapter adapter = searchView.getSuggestionsAdapter();
+
+            @Override
+            public boolean onSuggestionSelect(int position) {
+                Log.d(LOG_LABEL, "onSuggestionSelect " + position);
+                goToAttractionForPosition(adapter, position);
+                return true;
+            }
+
+            @Override
+            public boolean onSuggestionClick(int position) {
+                Log.d(LOG_LABEL, "onSuggestionClick " + position);
+                goToAttractionForPosition(adapter, position);
+                return true;
+            }
+        });
+    }
+
+    protected void goToAttractionForPosition(CursorAdapter adapter, int position) {
+        long itemId = adapter.getItemId(position);
+        Cursor cursor = adapter.getCursor();
+        cursor.moveToPosition(position);
+        int isEvent = cursor.getInt(SUGGEST_COLUMN_INDEX);
+        if (isEvent == 0) {
+            goToPlace(itemId);
+        } else {
+            goToEvent(itemId);
+        }
+    }
+
+    protected void goToPlace(long detailId) {
+        Log.d(LOG_LABEL, "going to detail view for place ID " + detailId);
+        Intent intent = new Intent(this, PlaceDetailActivity.class);
+        intent.putExtra(PlaceDetailActivity.DESTINATION_ID_KEY, detailId);
+        startActivity(intent);
+    }
+
+    protected void goToEvent(long detailId) {
+        Log.d(LOG_LABEL, "going to detail view for event ID " + detailId);
+        Intent intent = new Intent(this, EventDetailActivity.class);
+        intent.putExtra(EventDetailActivity.EVENT_ID_KEY, detailId);
+        startActivity(intent);
     }
 }

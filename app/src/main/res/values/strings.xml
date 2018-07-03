@@ -109,4 +109,7 @@
     <string name="preferences_privacy">Privacy</string>
     <string name="preferences_terms_of_service">Terms of service</string>
     <string name="preferences">Settings</string>
+    <string name="title_activity_search">Search GoPhillyGo</string>
+    <string name="search_hint">Place or event</string>
+    <string name="search_provider_description">Places and Events around Greater Philadelphia</string>
 </resources>
