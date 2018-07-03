@@ -110,6 +110,14 @@ public class Attraction {
         this.timestamp = timestamp;
     }
 
+    public boolean isHiking() {
+        return activities.contains(CategoryAttraction.HIKING_API_NAME);
+    }
+
+    public boolean isWaterRecreation() {
+        return activities.contains(CategoryAttraction.WATER_REC_API_NAME);
+    }
+
     public int getId() {
         return id;
     }
