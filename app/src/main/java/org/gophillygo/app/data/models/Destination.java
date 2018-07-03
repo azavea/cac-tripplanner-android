@@ -130,6 +130,22 @@ public class Destination extends Attraction {
         return categoryFlags;
     }
 
+    // get a dot-separated string listing all the categories for this place (nature, exercise, etc.)
+    public String getCategoriesString() {
+        StringBuilder stringBuilder = new StringBuilder("");
+        // separate activities with dots
+        String dot = getHtmlFromString("&nbsp;&#8226;&nbsp;").toString();
+
+        for (String category: categories) {
+            if (stringBuilder.length() > 0) {
+                stringBuilder.append(dot);
+            }
+
+            stringBuilder.append(category);
+        }
+        return stringBuilder.toString();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -67,7 +67,7 @@
                 android:id="@+id/place_detail_activities_list"
                 style="@style/PlaceDetailActivity"
                 android:textAlignment="center"
-                android:text="@{destination.getActivitiesString(context)}"
+                android:text="@{destination.categoriesString}"
                 android:visibility="@{destination.hasActivities ? View.VISIBLE : View.GONE}"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
