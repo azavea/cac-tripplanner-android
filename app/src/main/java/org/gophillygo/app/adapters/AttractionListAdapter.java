@@ -1,6 +1,7 @@
 package org.gophillygo.app.adapters;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
@@ -49,10 +50,11 @@ public class AttractionListAdapter<T extends AttractionInfo> extends ListAdapter
             this.binding = binding;
         }
 
-        public void bind(AttractionInfo info) {
+        public void bind(AttractionInfo info, Context context) {
             binding.setVariable(BR.attractionInfo, info);
             binding.setVariable(BR.attraction, info.getAttraction());
             binding.setVariable(BR.position, getAdapterPosition());
+            binding.setVariable(BR.context, context);
             binding.executePendingBindings();
         }
     }
@@ -117,7 +119,7 @@ public class AttractionListAdapter<T extends AttractionInfo> extends ListAdapter
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         T info = attractionList.get(position);
-        holder.bind(info);
+        holder.bind(info, holder.itemView.getContext());
     }
 
     @Override

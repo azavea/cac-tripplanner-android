@@ -41,6 +41,7 @@ public abstract class CarouselViewListener implements ViewListener {
                 null,
                 false);
         binding.setDestination(destination);
+        binding.setActivity(activity);
         return binding.getRoot();
     }
 }

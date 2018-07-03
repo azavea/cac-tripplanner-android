@@ -169,7 +169,7 @@ public abstract class BaseAttractionActivity extends AppCompatActivity
                 location.setLatitude(coordinates.getY());
                 location.setLongitude(coordinates.getX());
                 float distanceInMeters = currentLocation.distanceTo(location);
-                dest.setDistance(this, distanceInMeters * METERS_TO_MILES);
+                dest.setDistance(distanceInMeters * METERS_TO_MILES);
             }
 
             // now distances have been updated, unset flag for need to update

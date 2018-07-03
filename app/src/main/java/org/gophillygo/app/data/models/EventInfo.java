@@ -3,6 +3,9 @@ package org.gophillygo.app.data.models;
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Embedded;
 import android.arch.persistence.room.Ignore;
+import android.content.Context;
+
+import org.gophillygo.app.R;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -34,8 +37,6 @@ public class EventInfo extends AttractionInfo<Event> {
 
     @ColumnInfo(index = true)
     private final Float distance;
-    @Ignore
-    private final String formattedDistance;
 
     public EventInfo(Event event, String destinationName, ArrayList<String> destinationCategories,
                      AttractionFlag.Option option, Float distance, DestinationLocation location) {
@@ -45,11 +46,6 @@ public class EventInfo extends AttractionInfo<Event> {
         this.destinationCategories = destinationCategories;
         this.distance = distance;
         this.location = location;
-        if (distance != null) {
-            this.formattedDistance = numberFormatter.format(distance.floatValue()) + " mi";
-        } else {
-            this.formattedDistance = "";
-        }
 
         if (destinationCategories != null && !destinationCategories.isEmpty()) {
             this.categories = new DestinationCategories(destinationCategories.contains(Filter.NATURE_CATEGORY),
@@ -76,8 +72,11 @@ public class EventInfo extends AttractionInfo<Event> {
     }
 
     @Override
-    public String getFormattedDistance() {
-        return formattedDistance;
+    public String getFormattedDistance(Context context) {
+        if (distance == null) {
+            return "";
+        }
+        return context.getString(R.string.distance_with_abbreviated_miles, numberFormatter.format(distance.floatValue()));
     }
 
     public Event getEvent() {

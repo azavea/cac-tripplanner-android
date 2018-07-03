@@ -10,6 +10,7 @@
         <variable name="eventInfo" type="org.gophillygo.app.data.models.EventInfo"/>
         <variable name="destination" type="org.gophillygo.app.data.models.Destination"/>
         <variable name="activity" type="org.gophillygo.app.activities.EventDetailActivity" />
+        <variable name="context" type="android.content.Context" />
         <!-- imports to allow referencing within data binding expressions -->
         <import type="android.view.View"/>
     </data>
@@ -52,7 +53,7 @@
                     style="@style/ItemDetailDistance"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text='@{eventInfo.formattedDistance}'
+                    android:text='@{eventInfo.getFormattedDistance(context)}'
                     android:visibility="@{eventInfo.distance != null ? View.VISIBLE : View.GONE}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"

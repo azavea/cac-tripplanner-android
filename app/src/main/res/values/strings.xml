@@ -49,7 +49,7 @@
         <item quantity="other">%d upcoming events</item>
     </plurals>
 
-    <string name="miles_abbreviation"> mi</string>
+    <string name="distance_with_abbreviated_miles">%s mi</string>
 
     <string name="place_details_been_want_to_go_label">Been here? Want to go?</string>
 

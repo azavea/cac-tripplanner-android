@@ -8,6 +8,7 @@
         <variable name="destination" type="org.gophillygo.app.data.models.Destination"/>
         <variable name="destinationInfo" type="org.gophillygo.app.data.models.DestinationInfo"/>
         <variable name="activity" type="org.gophillygo.app.activities.PlaceDetailActivity" />
+        <variable name="context" type="android.content.Context" />
         <!-- imports to allow referencing within data binding expressions -->
         <import type="android.view.View"/>
     </data>
@@ -51,7 +52,7 @@
                     style="@style/ItemDetailDistance"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="@{destination.getFormattedDistance}"
+                    android:text="@{destination.getFormattedDistance(context)}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"/>

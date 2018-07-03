@@ -1,6 +1,7 @@
 package org.gophillygo.app.data.models;
 
 import android.arch.persistence.room.Embedded;
+import android.content.Context;
 
 import java.util.Objects;
 
@@ -33,8 +34,8 @@ public class DestinationInfo extends AttractionInfo<Destination> {
     }
 
     @Override
-    public String getFormattedDistance() {
-        return destination != null ? destination.getFormattedDistance() : null;
+    public String getFormattedDistance(Context context) {
+        return destination != null ? destination.getFormattedDistance(context) : null;
     }
 
     public Destination getDestination() {

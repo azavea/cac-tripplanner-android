@@ -2,6 +2,7 @@ package org.gophillygo.app.data.models;
 
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.TypeConverters;
+import android.content.Context;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.MenuRes;
 
@@ -27,7 +28,7 @@ public abstract class AttractionInfo<T extends Attraction> {
     public abstract T getAttraction();
     public abstract DestinationLocation getLocation();
     public abstract Float getDistance();
-    public abstract String getFormattedDistance();
+    public abstract String getFormattedDistance(Context context);
 
     public AttractionFlag getFlag() {
         return flag;

@@ -28,7 +28,6 @@ import org.gophillygo.app.data.DestinationRepository;
 import org.gophillygo.app.data.models.CategoryAttraction;
 import org.gophillygo.app.data.models.Destination;
 import org.gophillygo.app.data.models.Filter;
-import org.gophillygo.app.fragments.GpgPreferenceFragment;
 
 import java.util.ArrayList;
 import java.util.Collections;
