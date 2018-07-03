@@ -5,8 +5,11 @@ import android.arch.persistence.room.Embedded;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.Index;
+import android.content.Context;
 
 import com.google.gson.annotations.SerializedName;
+
+import org.gophillygo.app.R;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -76,10 +79,9 @@ public class Destination extends Attraction {
         this.categories = categories;
     }
 
-    public void setDistance(float distance) {
+    public void setDistance(Context context, float distance) {
         this.distance = distance;
-        // FIXME: move string constant to resources
-        this.formattedDistance = numberFormatter.format(distance) + " mi";
+        this.formattedDistance = numberFormatter.format(distance) + context.getString(R.string.miles_abbreviation);
     }
 
     public void setCategoryFlags(DestinationCategories categoryFlags) {
