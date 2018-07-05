@@ -8,6 +8,7 @@
         <!-- set up data binding to destination -->
         <variable name="destination" type="org.gophillygo.app.data.models.Destination"/>
         <variable name="showNearbyLabel" type="boolean" />
+        <variable name="activity" type="android.app.Activity" />
         <!-- imports to allow referencing within data binding expressions -->
         <import type="android.view.View"/>
     </data>
@@ -54,7 +55,7 @@
                 style="@style/ItemDetailDistance"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{destination.getFormattedDistance}"
+                android:text="@{destination.getFormattedDistance(activity)}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent" />
         </android.support.constraint.ConstraintLayout>

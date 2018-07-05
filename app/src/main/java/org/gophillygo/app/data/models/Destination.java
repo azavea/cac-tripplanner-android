@@ -3,10 +3,12 @@ package org.gophillygo.app.data.models;
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Embedded;
 import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.Index;
+import android.content.Context;
 
 import com.google.gson.annotations.SerializedName;
+
+import org.gophillygo.app.R;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -51,8 +53,6 @@ public class Destination extends Attraction {
     // convenience property to track distance to each destination
     @ColumnInfo(index = true)
     private float distance;
-    @Ignore
-    private String formattedDistance;
 
     public Destination(int id, int placeID, String name, boolean accessible, String image,
                        String city, boolean cycling, String zipCode, String description,
@@ -76,10 +76,12 @@ public class Destination extends Attraction {
         this.categories = categories;
     }
 
+    public String getFormattedDistance(Context context) {
+        return context.getString(R.string.distance_with_abbreviated_miles, numberFormatter.format(distance));
+    }
+
     public void setDistance(float distance) {
         this.distance = distance;
-        // FIXME: move string constant to resources
-        this.formattedDistance = numberFormatter.format(distance) + " mi";
     }
 
     public void setCategoryFlags(DestinationCategories categoryFlags) {
@@ -114,10 +116,6 @@ public class Destination extends Attraction {
         return distance;
     }
 
-    public String getFormattedDistance() {
-        return formattedDistance;
-    }
-
     public boolean isWatershedAlliance() {
         return watershedAlliance;
     }
@@ -128,6 +126,22 @@ public class Destination extends Attraction {
 
     public DestinationCategories getCategoryFlags() {
         return categoryFlags;
+    }
+
+    // get a dot-separated string listing all the categories for this place (nature, exercise, etc.)
+    public String getCategoriesString() {
+        StringBuilder stringBuilder = new StringBuilder("");
+        // separate activities with dots
+        String dot = getHtmlFromString("&nbsp;&#8226;&nbsp;").toString();
+
+        for (String category: categories) {
+            if (stringBuilder.length() > 0) {
+                stringBuilder.append(dot);
+            }
+
+            stringBuilder.append(category);
+        }
+        return stringBuilder.toString();
     }
 
     @Override
@@ -144,13 +158,12 @@ public class Destination extends Attraction {
                 Objects.equals(categories, that.categories) &&
                 Objects.equals(location, that.location) &&
                 Objects.equals(attributes, that.attributes) &&
-                Objects.equals(zipCode, that.zipCode) &&
-                Objects.equals(formattedDistance, that.formattedDistance);
+                Objects.equals(zipCode, that.zipCode);
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(super.hashCode(), city, state, address, categories, location, watershedAlliance, attributes, zipCode, distance, formattedDistance);
+        return Objects.hash(super.hashCode(), city, state, address, categories, location, watershedAlliance, attributes, zipCode, distance);
     }
 }

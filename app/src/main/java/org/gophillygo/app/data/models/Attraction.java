@@ -4,13 +4,11 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
-import android.content.Context;
 import android.os.Build;
 import android.provider.BaseColumns;
 import android.support.annotation.NonNull;
 import android.text.Html;
 import android.text.Spanned;
-import android.util.Log;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -116,6 +114,14 @@ public class Attraction {
         this.timestamp = timestamp;
     }
 
+    public boolean isHiking() {
+        return activities.contains(CategoryAttraction.HIKING_API_NAME);
+    }
+
+    public boolean isWaterRecreation() {
+        return activities.contains(CategoryAttraction.WATER_REC_API_NAME);
+    }
+
     public int getId() {
         return _id;
     }
@@ -195,35 +201,12 @@ public class Attraction {
      * @return Parsed HTML in a span
      */
     @SuppressWarnings("deprecation")
-    private Spanned getHtmlFromString(String source) {
+    protected static Spanned getHtmlFromString(String source) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             return Html.fromHtml(source, Html.FROM_HTML_MODE_LEGACY);
         } else {
             return Html.fromHtml(source);
         }
-    }
-
-    // get a dot-separated string listing all the activities available here
-    public String getActivitiesString(Context context) {
-        StringBuilder stringBuilder = new StringBuilder("");
-        // separate activities with dots
-        String dot = getHtmlFromString("&nbsp;&#8226;&nbsp;").toString();
-        for (String activity: this.getActivities()) {
-            if (stringBuilder.length() > 0) {
-                stringBuilder.append(dot);
-            }
-
-            if (activity.equals(CategoryAttraction.Activities.Cycling.getApiName())) {
-                stringBuilder.append(context.getString(CategoryAttraction.Activities.Cycling.getDisplayName()));
-            } else if (activity.equals(CategoryAttraction.Activities.Hiking.getApiName())) {
-                stringBuilder.append(context.getString(CategoryAttraction.Activities.Hiking.getDisplayName()));
-            } else if (activity.equals(CategoryAttraction.Activities.WaterRecreation.getApiName())) {
-                stringBuilder.append(context.getString(CategoryAttraction.Activities.WaterRecreation.getDisplayName()));
-            } else {
-                Log.e(LOG_LABEL, "Unrecognized activity " + activity);
-            }
-        }
-        return stringBuilder.toString();
     }
 
     // Implement equals and hashcode for list adapter to diff.
