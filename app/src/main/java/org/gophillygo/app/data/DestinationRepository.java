@@ -99,7 +99,7 @@ public class DestinationRepository {
             }
         }.execute();
 
-        UserFlagPost post = new UserFlagPost(flag.getAttractionID(), flag.getOption().api_name,
+        UserFlagPost post = new UserFlagPost(flag.getAttractionID(), flag.getOption().apiName,
                 flag.isEvent(), userUuid, apiKey);
 
         webservice.postUserFlag(post).enqueue(new Callback<UserFlagPostResponse>() {

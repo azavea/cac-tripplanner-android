@@ -132,6 +132,7 @@ public class EventDetailActivity extends AttractionDetailActivity {
             // set up data binding object
             binding.setEvent(eventInfo.getEvent());
             binding.setEventInfo(eventInfo);
+            binding.setAttractionInfo(eventInfo);
             binding.eventDetailDescriptionCard.detailDescriptionToggle.setOnClickListener(toggleClickListener);
             displayEvent();
         });
@@ -203,10 +204,10 @@ public class EventDetailActivity extends AttractionDetailActivity {
 
     private void updateFlag(int itemId) {
         boolean haveExistingGeofence = eventInfo.getFlag().getOption()
-                .api_name.equals(AttractionFlag.Option.WantToGo.api_name);
+                .apiName.equals(AttractionFlag.Option.WantToGo.apiName);
         eventInfo.updateAttractionFlag(itemId);
         viewModel.updateAttractionFlag(eventInfo.getFlag(), userUuid, getString(R.string.user_flag_post_api_key));
-        Boolean settingGeofence = eventInfo.getFlag().getOption().api_name.equals(AttractionFlag.Option.WantToGo.api_name);
+        Boolean settingGeofence = eventInfo.getFlag().getOption().apiName.equals(AttractionFlag.Option.WantToGo.apiName);
         addOrRemoveGeofence(eventInfo, haveExistingGeofence, settingGeofence);
         binding.notifyPropertyChanged(BR.destinationInfo);
     }

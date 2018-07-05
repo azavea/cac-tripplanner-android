@@ -158,13 +158,13 @@ public abstract class MapsActivity<T extends AttractionInfo> extends FilterableL
         PopupMenu menu = FlagMenuUtils.getFlagPopupMenu(this, view, info.getFlag());
         menu.setOnMenuItemClickListener(item -> {
             Boolean haveExistingGeofence = info.getFlag().getOption()
-                    .api_name.equals(AttractionFlag.Option.WantToGo.api_name);
+                    .apiName.equals(AttractionFlag.Option.WantToGo.apiName);
 
             info.updateAttractionFlag(item.getItemId());
             viewModel.updateAttractionFlag(info.getFlag(), userUuid, getString(R.string.user_flag_post_api_key));
             popupBinding.setAttractionInfo(info);
             popupBinding.setAttraction(info.getAttraction());
-            Boolean settingGeofence = info.getFlag().getOption().api_name.equals(AttractionFlag.Option.WantToGo.api_name);
+            Boolean settingGeofence = info.getFlag().getOption().apiName.equals(AttractionFlag.Option.WantToGo.apiName);
             addOrRemoveGeofence(info, haveExistingGeofence, settingGeofence);
             return true;
         });
