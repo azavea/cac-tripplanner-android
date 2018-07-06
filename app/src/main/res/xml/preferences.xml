@@ -10,7 +10,12 @@
         android:title="@string/preferences_fine_print"
         android:key="@string/preferences_fine_print_key">
         <Preference
-            android:title="@string/preferences_app_info" />
+            android:title="@string/preferences_app_info">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:targetPackage="org.gophillygo.app"
+                android:targetClass="org.gophillygo.app.activities.AppInfoActivity" />
+        </Preference>
         <Preference
             android:title="@string/preferences_terms_of_service" />
         <Preference

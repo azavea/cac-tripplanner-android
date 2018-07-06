@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.AppInfoActivity">
+
+    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        tools:context=".activities.AppInfoActivity"
+        tools:showIn="@layout/activity_app_info">
+
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/app_info_appbar"
+            android:fitsSystemWindows="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/app_info_toolbar"
+                style="@style/ToolbarTransparent"
+                android:background="@color/color_primary"
+                app:title="@string/preferences_app_info"
+                tools:targetApi="lollipop" />
+        </android.support.design.widget.AppBarLayout>
+
+        <TextView
+            android:padding="20dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/preferences_app_info"
+            app:layout_constraintTop_toBottomOf="@id/app_info_appbar"
+            style="@style/GpgTextAppearanceTitle"/>
+
+    </android.support.constraint.ConstraintLayout>
+
+</ScrollView>

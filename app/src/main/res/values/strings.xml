@@ -122,4 +122,5 @@
     <string name="title_activity_search">Search GoPhillyGo</string>
     <string name="search_hint">Place or event</string>
     <string name="search_provider_description">Places and Events around Greater Philadelphia</string>
+    <string name="title_activity_app_info">About GoPhillyGo</string>
 </resources>

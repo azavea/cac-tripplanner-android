@@ -143,6 +143,15 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="org.gophillygo.app.activities.HomeActivity" />
         </activity>
+        <activity
+            android:name=".activities.AppInfoActivity"
+            android:label="@string/title_activity_app_info"
+            android:parentActivityName=".activities.GpgPreferenceActivity"
+            android:theme="@style/GpgAppTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="org.gophillygo.app.activities.GpgPreferenceActivity" />
+        </activity>
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/api_keys.xml").
@@ -172,12 +181,12 @@
             </intent-filter>
         </receiver>
 
+        <!-- search content provider -->
         <provider
             android:name=".GoPhillyGoContentProvider"
             android:authorities="org.gophillygo.app.provider"
             android:enabled="true"
-            android:exported="true">
-        </provider>
+            android:exported="true" />
     </application>
 
 </manifest>
