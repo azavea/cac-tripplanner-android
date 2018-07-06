@@ -25,17 +25,33 @@
                 android:id="@+id/app_info_toolbar"
                 style="@style/ToolbarTransparent"
                 android:background="@color/color_primary"
-                app:title="@string/preferences_app_info"
+                app:title="@string/title_activity_app_info"
                 tools:targetApi="lollipop" />
         </android.support.design.widget.AppBarLayout>
 
         <TextView
-            android:padding="20dp"
+            android:id="@+id/app_info_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/preferences_app_info"
+            android:text="@string/app_info_description"
             app:layout_constraintTop_toBottomOf="@id/app_info_appbar"
             style="@style/GpgTextAppearanceTitle"/>
+
+        <TextView
+            android:id="@+id/app_info_root_site_link"
+            app:layout_constraintTop_toBottomOf="@id/app_info_description"
+            style="@style/GpgTextAppearanceTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/app_info_root_site_link"/>
+
+        <TextView
+            android:id="@+id/app_info_blog_link"
+            app:layout_constraintTop_toBottomOf="@id/app_info_root_site_link"
+            style="@style/GpgTextAppearanceTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/app_info_blog_link"/>
 
     </android.support.constraint.ConstraintLayout>
 

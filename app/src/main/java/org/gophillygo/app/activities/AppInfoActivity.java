@@ -5,7 +5,11 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.method.LinkMovementMethod;
+import android.text.method.MovementMethod;
+import android.text.util.Linkify;
 import android.view.View;
+import android.widget.TextView;
 
 import org.gophillygo.app.R;
 
@@ -18,6 +22,15 @@ public class AppInfoActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.app_info_toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        // set up links
+        TextView mainLink = findViewById(R.id.app_info_root_site_link);
+        Linkify.addLinks(mainLink, Linkify.WEB_URLS);
+        TextView blogLink = findViewById(R.id.app_info_blog_link);
+        Linkify.addLinks(blogLink, Linkify.WEB_URLS);
+        MovementMethod method = LinkMovementMethod.getInstance();
+        mainLink.setMovementMethod(method);
+        blogLink.setMovementMethod(method);
     }
 
 }

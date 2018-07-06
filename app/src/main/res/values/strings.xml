@@ -122,5 +122,11 @@
     <string name="title_activity_search">Search GoPhillyGo</string>
     <string name="search_hint">Place or event</string>
     <string name="search_provider_description">Places and Events around Greater Philadelphia</string>
+
+    <!-- About page -->
     <string name="title_activity_app_info">About GoPhillyGo</string>
+    <string name="app_info_description">TODO: long-ish descriptive text goes here.</string>
+    <string name="app_info_root_site_link" translatable="false"><a href="https://gophillygo.org">GoPhillyGo website</a></string>
+    <string name="app_info_blog_link" translatable="false"><a href="https://gophillygo.org/learn">GoPhillyGo blog</a></string>
+
 </resources>
