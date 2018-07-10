@@ -3,7 +3,10 @@
     <PreferenceCategory
         android:title="@string/general_preference_category"
         android:key="@string/general_preferences_key">
-        <Preference
+        <SwitchPreference
+            android:key="@string/general_preferences_allow_notifications_key"
+            android:defaultValue="true"
+            android:summary="@string/general_preference_notifications_summary"
             android:title="@string/general_preference_notifications" />
     </PreferenceCategory>
     <PreferenceCategory
