@@ -2,18 +2,20 @@ package org.gophillygo.app.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 import org.gophillygo.app.R;
 
+import java.util.Map;
 import java.util.UUID;
 
-public class UserUuidUtils {
+public class UserUtils {
 
-    private static final String LOG_LABEL = "UserUUidUtils";
+    private static final String LOG_LABEL = "UserUtils";
 
     // Do not instantiate
-    private UserUuidUtils() { }
+    private UserUtils() { }
 
     /**
      * Get the randomly generated ID for this app install from Shared Preferences, or create and
@@ -44,6 +46,18 @@ public class UserUuidUtils {
 
     private static String getRandomUuid() {
         return UUID.randomUUID().toString();
+    }
+
+    /**
+     * Check shared preferences to see if user allows for posting user flags to the GoPhillyGo server.
+     *
+     * @param context Context for getting shared preferences
+     * @return True if flag posting allowed (defaults to true)
+     */
+    public static boolean isFlagPostingEnabled(Context context) {
+        String key = context.getString(R.string.general_preferences_send_flags_key);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return !sharedPreferences.contains(key) || sharedPreferences.getBoolean(key, true);
     }
 
 }

@@ -48,6 +48,8 @@ public class GpgPreferenceFragment extends PreferenceFragment implements SharedP
         Log.d(LOG_LABEL, "shared preference changed");
 
         final String notificationsKey = getString(R.string.general_preferences_allow_notifications_key);
+        final String userFlagsKey = getString(R.string.general_preferences_send_flags_key);
+
         if (key.equals(notificationsKey)) {
             // Whether notifications have been enabled or disabled, we do the same thing:
             // kick off a worker that will check the setting before adding back or removing all
@@ -56,6 +58,8 @@ public class GpgPreferenceFragment extends PreferenceFragment implements SharedP
             Intent intent = new Intent(activity.getApplicationContext(), AddRemoveGeofencesBroadcastReceiver.class);
             intent.setAction(AddGeofenceWorker.ACTION_GEOFENCE_TRANSITION);
             activity.sendBroadcast(intent);
+        } else if (key.equals(userFlagsKey)) {
+            Log.d(LOG_LABEL, "toggled user flags upload user setting");
         } else {
             String message = "Unrecognized user preference changed: " + key;
             Log.w(LOG_LABEL, message);

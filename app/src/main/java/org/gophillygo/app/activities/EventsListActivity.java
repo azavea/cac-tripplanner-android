@@ -25,6 +25,7 @@ import org.gophillygo.app.data.networkresource.Status;
 import org.gophillygo.app.databinding.ActivityEventsListBinding;
 import org.gophillygo.app.databinding.FilterButtonBarBinding;
 import org.gophillygo.app.di.GpgViewModelFactory;
+import org.gophillygo.app.utils.UserUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,7 +69,11 @@ public class EventsListActivity extends FilterableListActivity
                 .getOption().apiName.equals(AttractionFlag.Option.WantToGo.apiName);
 
         eventInfo.updateAttractionFlag(item.getItemId());
-        viewModel.updateAttractionFlag(eventInfo.getFlag(), userUuid, getString(R.string.user_flag_post_api_key));
+
+        viewModel.updateAttractionFlag(eventInfo.getFlag(),
+                userUuid,
+                getString(R.string.user_flag_post_api_key),
+                UserUtils.isFlagPostingEnabled(this));
         adapter.notifyItemChanged(position);
 
         // do not attempt to add a geofence for an event with no location

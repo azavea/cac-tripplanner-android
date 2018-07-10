@@ -31,7 +31,7 @@ import org.gophillygo.app.tasks.AddGeofenceWorker;
 import org.gophillygo.app.tasks.AddRemoveGeofencesBroadcastReceiver;
 import org.gophillygo.app.tasks.RemoveGeofenceWorker;
 import org.gophillygo.app.utils.GpgLocationUtils;
-import org.gophillygo.app.utils.UserUuidUtils;
+import org.gophillygo.app.utils.UserUtils;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -142,7 +142,7 @@ public abstract class BaseAttractionActivity extends AppCompatActivity
             locationOrDestinationsChanged();
 
             // Get or create unique, random UUID for app install for posting user flags
-            userUuid = UserUuidUtils.getUserUuid(getApplicationContext());
+            userUuid = UserUtils.getUserUuid(getApplicationContext());
             Crashlytics.setUserIdentifier(userUuid);
         });
     }

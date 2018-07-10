@@ -110,10 +110,14 @@
     <!-- shared preferences settings key -->
     <string name="general_preferences_key" translatable="false">gophillygo_general_preferences</string>
     <string name="preferences_fine_print_key" translatable="false">gophillygo_preferences_fine_print</string>
+    <string name="general_preferences_allow_notifications_key" translatable="false">gophillygo_enable_notifications</string>
+    <string name="general_preferences_send_flags_key" translatable="false">gophillygo_send_flags</string>
 
     <!-- settings -->
     <string name="general_preference_notifications">Notifications</string>
     <string name="general_preference_notifications_summary">Show notification when near a place I\'ve noted that I want to go</string>
+    <string name="general_preferences_send_flags">Share user flags</string>
+    <string name="general_preferences_send_flags_summary">Let us know when you flag a place or event (want to go, been, etc.) so we can improve our listings</string>
     <string name="preferences_fine_print">Fine print</string>
     <string name="preferences_app_info">About</string>
     <string name="preferences_licences">Licenses</string>
@@ -123,9 +127,6 @@
     <string name="title_activity_search">Search GoPhillyGo</string>
     <string name="search_hint">Place or event</string>
     <string name="search_provider_description">Places and Events around Greater Philadelphia</string>
-
-    <!-- settings keys -->
-    <string name="general_preferences_allow_notifications_key" translatable="false">gophillygo_enable_notifications</string>
 
     <!-- About page -->
     <string name="title_activity_app_info">About GoPhillyGo</string>

@@ -8,6 +8,11 @@
             android:defaultValue="true"
             android:summary="@string/general_preference_notifications_summary"
             android:title="@string/general_preference_notifications" />
+        <SwitchPreference
+            android:key="@string/general_preferences_send_flags_key"
+            android:defaultValue="true"
+            android:summary="@string/general_preferences_send_flags_summary"
+            android:title="@string/general_preferences_send_flags"  />
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/preferences_fine_print"

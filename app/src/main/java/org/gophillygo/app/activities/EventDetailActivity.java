@@ -31,6 +31,7 @@ import org.gophillygo.app.databinding.ActivityEventDetailBinding;
 import org.gophillygo.app.di.GpgViewModelFactory;
 import org.gophillygo.app.tasks.GeofenceTransitionWorker;
 import org.gophillygo.app.utils.FlagMenuUtils;
+import org.gophillygo.app.utils.UserUtils;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -71,6 +72,7 @@ public class EventDetailActivity extends AttractionDetailActivity {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_event_detail);
         binding.setActivity(this);
+        binding.setContext(this);
 
         Toolbar toolbar = findViewById(R.id.event_detail_toolbar);
         // disable default app name title display
@@ -206,7 +208,12 @@ public class EventDetailActivity extends AttractionDetailActivity {
         boolean haveExistingGeofence = eventInfo.getFlag().getOption()
                 .apiName.equals(AttractionFlag.Option.WantToGo.apiName);
         eventInfo.updateAttractionFlag(itemId);
-        viewModel.updateAttractionFlag(eventInfo.getFlag(), userUuid, getString(R.string.user_flag_post_api_key));
+
+        viewModel.updateAttractionFlag(eventInfo.getFlag(),
+                userUuid,
+                getString(R.string.user_flag_post_api_key),
+                UserUtils.isFlagPostingEnabled(this));
+
         Boolean settingGeofence = eventInfo.getFlag().getOption().apiName.equals(AttractionFlag.Option.WantToGo.apiName);
         addOrRemoveGeofence(eventInfo, haveExistingGeofence, settingGeofence);
         binding.notifyPropertyChanged(BR.destinationInfo);

@@ -26,7 +26,7 @@ import org.gophillygo.app.data.models.DestinationLocation;
 import org.gophillygo.app.data.models.EventInfo;
 import org.gophillygo.app.tasks.AddRemoveGeofencesBroadcastReceiver;
 import org.gophillygo.app.tasks.RemoveGeofenceWorker;
-import org.gophillygo.app.utils.UserUuidUtils;
+import org.gophillygo.app.utils.UserUtils;
 
 import io.fabric.sdk.android.Fabric;
 
@@ -70,7 +70,7 @@ public abstract class AttractionDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         Fabric.with(this, new Crashlytics());
         // Get or create unique, random UUID for app install for posting user flags
-        userUuid = UserUuidUtils.getUserUuid(getApplicationContext());
+        userUuid = UserUtils.getUserUuid(getApplicationContext());
         Crashlytics.setUserIdentifier(userUuid);
         toggleClickListener = v -> {
             // click handler for toggling expanding/collapsing description card
