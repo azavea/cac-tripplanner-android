@@ -4,12 +4,15 @@ import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
 
+import org.gophillygo.app.R;
 import org.gophillygo.app.data.DestinationDao;
 import org.gophillygo.app.data.EventDao;
 import org.gophillygo.app.data.models.AttractionFlag;
@@ -29,6 +32,9 @@ import androidx.work.WorkManager;
 import androidx.work.WorkRequest;
 import dagger.android.AndroidInjection;
 
+import static org.gophillygo.app.tasks.RemoveGeofenceWorker.REMOVE_GEOFENCES_KEY;
+import static org.gophillygo.app.tasks.RemoveGeofenceWorker.REMOVE_GEOFENCE_TAG;
+
 /**
  * Add geofences by scheduling one-time worker job.
  *
@@ -41,7 +47,7 @@ import dagger.android.AndroidInjection;
  *
  * This is registered in the manifest to listen for reboots, so we should use the dagger library.
  */
-public class AddGeofencesBroadcastReceiver extends BroadcastReceiver {
+public class AddRemoveGeofencesBroadcastReceiver extends BroadcastReceiver {
 
     @Inject
     DestinationDao destinationDao;
@@ -58,6 +64,11 @@ public class AddGeofencesBroadcastReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         AndroidInjection.inject(this, context);
+
+        // Before adding geofence, check user settings to see if geofence notifications are enabled.
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        String key = context.getString(R.string.general_preferences_allow_notifications_key);
+        final boolean allowNotifications = !sharedPref.contains(key) || sharedPref.getBoolean(key, true);
 
         double[] latitudes;
         double[] longitudes;
@@ -133,7 +144,7 @@ public class AddGeofencesBroadcastReceiver extends BroadcastReceiver {
 
                     int destinationsCount = destinations.size();
                     int geofencesCount = destinationsCount + events.size();
-                    if (geofencesCount > MAX_GEOFENCES) {
+                    if (geofencesCount > MAX_GEOFENCES && allowNotifications) {
                         // FIXME: handle having too many geofences
                         String message = "Too many destinations with geofences to add.";
                         Log.e(LOG_LABEL, message);
@@ -168,14 +179,27 @@ public class AddGeofencesBroadcastReceiver extends BroadcastReceiver {
                         latitudes[combinedIndex] = location.getX();
                     }
 
-                    Data data = new Data.Builder()
-                            .putDoubleArray(AddGeofenceWorker.LATITUDES_KEY, latitudes)
-                            .putDoubleArray(AddGeofenceWorker.LONGITUDES_KEY, longitudes)
-                            .putStringArray(AddGeofenceWorker.GEOFENCE_LABELS_KEY, labels)
-                            .putStringArray(AddGeofenceWorker.GEOFENCE_NAMES_KEY, names)
-                            .build();
+                    if (allowNotifications) {
+                        Data data = new Data.Builder()
+                                .putDoubleArray(AddGeofenceWorker.LATITUDES_KEY, latitudes)
+                                .putDoubleArray(AddGeofenceWorker.LONGITUDES_KEY, longitudes)
+                                .putStringArray(AddGeofenceWorker.GEOFENCE_LABELS_KEY, labels)
+                                .putStringArray(AddGeofenceWorker.GEOFENCE_NAMES_KEY, names)
+                                .build();
+                        startWorker(data);
+                    } else {
+                        Log.d(LOG_LABEL, "User has disabled notifications; going to remove any registered geofences");
+                        // start worker to remove all geofences
+                        OneTimeWorkRequest.Builder workRequestBuilder = new OneTimeWorkRequest.Builder(RemoveGeofenceWorker.class);
+                        Data data = new Data.Builder()
+                                .putStringArray(REMOVE_GEOFENCES_KEY, labels).build();
+                        workRequestBuilder.setInputData(data);
+                        workRequestBuilder.addTag(REMOVE_GEOFENCE_TAG);
+                        WorkRequest workRequest = workRequestBuilder.build();
+                        WorkManager.getInstance().enqueue(workRequest);
+                        Log.d(LOG_LABEL, "Enqueued new work request to remove all geofences");
+                    }
 
-                    startWorker(data);
                     return null;
                 }
             }.execute();
@@ -205,6 +229,7 @@ public class AddGeofencesBroadcastReceiver extends BroadcastReceiver {
     }
 
     public static void addOneGeofence(double x, double y, @NonNull String label, @NonNull String name) {
+
         double[] latitudes = {y};
         double[] longitudes = {x};
         String[] labels = {label};
@@ -226,7 +251,6 @@ public class AddGeofencesBroadcastReceiver extends BroadcastReceiver {
         OneTimeWorkRequest.Builder workRequestBuilder = new OneTimeWorkRequest.Builder(AddGeofenceWorker.class);
         workRequestBuilder.setInputData(data);
         workRequestBuilder.addTag(ADD_GEOFENCE_TAG);
-        // TODO: set constraints and backoff on builder
         WorkRequest workRequest = workRequestBuilder.build();
         WorkManager.getInstance().enqueue(workRequest);
         Log.d(LOG_LABEL, "Enqueued new work request to add geofence(s)");

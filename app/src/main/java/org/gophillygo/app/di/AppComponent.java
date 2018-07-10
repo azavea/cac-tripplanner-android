@@ -3,9 +3,6 @@ package org.gophillygo.app.di;
 import android.app.Application;
 
 import org.gophillygo.app.GoPhillyGoApp;
-import org.gophillygo.app.GoPhillyGoContentProvider_MembersInjector;
-import org.gophillygo.app.activities.GpgPreferenceActivity;
-import org.gophillygo.app.activities.SearchActivity;
 
 import javax.inject.Singleton;
 
@@ -38,7 +35,7 @@ import dagger.android.AndroidInjectionModule;
         AppInfoActivityModule.class,
 
         // Broadcast Receivers
-        AddGeofenceBroadcastReceiverModule.class,
+        AddRemoveGeofenceBroadcastReceiverModule.class,
         GeofenceTransitionBroadcastReceiverModule.class,
 
         // Content Providers

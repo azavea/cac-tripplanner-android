@@ -165,7 +165,7 @@
             android:value="@string/google_maps_key" />
 
         <!-- Set up geofences again after reboot or location provider changes -->
-        <receiver android:name=".tasks.AddGeofencesBroadcastReceiver">
+        <receiver android:name=".tasks.AddRemoveGeofencesBroadcastReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>

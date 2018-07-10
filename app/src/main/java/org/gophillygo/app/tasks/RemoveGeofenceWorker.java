@@ -21,8 +21,8 @@ import androidx.work.Worker;
 
 public class RemoveGeofenceWorker extends Worker {
 
-    private static final String REMOVE_GEOFENCES_KEY = "remove_geofences";
-    private static final String REMOVE_GEOFENCE_TAG = "gpg-remove-geofences";
+    public static final String REMOVE_GEOFENCES_KEY = "remove_geofences";
+    public static final String REMOVE_GEOFENCE_TAG = "gpg-remove-geofences";
     private static final String LOG_LABEL = "RemoveGeofenceWorker";
 
     // event identifier used for custom Crashlytics event to note a geofence was removed
@@ -72,7 +72,6 @@ public class RemoveGeofenceWorker extends Worker {
         OneTimeWorkRequest.Builder workRequestBuilder = new OneTimeWorkRequest.Builder(RemoveGeofenceWorker.class);
         workRequestBuilder.setInputData(data);
         workRequestBuilder.addTag(REMOVE_GEOFENCE_TAG);
-        // TODO: set constraints and backoff on builder
         WorkRequest workRequest = workRequestBuilder.build();
         WorkManager.getInstance().enqueue(workRequest);
         Log.d(LOG_LABEL, "Enqueued new work request to remove one geofence");

@@ -9,6 +9,8 @@ import org.gophillygo.app.R;
 
 public class GpgPreferenceActivity extends AppCompatActivity {
 
+    private static final String LOG_LABEL = "PreferenceActivity";
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

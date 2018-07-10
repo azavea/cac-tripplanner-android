@@ -28,7 +28,7 @@ import org.gophillygo.app.data.models.EventInfo;
 import org.gophillygo.app.data.networkresource.Status;
 import org.gophillygo.app.di.GpgViewModelFactory;
 import org.gophillygo.app.tasks.AddGeofenceWorker;
-import org.gophillygo.app.tasks.AddGeofencesBroadcastReceiver;
+import org.gophillygo.app.tasks.AddRemoveGeofencesBroadcastReceiver;
 import org.gophillygo.app.tasks.RemoveGeofenceWorker;
 import org.gophillygo.app.utils.GpgLocationUtils;
 import org.gophillygo.app.utils.UserUuidUtils;
@@ -84,9 +84,9 @@ public abstract class BaseAttractionActivity extends AppCompatActivity
             // add geofence
             Log.d(LOG_LABEL, "Add attraction geofence");
             if (info instanceof EventInfo) {
-                AddGeofencesBroadcastReceiver.addOneGeofence((EventInfo)info);
+                AddRemoveGeofencesBroadcastReceiver.addOneGeofence((EventInfo)info);
             } else if (info instanceof DestinationInfo) {
-                AddGeofencesBroadcastReceiver.addOneGeofence(((DestinationInfo) info).getDestination());
+                AddRemoveGeofencesBroadcastReceiver.addOneGeofence(((DestinationInfo) info).getDestination());
             }
 
         } else if (haveExistingGeofence) {
@@ -268,7 +268,7 @@ public abstract class BaseAttractionActivity extends AppCompatActivity
                     Log.d(LOG_LABEL, "Re-requesting location after getting location network permissions");
                     fetchLastLocationOrUseDefault();
                     Log.d(LOG_LABEL, "Attempting to register geofences from database again");
-                    Intent intent = new Intent(getApplicationContext(), AddGeofencesBroadcastReceiver.class);
+                    Intent intent = new Intent(getApplicationContext(), AddRemoveGeofencesBroadcastReceiver.class);
                     intent.setAction(AddGeofenceWorker.ACTION_GEOFENCE_TRANSITION);
                     sendBroadcast(intent);
                 } else if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
