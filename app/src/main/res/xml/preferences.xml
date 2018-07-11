@@ -13,6 +13,10 @@
             android:defaultValue="true"
             android:summary="@string/general_preferences_send_flags_summary"
             android:title="@string/general_preferences_send_flags"  />
+        <Preference
+            android:key="@string/general_preferences_reset_uuid_key"
+            android:summary="@string/general_preferences_reset_uuid_summary"
+            android:title="@string/general_preferences_reset_uuid" />
     </PreferenceCategory>
     <PreferenceCategory
         android:title="@string/preferences_fine_print"

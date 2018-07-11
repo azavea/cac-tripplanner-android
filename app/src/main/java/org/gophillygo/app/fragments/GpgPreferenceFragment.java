@@ -4,17 +4,20 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 
 import org.gophillygo.app.R;
 import org.gophillygo.app.tasks.AddGeofenceWorker;
 import org.gophillygo.app.tasks.AddRemoveGeofencesBroadcastReceiver;
+import org.gophillygo.app.utils.UserUtils;
 
 public class GpgPreferenceFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -24,6 +27,15 @@ public class GpgPreferenceFragment extends PreferenceFragment implements SharedP
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.preferences);
+
+        // reset user ID and show message when setting for that is clicked
+        Preference reset = findPreference(getString(R.string.general_preferences_reset_uuid_key));
+        reset.setOnPreferenceClickListener(preference -> {
+            String uuid = UserUtils.resetUuid(getActivity());
+            String message = getString(R.string.general_preferences_reset_uuid_message, uuid);
+            Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+            return true;
+        });
     }
 
     @Override
