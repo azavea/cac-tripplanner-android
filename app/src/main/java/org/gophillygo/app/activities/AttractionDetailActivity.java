@@ -68,7 +68,9 @@ public abstract class AttractionDetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Fabric.with(this, new Crashlytics());
+        if (UserUtils.isFabricEnabled(this)) {
+            Fabric.with(this, new Crashlytics());
+        }
         // Get or create unique, random UUID for app install for posting user flags
         userUuid = UserUtils.getUserUuid(getApplicationContext());
         Crashlytics.setUserIdentifier(userUuid);

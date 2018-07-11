@@ -34,6 +34,10 @@ public class UserUtils {
 
         if (uuid.isEmpty()) {
             uuid = setNewUuid(sharedPreferences, preferencesKey);
+
+            // TODO: show first app install dialog(s)
+            // If UUID was empty, either user just first installed the app, or reset its data
+            // from system settings (unlikely the latter).
         }
 
         return uuid;
@@ -78,6 +82,18 @@ public class UserUtils {
      */
     public static boolean isFlagPostingEnabled(Context context) {
         String key = context.getString(R.string.general_preferences_send_flags_key);
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return !sharedPreferences.contains(key) || sharedPreferences.getBoolean(key, false);
+    }
+
+    /**
+     * Check if user allows for posting anonymized crash and usage data to Fabric.
+     *
+     * @param context For getting strings and preferences
+     * @return True if Fabric may be enabled
+     */
+    public static boolean isFabricEnabled(Context context) {
+        String key = context.getString(R.string.general_preferences_fabric_logging_key);
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         return !sharedPreferences.contains(key) || sharedPreferences.getBoolean(key, false);
     }
