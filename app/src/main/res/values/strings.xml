@@ -141,5 +141,11 @@
     <string name="app_info_description">TODO: long-ish descriptive text goes here.</string>
     <string name="app_info_root_site_link" translatable="false"><a href="https://gophillygo.org">GoPhillyGo website</a></string>
     <string name="app_info_blog_link" translatable="false"><a href="https://gophillygo.org/learn">GoPhillyGo blog</a></string>
+    
+    <!-- First launch dialog -->
+    <string name="first_launch_dialog_title">Let us know how you use our app</string>
+    <string name="first_launch_dialog_message">May we collect anonymous crash and usage data from you to improve our app? You can always change this later under the settings.</string>
+    <string name="first_launch_dialog_ok_action">Yes, share</string>
+    <string name="first_launch_dialog_cancel_action">No</string>
 
 </resources>

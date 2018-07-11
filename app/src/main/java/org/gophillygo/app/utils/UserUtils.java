@@ -1,8 +1,11 @@
 package org.gophillygo.app.utils;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.v7.view.ContextThemeWrapper;
 import android.util.Log;
 
 import org.gophillygo.app.R;
@@ -34,13 +37,30 @@ public class UserUtils {
 
         if (uuid.isEmpty()) {
             uuid = setNewUuid(sharedPreferences, preferencesKey);
-
-            // TODO: show first app install dialog(s)
             // If UUID was empty, either user just first installed the app, or reset its data
             // from system settings (unlikely the latter).
+            showFirstInstallDialog(context);
         }
 
         return uuid;
+    }
+
+    private static void showFirstInstallDialog(Context context) {
+        Log.d(LOG_LABEL, "show first app install dialog to ask for logging permissions");
+
+        // set the theme via ContextThemeWrapper, or else the message does not show
+        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.GpgAlertDialogTheme));
+        builder.setTitle(context.getString(R.string.first_launch_dialog_title))
+                .setMessage(context.getString(R.string.first_launch_dialog_message))
+                .setPositiveButton(context.getString(R.string.first_launch_dialog_ok_action), (dialog, which) -> {
+                    Log.d(LOG_LABEL, "Permissions for data sharing approved; changing");
+                    enableUserDataPosting(context);
+                    dialog.dismiss();
+                }).setNegativeButton(context.getString(R.string.first_launch_dialog_cancel_action), (dialog, which) -> {
+                    Log.d(LOG_LABEL, "Permissions for data sharing not approved; cancelling");
+                    dialog.cancel();
+                });
+        builder.create().show();
     }
 
     /**
@@ -72,6 +92,23 @@ public class UserUtils {
 
     private static String getRandomUuid() {
         return UUID.randomUUID().toString();
+    }
+
+    /**
+     * Update preferences to indicate that user has approved of sharing data with GoPhillyGo/Fabric.
+     *
+     * @param context Context for getting preferences and strings
+     */
+    private static void enableUserDataPosting(Context context) {
+        Log.d(LOG_LABEL, "Updating user preferences to allow data sharing with GoPhillyGo/Fabric");
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean(context.getString(R.string.general_preferences_send_flags_key), true);
+        editor.putBoolean(context.getString(R.string.general_preferences_fabric_logging_key), true);
+
+        // using `apply` instead of `commit` to fire off asynchronous commit and ignore result
+        editor.apply();
+
     }
 
     /**

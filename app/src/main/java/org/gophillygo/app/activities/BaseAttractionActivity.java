@@ -145,7 +145,7 @@ public abstract class BaseAttractionActivity extends AppCompatActivity
             locationOrDestinationsChanged();
 
             // Get or create unique, random UUID for app install for posting user flags
-            userUuid = UserUtils.getUserUuid(getApplicationContext());
+            userUuid = UserUtils.getUserUuid(this);
             Crashlytics.setUserIdentifier(userUuid);
         });
     }
