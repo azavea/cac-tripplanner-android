@@ -113,6 +113,8 @@ public abstract class BaseAttractionActivity extends AppCompatActivity
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        
         Fabric.with(this, new Crashlytics());
 
         fetchLastLocationOrUseDefault();

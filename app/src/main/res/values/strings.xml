@@ -113,10 +113,14 @@
     <string name="general_preferences_allow_notifications_key" translatable="false">gophillygo_enable_notifications</string>
     <string name="general_preferences_send_flags_key" translatable="false">gophillygo_send_flags</string>
     <string name="general_preferences_reset_uuid_key" translatable="false">gophillygo_reset_uuid</string>
+    <string name="general_preferences_fabric_logging_key" translatable="false">gophillygo_fabric_logging</string>
 
     <!-- settings -->
     <string name="general_preference_notifications">Notifications</string>
     <string name="general_preference_notifications_summary">Show notification when near a place I\'ve noted that I want to go</string>
+    <string name="general_preference_fabric_logging">Enable crash and usage data sharing</string>
+    <string name="general_preference_fabric_logging_summary">Let us know anonymously what happened if the app crashes, and also see how our app gets used</string>
+    <string name="general_preferences_fabric_logging_disabled_notification">Please restart app for setting change to take effect.</string>
     <string name="general_preferences_send_flags">Share user flags</string>
     <string name="general_preferences_send_flags_summary">Let us know when you flag a place or event (want to go, been, etc.) so we can improve our listings</string>
     <string name="general_preferences_reset_uuid">Reset anonymous app install ID</string>

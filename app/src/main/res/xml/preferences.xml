@@ -9,8 +9,13 @@
             android:summary="@string/general_preference_notifications_summary"
             android:title="@string/general_preference_notifications" />
         <SwitchPreference
+            android:key="@string/general_preferences_fabric_logging_key"
+            android:title="@string/general_preference_fabric_logging"
+            android:summary="@string/general_preference_fabric_logging_summary"
+            android:defaultValue="false" />
+        <SwitchPreference
             android:key="@string/general_preferences_send_flags_key"
-            android:defaultValue="true"
+            android:defaultValue="false"
             android:summary="@string/general_preferences_send_flags_summary"
             android:title="@string/general_preferences_send_flags"  />
         <Preference

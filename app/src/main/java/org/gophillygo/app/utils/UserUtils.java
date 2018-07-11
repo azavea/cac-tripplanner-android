@@ -74,12 +74,12 @@ public class UserUtils {
      * Check shared preferences to see if user allows for posting user flags to the GoPhillyGo server.
      *
      * @param context Context for getting shared preferences
-     * @return True if flag posting allowed (defaults to true)
+     * @return True if flag posting allowed (defaults to false, for opt-in)
      */
     public static boolean isFlagPostingEnabled(Context context) {
         String key = context.getString(R.string.general_preferences_send_flags_key);
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        return !sharedPreferences.contains(key) || sharedPreferences.getBoolean(key, true);
+        return !sharedPreferences.contains(key) || sharedPreferences.getBoolean(key, false);
     }
 
 }

@@ -61,6 +61,7 @@ public class GpgPreferenceFragment extends PreferenceFragment implements SharedP
 
         final String notificationsKey = getString(R.string.general_preferences_allow_notifications_key);
         final String userFlagsKey = getString(R.string.general_preferences_send_flags_key);
+        final String fabricKey = getString(R.string.general_preferences_fabric_logging_key);
 
         if (key.equals(notificationsKey)) {
             // Whether notifications have been enabled or disabled, we do the same thing:
@@ -72,6 +73,12 @@ public class GpgPreferenceFragment extends PreferenceFragment implements SharedP
             activity.sendBroadcast(intent);
         } else if (key.equals(userFlagsKey)) {
             Log.d(LOG_LABEL, "toggled user flags upload user setting");
+        } else if (key.equals(fabricKey)) {
+            Log.d(LOG_LABEL, "toggled user setting for Fabric logging");
+            // notify user to restart app for Fabric to stop logging, if setting changed to disable it
+            if (!sharedPreferences.getBoolean(fabricKey, false)) {
+                Toast.makeText(getActivity(), getString(R.string.general_preferences_fabric_logging_disabled_notification), Toast.LENGTH_LONG).show();
+            }
         } else {
             String message = "Unrecognized user preference changed: " + key;
             Log.w(LOG_LABEL, message);
