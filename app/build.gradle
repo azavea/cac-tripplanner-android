@@ -97,7 +97,7 @@ dependencies {
     implementation "com.google.android.gms:play-services-maps:$playServicesVersion"
 
     // Android WorkManager
-    implementation 'android.arch.work:work-runtime:1.0.0-alpha03'
+    implementation 'android.arch.work:work-runtime:1.0.0-alpha04'
 
     // Carousel
     implementation 'com.synnapps:carouselview:0.1.5'
