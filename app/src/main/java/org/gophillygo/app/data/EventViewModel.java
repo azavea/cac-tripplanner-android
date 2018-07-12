@@ -25,6 +25,10 @@ public class EventViewModel extends AttractionViewModel {
         return destinationRepository.getEvent(eventId);
     }
 
+    public LiveData<List<EventInfo>> getEventsForDestination(long destinationId) {
+        return destinationRepository.getEventsForDestination(destinationId);
+    }
+
     public void updateEvent(Event event) {
         destinationRepository.updateEvent(event);
     }

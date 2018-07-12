@@ -28,6 +28,18 @@ public abstract class EventDao implements AttractionDao<Event> {
             "ORDER BY event.start_date ASC;")
     public abstract LiveData<List<EventInfo>> getAll();
 
+    @Transaction
+    @Query("SELECT event.*, destination.name AS destinationName, NULL AS distance, " +
+            "destination.categories AS destinationCategories, attractionflag.option, " +
+            "destination.x, destination.y, destination.distance " +
+            "FROM event " +
+            "LEFT JOIN destination ON destination._id = event.destination " +
+            "LEFT JOIN attractionflag " +
+            "ON event._id = attractionflag.attraction_id AND attractionflag.is_event = 1 " +
+            "WHERE destination._id = :destinationId " +
+            "ORDER BY event.start_date ASC;")
+    public abstract LiveData<List<EventInfo>> getEventsForDestination(long destinationId);
+
     @Query("SELECT event.*, destination.name AS destinationName, " +
             "destination.categories AS destinationCategories, attractionflag.option, " +
             "destination.distance AS distance, destination.x, destination.y, destination.watershed_alliance " +
