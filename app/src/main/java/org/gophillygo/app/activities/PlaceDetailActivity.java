@@ -13,6 +13,7 @@ import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
+import android.widget.ScrollView;
 
 import com.crashlytics.android.Crashlytics;
 
@@ -111,7 +112,7 @@ public class PlaceDetailActivity extends AttractionDetailActivity implements Att
 
             // set up list of related events
             if (destinationInfo.getEventCount() > 0) {
-                RecyclerView eventsList = findViewById(R.id.place_detail_list_recycler_view);
+                RecyclerView eventsList = findViewById(R.id.place_detail_events_recycler_view);
                 // set adapter for related events
                 eventViewModel.getEventsForDestination(placeId).observe(this, events -> {
                     if (events != null) {
@@ -164,9 +165,15 @@ public class PlaceDetailActivity extends AttractionDetailActivity implements Att
         binding.notifyPropertyChanged(BR.destinationInfo);
     }
 
-    // TODO: #113 scroll to bottom, where events are listed inline with the view
+    /**
+     * Scroll to head of inline events list when calendar count summary clicked.
+     *
+     * @param view View clicked (required parameter for binding)
+     */
     public void goToEvents(View view) {
-        Log.d(LOG_LABEL, "Clicked events in destination. TODO: #113");
+        ScrollView scrollView = findViewById(R.id.place_detail_scroll_view);
+        scrollView.scrollTo(0, findViewById(R.id.place_detail_events_recycler_view).getTop());
+
     }
 
     @Override
