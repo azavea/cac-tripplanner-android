@@ -186,9 +186,6 @@ public abstract class AttractionDetailActivity extends AppCompatActivity {
      */
     public String getFlagLabel(AttractionInfo info) {
         if (info == null || info.getAttraction() == null) {
-            String msg = "Cannot get flag label for missing object";
-            Log.e(LOG_LABEL, msg);
-            Crashlytics.log(msg);
             return getString(R.string.place_detail_unset);
         }
 

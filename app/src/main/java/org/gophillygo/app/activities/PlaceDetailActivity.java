@@ -3,6 +3,7 @@ package org.gophillygo.app.activities;
 import android.annotation.SuppressLint;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -26,6 +27,7 @@ import org.gophillygo.app.data.EventViewModel;
 import org.gophillygo.app.data.models.AttractionFlag;
 import org.gophillygo.app.data.models.AttractionInfo;
 import org.gophillygo.app.data.models.DestinationInfo;
+import org.gophillygo.app.data.models.EventInfo;
 import org.gophillygo.app.databinding.ActivityPlaceDetailBinding;
 import org.gophillygo.app.di.GpgViewModelFactory;
 import org.gophillygo.app.tasks.GeofenceTransitionWorker;
@@ -49,6 +51,8 @@ public class PlaceDetailActivity extends AttractionDetailActivity implements Att
     DestinationViewModel destinationViewModel;
     @SuppressWarnings("WeakerAccess")
     EventViewModel eventViewModel;
+
+    RecyclerView eventsList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -112,7 +116,7 @@ public class PlaceDetailActivity extends AttractionDetailActivity implements Att
 
             // set up list of related events
             if (destinationInfo.getEventCount() > 0) {
-                RecyclerView eventsList = findViewById(R.id.place_detail_events_recycler_view);
+                eventsList = findViewById(R.id.place_detail_events_recycler_view);
                 // set adapter for related events
                 eventViewModel.getEventsForDestination(placeId).observe(this, events -> {
                     if (events != null) {
@@ -184,5 +188,39 @@ public class PlaceDetailActivity extends AttractionDetailActivity implements Att
     @Override
     protected int getAttractionId() {
         return (int) placeId;
+    }
+
+    /**
+     * Go to event detail when related event clicked
+     *
+     * @param position Offset of event in list
+     */
+    @Override
+    public void clickedAttraction(int position) {
+        long eventId = eventsList.getAdapter().getItemId(position);
+        Log.d(LOG_LABEL, "Clicked event with ID: " + eventId);
+        Intent intent = new Intent(this, EventDetailActivity.class);
+        intent.putExtra(EventDetailActivity.EVENT_ID_KEY, eventId);
+        startActivity(intent);
+    }
+
+    @Override
+    public boolean clickedFlagOption(MenuItem item, AttractionInfo eventInfo, Integer position) {
+        Log.d(LOG_LABEL, "clicked flag option on event at " + position);
+        Boolean haveExistingGeofence = eventInfo.getFlag()
+                .getOption().apiName.equals(AttractionFlag.Option.WantToGo.apiName);
+
+        eventInfo.updateAttractionFlag(item.getItemId());
+        eventViewModel.updateAttractionFlag(eventInfo.getFlag(), userUuid, getString(R.string.user_flag_post_api_key));
+        eventsList.getAdapter().notifyItemChanged(position);
+
+        // do not attempt to add a geofence for an event with no location (should always exist here,
+        // as we know there is an associated place)
+        if (((EventInfo)eventInfo).hasDestinationName()) {
+            Boolean settingGeofence = eventInfo.getFlag().getOption().apiName.equals(AttractionFlag.Option.WantToGo.apiName);
+            addOrRemoveGeofence(eventInfo, haveExistingGeofence, settingGeofence);
+        }
+
+        return true;
     }
 }

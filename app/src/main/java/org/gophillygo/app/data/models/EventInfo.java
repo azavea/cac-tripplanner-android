@@ -80,8 +80,8 @@ public class EventInfo extends AttractionInfo<Event> {
     }
 
     @Override
-    public String getFormattedDistance() {
-        if (distance == null || context == null) {
+    public String getFormattedDistance(Context context) {
+        if (distance == null) {
             return "";
         }
         return numberFormatter.format(distance.floatValue());
