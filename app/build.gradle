@@ -100,7 +100,7 @@ dependencies {
     implementation 'android.arch.work:work-runtime:1.0.0-alpha03'
 
     // Carousel
-    implementation 'com.github.flibbertigibbet:carouselview:1.0.5'
+    implementation 'com.synnapps:carouselview:0.1.5'
 
     // Badges
     implementation 'com.github.nekocode:Badge:2.0'
