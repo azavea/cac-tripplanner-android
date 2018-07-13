@@ -4,9 +4,13 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Embedded;
 import android.arch.persistence.room.Ignore;
 import android.util.Log;
+import android.content.Context;
+
+import org.gophillygo.app.R;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class EventInfo extends AttractionInfo<Event> {
@@ -77,7 +81,7 @@ public class EventInfo extends AttractionInfo<Event> {
 
     @Override
     public String getFormattedDistance() {
-        if (distance == null) {
+        if (distance == null || context == null) {
             return "";
         }
         return numberFormatter.format(distance.floatValue());
