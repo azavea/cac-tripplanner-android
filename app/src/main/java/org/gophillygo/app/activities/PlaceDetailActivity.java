@@ -13,7 +13,6 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ListView;
 import android.widget.ScrollView;
 
 import com.crashlytics.android.Crashlytics;
@@ -211,7 +210,7 @@ public class PlaceDetailActivity extends AttractionDetailActivity implements Att
                 .getOption().apiName.equals(AttractionFlag.Option.WantToGo.apiName);
 
         eventInfo.updateAttractionFlag(item.getItemId());
-        eventViewModel.updateAttractionFlag(eventInfo.getFlag(), userUuid, getString(R.string.user_flag_post_api_key));
+        eventViewModel.updateAttractionFlag(eventInfo.getFlag(), userUuid, getString(R.string.user_flag_post_api_key), UserUtils.isFlagPostingEnabled(this));
         eventsList.getAdapter().notifyItemChanged(position);
 
         // do not attempt to add a geofence for an event with no location (should always exist here,
