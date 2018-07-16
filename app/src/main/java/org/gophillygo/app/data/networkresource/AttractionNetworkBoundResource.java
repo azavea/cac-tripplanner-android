@@ -10,6 +10,7 @@ import org.gophillygo.app.data.DestinationWebservice;
 import org.gophillygo.app.data.EventDao;
 import org.gophillygo.app.data.models.Attraction;
 import org.gophillygo.app.data.models.AttractionInfo;
+import org.gophillygo.app.data.models.CategoryAttraction;
 import org.gophillygo.app.data.models.Destination;
 import org.gophillygo.app.data.models.DestinationCategories;
 import org.gophillygo.app.data.models.DestinationQueryResponse;
@@ -60,9 +61,9 @@ abstract public class AttractionNetworkBoundResource<A extends Attraction, I ext
             item.setTimestamp(timestamp);
             List<String> categories = item.getCategories();
             if (categories != null && !categories.isEmpty()) {
-                item.setCategoryFlags(new DestinationCategories(categories.contains(Filter.NATURE_CATEGORY),
-                        categories.contains(Filter.EXERCISE_CATEGORY),
-                        categories.contains(Filter.EDUCATIONAL_CATEGORY)));
+                item.setCategoryFlags(new DestinationCategories(categories.contains(CategoryAttraction.PlaceCategories.Nature.dbName),
+                        categories.contains(CategoryAttraction.PlaceCategories.Exercise.dbName),
+                        categories.contains(CategoryAttraction.PlaceCategories.Educational.dbName)));
             } else {
                 item.setCategoryFlags(new DestinationCategories(false, false, false));
             }

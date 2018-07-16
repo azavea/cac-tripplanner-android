@@ -15,10 +15,6 @@ public class Filter extends BaseObservable implements Serializable {
 
     private static final String LOG_LABEL = "Filter";
 
-    public static final String NATURE_CATEGORY = "Nature";
-    public static final String EXERCISE_CATEGORY = "Exercise";
-    public static final String EDUCATIONAL_CATEGORY = "Educational";
-
     @Bindable
     private boolean nature;
     @Bindable
@@ -35,6 +31,7 @@ public class Filter extends BaseObservable implements Serializable {
     private boolean liked;
     @Bindable
     private boolean accessible;
+
 
     public Filter() {
         this(false, false, false, false, false, false, false, false);

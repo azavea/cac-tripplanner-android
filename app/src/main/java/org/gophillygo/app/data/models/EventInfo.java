@@ -48,9 +48,9 @@ public class EventInfo extends AttractionInfo<Event> {
         this.location = location;
 
         if (destinationCategories != null && !destinationCategories.isEmpty()) {
-            this.categories = new DestinationCategories(destinationCategories.contains(Filter.NATURE_CATEGORY),
-                    destinationCategories.contains(Filter.EXERCISE_CATEGORY),
-                    destinationCategories.contains(Filter.EDUCATIONAL_CATEGORY));
+            this.categories = new DestinationCategories(destinationCategories.contains(CategoryAttraction.PlaceCategories.Nature.dbName),
+                    destinationCategories.contains(CategoryAttraction.PlaceCategories.Exercise.dbName),
+                    destinationCategories.contains(CategoryAttraction.PlaceCategories.Educational.dbName));
         } else {
             this.categories = new DestinationCategories(false, false, false);
         }
@@ -73,7 +73,7 @@ public class EventInfo extends AttractionInfo<Event> {
 
     @Override
     public String getFormattedDistance(Context context) {
-        if (distance == null) {
+        if (distance == null || context == null) {
             return "";
         }
         String formatted = numberFormatter.format(distance.floatValue());
