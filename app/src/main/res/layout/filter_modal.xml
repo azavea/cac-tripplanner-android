@@ -82,7 +82,7 @@
         </android.support.v7.widget.ButtonBarLayout>
 
         <android.support.v7.widget.ButtonBarLayout
-            android:id="@+id/filter_modal_options_button_bar_1"
+            android:id="@+id/filter_modal_options_category_button_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/filter_modal_category_button_bar"
@@ -105,10 +105,10 @@
         </android.support.v7.widget.ButtonBarLayout>
 
         <android.support.v7.widget.ButtonBarLayout
-            android:id="@+id/filter_modal_options_button_bar_2"
+            android:id="@+id/filter_modal_options_flag_button_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/filter_modal_options_button_bar_1"
+            android:layout_below="@+id/filter_modal_options_category_button_bar"
             android:layout_marginBottom="8dp"
             android:weightSum="2">
 
@@ -131,7 +131,7 @@
             android:id="@+id/filter_modal_options_accessible_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/filter_modal_options_button_bar_2"
+            android:layout_below="@+id/filter_modal_options_flag_button_bar"
             android:layout_marginBottom="8dp"
             android:layout_marginTop="8dp"
             android:weightSum="1">
@@ -144,5 +144,20 @@
                 android:text="@string/accessible_filter_button_title" />
         </android.support.v7.widget.ButtonBarLayout>
 
+        <android.support.v7.widget.ButtonBarLayout
+            android:id="@+id/filter_modal_options_watershed_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/filter_modal_options_accessible_bar"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
+            android:weightSum="1">
+            <org.gophillygo.app.GpgToggleButton
+                android:id="@+id/filter_modal_watershed_alliance_button"
+                style="@style/ToggleFilterButton"
+                android:checked="@{filter.watershedAlliance}"
+                android:onCheckedChanged="@{(v, checked) -> filter.setWatershedAlliance(checked)}"
+                android:text="@string/watershed_alliance_label" />
+        </android.support.v7.widget.ButtonBarLayout>
     </RelativeLayout>
 </layout>

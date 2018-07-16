@@ -3,12 +3,15 @@ package org.gophillygo.app.data.models;
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Embedded;
 import android.arch.persistence.room.Ignore;
+import android.util.Log;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Objects;
 
 public class EventInfo extends AttractionInfo<Event> {
+
+    private static final String LOG_LABEL = "EventInfo";
 
     private static final NumberFormat numberFormatter = NumberFormat.getNumberInstance();
     static {
@@ -54,6 +57,13 @@ public class EventInfo extends AttractionInfo<Event> {
                     destinationCategories.contains(CategoryAttraction.PlaceCategories.Educational.dbName));
         } else {
             this.categories = new DestinationCategories(false, false, false);
+        }
+
+        // FIXME: remove this debug logging
+        if (watershedAlliance) {
+            Log.d(LOG_LABEL, destinationName + " is in the watershed alliance!");
+        } else {
+            Log.d(LOG_LABEL, destinationName + " is *not* in the watershed alliance");
         }
     }
 

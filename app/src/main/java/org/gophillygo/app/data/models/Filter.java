@@ -31,6 +31,7 @@ public class Filter extends BaseObservable implements Serializable {
     private boolean liked;
     @Bindable
     private boolean accessible;
+
     @Bindable
     private boolean watershedAlliance;
 
@@ -99,8 +100,9 @@ public class Filter extends BaseObservable implements Serializable {
         boolean categoryMatches = categoryMatches(info.getCategories());
         boolean flagMatches = flagMatches(info.getFlag());
         boolean accessibleMatches = accessibleMatches(info.getEvent().isAccessible());
+        boolean watershedAllianceMatches = watershedAllianceMatches(info.isWatershedAlliance());
 
-        return categoryMatches && flagMatches && accessibleMatches;
+        return categoryMatches && flagMatches && accessibleMatches && watershedAllianceMatches;
     }
 
     private boolean categoryMatches(DestinationCategories categories) {
@@ -228,6 +230,14 @@ public class Filter extends BaseObservable implements Serializable {
         notifyPropertyChanged(BR.accessible);
     }
 
+    public boolean isWatershedAlliance() {
+        return watershedAlliance;
+    }
+
+    public void setWatershedAlliance(boolean watershedAlliance) {
+        this.watershedAlliance = watershedAlliance;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -240,12 +250,13 @@ public class Filter extends BaseObservable implements Serializable {
                 wantToGo == filter.wantToGo &&
                 notInterested == filter.notInterested &&
                 liked == filter.liked &&
-                accessible == filter.accessible;
+                accessible == filter.accessible &&
+                watershedAlliance == filter.watershedAlliance;
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(nature, exercise, educational, been, wantToGo, notInterested, liked, accessible);
+        return Objects.hash(nature, exercise, educational, been, wantToGo, notInterested, liked, accessible, watershedAlliance);
     }
 }
