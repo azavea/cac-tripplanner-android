@@ -117,19 +117,19 @@
 
     <!-- settings -->
     <string name="general_preference_notifications">Notifications</string>
-    <string name="general_preference_notifications_summary">Show notification when near a place I\'ve noted that I want to go</string>
-    <string name="general_preference_fabric_logging">Enable crash and usage data sharing</string>
-    <string name="general_preference_fabric_logging_summary">Let us know anonymously what happened if the app crashes, and also see how our app gets used</string>
+    <string name="general_preference_notifications_summary">Notify me when I\'m near a place I want to go.</string>
+    <string name="general_preference_fabric_logging">Share crash and usage data</string>
+    <string name="general_preference_fabric_logging_summary">Send anonymous reports about how I\'m using the app and when the app crashes.</string>
     <string name="general_preferences_fabric_logging_disabled_notification">Please restart app for setting change to take effect.</string>
     <string name="general_preferences_send_flags">Share user flags</string>
-    <string name="general_preferences_send_flags_summary">Let us know when you flag a place or event (want to go, been, etc.) so we can improve our listings</string>
+    <string name="general_preferences_send_flags_summary">Let us know when you flag a place or event (want to go, been, etc.) so we can improve our listings.</string>
     <string name="general_preferences_reset_uuid">Reset anonymous app install ID</string>
-    <string name="general_preferences_reset_uuid_summary">Change the random string used to identify a unique app install when sending user flags, crash logs, or usage data.</string>
+    <string name="general_preferences_reset_uuid_summary">Have privacy concerns? Everything we track is anonymous, and you can reset this unique identifier at any time. None of the selections you\'ve made will be lost.</string>
     <string name="general_preferences_reset_uuid_message">Identifier reset to %s</string>
     <string name="preferences_fine_print">Fine print</string>
     <string name="preferences_app_info">About</string>
     <string name="preferences_licences">Licenses</string>
-    <string name="preferences_privacy">Privacy</string>
+    <string name="preferences_privacy">Privacy policy</string>
     <string name="preferences_terms_of_service">Terms of service</string>
     <string name="preferences">Settings</string>
     <string name="title_activity_search">Search GoPhillyGo</string>
@@ -143,8 +143,8 @@
     <string name="app_info_blog_link" translatable="false"><a href="https://gophillygo.org/learn">GoPhillyGo blog</a></string>
     
     <!-- First launch dialog -->
-    <string name="first_launch_dialog_title">Let us know how you use our app</string>
-    <string name="first_launch_dialog_message">May we collect anonymous crash and usage data from you to improve our app? You can always change this later under the settings.</string>
+    <string name="first_launch_dialog_title">Help us improve</string>
+    <string name="first_launch_dialog_message">May we collect anonymous usage and crash data from you to improve our app? You can always change this later under the settings.</string>
     <string name="first_launch_dialog_ok_action">Yes, share</string>
     <string name="first_launch_dialog_cancel_action">No</string>
 
