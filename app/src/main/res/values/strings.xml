@@ -121,8 +121,8 @@
     <string name="general_preference_fabric_logging">Share crash and usage data</string>
     <string name="general_preference_fabric_logging_summary">Send anonymous reports about how I\'m using the app and when the app crashes.</string>
     <string name="general_preferences_fabric_logging_disabled_notification">Please restart app for setting change to take effect.</string>
-    <string name="general_preferences_send_flags">Share user flags</string>
-    <string name="general_preferences_send_flags_summary">Let us know when you flag a place or event (want to go, been, etc.) so we can improve our listings.</string>
+    <string name="general_preferences_send_flags">Share selections</string>
+    <string name="general_preferences_send_flags_summary">Send us anonymous reports of which destinations and events you have marked as <i>been, liked, want to go,</i> or <i>not interested</i> so we can improve our listings.</string>
     <string name="general_preferences_reset_uuid">Reset anonymous app install ID</string>
     <string name="general_preferences_reset_uuid_summary">Have privacy concerns? Everything we track is anonymous, and you can reset this unique identifier at any time. None of the selections you\'ve made will be lost.</string>
     <string name="general_preferences_reset_uuid_message">Identifier reset to %s</string>
