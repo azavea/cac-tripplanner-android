@@ -34,8 +34,8 @@ public class DestinationInfo extends AttractionInfo<Destination> {
     }
 
     @Override
-    public String getFormattedDistance(Context context) {
-        return destination != null ? destination.getFormattedDistance(context) : null;
+    public String getFormattedDistance() {
+        return destination != null ? destination.getFormattedDistance() : null;
     }
 
     public Destination getDestination() {

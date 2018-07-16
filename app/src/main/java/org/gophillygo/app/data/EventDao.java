@@ -18,9 +18,9 @@ import java.util.List;
 @Dao
 public abstract class EventDao implements AttractionDao<Event> {
     @Transaction
-    @Query("SELECT event.*, destination.name AS destinationName, NULL AS distance, " +
+    @Query("SELECT event.*, destination.name AS destinationName, " +
             "destination.categories AS destinationCategories, attractionflag.option, " +
-            "destination.x, destination.y, destination.distance " +
+            "destination.distance AS distance, destination.x, destination.y, destination.watershed_alliance " +
             "FROM event " +
             "LEFT JOIN destination ON destination._id = event.destination " +
             "LEFT JOIN attractionflag " +
@@ -28,9 +28,9 @@ public abstract class EventDao implements AttractionDao<Event> {
             "ORDER BY event.start_date ASC;")
     public abstract LiveData<List<EventInfo>> getAll();
 
-    @Query("SELECT event.*, destination.name AS destinationName, destination.distance AS distance, " +
+    @Query("SELECT event.*, destination.name AS destinationName, " +
             "destination.categories AS destinationCategories, attractionflag.option, " +
-            "destination.x, destination.y, destination.distance " +
+            "destination.distance AS distance, destination.x, destination.y, destination.watershed_alliance " +
             "FROM event " +
             "LEFT JOIN destination ON destination._id = event.destination " +
             "LEFT JOIN attractionflag " +
@@ -57,9 +57,9 @@ public abstract class EventDao implements AttractionDao<Event> {
      * @return EventInfo objects
      */
 
-    @Query("SELECT event.*, destination.name AS destinationName, destination.distance AS distance, " +
+    @Query("SELECT event.*, destination.name AS destinationName, " +
             "destination.categories AS destinationCategories, attractionflag.option, " +
-            "destination.x, destination.y, destination.distance " +
+            "destination.distance AS distance, destination.x, destination.y, destination.watershed_alliance " +
             "FROM event " +
             "INNER JOIN destination ON destination._id = event.destination " +
             "LEFT JOIN attractionflag " +
@@ -73,9 +73,9 @@ public abstract class EventDao implements AttractionDao<Event> {
      * @param eventId ID of event to fetch (*not* placeID)
      * @return Event with related destination information, if any
      */
-    @Query("SELECT event.*, destination.name AS destinationName, destination.distance AS distance, " +
+    @Query("SELECT event.*, destination.name AS destinationName, " +
             "destination.categories AS destinationCategories, attractionflag.option, " +
-            "destination.x, destination.y, destination.distance " +
+            "destination.distance AS distance, destination.x, destination.y, destination.watershed_alliance " +
             "FROM event " +
             "LEFT JOIN destination ON destination._id = event.destination " +
             "LEFT JOIN attractionflag " +

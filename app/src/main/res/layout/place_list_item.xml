@@ -8,8 +8,6 @@
         <variable name="attraction" type="org.gophillygo.app.data.models.Destination"/>
         <variable name="attractionInfo" type="org.gophillygo.app.data.models.DestinationInfo"/>
         <variable name="position" type="Integer" />
-        <variable name="activity" type="android.app.Activity" />
-        <variable name="context" type="android.content.Context" />
         <variable name="adapter" type="org.gophillygo.app.adapters.PlacesListAdapter" />
         <import type="android.view.View"/>
     </data>
@@ -65,7 +63,7 @@
             style="@style/PlaceListItemDistance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{attraction.getFormattedDistance(context)}"
+            android:text="@{@string/distance_with_abbreviated_miles(attraction.getFormattedDistance())}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/place_list_item_name_label" />

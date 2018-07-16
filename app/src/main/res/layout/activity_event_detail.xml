@@ -54,7 +54,7 @@
                     style="@style/ItemDetailDistance"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text='@{eventInfo.getFormattedDistance(context)}'
+                    android:text='@{@string/distance_with_abbreviated_miles(eventInfo.getFormattedDistance())}'
                     android:visibility="@{eventInfo.distance != null ? View.VISIBLE : View.GONE}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
