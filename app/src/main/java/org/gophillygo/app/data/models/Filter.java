@@ -31,22 +31,29 @@ public class Filter extends BaseObservable implements Serializable {
     private boolean liked;
     @Bindable
     private boolean accessible;
-
     @Bindable
     private boolean watershedAlliance;
+    @Bindable
+    private boolean cycling;
+    @Bindable
+    private boolean hiking;
+    @Bindable
+    private boolean waterRecreation;
 
 
     public Filter() {
-        this(false, false, false, false, false, false, false, false, false);
+        this(false, false, false, false, false, false, false, false, false, false, false, false);
     }
 
     public Filter(Filter other) {
-        this(other.nature, other.exercise, other.educational, other.been, other.wantToGo, other.notInterested, other.liked, other.accessible, other.watershedAlliance);
+        this(other.nature, other.exercise, other.educational, other.been, other.wantToGo,
+                other.notInterested, other.liked, other.accessible, other.watershedAlliance,
+                other.cycling, other.hiking, other.waterRecreation);
     }
 
     public Filter(boolean nature, boolean exercise, boolean educational, boolean been,
                   boolean wantToGo, boolean notInterested, boolean liked, boolean accessible,
-                  boolean watershedAlliance) {
+                  boolean watershedAlliance, boolean cycling, boolean hiking, boolean waterRecreation) {
         this.nature = nature;
         this.exercise = exercise;
         this.educational = educational;
@@ -56,10 +63,14 @@ public class Filter extends BaseObservable implements Serializable {
         this.liked = liked;
         this.accessible = accessible;
         this.watershedAlliance = watershedAlliance;
+        this.cycling = cycling;
+        this.hiking = hiking;
+        this.waterRecreation = waterRecreation;
     }
 
     public int count() {
-        boolean[] fields = {nature, exercise, educational, been, wantToGo, notInterested, liked, accessible, watershedAlliance};
+        boolean[] fields = {nature, exercise, educational, been, wantToGo, notInterested, liked,
+                accessible, watershedAlliance, cycling, hiking, waterRecreation};
         int selectedCount = 0;
         for (boolean field : fields) {
             if (field) {
@@ -79,6 +90,9 @@ public class Filter extends BaseObservable implements Serializable {
         this.liked = false;
         this.accessible = false;
         this.watershedAlliance = false;
+        this.cycling = false;
+        this.hiking = false;
+        this.waterRecreation = false;
         notifyChange();
     }
 
@@ -92,8 +106,9 @@ public class Filter extends BaseObservable implements Serializable {
         boolean flagMatches = flagMatches(info.getFlag());
         boolean accessibleMatches = accessibleMatches(info.getDestination().isAccessible());
         boolean watershedAllianceMatches = watershedAllianceMatches(info.getDestination().isWatershedAlliance());
+        boolean activityMatches = activityMatches(info.getAttraction());
 
-        return categoryMatches && flagMatches && accessibleMatches && watershedAllianceMatches;
+        return categoryMatches && flagMatches && accessibleMatches && watershedAllianceMatches && activityMatches;
     }
 
     public boolean matches(EventInfo info) {
@@ -101,8 +116,18 @@ public class Filter extends BaseObservable implements Serializable {
         boolean flagMatches = flagMatches(info.getFlag());
         boolean accessibleMatches = accessibleMatches(info.getEvent().isAccessible());
         boolean watershedAllianceMatches = watershedAllianceMatches(info.isWatershedAlliance());
+        boolean activityMatches = activityMatches(info.getAttraction());
 
-        return categoryMatches && flagMatches && accessibleMatches && watershedAllianceMatches;
+        return categoryMatches && flagMatches && accessibleMatches && watershedAllianceMatches && activityMatches;
+    }
+
+    private boolean activityMatches(Attraction attraction) {
+        if (!cycling && !hiking && !waterRecreation) {
+            return true;
+        }
+        // match on any filter activity
+        return ((cycling && attraction.isCycling()) || (hiking && attraction.isHiking()) ||
+                (waterRecreation && attraction.isWaterRecreation()));
     }
 
     private boolean categoryMatches(DestinationCategories categories) {
@@ -238,6 +263,30 @@ public class Filter extends BaseObservable implements Serializable {
         this.watershedAlliance = watershedAlliance;
     }
 
+    public boolean isCycling() {
+        return cycling;
+    }
+
+    public void setCycling(boolean cycling) {
+        this.cycling = cycling;
+    }
+
+    public boolean isHiking() {
+        return hiking;
+    }
+
+    public void setHiking(boolean hiking) {
+        this.hiking = hiking;
+    }
+
+    public boolean isWaterRecreation() {
+        return waterRecreation;
+    }
+
+    public void setWaterRecreation(boolean waterRecreation) {
+        this.waterRecreation = waterRecreation;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -251,12 +300,16 @@ public class Filter extends BaseObservable implements Serializable {
                 notInterested == filter.notInterested &&
                 liked == filter.liked &&
                 accessible == filter.accessible &&
-                watershedAlliance == filter.watershedAlliance;
+                watershedAlliance == filter.watershedAlliance &&
+                cycling == filter.cycling &&
+                hiking == filter.hiking &&
+                waterRecreation == filter.waterRecreation;
     }
 
     @Override
     public int hashCode() {
 
-        return Objects.hash(nature, exercise, educational, been, wantToGo, notInterested, liked, accessible, watershedAlliance);
+        return Objects.hash(nature, exercise, educational, been, wantToGo, notInterested, liked, accessible,
+                watershedAlliance, cycling, hiking, waterRecreation);
     }
 }

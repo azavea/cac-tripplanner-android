@@ -58,13 +58,6 @@ public class EventInfo extends AttractionInfo<Event> {
         } else {
             this.categories = new DestinationCategories(false, false, false);
         }
-
-        // FIXME: remove this debug logging
-        if (watershedAlliance) {
-            Log.d(LOG_LABEL, destinationName + " is in the watershed alliance!");
-        } else {
-            Log.d(LOG_LABEL, destinationName + " is *not* in the watershed alliance");
-        }
     }
 
     @Override

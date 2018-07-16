@@ -82,10 +82,41 @@
         </android.support.v7.widget.ButtonBarLayout>
 
         <android.support.v7.widget.ButtonBarLayout
-            android:id="@+id/filter_modal_options_category_button_bar"
+            android:id="@+id/filter_modal_options_activities_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/filter_modal_category_button_bar"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
+            android:weightSum="3">
+
+            <org.gophillygo.app.GpgToggleButton
+                android:id="@+id/filter_modal_options_cycling_button"
+                style="@style/ToggleFilterButton"
+                android:checked="@{filter.cycling}"
+                android:onCheckedChanged="@{(v, checked) -> filter.setCycling(checked)}"
+                android:text="@string/cycling_activity_label" />
+
+            <org.gophillygo.app.GpgToggleButton
+                android:id="@+id/filter_modal_options_hiking_button"
+                style="@style/ToggleFilterButton"
+                android:checked="@{filter.hiking}"
+                android:onCheckedChanged="@{(v, checked) -> filter.setHiking(checked)}"
+                android:text="@string/hiking_activity_label" />
+
+            <org.gophillygo.app.GpgToggleButton
+                android:id="@+id/filter_modal_options_water_recreation_button"
+                style="@style/ToggleFilterButton"
+                android:checked="@{filter.waterRecreation}"
+                android:onCheckedChanged="@{(v, checked) -> filter.setWaterRecreation(checked)}"
+                android:text="@string/water_recreation_activity_label" />
+        </android.support.v7.widget.ButtonBarLayout>
+
+        <android.support.v7.widget.ButtonBarLayout
+            android:id="@+id/filter_modal_options_category_button_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/filter_modal_options_activities_bar"
             android:layout_marginTop="8dp"
             android:weightSum="2">
 
