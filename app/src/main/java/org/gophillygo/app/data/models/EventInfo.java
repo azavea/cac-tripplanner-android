@@ -76,7 +76,8 @@ public class EventInfo extends AttractionInfo<Event> {
         if (distance == null) {
             return "";
         }
-        return context.getString(R.string.distance_with_abbreviated_miles, numberFormatter.format(distance.floatValue()));
+        String formatted = numberFormatter.format(distance.floatValue());
+        return formatted != null ? context.getString(R.string.distance_with_abbreviated_miles, formatted) : "";
     }
 
     public Event getEvent() {

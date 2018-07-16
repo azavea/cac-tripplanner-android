@@ -11,7 +11,7 @@ public class AttractionViewModel extends ViewModel {
         this.destinationRepository = destinationRepository;
     }
 
-    public void updateAttractionFlag(AttractionFlag flag, String userUuid, String apiKey) {
-        destinationRepository.updateAttractionFlag(flag, userUuid, apiKey);
+    public void updateAttractionFlag(AttractionFlag flag, String userUuid, String apiKey, boolean postToServer) {
+        destinationRepository.updateAttractionFlag(flag, userUuid, apiKey, postToServer);
     }
 }

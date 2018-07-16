@@ -11,6 +11,7 @@ import android.view.Gravity;
 import android.view.View;
 
 import com.crashlytics.android.Crashlytics;
+
 import org.gophillygo.app.BR;
 import org.gophillygo.app.R;
 import org.gophillygo.app.data.DestinationViewModel;
@@ -18,9 +19,9 @@ import org.gophillygo.app.data.models.AttractionFlag;
 import org.gophillygo.app.data.models.DestinationInfo;
 import org.gophillygo.app.databinding.ActivityPlaceDetailBinding;
 import org.gophillygo.app.di.GpgViewModelFactory;
-import org.gophillygo.app.utils.FlagMenuUtils;
-
 import org.gophillygo.app.tasks.GeofenceTransitionWorker;
+import org.gophillygo.app.utils.FlagMenuUtils;
+import org.gophillygo.app.utils.UserUtils;
 
 import javax.inject.Inject;
 
@@ -123,7 +124,9 @@ public class PlaceDetailActivity extends AttractionDetailActivity {
         Boolean haveExistingGeofence = destinationInfo.getFlag().getOption()
                 .apiName.equals(AttractionFlag.Option.WantToGo.apiName);
         destinationInfo.updateAttractionFlag(itemId);
-        viewModel.updateAttractionFlag(destinationInfo.getFlag(), userUuid, getString(R.string.user_flag_post_api_key));
+
+        viewModel.updateAttractionFlag(destinationInfo.getFlag(), userUuid, getString(R.string.user_flag_post_api_key),
+                UserUtils.isFlagPostingEnabled(this));
         Boolean settingGeofence = itemId  == AttractionFlag.Option.WantToGo.code;
         addOrRemoveGeofence(destinationInfo, haveExistingGeofence, settingGeofence);
         binding.notifyPropertyChanged(BR.destinationInfo);

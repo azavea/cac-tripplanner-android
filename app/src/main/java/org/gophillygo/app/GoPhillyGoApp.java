@@ -47,7 +47,7 @@ public class GoPhillyGoApp extends Application implements HasActivityInjector, H
     @Override
     public void onCreate() {
         super.onCreate();
-        Fabric.with(this, new Crashlytics());
+
         if (BuildConfig.DEBUG) {
             Log.d(LOG_LABEL, "Running in debug mode");
         }

@@ -28,6 +28,7 @@ import org.gophillygo.app.data.models.AttractionInfo;
 import org.gophillygo.app.data.models.DestinationInfo;
 import org.gophillygo.app.databinding.ActivityPlacesListBinding;
 import org.gophillygo.app.databinding.FilterButtonBarBinding;
+import org.gophillygo.app.utils.UserUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -72,7 +73,12 @@ public class PlacesListActivity extends FilterableListActivity implements
                 .apiName.equals(AttractionFlag.Option.WantToGo.apiName);
 
         destinationInfo.updateAttractionFlag(item.getItemId());
-        viewModel.updateAttractionFlag(destinationInfo.getFlag(), userUuid, getString(R.string.user_flag_post_api_key));
+
+        viewModel.updateAttractionFlag(destinationInfo.getFlag(),
+                userUuid,
+                getString(R.string.user_flag_post_api_key),
+                UserUtils.isFlagPostingEnabled(this));
+
         placesListAdapter.notifyItemChanged(position);
         Boolean settingGeofence = destinationInfo.getFlag().getOption().apiName.equals(AttractionFlag.Option.WantToGo.apiName);
         addOrRemoveGeofence(destinationInfo, haveExistingGeofence, settingGeofence);

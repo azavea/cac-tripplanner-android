@@ -24,9 +24,9 @@ import org.gophillygo.app.data.models.AttractionInfo;
 import org.gophillygo.app.data.models.DestinationInfo;
 import org.gophillygo.app.data.models.DestinationLocation;
 import org.gophillygo.app.data.models.EventInfo;
-import org.gophillygo.app.tasks.AddGeofencesBroadcastReceiver;
+import org.gophillygo.app.tasks.AddRemoveGeofencesBroadcastReceiver;
 import org.gophillygo.app.tasks.RemoveGeofenceWorker;
-import org.gophillygo.app.utils.UserUuidUtils;
+import org.gophillygo.app.utils.UserUtils;
 
 import io.fabric.sdk.android.Fabric;
 
@@ -55,9 +55,9 @@ public abstract class AttractionDetailActivity extends AppCompatActivity {
             // add geofence
             Log.d(LOG_LABEL, "Add attraction geofence");
             if (info instanceof EventInfo) {
-                AddGeofencesBroadcastReceiver.addOneGeofence((EventInfo)info);
+                AddRemoveGeofencesBroadcastReceiver.addOneGeofence((EventInfo)info);
             } else if (info instanceof DestinationInfo) {
-                AddGeofencesBroadcastReceiver.addOneGeofence(((DestinationInfo) info).getDestination());
+                AddRemoveGeofencesBroadcastReceiver.addOneGeofence(((DestinationInfo) info).getDestination());
             }
         } else if (haveExistingGeofence) {
             Log.d(LOG_LABEL, "Removing attraction geofence");
@@ -68,9 +68,11 @@ public abstract class AttractionDetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Fabric.with(this, new Crashlytics());
+        if (UserUtils.isFabricEnabled(this)) {
+            Fabric.with(this, new Crashlytics());
+        }
         // Get or create unique, random UUID for app install for posting user flags
-        userUuid = UserUuidUtils.getUserUuid(getApplicationContext());
+        userUuid = UserUtils.getUserUuid(getApplicationContext());
         Crashlytics.setUserIdentifier(userUuid);
         toggleClickListener = v -> {
             // click handler for toggling expanding/collapsing description card

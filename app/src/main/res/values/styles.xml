@@ -17,6 +17,10 @@
         <item name="android:dropDownListViewStyle">@style/GpgListViewDropdownStyle</item>
     </style>
 
+    <style name="GpgAlertDialogTheme" parent="Base.Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:textColor">@color/color_text_dark_grey</item>
+    </style>
+
     <style name="GpgListViewDropdownStyle" parent="Base.Widget.AppCompat.ListView.DropDown">
         <item name="android:background">@color/color_white</item>
     </style>
