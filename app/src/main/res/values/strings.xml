@@ -138,7 +138,7 @@
 
     <!-- About page -->
     <string name="title_activity_app_info">About GoPhillyGo</string>
-    <string name="app_info_description">TODO: long-ish descriptive text goes here.</string>
+    <string name="app_info_description">The Clean Air Council\'s GoPhillyGo mobile application highlights the greater Philadelphia area\'s best educational and recreational destinations and events.</string>
     <string name="app_info_root_site_link" translatable="false"><a href="https://gophillygo.org">GoPhillyGo website</a></string>
     <string name="app_info_blog_link" translatable="false"><a href="https://gophillygo.org/learn">GoPhillyGo blog</a></string>
     
