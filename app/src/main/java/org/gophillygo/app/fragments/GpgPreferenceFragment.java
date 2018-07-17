@@ -57,6 +57,9 @@ public class GpgPreferenceFragment extends PreferenceFragment implements SharedP
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (!isAdded() || getActivity() == null) {
+            return;
+        }
         Log.d(LOG_LABEL, "shared preference changed");
 
         final String notificationsKey = getString(R.string.general_preferences_allow_notifications_key);
