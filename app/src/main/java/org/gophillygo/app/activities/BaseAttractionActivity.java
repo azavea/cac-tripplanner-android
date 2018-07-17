@@ -18,6 +18,7 @@ import android.util.Log;
 import android.view.Menu;
 
 import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.core.CrashlyticsCore;
 
 import org.gophillygo.app.data.DestinationViewModel;
 import org.gophillygo.app.data.models.AttractionInfo;
@@ -114,9 +115,11 @@ public abstract class BaseAttractionActivity extends AppCompatActivity
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (UserUtils.isFabricEnabled(this)) {
-            Fabric.with(this, new Crashlytics());
-        }
+        // Initialize Fabric/Crashlytics crash and usage data logging.
+        // Disable if user setting turned off; still must be initialized to avoid errors.
+        // Based on: https://stackoverflow.com/a/31996615
+        CrashlyticsCore core = new CrashlyticsCore.Builder().disabled(!UserUtils.isFabricEnabled(this)).build();
+        Fabric.with(this, new Crashlytics.Builder().core(core).build());
 
         fetchLastLocationOrUseDefault();
 

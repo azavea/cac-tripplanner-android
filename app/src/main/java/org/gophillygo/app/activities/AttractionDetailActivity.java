@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.core.CrashlyticsCore;
 import com.synnapps.carouselview.CarouselView;
 
 import org.gophillygo.app.R;
@@ -68,9 +69,13 @@ public abstract class AttractionDetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (UserUtils.isFabricEnabled(this)) {
-            Fabric.with(this, new Crashlytics());
-        }
+
+        // Initialize Fabric/Crashlytics crash and usage data logging.
+        // Disable if user setting turned off; still must be initialized to avoid errors.
+        // Based on: https://stackoverflow.com/a/31996615
+        CrashlyticsCore core = new CrashlyticsCore.Builder().disabled(!UserUtils.isFabricEnabled(this)).build();
+        Fabric.with(this, new Crashlytics.Builder().core(core).build());
+
         // Get or create unique, random UUID for app install for posting user flags
         userUuid = UserUtils.getUserUuid(getApplicationContext());
         Crashlytics.setUserIdentifier(userUuid);
