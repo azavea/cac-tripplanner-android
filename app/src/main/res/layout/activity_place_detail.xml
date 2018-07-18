@@ -14,6 +14,7 @@
         <import type="android.view.View"/>
     </data>
     <ScrollView
+        android:id="@+id/place_detail_scroll_view"
         android:fillViewport="true"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -197,7 +198,6 @@
                     android:drawableStart="@drawable/ic_directions_blue_24dp"
                     android:onClick="@{activity::goToDirections}"
                     android:text="@string/place_detail_directions_button"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/place_detail_website_button"
                     app:layout_constraintStart_toEndOf="@+id/place_detail_map_button" />
 
@@ -220,6 +220,14 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/place_detail_button_bar" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/place_detail_events_recycler_view"
+                app:layout_constraintTop_toBottomOf="@+id/place_detail_watershed_alliance_icon"
+                android:paddingTop="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            </android.support.v7.widget.RecyclerView>
 
         </android.support.constraint.ConstraintLayout>
     </ScrollView>

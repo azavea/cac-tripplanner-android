@@ -10,7 +10,6 @@ import org.gophillygo.app.R;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 public class EventInfo extends AttractionInfo<Event> {
@@ -80,8 +79,8 @@ public class EventInfo extends AttractionInfo<Event> {
     }
 
     @Override
-    public String getFormattedDistance() {
-        if (distance == null || context == null) {
+    public String getFormattedDistance(Context context) {
+        if (distance == null) {
             return "";
         }
         return numberFormatter.format(distance.floatValue());

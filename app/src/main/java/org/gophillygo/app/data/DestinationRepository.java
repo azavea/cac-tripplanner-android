@@ -66,6 +66,10 @@ public class DestinationRepository {
         return eventDao.getEvent(eventId);
     }
 
+    public LiveData<List<EventInfo>> getEventsForDestination(long destinationId) {
+        return eventDao.getEventsForDestination(destinationId);
+    }
+
     @SuppressLint("StaticFieldLeak")
     public void updateDestination(Destination destination) {
         new AsyncTask<Void, Void, Void>() {
