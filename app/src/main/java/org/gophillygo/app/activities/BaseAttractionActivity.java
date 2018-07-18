@@ -54,12 +54,15 @@ public abstract class BaseAttractionActivity extends AppCompatActivity
 
     private static final float METERS_TO_MILES = 0.000621371192f;
 
+    private static final int MAX_DISTANCE_TO_USE_LOCATION_METERS = 500 * 1000;
+
     // maximum number of nearby destinations to show in carousel
     protected static final int NEAREST_DESTINATION_COUNT = 8;
 
     // City Hall
     private static final double DEFAULT_LATITUDE = 39.954888;
     private static final double DEFAULT_LONGITUDE = -75.163206;
+    private static Location defaultLocation;
     private static final int SUGGEST_COLUMN_INDEX = 3;
 
     private Location currentLocation;
@@ -98,9 +101,7 @@ public abstract class BaseAttractionActivity extends AppCompatActivity
 
     private void setDefaultLocation() {
         Log.w(LOG_LABEL, "Using City Hall as default location");
-        currentLocation = new Location(DUMMY_LOCATION_PROVIDER);
-        currentLocation.setLatitude(DEFAULT_LATITUDE);
-        currentLocation.setLongitude(DEFAULT_LONGITUDE);
+        currentLocation = defaultLocation;
     }
 
     private void fetchLastLocationOrUseDefault() {
@@ -117,6 +118,10 @@ public abstract class BaseAttractionActivity extends AppCompatActivity
         if (UserUtils.isFabricEnabled(this)) {
             Fabric.with(this, new Crashlytics());
         }
+
+        defaultLocation = new Location(DUMMY_LOCATION_PROVIDER);
+        defaultLocation.setLatitude(DEFAULT_LATITUDE);
+        defaultLocation.setLongitude(DEFAULT_LONGITUDE);
 
         fetchLastLocationOrUseDefault();
 
@@ -217,7 +222,17 @@ public abstract class BaseAttractionActivity extends AppCompatActivity
         }
 
         Log.d(LOG_LABEL, "location found: " + location.toString());
-        currentLocation = location;
+
+        float distance = location.distanceTo(defaultLocation);
+
+        if (distance > MAX_DISTANCE_TO_USE_LOCATION_METERS) {
+            Log.d(LOG_LABEL, "User is far away from Philly; use default location instead of actual. Distance from City Hall: " + distance);
+            setDefaultLocation();
+        } else {
+            Log.d(LOG_LABEL, "Location is in range. Distance from City Hall: " + distance);
+            currentLocation = location;
+        }
+
         locationHasChanged = true;
         nearestDestinations = findNearestDestinations();
         locationOrDestinationsChanged();
