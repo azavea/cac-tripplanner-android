@@ -31,7 +31,7 @@ public abstract class EventDao implements AttractionDao<Event> {
     @Transaction
     @Query("SELECT event.*, destination.name AS destinationName, NULL AS distance, " +
             "destination.categories AS destinationCategories, attractionflag.option, " +
-            "destination.x, destination.y, destination.distance " +
+            "destination.distance, destination.x, destination.y, destination.watershed_alliance " +
             "FROM event " +
             "LEFT JOIN destination ON destination._id = event.destination " +
             "LEFT JOIN attractionflag " +
