@@ -16,9 +16,9 @@ public class CategoryAttraction {
     // category grid cards that are not in the destination category string: two user flags,
     // and events
     public static final String EVENTS_API_NAME = "events";
-    public static final String NATURE_API_NAME = "nature";
-    public static final String EXERCISE_API_NAME = "exercise";
-    public static final String EDUCATIONAL_API_NAME = "educational";
+    public static final String NATURE_API_NAME = "Nature";
+    public static final String EXERCISE_API_NAME = "Exercise";
+    public static final String EDUCATIONAL_API_NAME = "Educational";
     public static final String CYCLING_API_NAME = "cycling";
     public static final String HIKING_API_NAME = "hiking";
     public static final String WATER_REC_API_NAME = "water recreation";

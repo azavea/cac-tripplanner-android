@@ -55,7 +55,7 @@
                 style="@style/ItemDetailDistance"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{destination.getFormattedDistance(activity)}"
+                android:text="@{@string/distance_with_abbreviated_miles(destination.getFormattedDistance())}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent" />
         </android.support.constraint.ConstraintLayout>

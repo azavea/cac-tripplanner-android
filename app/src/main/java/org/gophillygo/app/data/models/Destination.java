@@ -76,8 +76,8 @@ public class Destination extends Attraction {
         this.categories = categories;
     }
 
-    public String getFormattedDistance(Context context) {
-        return context.getString(R.string.distance_with_abbreviated_miles, numberFormatter.format(distance));
+    public String getFormattedDistance() {
+        return numberFormatter.format(distance);
     }
 
     public void setDistance(float distance) {
