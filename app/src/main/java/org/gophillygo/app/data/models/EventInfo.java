@@ -79,7 +79,7 @@ public class EventInfo extends AttractionInfo<Event> {
     }
 
     @Override
-    public String getFormattedDistance(Context context) {
+    public String getFormattedDistance() {
         if (distance == null) {
             return "";
         }
