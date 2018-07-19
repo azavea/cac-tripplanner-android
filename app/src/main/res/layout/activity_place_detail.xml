@@ -27,7 +27,7 @@
                 android:id="@+id/place_detail_carousel"
                 style="@style/Carousel"
                 android:layout_width="match_parent"
-                app:layout_constraintBottom_toTopOf="@+id/place_detail_activities_list"
+                app:layout_constraintBottom_toTopOf="@+id/place_detail_categories_list"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <android.support.constraint.ConstraintLayout
@@ -67,7 +67,7 @@
                 tools:targetApi="lollipop" />
 
             <TextView
-                android:id="@+id/place_detail_activities_list"
+                android:id="@+id/place_detail_categories_list"
                 style="@style/PlaceDetailActivity"
                 android:textAlignment="center"
                 android:text="@{destination.categoriesString}"
@@ -77,69 +77,83 @@
                 app:layout_constraintTop_toBottomOf="@+id/place_detail_carousel" />
 
             <android.support.constraint.ConstraintLayout
-                android:id="@+id/place_detail_cycling_and_events_bar"
-                style="@style/PlaceDetailCyclingAndEventsBar"
+                android:id="@+id/place_detail_activities_and_events_bar"
+                style="@style/PlaceDetailActivitiesAndEventsBar"
                 android:layout_width="0dp"
-                android:visibility="@{destination.isCycling || destination.isHiking || destination.isWaterRecreation || destinationInfo.hasEvents ? View.VISIBLE : View.GONE}"
                 android:layout_height="wrap_content"
+                android:visibility="@{destination.isCycling || destination.isHiking || destination.isWaterRecreation || destinationInfo.hasEvents ? View.VISIBLE : View.GONE}"
                 app:layout_constraintBottom_toTopOf="@+id/place_detail_description_card"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/place_detail_activities_list">
+                app:layout_constraintTop_toBottomOf="@+id/place_detail_categories_list">
 
-                <ImageView
-                    android:id="@+id/place_detail_cycling_label"
-                    style="@style/PlaceDetailActivity"
+                <android.support.constraint.ConstraintLayout
+                    android:id="@+id/place_detail_activities"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:contentDescription="@string/bicycle_activity_label"
-                    app:srcCompat="@drawable/ic_directions_bike_black_16dp"
-                    android:visibility="@{destination.isCycling ? View.VISIBLE : View.GONE}"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/place_detail_hiking_label"
-                    app:layout_constraintHorizontal_bias="0.16"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <ImageView
-                    android:id="@+id/place_detail_hiking_label"
-                    style="@style/PlaceDetailActivity"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:contentDescription="@string/hiking_activity_label"
-                    app:srcCompat="@drawable/hiking_24dp"
-                    android:visibility="@{destination.isHiking ? View.VISIBLE : View.GONE}"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/place_detail_water_rec_label"
-                    app:layout_constraintHorizontal_bias="0.16"
-                    app:layout_constraintStart_toEndOf="@id/place_detail_cycling_label"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <ImageView
-                    android:id="@+id/place_detail_water_rec_label"
-                    style="@style/PlaceDetailActivity"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:contentDescription="@string/water_recreation_activity_label"
-                    app:srcCompat="@drawable/water_recreation_24dp"
-                    android:visibility="@{destination.isWaterRecreation ? View.VISIBLE : View.GONE}"
+                    android:visibility="@{destination.isCycling || destination.isHiking || destination.isWaterRecreation ? View.VISIBLE : View.GONE}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/place_detail_upcoming_events"
-                    app:layout_constraintHorizontal_bias="0.16"
-                    app:layout_constraintStart_toEndOf="@id/place_detail_hiking_label"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageView
+                        android:id="@+id/place_detail_cycling_label"
+                        style="@style/PlaceDetailActivity"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginStart="8dp"
+                        android:contentDescription="@string/bicycle_activity_label"
+                        android:visibility="@{destination.isCycling ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/place_detail_hiking_label"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/ic_directions_bike_black_24dp" />
+
+                    <ImageView
+                        android:id="@+id/place_detail_hiking_label"
+                        style="@style/PlaceDetailActivity"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginStart="8dp"
+                        android:contentDescription="@string/hiking_activity_label"
+                        android:visibility="@{destination.isHiking ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/place_detail_water_rec_label"
+                        app:layout_constraintStart_toEndOf="@+id/place_detail_cycling_label"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/hiking_24dp" />
+
+                    <ImageView
+                        android:id="@+id/place_detail_water_rec_label"
+                        style="@style/PlaceDetailActivity"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginStart="8dp"
+                        android:contentDescription="@string/water_recreation_activity_label"
+                        android:visibility="@{destination.isWaterRecreation ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/place_detail_hiking_label"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/water_recreation_24dp" />
+                </android.support.constraint.ConstraintLayout>
 
                 <TextView
                     android:id="@+id/place_detail_upcoming_events"
                     style="@style/PlaceDetailActivity"
-                    android:drawableEnd="@drawable/ic_event_black_16dp"
-                    android:visibility="@{destinationInfo.hasEvents ? View.VISIBLE : View.GONE}"
-                    android:text="@{@plurals/place_upcoming_activities_count(destinationInfo.getEventCount(), destinationInfo.getEventCount())}"
+                    android:layout_marginStart="8dp"
+                    android:drawableStart="@drawable/ic_event_black_24dp"
                     android:onClick="@{activity::goToEvents}"
+                    android:text="@{@plurals/place_upcoming_activities_count(destinationInfo.getEventCount(), destinationInfo.getEventCount())}"
+                    android:visibility="@{destinationInfo.hasEvents ? View.VISIBLE : View.GONE}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toEndOf="@+id/place_detail_water_rec_label"
+                    app:layout_constraintStart_toEndOf="@+id/place_detail_activities"
                     app:layout_constraintTop_toTopOf="parent" />
             </android.support.constraint.ConstraintLayout>
 
@@ -152,7 +166,7 @@
                 app:htmlDescription="@{destination.htmlDescription}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/place_detail_cycling_and_events_bar" />
+                app:layout_constraintTop_toBottomOf="@+id/place_detail_activities_and_events_bar" />
 
             <android.support.v7.widget.CardView
                 android:id="@+id/place_detail_flag_options_card"
