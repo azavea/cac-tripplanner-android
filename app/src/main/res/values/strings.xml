@@ -74,6 +74,7 @@
 
     <string name="event_detail_single_day_time_range">%s • %s - %s</string>
     <string name="event_detail_date_range">%s - %s</string>
+    <string name="event_detail_date_start_multiday_events">Now</string>
     <string name="event_detail_add_to_calendar">Add to calendar</string>
     <string name="event_detail_no_calendar">No calendar application is installed.</string>
 

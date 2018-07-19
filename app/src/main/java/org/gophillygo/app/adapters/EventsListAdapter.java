@@ -18,6 +18,8 @@ public class EventsListAdapter extends AttractionListAdapter<EventInfo> {
 
     public static final DateFormat monthFormat, dayOfMonthFormat, dayOfWeekFormat, timeFormat, monthDayFormat;
 
+    private final Date now;
+
     static {
         monthFormat = new SimpleDateFormat("MMM", Locale.US);
         dayOfMonthFormat = new SimpleDateFormat("dd", Locale.US);
@@ -31,6 +33,11 @@ public class EventsListAdapter extends AttractionListAdapter<EventInfo> {
     public EventsListAdapter(Context context, List<EventInfo> attractions, AttractionListItemClickListener listener) {
         super(context, attractions, R.layout.event_list_item, listener);
         this.context = context;
+        now = new Date();
+    }
+
+    public boolean isCurrentlyOngoingEvent(Event event) {
+        return !event.isSingleDayEvent() && event.getStart().before(now);
     }
 
     public String getEventTimeString(Event event) {
