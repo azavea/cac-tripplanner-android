@@ -19,12 +19,12 @@
     <!-- User flags -->
     <string name="place_detail_unset">Been here? Want to go?</string>
     <string name="event_detail_unset">Want to go?</string>
-    <string name="place_detail_want_to_go">You want to go here!</string>
-    <string name="event_detail_want_to_go">You want to go to this!</string>
+    <string name="place_detail_want_to_go">You want to go here</string>
+    <string name="event_detail_want_to_go">You want to go to this</string>
     <string name="place_detail_been">You\'ve been here</string>
     <string name="event_detail_been">You\'ve been to this</string>
-    <string name="place_detail_liked">You liked this place!</string>
-    <string name="event_detail_liked">You liked this event!</string>
+    <string name="place_detail_liked">You liked this place</string>
+    <string name="event_detail_liked">You liked this event</string>
     <string name="place_detail_not_interested">You\'re not interested</string>
     <string name="event_detail_not_interested">You\'re not interested</string>
 
