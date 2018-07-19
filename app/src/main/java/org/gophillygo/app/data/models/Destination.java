@@ -132,7 +132,7 @@ public class Destination extends Attraction {
     public String getCategoriesString() {
         StringBuilder stringBuilder = new StringBuilder("");
         // separate activities with dots
-        String dot = getHtmlFromString("&nbsp;&#8226;&nbsp;").toString();
+        String dot = getHtmlFromString("&nbsp;&nbsp;&#8226;&nbsp;&nbsp;").toString();
 
         for (String category: categories) {
             if (stringBuilder.length() > 0) {
