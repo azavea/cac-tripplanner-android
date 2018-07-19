@@ -157,8 +157,8 @@ public abstract class DestinationDao implements AttractionDao<Destination> {
 
     @Query(value = "SELECT destination.* FROM destination INNER JOIN attractionflag " +
             "ON destination._id = attractionflag.attraction_id AND attractionflag.is_event = 0 " +
-            "WHERE attractionflag.option = :geofenceFlagCode")
-    public abstract List<Destination> getGeofenceDestinations(int geofenceFlagCode);
+            "WHERE attractionflag.option = :wantToGoCode OR attractionflag.option = :likedCode")
+    public abstract List<Destination> getGeofenceDestinations(int wantToGoCode, int likedCode);
 
     /**
      * Get a single destination.

@@ -159,11 +159,14 @@ public class PlaceDetailActivity extends AttractionDetailActivity implements Att
             Crashlytics.log(message);
             return;
         }
-        Boolean haveExistingGeofence = destinationInfo.getFlag().getOption()
-                .apiName.equals(AttractionFlag.Option.WantToGo.apiName);
+        String option = destinationInfo.getFlag().getOption().apiName;
+        boolean haveExistingGeofence = option.equals(AttractionFlag.Option.WantToGo.apiName) ||
+                option.equals(AttractionFlag.Option.Liked.apiName);
         destinationInfo.updateAttractionFlag(itemId);
         destinationViewModel.updateAttractionFlag(destinationInfo.getFlag(), userUuid, getString(R.string.user_flag_post_api_key), UserUtils.isFlagPostingEnabled(this));
-        Boolean settingGeofence = itemId  == AttractionFlag.Option.WantToGo.code;
+        String optionAfter = destinationInfo.getFlag().getOption().apiName;
+        boolean settingGeofence = optionAfter.equals(AttractionFlag.Option.WantToGo.apiName) ||
+                optionAfter.equals(AttractionFlag.Option.Liked.apiName);
         addOrRemoveGeofence(destinationInfo, haveExistingGeofence, settingGeofence);
         binding.notifyPropertyChanged(BR.destinationInfo);
     }
@@ -206,8 +209,9 @@ public class PlaceDetailActivity extends AttractionDetailActivity implements Att
     @Override
     public boolean clickedFlagOption(MenuItem item, AttractionInfo eventInfo, Integer position) {
         Log.d(LOG_LABEL, "clicked flag option on event at " + position);
-        Boolean haveExistingGeofence = eventInfo.getFlag()
-                .getOption().apiName.equals(AttractionFlag.Option.WantToGo.apiName);
+        String option = eventInfo.getFlag().getOption().apiName;
+        boolean haveExistingGeofence = option.equals(AttractionFlag.Option.WantToGo.apiName) ||
+                option.equals(AttractionFlag.Option.Liked.apiName);
 
         eventInfo.updateAttractionFlag(item.getItemId());
         eventViewModel.updateAttractionFlag(eventInfo.getFlag(), userUuid, getString(R.string.user_flag_post_api_key), UserUtils.isFlagPostingEnabled(this));
@@ -216,7 +220,9 @@ public class PlaceDetailActivity extends AttractionDetailActivity implements Att
         // do not attempt to add a geofence for an event with no location (should always exist here,
         // as we know there is an associated place)
         if (((EventInfo)eventInfo).hasDestinationName()) {
-            Boolean settingGeofence = eventInfo.getFlag().getOption().apiName.equals(AttractionFlag.Option.WantToGo.apiName);
+            String optionAfter = eventInfo.getFlag().getOption().apiName;
+            boolean settingGeofence = optionAfter.equals(AttractionFlag.Option.WantToGo.apiName) ||
+                    optionAfter.equals(AttractionFlag.Option.Liked.apiName);
             addOrRemoveGeofence(eventInfo, haveExistingGeofence, settingGeofence);
         }
 

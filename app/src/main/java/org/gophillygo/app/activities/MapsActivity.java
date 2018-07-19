@@ -159,8 +159,9 @@ public abstract class MapsActivity<T extends AttractionInfo> extends FilterableL
     public void optionsButtonClick(View view, T info) {
         PopupMenu menu = FlagMenuUtils.getFlagPopupMenu(this, view, info.getFlag());
         menu.setOnMenuItemClickListener(item -> {
-            Boolean haveExistingGeofence = info.getFlag().getOption()
-                    .apiName.equals(AttractionFlag.Option.WantToGo.apiName);
+            String option = info.getFlag().getOption().apiName;
+            Boolean haveExistingGeofence = option.equals(AttractionFlag.Option.WantToGo.apiName) ||
+                    option.equals(AttractionFlag.Option.Liked.apiName);
 
             info.updateAttractionFlag(item.getItemId());
 
@@ -169,7 +170,9 @@ public abstract class MapsActivity<T extends AttractionInfo> extends FilterableL
 
             popupBinding.setAttractionInfo(info);
             popupBinding.setAttraction(info.getAttraction());
-            Boolean settingGeofence = info.getFlag().getOption().apiName.equals(AttractionFlag.Option.WantToGo.apiName);
+            String optionAfter = info.getFlag().getOption().apiName;
+            Boolean settingGeofence = optionAfter.equals(AttractionFlag.Option.WantToGo.apiName) ||
+                    optionAfter.equals(AttractionFlag.Option.Liked.apiName);
             addOrRemoveGeofence(info, haveExistingGeofence, settingGeofence);
             return true;
         });

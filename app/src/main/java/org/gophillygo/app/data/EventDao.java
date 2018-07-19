@@ -76,8 +76,8 @@ public abstract class EventDao implements AttractionDao<Event> {
             "INNER JOIN destination ON destination._id = event.destination " +
             "LEFT JOIN attractionflag " +
             "ON event._id = attractionflag.attraction_id AND attractionflag.is_event = 1 " +
-            "WHERE attractionflag.option = :geofenceFlagCode")
-    public abstract List<EventInfo> getGeofenceEvents(int geofenceFlagCode);
+            "WHERE attractionflag.option = :wantToGoCode OR attractionflag.option = :likedCode")
+    public abstract List<EventInfo> getGeofenceEvents(int wantToGoCode, int likedCode);
 
     /**
      * Get event from background thread.
