@@ -69,6 +69,7 @@ public class EventsMapsActivity extends MapsActivity<EventInfo> {
             case R.id.events_map_action_view_places:
                 Log.d(LOG_LABEL, "Selected map events menu item");
                 intent = new Intent(this, PlacesMapsActivity.class);
+                intent.putExtra(FILTER_KEY, filter);
                 startActivity(intent);
                 break;
             case R.id.events_map_action_map_search:
@@ -77,6 +78,7 @@ public class EventsMapsActivity extends MapsActivity<EventInfo> {
             case R.id.events_map_action_view_list:
                 Log.d(LOG_LABEL, "Selected to go back to list view from map");
                 intent = new Intent(this, EventsListActivity.class);
+                intent.putExtra(FILTER_KEY, filter);
                 startActivity(intent);
                 break;
             default:

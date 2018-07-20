@@ -145,14 +145,19 @@ public class EventsListActivity extends FilterableListActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
+        Intent intent;
         switch (itemId) {
             case R.id.action_event_place:
                 Log.d(LOG_LABEL, "Selected event place menu item");
-                startActivity(new Intent(this, PlacesListActivity.class));
+                intent = new Intent(this, PlacesListActivity.class);
+                intent.putExtra(FILTER_KEY, filter);
+                startActivity(intent);
                 break;
             case R.id.action_event_map:
                 Log.d(LOG_LABEL, "Selected map menu item");
-                startActivity(new Intent(this, EventsMapsActivity.class));
+                intent = new Intent(this, EventsMapsActivity.class);
+                intent.putExtra(FILTER_KEY, filter);
+                startActivity(intent);
                 break;
             case R.id.action_event_search:
                 Log.d(LOG_LABEL, "Selected search menu item");
