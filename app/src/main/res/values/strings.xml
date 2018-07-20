@@ -136,6 +136,9 @@
     <string name="title_activity_search">Search GoPhillyGo</string>
     <string name="search_hint">Place or event</string>
     <string name="search_provider_description">Places and Events around Greater Philadelphia</string>
+    <string name="general_preferences_privacy_policy_url" translatable="false">https://gophillygo.org/privacy_policy</string>
+    <string name="general_preferences_terms_of_service_url" translatable="false">https://gophillygo.org/terms_of_service</string>
+
 
     <!-- About page -->
     <string name="title_activity_app_info">About GoPhillyGo</string>

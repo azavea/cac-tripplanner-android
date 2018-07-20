@@ -34,9 +34,17 @@
                 android:targetClass="org.gophillygo.app.activities.AppInfoActivity" />
         </Preference>
         <Preference
-            android:title="@string/preferences_terms_of_service" />
+            android:title="@string/preferences_terms_of_service" >
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="@string/general_preferences_terms_of_service_url" />
+        </Preference>
         <Preference
-            android:title="@string/preferences_privacy" />
+            android:title="@string/preferences_privacy">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="@string/general_preferences_privacy_policy_url" />
+        </Preference>
         <Preference
             android:title="@string/preferences_licences">
             <intent
