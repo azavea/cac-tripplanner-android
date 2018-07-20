@@ -168,23 +168,23 @@ public class PlacesListActivity extends FilterableListActivity implements
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
+        Intent intent;
         switch (itemId) {
             case R.id.action_place_list_events:
                 Log.d(LOG_LABEL, "Selected events menu item");
+                intent = new Intent(this, EventsListActivity.class);
+                intent.putExtra(FILTER_KEY, filter);
+                startActivity(intent);
                 break;
             case R.id.action_place_list_map:
                 Log.d(LOG_LABEL, "Selected map menu item");
-                startActivity(new Intent(this, PlacesMapsActivity.class));
+                intent = new Intent(this, PlacesMapsActivity.class);
+                intent.putExtra(FILTER_KEY, filter);
+                startActivity(intent);
                 break;
             case R.id.action_place_list_search:
                 Log.d(LOG_LABEL, "Selected search menu item");
-
-                // TODO: search
-                if (super.onSearchRequested()) {
-                    Log.d(LOG_LABEL, "search requested!");
-                } else {
-                    Log.w(LOG_LABEL, "no search reqeusted?");
-                }
+                super.onSearchRequested();
                 break;
             default:
                 Log.w(LOG_LABEL, "Unrecognized menu item selected: " + String.valueOf(itemId));
