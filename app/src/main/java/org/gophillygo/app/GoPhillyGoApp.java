@@ -7,8 +7,10 @@ import android.content.ContentProvider;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.core.CrashlyticsCore;
 
 import org.gophillygo.app.di.AppInjector;
+import org.gophillygo.app.utils.UserUtils;
 
 import javax.inject.Inject;
 
@@ -51,6 +53,12 @@ public class GoPhillyGoApp extends Application implements HasActivityInjector, H
         if (BuildConfig.DEBUG) {
             Log.d(LOG_LABEL, "Running in debug mode");
         }
+
+        // Initialize Fabric/Crashlytics crash and usage data logging.
+        // Disable if user setting turned off; still must be initialized to avoid errors.
+        // Based on: https://stackoverflow.com/a/31996615
+        CrashlyticsCore core = new CrashlyticsCore.Builder().disabled(!UserUtils.isFabricEnabled(this)).build();
+        Fabric.with(this, new Crashlytics.Builder().core(core).build());
 
         // Lazy initialization to support injection for content provider. See:
         // https://github.com/google/dagger/blob/master/java/dagger/android/DaggerApplication.java
