@@ -9,9 +9,8 @@ import android.view.MenuItem;
 
 import org.gophillygo.app.R;
 import org.gophillygo.app.data.models.DestinationInfo;
-import org.gophillygo.app.databinding.FilterButtonBarBinding;
 import org.gophillygo.app.databinding.ActivityPlacesMapsBinding;
-
+import org.gophillygo.app.databinding.FilterButtonBarBinding;
 
 import java.util.HashMap;
 
@@ -40,21 +39,19 @@ public class PlacesMapsActivity extends MapsActivity<DestinationInfo> {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Intent intent;
         int itemId = item.getItemId();
         switch (itemId) {
             case R.id.places_map_action_view_events:
                 Log.d(LOG_LABEL, "Selected map events menu item");
-                intent = new Intent(this, EventsMapsActivity.class);
-                startActivity(intent);
-                break;
-            case R.id.places_map_action_map_search:
-                Log.d(LOG_LABEL, "Selected map search menu item");
+                startActivity(new Intent(this, EventsMapsActivity.class));
                 break;
             case R.id.places_map_action_view_list:
                 Log.d(LOG_LABEL, "Selected to go back to list view from map");
-                intent = new Intent(this, PlacesListActivity.class);
-                startActivity(intent);
+                startActivity(new Intent(this, PlacesListActivity.class));
+                break;
+            case R.id.places_map_action_map_search:
+                Log.d(LOG_LABEL, "Selected search menu item");
+                super.onSearchRequested();
                 break;
             default:
                 Log.w(LOG_LABEL, "Unrecognized menu item selected: " + String.valueOf(itemId));

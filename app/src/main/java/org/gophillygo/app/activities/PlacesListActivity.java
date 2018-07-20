@@ -171,6 +171,7 @@ public class PlacesListActivity extends FilterableListActivity implements
         switch (itemId) {
             case R.id.action_place_list_events:
                 Log.d(LOG_LABEL, "Selected events menu item");
+                startActivity(new Intent(this, EventsListActivity.class));
                 break;
             case R.id.action_place_list_map:
                 Log.d(LOG_LABEL, "Selected map menu item");
@@ -178,13 +179,7 @@ public class PlacesListActivity extends FilterableListActivity implements
                 break;
             case R.id.action_place_list_search:
                 Log.d(LOG_LABEL, "Selected search menu item");
-
-                // TODO: search
-                if (super.onSearchRequested()) {
-                    Log.d(LOG_LABEL, "search requested!");
-                } else {
-                    Log.w(LOG_LABEL, "no search reqeusted?");
-                }
+                super.onSearchRequested();
                 break;
             default:
                 Log.w(LOG_LABEL, "Unrecognized menu item selected: " + String.valueOf(itemId));

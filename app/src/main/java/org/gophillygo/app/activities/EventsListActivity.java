@@ -148,6 +148,7 @@ public class EventsListActivity extends FilterableListActivity
         switch (itemId) {
             case R.id.action_event_place:
                 Log.d(LOG_LABEL, "Selected event place menu item");
+                startActivity(new Intent(this, PlacesListActivity.class));
                 break;
             case R.id.action_event_map:
                 Log.d(LOG_LABEL, "Selected map menu item");
@@ -155,6 +156,7 @@ public class EventsListActivity extends FilterableListActivity
                 break;
             case R.id.action_event_search:
                 Log.d(LOG_LABEL, "Selected search menu item");
+                super.onSearchRequested();
                 break;
             default:
                 Log.w(LOG_LABEL, "Unrecognized menu item selected: " + String.valueOf(itemId));
