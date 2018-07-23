@@ -69,8 +69,9 @@ public class PlacesListActivity extends FilterableListActivity implements
     }
 
     public boolean clickedFlagOption(MenuItem item, AttractionInfo destinationInfo, Integer position) {
-        Boolean haveExistingGeofence = destinationInfo.getFlag().getOption()
-                .apiName.equals(AttractionFlag.Option.WantToGo.apiName);
+        String option = destinationInfo.getFlag().getOption().apiName;
+        boolean haveExistingGeofence = option.equals(AttractionFlag.Option.WantToGo.apiName) ||
+                option.equals(AttractionFlag.Option.Liked.apiName);
 
         destinationInfo.updateAttractionFlag(item.getItemId());
 
@@ -80,7 +81,9 @@ public class PlacesListActivity extends FilterableListActivity implements
                 UserUtils.isFlagPostingEnabled(this));
 
         placesListAdapter.notifyItemChanged(position);
-        Boolean settingGeofence = destinationInfo.getFlag().getOption().apiName.equals(AttractionFlag.Option.WantToGo.apiName);
+        String optionAfter = destinationInfo.getFlag().getOption().apiName;
+        boolean settingGeofence = optionAfter.equals(AttractionFlag.Option.WantToGo.apiName) ||
+                optionAfter.equals(AttractionFlag.Option.Liked.apiName);
         addOrRemoveGeofence(destinationInfo, haveExistingGeofence, settingGeofence);
 	    return true;
     }

@@ -205,8 +205,9 @@ public class EventDetailActivity extends AttractionDetailActivity {
     }
 
     private void updateFlag(int itemId) {
-        boolean haveExistingGeofence = eventInfo.getFlag().getOption()
-                .apiName.equals(AttractionFlag.Option.WantToGo.apiName);
+        String option = eventInfo.getFlag().getOption().apiName;
+        boolean haveExistingGeofence = option.equals(AttractionFlag.Option.WantToGo.apiName) ||
+                option.equals(AttractionFlag.Option.Liked.apiName);
         eventInfo.updateAttractionFlag(itemId);
 
         viewModel.updateAttractionFlag(eventInfo.getFlag(),
@@ -214,7 +215,9 @@ public class EventDetailActivity extends AttractionDetailActivity {
                 getString(R.string.user_flag_post_api_key),
                 UserUtils.isFlagPostingEnabled(this));
 
-        Boolean settingGeofence = eventInfo.getFlag().getOption().apiName.equals(AttractionFlag.Option.WantToGo.apiName);
+        String optionAfter = eventInfo.getFlag().getOption().apiName;
+        Boolean settingGeofence = optionAfter.equals(AttractionFlag.Option.WantToGo.apiName) ||
+                optionAfter.equals(AttractionFlag.Option.Liked.apiName);
         addOrRemoveGeofence(eventInfo, haveExistingGeofence, settingGeofence);
         binding.notifyPropertyChanged(BR.destinationInfo);
     }

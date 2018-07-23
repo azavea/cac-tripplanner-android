@@ -101,8 +101,8 @@
     <string name="user_uuid_shared_preferences_file">gophillygo_user_uuid_shared_preferences</string>
     <!-- the key to the UUID within the shared preferences file -->
     <string name="user_uuid_shared_preferences_key">gophillygo_user_uuid</string>
-    <string name="location_network_permission_rationale">Please set location mode to \"High Accuracy\" to receive notifications when places you want to go are nearby.</string>
-    <string name="channel_description">Nearby GoPhillyGo destinations you want to go visit</string>
+    <string name="location_network_permission_rationale">Please set location mode to \"High Accuracy\" to receive notifications when places you like or want to go are nearby.</string>
+    <string name="channel_description">Nearby GoPhillyGo destinations you like or want to go visit</string>
     <string name="place_nearby_notification">Are you visiting %1$s now? Learn more.</string>
     <string name="place_nearby_been_button">I\'m there now</string>
     <string name="home_grid_events">Upcoming events</string>
@@ -118,7 +118,7 @@
 
     <!-- settings -->
     <string name="general_preference_notifications">Notifications</string>
-    <string name="general_preference_notifications_summary">Notify me when I\'m near a place I want to go.</string>
+    <string name="general_preference_notifications_summary">Notify me when I\'m near a place I like or want to go.</string>
     <string name="general_preference_fabric_logging">Share crash and usage data</string>
     <string name="general_preference_fabric_logging_summary">Send anonymous reports about how I\'m using the app and when the app crashes.</string>
     <string name="general_preferences_fabric_logging_disabled_notification">Please restart app for setting change to take effect.</string>
@@ -145,7 +145,7 @@
     <string name="app_info_description">The Clean Air Council\'s GoPhillyGo mobile application highlights the greater Philadelphia area\'s best educational and recreational destinations and events.</string>
     <string name="app_info_root_site_link" translatable="false"><a href="https://gophillygo.org">GoPhillyGo website</a></string>
     <string name="app_info_blog_link" translatable="false"><a href="https://gophillygo.org/learn">GoPhillyGo blog</a></string>
-    
+
     <!-- First launch dialog -->
     <string name="first_launch_dialog_title">Help us improve</string>
     <string name="first_launch_dialog_message">May we collect anonymous usage and crash data from you to improve our app? You can always change this later under the settings.</string>

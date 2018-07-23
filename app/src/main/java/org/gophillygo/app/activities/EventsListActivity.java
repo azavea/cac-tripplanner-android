@@ -65,8 +65,9 @@ public class EventsListActivity extends FilterableListActivity
     }
 
     public boolean clickedFlagOption(MenuItem item, AttractionInfo eventInfo, Integer position) {
-        Boolean haveExistingGeofence = eventInfo.getFlag()
-                .getOption().apiName.equals(AttractionFlag.Option.WantToGo.apiName);
+        String option = eventInfo.getFlag().getOption().apiName;
+        Boolean haveExistingGeofence = option.equals(AttractionFlag.Option.WantToGo.apiName) ||
+                option.equals(AttractionFlag.Option.Liked.apiName);
 
         eventInfo.updateAttractionFlag(item.getItemId());
 
@@ -78,7 +79,9 @@ public class EventsListActivity extends FilterableListActivity
 
         // do not attempt to add a geofence for an event with no location
         if (((EventInfo)eventInfo).hasDestinationName()) {
-            Boolean settingGeofence = eventInfo.getFlag().getOption().apiName.equals(AttractionFlag.Option.WantToGo.apiName);
+            String optionAfter = eventInfo.getFlag().getOption().apiName;
+            Boolean settingGeofence = optionAfter.equals(AttractionFlag.Option.WantToGo.apiName) ||
+                    optionAfter.equals(AttractionFlag.Option.Liked.apiName);
             addOrRemoveGeofence(eventInfo, haveExistingGeofence, settingGeofence);
         } else {
             // TODO: notify user?

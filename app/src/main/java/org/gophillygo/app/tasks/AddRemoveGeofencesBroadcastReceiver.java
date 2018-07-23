@@ -125,8 +125,10 @@ public class AddRemoveGeofencesBroadcastReceiver extends BroadcastReceiver {
                 @Override
                 protected Void doInBackground(Void... voids) {
                     List<Destination> destinations = destinationDao
-                            .getGeofenceDestinations(AttractionFlag.Option.WantToGo.code);
-                    List<EventInfo> events = eventDao.getGeofenceEvents(AttractionFlag.Option.WantToGo.code);
+                            .getGeofenceDestinations(AttractionFlag.Option.WantToGo.code,
+                                    AttractionFlag.Option.Liked.code);
+                    List<EventInfo> events = eventDao.getGeofenceEvents(AttractionFlag.Option.WantToGo.code,
+                            AttractionFlag.Option.Liked.code);
 
                     // Check that there is at least one place to geofence and prevent NPEs by
                     // initializing null lists
