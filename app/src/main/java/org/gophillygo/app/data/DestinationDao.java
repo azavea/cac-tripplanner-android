@@ -81,6 +81,13 @@ public abstract class DestinationDao implements AttractionDao<Destination> {
             "LIMIT 1")
     public abstract LiveData<CategoryImage> getRandomExerciseImages();
 
+    @Query("SELECT _id AS attractionID, 0 AS is_event, destination.wide_image AS image " +
+            "FROM destination " +
+            "WHERE watershed_alliance = 1 " +
+            "ORDER BY random() " +
+            "LIMIT 1")
+    public abstract LiveData<CategoryImage> getRandomWatershedAllianceImages();
+
     /**
      * Find random representative images for each of the filter buttons on the home screen.
      * Must be called from background thread.
@@ -110,6 +117,10 @@ public abstract class DestinationDao implements AttractionDao<Destination> {
 
         LiveData<CategoryImage> liked = getRandomImagesForFlag(AttractionFlag.Option.Liked.code);
         addSourceToRandomImagesLiveData(liked, CategoryAttraction.PlaceCategories.Liked, categoryAttractions, data);
+
+        LiveData<CategoryImage> watershedAlliance = getRandomWatershedAllianceImages();
+        addSourceToRandomImagesLiveData(watershedAlliance, CategoryAttraction.PlaceCategories.WatershedAlliance,
+                categoryAttractions, data);
 
         LiveData<CategoryImage> nature = getRandomNatureImages();
         addSourceToRandomImagesLiveData(nature, CategoryAttraction.PlaceCategories.Nature, categoryAttractions, data);

@@ -224,6 +224,9 @@ PlaceCategoryGridAdapter.GridViewHolder.PlaceGridItemClickListener {
             case Educational:
                 filter.setEducational(true);
                 break;
+            case WatershedAlliance:
+                filter.setWatershedAlliance(true);
+                break;
             default:
                 Log.e(LOG_LABEL, "Unrecognized place category " + category.displayName);
         }

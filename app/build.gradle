@@ -135,7 +135,7 @@ dependencies {
     annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
 
     // OSS licensing
-    implementation 'com.google.android.gms:play-services-oss-licenses:15.0.1'
+    implementation 'com.google.android.gms:play-services-oss-licenses:16.0.0'
 
     // testing
     testImplementation 'junit:junit:4.12'
