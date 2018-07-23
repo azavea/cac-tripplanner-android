@@ -8,6 +8,7 @@
         <!-- set up data binding to destination -->
         <variable name="destination" type="org.gophillygo.app.data.models.Destination"/>
         <variable name="showNearbyLabel" type="boolean" />
+        <variable name="activity" type="android.app.Activity" />
         <!-- imports to allow referencing within data binding expressions -->
         <import type="android.view.View"/>
     </data>
@@ -54,23 +55,9 @@
                 style="@style/ItemDetailDistance"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{destination.getFormattedDistance}"
+                android:text="@{@string/distance_with_abbreviated_miles(destination.getFormattedDistance())}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent" />
-
-            <TextView
-                android:id="@+id/carousel_item_nearby_label"
-                style="@style/Base.TextAppearance.AppCompat.Title.Inverse"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                android:layout_marginRight="16dp"
-                android:text="@string/carousel_nearby_label"
-                android:textAlignment="textEnd"
-                android:textSize="12sp"
-                android:visibility="@{showNearbyLabel ? View.VISIBLE : View.GONE}"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintRight_toRightOf="parent" />
         </android.support.constraint.ConstraintLayout>
     </android.support.constraint.ConstraintLayout>
 </layout>

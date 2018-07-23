@@ -5,7 +5,6 @@
     <string name="menu_search_action">Search</string>
     <string name="menu_action_settings">Settings</string>
     <string name="menu_action_about">About</string>
-    <string name="menu_action_logout">Sign out</string>
     <string name="menu_action_events">Go to events</string>
     <string name="menu_action_places">Go to places</string>
     <string name="menu_action_map">See map</string>
@@ -17,7 +16,17 @@
     <string name="place_been_option">Been</string>
     <string name="place_want_to_go_option">Want to go</string>
 
-    <string name="carousel_nearby_label">Nearby</string>
+    <!-- User flags -->
+    <string name="place_detail_unset">Been here? Want to go?</string>
+    <string name="event_detail_unset">Want to go?</string>
+    <string name="place_detail_want_to_go">You want to go here</string>
+    <string name="event_detail_want_to_go">You want to go to this</string>
+    <string name="place_detail_been">You\'ve been here</string>
+    <string name="event_detail_been">You\'ve been to this</string>
+    <string name="place_detail_liked">You liked this place</string>
+    <string name="event_detail_liked">You liked this event</string>
+    <string name="place_detail_not_interested">You\'re not interested</string>
+    <string name="event_detail_not_interested">You\'re not interested</string>
 
     <string name="places_list_title">Places</string>
     <string name="events_list_title">Events</string>
@@ -50,7 +59,7 @@
         <item quantity="other">%d upcoming events</item>
     </plurals>
 
-    <string name="place_details_been_want_to_go_label">Been here? Want to go?</string>
+    <string name="distance_with_abbreviated_miles">%s mi</string>
 
     <string name="place_detail_map_button">Map</string>
     <string name="place_detail_directions_button">Directions</string>
@@ -65,6 +74,7 @@
 
     <string name="event_detail_single_day_time_range">%s • %s - %s</string>
     <string name="event_detail_date_range">%s - %s</string>
+    <string name="event_detail_date_start_multiday_events">Now</string>
     <string name="event_detail_add_to_calendar">Add to calendar</string>
     <string name="event_detail_no_calendar">No calendar application is installed.</string>
 
@@ -91,9 +101,55 @@
     <string name="user_uuid_shared_preferences_file">gophillygo_user_uuid_shared_preferences</string>
     <!-- the key to the UUID within the shared preferences file -->
     <string name="user_uuid_shared_preferences_key">gophillygo_user_uuid</string>
-    <string name="location_network_permission_rationale">Please set location mode to \"High Accuracy\" to receive notifications when places you want to go are nearby.</string>
-    <string name="channel_description">Nearby GoPhillyGo destinations you want to go visit</string>
+    <string name="location_network_permission_rationale">Please set location mode to \"High Accuracy\" to receive notifications when places you like or want to go are nearby.</string>
+    <string name="channel_description">Nearby GoPhillyGo destinations you like or want to go visit</string>
     <string name="place_nearby_notification">Are you visiting %1$s now? Learn more.</string>
     <string name="place_nearby_been_button">I\'m there now</string>
     <string name="home_grid_events">Upcoming events</string>
+    <string name="general_preference_category">General</string>
+
+    <!-- shared preferences settings key -->
+    <string name="general_preferences_key" translatable="false">gophillygo_general_preferences</string>
+    <string name="preferences_fine_print_key" translatable="false">gophillygo_preferences_fine_print</string>
+    <string name="general_preferences_allow_notifications_key" translatable="false">gophillygo_enable_notifications</string>
+    <string name="general_preferences_send_flags_key" translatable="false">gophillygo_send_flags</string>
+    <string name="general_preferences_reset_uuid_key" translatable="false">gophillygo_reset_uuid</string>
+    <string name="general_preferences_fabric_logging_key" translatable="false">gophillygo_fabric_logging</string>
+
+    <!-- settings -->
+    <string name="general_preference_notifications">Notifications</string>
+    <string name="general_preference_notifications_summary">Notify me when I\'m near a place I like or want to go.</string>
+    <string name="general_preference_fabric_logging">Share crash and usage data</string>
+    <string name="general_preference_fabric_logging_summary">Send anonymous reports about how I\'m using the app and when the app crashes.</string>
+    <string name="general_preferences_fabric_logging_disabled_notification">Please restart app for setting change to take effect.</string>
+    <string name="general_preferences_send_flags">Share selections</string>
+    <string name="general_preferences_send_flags_summary">Send us anonymous reports of which destinations and events you have marked as <i>been, liked, want to go,</i> or <i>not interested</i> so we can improve our listings.</string>
+    <string name="general_preferences_reset_uuid">Reset anonymous app install ID</string>
+    <string name="general_preferences_reset_uuid_summary">Have privacy concerns? Everything we track is anonymous, and you can reset this unique identifier at any time. None of the selections you\'ve made will be lost.</string>
+    <string name="general_preferences_reset_uuid_message">Identifier reset to %s</string>
+    <string name="preferences_fine_print">Fine print</string>
+    <string name="preferences_app_info">About</string>
+    <string name="preferences_licences">Licenses</string>
+    <string name="preferences_privacy">Privacy policy</string>
+    <string name="preferences_terms_of_service">Terms of service</string>
+    <string name="preferences">Settings</string>
+    <string name="title_activity_search">Search GoPhillyGo</string>
+    <string name="search_hint">Place or event</string>
+    <string name="search_provider_description">Places and Events around Greater Philadelphia</string>
+    <string name="general_preferences_privacy_policy_url" translatable="false">https://gophillygo.org/privacy_policy</string>
+    <string name="general_preferences_terms_of_service_url" translatable="false">https://gophillygo.org/terms_of_service</string>
+
+
+    <!-- About page -->
+    <string name="title_activity_app_info">About GoPhillyGo</string>
+    <string name="app_info_description">The Clean Air Council\'s GoPhillyGo mobile application highlights the greater Philadelphia area\'s best educational and recreational destinations and events.</string>
+    <string name="app_info_root_site_link" translatable="false"><a href="https://gophillygo.org">GoPhillyGo website</a></string>
+    <string name="app_info_blog_link" translatable="false"><a href="https://gophillygo.org/learn">GoPhillyGo blog</a></string>
+
+    <!-- First launch dialog -->
+    <string name="first_launch_dialog_title">Help us improve</string>
+    <string name="first_launch_dialog_message">May we collect anonymous usage and crash data from you to improve our app? You can always change this later under the settings.</string>
+    <string name="first_launch_dialog_ok_action">Yes, share</string>
+    <string name="first_launch_dialog_cancel_action">No</string>
+
 </resources>

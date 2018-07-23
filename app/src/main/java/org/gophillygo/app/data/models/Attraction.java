@@ -4,25 +4,18 @@ import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
-import android.content.Context;
 import android.os.Build;
+import android.provider.BaseColumns;
 import android.support.annotation.NonNull;
 import android.text.Html;
 import android.text.Spanned;
-import android.util.Log;
 
 import com.google.gson.annotations.SerializedName;
-import org.gophillygo.app.BuildConfig;
-import org.gophillygo.app.data.DestinationWebservice;
 
-import org.gophillygo.app.BuildConfig;
+import org.gophillygo.app.data.DestinationWebservice;
 
 import java.util.ArrayList;
 import java.util.Objects;
-
-import static org.gophillygo.app.data.models.CategoryAttraction.Activities.Cycling;
-import static org.gophillygo.app.data.models.CategoryAttraction.Activities.Hiking;
-import static org.gophillygo.app.data.models.CategoryAttraction.Activities.WaterRecreation;
 
 
 @Entity
@@ -31,8 +24,11 @@ public class Attraction {
     @Ignore
     private static final String LOG_LABEL = "Attraction";
 
+    // Use _ID for the internal primary column name, to ease mapping to a Cursor.
     @PrimaryKey
-    private final int id;
+    @ColumnInfo(index = true)
+    @SerializedName("id")
+    private final int _id;
 
     @ColumnInfo(index = true)
     private final int placeID;
@@ -71,11 +67,11 @@ public class Attraction {
     // timestamp is not final, as it is set on database save, and not by serializer
     private long timestamp;
 
-    public Attraction(int id, int placeID, String name, boolean accessible, String image,
+    public Attraction(int _id, int placeID, String name, boolean accessible, String image,
                       boolean cycling, String description, int priority, String websiteUrl,
                       String wideImage, boolean isEvent, ArrayList<String> activities,
                       ArrayList<String> extraWideImages) {
-        this.id = id;
+        this._id = _id;
         this.placeID = placeID;
         this.name = name;
         this.accessible = accessible;
@@ -118,8 +114,16 @@ public class Attraction {
         this.timestamp = timestamp;
     }
 
+    public boolean isHiking() {
+        return activities.contains(CategoryAttraction.HIKING_API_NAME);
+    }
+
+    public boolean isWaterRecreation() {
+        return activities.contains(CategoryAttraction.WATER_REC_API_NAME);
+    }
+
     public int getId() {
-        return id;
+        return _id;
     }
 
     public int getPlaceID() {
@@ -197,35 +201,12 @@ public class Attraction {
      * @return Parsed HTML in a span
      */
     @SuppressWarnings("deprecation")
-    private Spanned getHtmlFromString(String source) {
+    protected static Spanned getHtmlFromString(String source) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             return Html.fromHtml(source, Html.FROM_HTML_MODE_LEGACY);
         } else {
             return Html.fromHtml(source);
         }
-    }
-
-    // get a dot-separated string listing all the activities available here
-    public String getActivitiesString(Context context) {
-        StringBuilder stringBuilder = new StringBuilder("");
-        // separate activities with dots
-        String dot = getHtmlFromString("&nbsp;&#8226;&nbsp;").toString();
-        for (String activity: this.getActivities()) {
-            if (stringBuilder.length() > 0) {
-                stringBuilder.append(dot);
-            }
-
-            if (activity.equals(CategoryAttraction.Activities.Cycling.getApiName())) {
-                stringBuilder.append(context.getString(CategoryAttraction.Activities.Cycling.getDisplayName()));
-            } else if (activity.equals(CategoryAttraction.Activities.Hiking.getApiName())) {
-                stringBuilder.append(context.getString(CategoryAttraction.Activities.Hiking.getDisplayName()));
-            } else if (activity.equals(CategoryAttraction.Activities.WaterRecreation.getApiName())) {
-                stringBuilder.append(context.getString(CategoryAttraction.Activities.WaterRecreation.getDisplayName()));
-            } else {
-                Log.e(LOG_LABEL, "Unrecognized activity " + activity);
-            }
-        }
-        return stringBuilder.toString();
     }
 
     // Implement equals and hashcode for list adapter to diff.
@@ -235,7 +216,7 @@ public class Attraction {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Attraction that = (Attraction) o;
-        return id == that.id &&
+        return _id == that._id &&
                 placeID == that.placeID &&
                 accessible == that.accessible &&
                 cycling == that.cycling &&
@@ -254,6 +235,6 @@ public class Attraction {
     @Override
     public int hashCode() {
 
-        return Objects.hash(id, placeID, name, accessible, image, cycling, description, priority, activities, websiteUrl, wideImage, isEvent, timestamp);
+        return Objects.hash(_id, placeID, name, accessible, image, cycling, description, priority, activities, websiteUrl, wideImage, isEvent, timestamp);
     }
 }

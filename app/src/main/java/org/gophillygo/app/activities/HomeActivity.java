@@ -19,7 +19,6 @@ import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.integration.recyclerview.RecyclerViewPreloader;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.util.FixedPreloadSizeProvider;
-import com.bumptech.glide.util.ViewPreloadSizeProvider;
 import com.synnapps.carouselview.CarouselView;
 
 import org.gophillygo.app.CarouselViewListener;
@@ -121,7 +120,7 @@ PlaceCategoryGridAdapter.GridViewHolder.PlaceGridItemClickListener {
         Log.d(LOG_LABEL, "set up carousel with size: " + getNearestDestinationSize());
 
         carouselView.pauseCarousel();
-        carouselView.setViewListener(new CarouselViewListener(this, true) {
+        carouselView.setViewListener(new CarouselViewListener(this) {
             @Override
             public Destination getDestinationAt(int position) {
                 return getNearestDestination(position);
@@ -136,11 +135,21 @@ PlaceCategoryGridAdapter.GridViewHolder.PlaceGridItemClickListener {
         } else {
             Log.d(LOG_LABEL, "Nearest destinations collection empty; nothing to put in carousel.");
         }
+
+        // Go to place detail view on carousel interaction
+        carouselView.setImageClickListener(position -> {
+            Log.d(LOG_LABEL, "Clicked item at " + position);
+            Destination destination = getNearestDestination(position);
+            if (destination != null) {
+                goToPlace((long)destination.getId());
+            }
+        });
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.home_menu, menu);
+        setupSearch(menu, R.id.action_home_search);
         return true;
     }
 
@@ -149,17 +158,13 @@ PlaceCategoryGridAdapter.GridViewHolder.PlaceGridItemClickListener {
         int itemId = item.getItemId();
 
         switch (itemId) {
-            case R.id.action_search:
+            case R.id.action_place_list_search:
                 Log.d(LOG_LABEL, "Clicked search action");
                 break;
             case R.id.action_settings:
                 Log.d(LOG_LABEL, "Clicked settings action");
-                break;
-            case R.id.action_about:
-                Log.d(LOG_LABEL, "Clicked about action");
-                break;
-            case R.id.action_logout:
-                Log.d(LOG_LABEL, "Clicked logout action");
+                Intent intent = new Intent(this, GpgPreferenceActivity.class);
+                startActivity(intent);
                 break;
             default:
                 Log.w(LOG_LABEL, "Unrecognized menu option selected: " + itemId);
@@ -218,6 +223,9 @@ PlaceCategoryGridAdapter.GridViewHolder.PlaceGridItemClickListener {
                 break;
             case Educational:
                 filter.setEducational(true);
+                break;
+            case WatershedAlliance:
+                filter.setWatershedAlliance(true);
                 break;
             default:
                 Log.e(LOG_LABEL, "Unrecognized place category " + category.displayName);

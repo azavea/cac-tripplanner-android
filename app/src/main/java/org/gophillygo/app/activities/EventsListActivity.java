@@ -25,10 +25,7 @@ import org.gophillygo.app.data.networkresource.Status;
 import org.gophillygo.app.databinding.ActivityEventsListBinding;
 import org.gophillygo.app.databinding.FilterButtonBarBinding;
 import org.gophillygo.app.di.GpgViewModelFactory;
-import org.gophillygo.app.tasks.AddGeofencesBroadcastReceiver;
-import org.gophillygo.app.tasks.RemoveGeofenceWorker;
-
-import org.gophillygo.app.data.models.EventInfo;
+import org.gophillygo.app.utils.UserUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,22 +61,27 @@ public class EventsListActivity extends FilterableListActivity
         // Get database ID for event clicked, based on positional offset, and pass it along
         long eventId = eventsListView.getAdapter().getItemId(position);
         Log.d(LOG_LABEL, "Clicked event with ID: " + eventId);
-        Intent intent = new Intent(this, EventDetailActivity.class);
-        intent.putExtra(EventDetailActivity.EVENT_ID_KEY, eventId);
-        startActivity(intent);
+        goToEvent(eventId);
     }
 
     public boolean clickedFlagOption(MenuItem item, AttractionInfo eventInfo, Integer position) {
-        Boolean haveExistingGeofence = eventInfo.getFlag()
-                .getOption().api_name.equals(AttractionFlag.Option.WantToGo.api_name);
+        String option = eventInfo.getFlag().getOption().apiName;
+        Boolean haveExistingGeofence = option.equals(AttractionFlag.Option.WantToGo.apiName) ||
+                option.equals(AttractionFlag.Option.Liked.apiName);
 
         eventInfo.updateAttractionFlag(item.getItemId());
-        viewModel.updateAttractionFlag(eventInfo.getFlag(), userUuid, getString(R.string.user_flag_post_api_key));
+
+        viewModel.updateAttractionFlag(eventInfo.getFlag(),
+                userUuid,
+                getString(R.string.user_flag_post_api_key),
+                UserUtils.isFlagPostingEnabled(this));
         adapter.notifyItemChanged(position);
 
         // do not attempt to add a geofence for an event with no location
         if (((EventInfo)eventInfo).hasDestinationName()) {
-            Boolean settingGeofence = eventInfo.getFlag().getOption().api_name.equals(AttractionFlag.Option.WantToGo.api_name);
+            String optionAfter = eventInfo.getFlag().getOption().apiName;
+            Boolean settingGeofence = optionAfter.equals(AttractionFlag.Option.WantToGo.apiName) ||
+                    optionAfter.equals(AttractionFlag.Option.Liked.apiName);
             addOrRemoveGeofence(eventInfo, haveExistingGeofence, settingGeofence);
         } else {
             // TODO: notify user?
@@ -139,22 +141,30 @@ public class EventsListActivity extends FilterableListActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.events_list_menu, menu);
+        setupSearch(menu, R.id.action_event_search);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
+        Intent intent;
         switch (itemId) {
             case R.id.action_event_place:
                 Log.d(LOG_LABEL, "Selected event place menu item");
+                intent = new Intent(this, PlacesListActivity.class);
+                intent.putExtra(FILTER_KEY, filter);
+                startActivity(intent);
                 break;
             case R.id.action_event_map:
                 Log.d(LOG_LABEL, "Selected map menu item");
-                startActivity(new Intent(this, EventsMapsActivity.class));
+                intent = new Intent(this, EventsMapsActivity.class);
+                intent.putExtra(FILTER_KEY, filter);
+                startActivity(intent);
                 break;
             case R.id.action_event_search:
                 Log.d(LOG_LABEL, "Selected search menu item");
+                super.onSearchRequested();
                 break;
             default:
                 Log.w(LOG_LABEL, "Unrecognized menu item selected: " + String.valueOf(itemId));

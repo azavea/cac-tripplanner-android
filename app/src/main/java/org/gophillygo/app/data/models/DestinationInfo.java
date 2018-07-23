@@ -1,6 +1,7 @@
 package org.gophillygo.app.data.models;
 
 import android.arch.persistence.room.Embedded;
+import android.content.Context;
 
 import java.util.Objects;
 

@@ -66,6 +66,10 @@ public class DestinationRepository {
         return eventDao.getEvent(eventId);
     }
 
+    public LiveData<List<EventInfo>> getEventsForDestination(long destinationId) {
+        return eventDao.getEventsForDestination(destinationId);
+    }
+
     @SuppressLint("StaticFieldLeak")
     public void updateDestination(Destination destination) {
         new AsyncTask<Void, Void, Void>() {
@@ -88,9 +92,17 @@ public class DestinationRepository {
         }.execute();
     }
 
+    /**
+     * Post user flag and anonymized app ID to GoPhillyGo server on change.
+     *
+     *
+     * @param flag new flag set
+     * @param userUuid user's anonymous app install identifier
+     * @param apiKey key server expects on POST
+     * @param postToServer True if user allows flags to be shared with GoPhillyGo
+     */
     @SuppressLint("StaticFieldLeak")
-    public void updateAttractionFlag(AttractionFlag flag, String userUuid, String apiKey) {
-
+    public void updateAttractionFlag(AttractionFlag flag, String userUuid, String apiKey, boolean postToServer) {
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... voids) {
@@ -99,7 +111,12 @@ public class DestinationRepository {
             }
         }.execute();
 
-        UserFlagPost post = new UserFlagPost(flag.getAttractionID(), flag.getOption().api_name,
+        if (!postToServer) {
+            Log.d(LOG_LABEL, "Posting user flags to server disabled; not sending");
+            return;
+        }
+
+        UserFlagPost post = new UserFlagPost(flag.getAttractionID(), flag.getOption().apiName,
                 flag.isEvent(), userUuid, apiKey);
 
         webservice.postUserFlag(post).enqueue(new Callback<UserFlagPostResponse>() {

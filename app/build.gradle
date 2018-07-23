@@ -7,13 +7,15 @@ buildscript {
         classpath 'io.fabric.tools:gradle:1.+'
     }
 }
-apply plugin: 'com.android.application'
 
 repositories {
     maven { url 'https://maven.fabric.io/public' }
 }
 
+apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
+apply plugin: 'com.google.gms.oss.licenses.plugin'
+
 
 android {
     signingConfigs {
@@ -24,8 +26,9 @@ android {
         applicationId "org.gophillygo.app"
         minSdkVersion 19
         targetSdkVersion 27
-        versionCode 4
-        versionName "1.0.3"
+        versionCode 10
+        versionName "1.0.8"
+        vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         javaCompileOptions {
             annotationProcessorOptions {
@@ -95,10 +98,10 @@ dependencies {
     implementation "com.google.android.gms:play-services-maps:$playServicesVersion"
 
     // Android WorkManager
-    implementation 'android.arch.work:work-runtime:1.0.0-alpha03'
+    implementation 'android.arch.work:work-runtime:1.0.0-alpha04'
 
     // Carousel
-    implementation 'com.github.flibbertigibbet:carouselview:1.0.5'
+    implementation 'com.synnapps:carouselview:0.1.5'
 
     // Badges
     implementation 'com.github.nekocode:Badge:2.0'
@@ -107,7 +110,7 @@ dependencies {
     implementation('com.github.bumptech.glide:glide:4.6.1') {
         exclude group: "com.android.support"
     }
-    implementation ("com.github.bumptech.glide:recyclerview-integration:4.7.1") {
+    implementation("com.github.bumptech.glide:recyclerview-integration:4.7.1") {
         transitive = false
     }
     annotationProcessor 'com.github.bumptech.glide:compiler:4.6.1'
@@ -130,6 +133,9 @@ dependencies {
     implementation "com.google.dagger:dagger-android-support:$daggerVersion"
     annotationProcessor "com.google.dagger:dagger-android-processor:$daggerVersion"
     annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
+
+    // OSS licensing
+    implementation 'com.google.android.gms:play-services-oss-licenses:16.0.0'
 
     // testing
     testImplementation 'junit:junit:4.12'

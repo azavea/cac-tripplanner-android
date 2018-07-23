@@ -1,16 +1,24 @@
 package org.gophillygo.app.activities;
 
+import android.app.SearchManager;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.widget.CursorAdapter;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
+import android.view.Menu;
 
 import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.core.CrashlyticsCore;
 
 import org.gophillygo.app.data.DestinationViewModel;
 import org.gophillygo.app.data.models.AttractionInfo;
@@ -21,10 +29,10 @@ import org.gophillygo.app.data.models.EventInfo;
 import org.gophillygo.app.data.networkresource.Status;
 import org.gophillygo.app.di.GpgViewModelFactory;
 import org.gophillygo.app.tasks.AddGeofenceWorker;
-import org.gophillygo.app.tasks.AddGeofencesBroadcastReceiver;
+import org.gophillygo.app.tasks.AddRemoveGeofencesBroadcastReceiver;
 import org.gophillygo.app.tasks.RemoveGeofenceWorker;
 import org.gophillygo.app.utils.GpgLocationUtils;
-import org.gophillygo.app.utils.UserUuidUtils;
+import org.gophillygo.app.utils.UserUtils;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -47,12 +55,16 @@ public abstract class BaseAttractionActivity extends AppCompatActivity
 
     private static final float METERS_TO_MILES = 0.000621371192f;
 
+    private static final int MAX_DISTANCE_TO_USE_LOCATION_METERS = 500 * 1000;
+
     // maximum number of nearby destinations to show in carousel
     protected static final int NEAREST_DESTINATION_COUNT = 8;
 
     // City Hall
     private static final double DEFAULT_LATITUDE = 39.954888;
     private static final double DEFAULT_LONGITUDE = -75.163206;
+    private static Location defaultLocation;
+    private static final int SUGGEST_COLUMN_INDEX = 3;
 
     private Location currentLocation;
     private boolean locationHasChanged = false; // true if distances to new location not yet set
@@ -76,9 +88,9 @@ public abstract class BaseAttractionActivity extends AppCompatActivity
             // add geofence
             Log.d(LOG_LABEL, "Add attraction geofence");
             if (info instanceof EventInfo) {
-                AddGeofencesBroadcastReceiver.addOneGeofence((EventInfo)info);
+                AddRemoveGeofencesBroadcastReceiver.addOneGeofence((EventInfo)info);
             } else if (info instanceof DestinationInfo) {
-                AddGeofencesBroadcastReceiver.addOneGeofence(((DestinationInfo) info).getDestination());
+                AddRemoveGeofencesBroadcastReceiver.addOneGeofence(((DestinationInfo) info).getDestination());
             }
 
         } else if (haveExistingGeofence) {
@@ -90,9 +102,7 @@ public abstract class BaseAttractionActivity extends AppCompatActivity
 
     private void setDefaultLocation() {
         Log.w(LOG_LABEL, "Using City Hall as default location");
-        currentLocation = new Location(DUMMY_LOCATION_PROVIDER);
-        currentLocation.setLatitude(DEFAULT_LATITUDE);
-        currentLocation.setLongitude(DEFAULT_LONGITUDE);
+        currentLocation = defaultLocation;
     }
 
     private void fetchLastLocationOrUseDefault() {
@@ -105,7 +115,16 @@ public abstract class BaseAttractionActivity extends AppCompatActivity
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Fabric.with(this, new Crashlytics());
+
+        // Initialize Fabric/Crashlytics crash and usage data logging.
+        // Disable if user setting turned off; still must be initialized to avoid errors.
+        // Based on: https://stackoverflow.com/a/31996615
+        CrashlyticsCore core = new CrashlyticsCore.Builder().disabled(!UserUtils.isFabricEnabled(this)).build();
+        Fabric.with(this, new Crashlytics.Builder().core(core).build());
+
+        defaultLocation = new Location(DUMMY_LOCATION_PROVIDER);
+        defaultLocation.setLatitude(DEFAULT_LATITUDE);
+        defaultLocation.setLongitude(DEFAULT_LONGITUDE);
 
         fetchLastLocationOrUseDefault();
 
@@ -134,7 +153,7 @@ public abstract class BaseAttractionActivity extends AppCompatActivity
             locationOrDestinationsChanged();
 
             // Get or create unique, random UUID for app install for posting user flags
-            userUuid = UserUuidUtils.getUserUuid(getApplicationContext());
+            userUuid = UserUtils.getUserUuid(this);
             Crashlytics.setUserIdentifier(userUuid);
         });
     }
@@ -206,7 +225,17 @@ public abstract class BaseAttractionActivity extends AppCompatActivity
         }
 
         Log.d(LOG_LABEL, "location found: " + location.toString());
-        currentLocation = location;
+
+        float distance = location.distanceTo(defaultLocation);
+
+        if (distance > MAX_DISTANCE_TO_USE_LOCATION_METERS) {
+            Log.d(LOG_LABEL, "User is far away from Philly; use default location instead of actual. Distance from City Hall: " + distance);
+            setDefaultLocation();
+        } else {
+            Log.d(LOG_LABEL, "Location is in range. Distance from City Hall: " + distance);
+            currentLocation = location;
+        }
+
         locationHasChanged = true;
         nearestDestinations = findNearestDestinations();
         locationOrDestinationsChanged();
@@ -260,7 +289,7 @@ public abstract class BaseAttractionActivity extends AppCompatActivity
                     Log.d(LOG_LABEL, "Re-requesting location after getting location network permissions");
                     fetchLastLocationOrUseDefault();
                     Log.d(LOG_LABEL, "Attempting to register geofences from database again");
-                    Intent intent = new Intent(getApplicationContext(), AddGeofencesBroadcastReceiver.class);
+                    Intent intent = new Intent(getApplicationContext(), AddRemoveGeofencesBroadcastReceiver.class);
                     intent.setAction(AddGeofenceWorker.ACTION_GEOFENCE_TRANSITION);
                     sendBroadcast(intent);
                 } else if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
@@ -268,5 +297,65 @@ public abstract class BaseAttractionActivity extends AppCompatActivity
                 }
             }
         }
+    }
+
+    /**
+     * Set up a search widget in the activity app bar.
+     *
+     * @param menu Options menu
+     * @param searchItem Item in the options menu for searching
+     */
+    protected void setupSearch(Menu menu, @IdRes int searchItem) {
+        // Get the SearchView and set the searchable configuration
+        SearchManager searchManager = (SearchManager)getSystemService(Context.SEARCH_SERVICE);
+        SearchView searchView = (SearchView) menu.findItem(searchItem).getActionView();
+        // Assumes current activity is the searchable activity
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+
+        // handle opening detail intent from search
+        // https://developer.android.com/reference/android/widget/SearchView.OnSuggestionListener
+        searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
+            CursorAdapter adapter = searchView.getSuggestionsAdapter();
+
+            @Override
+            public boolean onSuggestionSelect(int position) {
+                Log.d(LOG_LABEL, "onSuggestionSelect " + position);
+                goToAttractionForPosition(adapter, position);
+                return true;
+            }
+
+            @Override
+            public boolean onSuggestionClick(int position) {
+                Log.d(LOG_LABEL, "onSuggestionClick " + position);
+                goToAttractionForPosition(adapter, position);
+                return true;
+            }
+        });
+    }
+
+    protected void goToAttractionForPosition(CursorAdapter adapter, int position) {
+        long itemId = adapter.getItemId(position);
+        Cursor cursor = adapter.getCursor();
+        cursor.moveToPosition(position);
+        int isEvent = cursor.getInt(SUGGEST_COLUMN_INDEX);
+        if (isEvent == 0) {
+            goToPlace(itemId);
+        } else {
+            goToEvent(itemId);
+        }
+    }
+
+    protected void goToPlace(long detailId) {
+        Log.d(LOG_LABEL, "going to detail view for place ID " + detailId);
+        Intent intent = new Intent(this, PlaceDetailActivity.class);
+        intent.putExtra(PlaceDetailActivity.DESTINATION_ID_KEY, detailId);
+        startActivity(intent);
+    }
+
+    protected void goToEvent(long detailId) {
+        Log.d(LOG_LABEL, "going to detail view for event ID " + detailId);
+        Intent intent = new Intent(this, EventDetailActivity.class);
+        intent.putExtra(EventDetailActivity.EVENT_ID_KEY, detailId);
+        startActivity(intent);
     }
 }

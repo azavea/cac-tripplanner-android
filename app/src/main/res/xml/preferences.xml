@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="@string/general_preference_category"
+        android:key="@string/general_preferences_key">
+        <SwitchPreference
+            android:key="@string/general_preferences_allow_notifications_key"
+            android:defaultValue="true"
+            android:summary="@string/general_preference_notifications_summary"
+            android:title="@string/general_preference_notifications" />
+        <SwitchPreference
+            android:key="@string/general_preferences_fabric_logging_key"
+            android:title="@string/general_preference_fabric_logging"
+            android:summary="@string/general_preference_fabric_logging_summary"
+            android:defaultValue="false" />
+        <SwitchPreference
+            android:key="@string/general_preferences_send_flags_key"
+            android:defaultValue="false"
+            android:summary="@string/general_preferences_send_flags_summary"
+            android:title="@string/general_preferences_send_flags"  />
+        <Preference
+            android:key="@string/general_preferences_reset_uuid_key"
+            android:summary="@string/general_preferences_reset_uuid_summary"
+            android:title="@string/general_preferences_reset_uuid" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        android:title="@string/preferences_fine_print"
+        android:key="@string/preferences_fine_print_key">
+        <Preference
+            android:title="@string/preferences_app_info">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:targetPackage="org.gophillygo.app"
+                android:targetClass="org.gophillygo.app.activities.AppInfoActivity" />
+        </Preference>
+        <Preference
+            android:title="@string/preferences_terms_of_service" >
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="@string/general_preferences_terms_of_service_url" />
+        </Preference>
+        <Preference
+            android:title="@string/preferences_privacy">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="@string/general_preferences_privacy_policy_url" />
+        </Preference>
+        <Preference
+            android:title="@string/preferences_licences">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:targetPackage="org.gophillygo.app"
+                android:targetClass="com.google.android.gms.oss.licenses.OssLicensesMenuActivity" />
+        </Preference>
+    </PreferenceCategory>
+
+</PreferenceScreen>

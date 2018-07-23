@@ -27,22 +27,22 @@ public abstract class DestinationDao implements AttractionDao<Destination> {
     private static final String LOG_LABEL = "DestinationDao";
 
     @Transaction
-    @Query("SELECT destination.*, COUNT(event.id) AS eventCount, attractionflag.option " +
+    @Query("SELECT destination.*, COUNT(event._id) AS eventCount, attractionflag.option " +
             "FROM destination " +
-            "LEFT JOIN event ON destination.id = event.destination " +
+            "LEFT JOIN event ON destination._id = event.destination " +
             "LEFT JOIN attractionflag " +
-            "ON destination.id = attractionflag.attraction_id AND attractionflag.is_event = 0 " +
-            "GROUP BY destination.id " +
+            "ON destination._id = attractionflag.attraction_id AND attractionflag.is_event = 0 " +
+            "GROUP BY destination._id " +
             "ORDER BY distance ASC")
     public abstract LiveData<List<DestinationInfo>> getAll();
 
-    @Query("SELECT destination.*, COUNT(event.id) AS eventCount, attractionflag.option " +
+    @Query("SELECT destination.*, COUNT(event._id) AS eventCount, attractionflag.option " +
             "FROM destination " +
-            "LEFT JOIN event ON destination.id = event.destination " +
+            "LEFT JOIN event ON destination._id = event.destination " +
             "LEFT JOIN attractionflag " +
-            "ON destination.id = attractionflag.attraction_id AND attractionflag.is_event = 0 " +
-            "WHERE destination.id = :destinationId " +
-            "GROUP BY destination.id")
+            "ON destination._id = attractionflag.attraction_id AND attractionflag.is_event = 0 " +
+            "WHERE destination._id = :destinationId " +
+            "GROUP BY destination._id")
     abstract LiveData<DestinationInfo> getDestination(long destinationId);
 
     @Query("DELETE FROM destination")
@@ -55,31 +55,38 @@ public abstract class DestinationDao implements AttractionDao<Destination> {
         }
     }
 
-    @Query("SELECT id AS attractionID, 1 AS is_event, wide_image AS image FROM event ORDER BY random() LIMIT 1")
+    @Query("SELECT _id AS attractionID, 1 AS is_event, wide_image AS image FROM event ORDER BY random() LIMIT 1")
     protected abstract LiveData<CategoryImage> getEventCategoryImage();
 
-    @Query("SELECT id AS attractionID, 0 AS is_event, destination.wide_image AS image " +
+    @Query("SELECT _id AS attractionID, 0 AS is_event, destination.wide_image AS image " +
             "FROM destination " +
             "LEFT JOIN attractionflag " +
-            "ON destination.id = attractionflag.attraction_id AND attractionflag.is_event = 0 " +
+            "ON destination._id = attractionflag.attraction_id AND attractionflag.is_event = 0 " +
             "WHERE attractionflag.option = :flag " +
             "ORDER BY random() " +
             "LIMIT 1")
     public abstract LiveData<CategoryImage> getRandomImagesForFlag(int flag);
 
-    @Query("SELECT id AS attractionID, 0 AS is_event, destination.wide_image AS image " +
+    @Query("SELECT _id AS attractionID, 0 AS is_event, destination.wide_image AS image " +
             "FROM destination " +
             "WHERE nature = 1 " +
             "ORDER BY random() " +
             "LIMIT 1")
     public abstract LiveData<CategoryImage> getRandomNatureImages();
 
-    @Query("SELECT id AS attractionID, 0 AS is_event, destination.wide_image AS image " +
+    @Query("SELECT _id AS attractionID, 0 AS is_event, destination.wide_image AS image " +
             "FROM destination " +
             "WHERE exercise = 1 " +
             "ORDER BY random() " +
             "LIMIT 1")
     public abstract LiveData<CategoryImage> getRandomExerciseImages();
+
+    @Query("SELECT _id AS attractionID, 0 AS is_event, destination.wide_image AS image " +
+            "FROM destination " +
+            "WHERE watershed_alliance = 1 " +
+            "ORDER BY random() " +
+            "LIMIT 1")
+    public abstract LiveData<CategoryImage> getRandomWatershedAllianceImages();
 
     /**
      * Find random representative images for each of the filter buttons on the home screen.
@@ -110,6 +117,10 @@ public abstract class DestinationDao implements AttractionDao<Destination> {
 
         LiveData<CategoryImage> liked = getRandomImagesForFlag(AttractionFlag.Option.Liked.code);
         addSourceToRandomImagesLiveData(liked, CategoryAttraction.PlaceCategories.Liked, categoryAttractions, data);
+
+        LiveData<CategoryImage> watershedAlliance = getRandomWatershedAllianceImages();
+        addSourceToRandomImagesLiveData(watershedAlliance, CategoryAttraction.PlaceCategories.WatershedAlliance,
+                categoryAttractions, data);
 
         LiveData<CategoryImage> nature = getRandomNatureImages();
         addSourceToRandomImagesLiveData(nature, CategoryAttraction.PlaceCategories.Nature, categoryAttractions, data);
@@ -156,9 +167,9 @@ public abstract class DestinationDao implements AttractionDao<Destination> {
      */
 
     @Query(value = "SELECT destination.* FROM destination INNER JOIN attractionflag " +
-            "ON destination.id = attractionflag.attraction_id AND attractionflag.is_event = 0 " +
-            "WHERE attractionflag.option = :geofenceFlagCode")
-    public abstract List<Destination> getGeofenceDestinations(int geofenceFlagCode);
+            "ON destination._id = attractionflag.attraction_id AND attractionflag.is_event = 0 " +
+            "WHERE attractionflag.option = :wantToGoCode OR attractionflag.option = :likedCode")
+    public abstract List<Destination> getGeofenceDestinations(int wantToGoCode, int likedCode);
 
     /**
      * Get a single destination.
@@ -168,6 +179,6 @@ public abstract class DestinationDao implements AttractionDao<Destination> {
      * @param destinationId ID of place to fetch
      * @return Matching destination, with related event count and user flag.
      */
-    @Query("SELECT * FROM destination WHERE destination.id = :destinationId")
+    @Query("SELECT * FROM destination WHERE destination._id = :destinationId")
     public abstract Destination getDestinationInBackground(long destinationId);
 }

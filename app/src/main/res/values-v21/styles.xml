@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="ListItem">
+        <item name="android:layout_margin">8dp</item>
+        <item name="android:background">@color/color_white</item>
+        <item name="android:elevation">2dp</item>
+    </style>
+
+    <style name="ToolbarOpaque" parent="ToolbarTransparent">
+        <item name="android:background">@color/color_primary</item>
+        <item name="android:elevation">0dp</item>
+    </style>
+
+    <style name="GpgAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/color_primary</item>
+        <item name="colorPrimaryDark">@color/color_primary_dark</item>
+
+        <item name="colorAccent">@color/color_accent</item>
+        <item name="android:windowBackground">@color/color_background_grey</item>
+
+        <!-- action bar overlaps content (do not use windowActionBarOverlay) -->
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:textColorPrimary">@color/text_color_primary</item>
+
+        <!-- search widget and its dropdown -->
+        <item name="android:dropDownItemStyle">@style/GpgItemDropdownStyle</item>
+        <item name="android:dropDownListViewStyle">@style/GpgListViewDropdownStyle</item>
+    </style>
+</resources>

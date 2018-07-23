@@ -20,7 +20,7 @@ import static android.arch.persistence.room.ForeignKey.SET_NULL;
 
 
 @Entity(foreignKeys = @ForeignKey(entity = Destination.class,
-        parentColumns = "id",
+        parentColumns = "_id",
         childColumns = "destination",
         deferred = true,
         onDelete = SET_NULL),
@@ -56,13 +56,13 @@ public class Event extends Attraction {
     private boolean isSingleDay;
 
 
-    public Event(int id, int placeID, String name, boolean accessible, String image,
+    public Event(int _id, int placeID, String name, boolean accessible, String image,
                  boolean cycling, String description, int priority, String websiteUrl,
                  String wideImage, boolean isEvent, ArrayList<String> activities,
                  Integer destination, String startDate, String endDate, ArrayList<String> extraWideImages) {
 
         // initialize Attraction
-        super(id, placeID, name, accessible, image, cycling, description, priority, websiteUrl,
+        super(_id, placeID, name, accessible, image, cycling, description, priority, websiteUrl,
               wideImage, isEvent, activities, extraWideImages);
 
         this.destination = destination;

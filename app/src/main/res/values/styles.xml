@@ -2,7 +2,6 @@
 
     <!-- Base application theme -->
     <style name="GpgAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- TODO: change app colors from these defaults -->
         <item name="colorPrimary">@color/color_primary</item>
         <item name="colorPrimaryDark">@color/color_primary_dark</item>
 
@@ -12,8 +11,36 @@
         <!-- action bar overlaps content (do not use windowActionBarOverlay) -->
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:textColorPrimary">@color/text_color_primary</item>
+
+        <!-- search widget and its dropdown -->
+        <item name="android:dropDownItemStyle">@style/GpgItemDropdownStyle</item>
+        <item name="android:dropDownListViewStyle">@style/GpgListViewDropdownStyle</item>
     </style>
 
+    <style name="GpgAlertDialogTheme" parent="Base.Theme.AppCompat.Light.Dialog.Alert">
+        <item name="android:textColor">@color/color_text_dark_grey</item>
+    </style>
+
+    <style name="GpgListViewDropdownStyle" parent="Base.Widget.AppCompat.ListView.DropDown">
+        <item name="android:background">@color/color_white</item>
+    </style>
+
+    <style name="GpgItemDropdownStyle" parent="Base.TextAppearance.AppCompat.Widget.DropDownItem">
+        <item name="android:textColor">@color/color_text_dark_grey</item>
+        <item name="android:paddingStart">32dp</item>
+        <item name="android:paddingEnd">8dp</item>
+    </style>
+
+    <style name="GpgDarkTextTheme" parent="Base.Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/color_primary</item>
+        <item name="colorPrimaryDark">@color/color_primary_dark</item>
+        <item name="colorAccent">@color/color_accent</item>
+        <item name="android:windowBackground">@color/color_background_grey</item>
+        <item name="android:fitsSystemWindows">true</item>
+        <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
+        <item name="android:textColorSecondary">@color/color_text_dark_grey</item>
+        <item name="android:textAppearance">@style/GpgTextAppearanceTitle</item>
+    </style>
 
     <!-- components -->
     <style name="ToolbarTransparent">
@@ -22,14 +49,12 @@
         <item name="android:background">@null</item>
         <item name="android:layout_alignParentTop">true</item>
         <item name="android:fitsSystemWindows">true</item>
-        <item name="android:elevation">4dp</item>
         <item name="android:theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
         <item name="popupTheme">@style/ThemeOverlay.AppCompat.Light</item>
     </style>
 
     <style name="ToolbarOpaque" parent="ToolbarTransparent">
         <item name="android:background">@color/color_primary</item>
-        <item name="android:elevation">0dp</item>
     </style>
 
     <style name="Carousel">
@@ -79,7 +104,7 @@
         <item name="android:layout_marginTop">16dp</item>
     </style>
 
-    <style name="PlaceDetailCyclingAndEventsBar">
+    <style name="PlaceDetailActivitiesAndEventsBar">
         <item name="android:layout_margin">8dp</item>
         <item name="android:padding">4dp</item>
     </style>
@@ -93,7 +118,6 @@
     <style name="ListItem">
         <item name="android:layout_margin">8dp</item>
         <item name="android:background">@color/color_white</item>
-        <item name="android:elevation">2dp</item>
     </style>
 
 
@@ -207,18 +231,19 @@
         <item name="android:drawableStart">@drawable/ic_place_white_16dp</item>
     </style>
 
-    <style name="ItemDetailFlag" parent="TextAppearance.AppCompat.Title">
+    <style name="GpgTextAppearanceTitle" parent="TextAppearance.AppCompat.Title">
         <item name="android:textColor">@color/color_black</item>
         <item name="android:fontFamily">sans-serif</item>
+    </style>
+
+    <style name="ItemDetailFlag" parent="GpgTextAppearanceTitle">
         <item name="android:textSize">15sp</item>
         <item name="android:padding">16dp</item>
         <item name="android:layout_height">56dp</item>
         <item name="android:gravity">center_vertical</item>
     </style>
 
-    <style name="ItemDetailDescription" parent="TextAppearance.AppCompat.Title">
-        <item name="android:textColor">@color/color_black</item>
-        <item name="android:fontFamily">sans-serif</item>
+    <style name="ItemDetailDescription" parent="GpgTextAppearanceTitle">
         <item name="android:textSize">13sp</item>
         <item name="android:padding">0dp</item>
         <item name="android:lineSpacingMultiplier">1.2</item>
@@ -230,9 +255,7 @@
         <item name="android:ellipsize">end</item>
     </style>
 
-    <style name="ItemDetailDescriptionToggle" parent="TextAppearance.AppCompat.Title">
-        <item name="android:textColor">@color/color_primary</item>
-        <item name="android:fontFamily">sans-serif</item>
+    <style name="ItemDetailDescriptionToggle" parent="GpgTextAppearanceTitle">
         <item name="android:textSize">12sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textAlignment">center</item>
@@ -240,22 +263,23 @@
         <item name="android:layout_marginBottom">8dp</item>
     </style>
 
-    <style name="PlaceDetailActivity" parent="TextAppearance.AppCompat.Title">
+    <style name="PlaceDetailActivity" parent="GpgTextAppearanceTitle">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginTop">16dp</item>
         <item name="android:layout_marginStart">8dp</item>
         <item name="android:layout_marginEnd">8dp</item>
-        <item name="android:textColor">@color/color_black</item>
-        <item name="android:fontFamily">sans-serif</item>
         <item name="android:textSize">14sp</item>
         <item name="android:padding">0dp</item>
-        <item name="android:drawablePadding">6dp</item>
+        <item name="android:drawablePadding">8dp</item>
     </style>
 
-    <style name="EventDetailDate" parent="TextAppearance.AppCompat.Title">
-        <item name="android:textColor">@color/color_black</item>
-        <item name="android:fontFamily">sans-serif</item>
+    <style name="GpgPreferenceFragment">
+        <item name="android:textAppearance">@style/GpgTextAppearanceTitle</item>
+        <item name="android:textColorPrimary">@color/color_text_dark_grey</item>
+    </style>
+
+    <style name="EventDetailDate" parent="GpgTextAppearanceTitle">
         <item name="android:textSize">22sp</item>
         <item name="android:textStyle">bold</item>
         <item name="android:textAlignment">center</item>
@@ -265,9 +289,7 @@
         <item name="android:padding">0dp</item>
     </style>
 
-    <style name="EventDetailLocation" parent="TextAppearance.AppCompat.Title">
-        <item name="android:textColor">@color/color_black</item>
-        <item name="android:fontFamily">sans-serif</item>
+    <style name="EventDetailLocation" parent="GpgTextAppearanceTitle">
         <item name="android:textSize">20sp</item>
         <item name="android:textAlignment">center</item>
         <item name="android:layout_marginEnd">8dp</item>
@@ -276,13 +298,12 @@
         <item name="android:padding">0dp</item>
     </style>
 
-    <style name="PlaceListItemName" parent="TextAppearance.AppCompat.Title">
+    <style name="PlaceListItemName" parent="GpgTextAppearanceTitle">
         <item name="android:layout_marginStart">8dp</item>
         <item name="android:layout_marginEnd">8dp</item>
         <item name="android:layout_marginTop">12dp</item>
         <item name="android:padding">0dp</item>
-        <item name="android:fontFamily">sans-serif</item>
-        <item name="android:textColor">@color/color_black</item>
+
         <item name="android:textSize">18sp</item>
     </style>
 
@@ -299,25 +320,20 @@
         <item name="android:drawableStart">@drawable/ic_place_gray_16dp</item>
     </style>
 
-    <style name="EventListItemMonth" parent="TextAppearance.AppCompat.Title">
+    <style name="EventListItemMonth" parent="GpgTextAppearanceTitle">
         <item name="android:layout_marginEnd">16dp</item>
         <item name="android:layout_marginStart">8dp</item>
         <item name="android:layout_marginTop">8dp</item>
         <item name="android:padding">0dp</item>
-        <item name="android:textColor">@color/color_black</item>
-        <item name="android:fontFamily">sans-serif</item>
         <item name="android:textSize">13sp</item>
         <item name="android:textAllCaps">true</item>
         <item name="android:textAlignment">center</item>
     </style>
 
-    <style name="EventListItemDayOfMonth" parent="TextAppearance.AppCompat.Title">
+    <style name="EventListItemDayOfMonth" parent="GpgTextAppearanceTitle">
         <item name="android:layout_marginEnd">16dp</item>
         <item name="android:layout_marginStart">8dp</item>
         <item name="android:padding">0dp</item>
-        <item name="android:textColor">@color/color_black</item>
-        <item name="android:fontFamily">sans-serif</item>
-        <item name="android:textSize">32sp</item>
         <item name="android:textAlignment">center</item>
     </style>
 
@@ -333,23 +349,19 @@
         <item name="android:textAlignment">center</item>
     </style>
 
-    <style name="EventListItemName" parent="TextAppearance.AppCompat.Title">
+    <style name="EventListItemName" parent="GpgTextAppearanceTitle">
         <item name="android:layout_marginEnd">8dp</item>
         <item name="android:layout_marginStart">72dp</item>
         <item name="android:layout_marginTop">8dp</item>
         <item name="android:padding">0dp</item>
-        <item name="android:textColor">@color/color_black</item>
-        <item name="android:fontFamily">sans-serif</item>
         <item name="android:textSize">18sp</item>
     </style>
 
-    <style name="EventListItemDestination" parent="TextAppearance.AppCompat.Title">
+    <style name="EventListItemDestination" parent="GpgTextAppearanceTitle">
         <item name="android:layout_marginEnd">8dp</item>
         <item name="android:layout_marginStart">72dp</item>
         <item name="android:layout_marginTop">8dp</item>
         <item name="android:padding">0dp</item>
-        <item name="android:textColor">@color/color_black</item>
-        <item name="android:fontFamily">sans-serif</item>
         <item name="android:textSize">13sp</item>
     </style>
 
@@ -389,9 +401,14 @@
         <item name="android:layout_width">150dp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginTop">16dp</item>
+        <item name="android:layout_marginBottom">16dp</item>
         <item name="android:adjustViewBounds">true</item>
         <item name="android:scaleType">centerInside</item>
         <item name="android:src">@drawable/watershed_alliance_full_icon_300x104px</item>
         <item name="android:contentDescription">Watershed Alliance</item>
     </style>
+
+    <style name="GpgAppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="GpgAppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

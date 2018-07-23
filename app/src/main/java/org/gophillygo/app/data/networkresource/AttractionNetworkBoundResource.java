@@ -4,18 +4,18 @@ import android.arch.lifecycle.LiveData;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import org.gophillygo.app.BuildConfig;
 import org.gophillygo.app.data.DestinationDao;
 import org.gophillygo.app.data.DestinationWebservice;
 import org.gophillygo.app.data.EventDao;
 import org.gophillygo.app.data.models.Attraction;
 import org.gophillygo.app.data.models.AttractionInfo;
+import org.gophillygo.app.data.models.CategoryAttraction;
 import org.gophillygo.app.data.models.Destination;
 import org.gophillygo.app.data.models.DestinationCategories;
 import org.gophillygo.app.data.models.DestinationQueryResponse;
 import org.gophillygo.app.data.models.Event;
 import org.gophillygo.app.data.models.Filter;
-
-import org.gophillygo.app.data.EventDao;
 
 import java.util.HashSet;
 import java.util.List;
@@ -31,7 +31,8 @@ abstract public class AttractionNetworkBoundResource<A extends Attraction, I ext
         extends NetworkBoundResource<List<I>, DestinationQueryResponse> {
 
     // maximum rate at which to refresh data from network
-    private static final long RATE_LIMIT = TimeUnit.MINUTES.toMillis(15);
+    private static final long RATE_LIMIT = BuildConfig.DEBUG ? TimeUnit.MINUTES.toMillis(15):
+            TimeUnit.HOURS.toMillis(12);
 
     private final DestinationWebservice webservice;
     private final DestinationDao destinationDao;
@@ -60,9 +61,9 @@ abstract public class AttractionNetworkBoundResource<A extends Attraction, I ext
             item.setTimestamp(timestamp);
             List<String> categories = item.getCategories();
             if (categories != null && !categories.isEmpty()) {
-                item.setCategoryFlags(new DestinationCategories(categories.contains(Filter.NATURE_CATEGORY),
-                        categories.contains(Filter.EXERCISE_CATEGORY),
-                        categories.contains(Filter.EDUCATIONAL_CATEGORY)));
+                item.setCategoryFlags(new DestinationCategories(categories.contains(CategoryAttraction.PlaceCategories.Nature.dbName),
+                        categories.contains(CategoryAttraction.PlaceCategories.Exercise.dbName),
+                        categories.contains(CategoryAttraction.PlaceCategories.Educational.dbName)));
             } else {
                 item.setCategoryFlags(new DestinationCategories(false, false, false));
             }

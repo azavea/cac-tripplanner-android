@@ -31,6 +31,7 @@ import org.gophillygo.app.databinding.ActivityEventDetailBinding;
 import org.gophillygo.app.di.GpgViewModelFactory;
 import org.gophillygo.app.tasks.GeofenceTransitionWorker;
 import org.gophillygo.app.utils.FlagMenuUtils;
+import org.gophillygo.app.utils.UserUtils;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -71,6 +72,7 @@ public class EventDetailActivity extends AttractionDetailActivity {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_event_detail);
         binding.setActivity(this);
+        binding.setContext(this);
 
         Toolbar toolbar = findViewById(R.id.event_detail_toolbar);
         // disable default app name title display
@@ -90,7 +92,6 @@ public class EventDetailActivity extends AttractionDetailActivity {
 
         carouselView = findViewById(R.id.event_detail_carousel);
         carouselView.setIndicatorGravity(Gravity.CENTER_HORIZONTAL|Gravity.BOTTOM);
-
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(EventViewModel.class);
         destinationViewModel = ViewModelProviders.of(this, viewModelFactory).get(DestinationViewModel.class);
         viewModel.getEvent(eventId).observe(this, eventInfo -> {
@@ -133,6 +134,7 @@ public class EventDetailActivity extends AttractionDetailActivity {
             // set up data binding object
             binding.setEvent(eventInfo.getEvent());
             binding.setEventInfo(eventInfo);
+            binding.setAttractionInfo(eventInfo);
             binding.eventDetailDescriptionCard.detailDescriptionToggle.setOnClickListener(toggleClickListener);
             displayEvent();
         });
@@ -203,11 +205,19 @@ public class EventDetailActivity extends AttractionDetailActivity {
     }
 
     private void updateFlag(int itemId) {
-        boolean haveExistingGeofence = eventInfo.getFlag().getOption()
-                .api_name.equals(AttractionFlag.Option.WantToGo.api_name);
+        String option = eventInfo.getFlag().getOption().apiName;
+        boolean haveExistingGeofence = option.equals(AttractionFlag.Option.WantToGo.apiName) ||
+                option.equals(AttractionFlag.Option.Liked.apiName);
         eventInfo.updateAttractionFlag(itemId);
-        viewModel.updateAttractionFlag(eventInfo.getFlag(), userUuid, getString(R.string.user_flag_post_api_key));
-        Boolean settingGeofence = eventInfo.getFlag().getOption().api_name.equals(AttractionFlag.Option.WantToGo.api_name);
+
+        viewModel.updateAttractionFlag(eventInfo.getFlag(),
+                userUuid,
+                getString(R.string.user_flag_post_api_key),
+                UserUtils.isFlagPostingEnabled(this));
+
+        String optionAfter = eventInfo.getFlag().getOption().apiName;
+        Boolean settingGeofence = optionAfter.equals(AttractionFlag.Option.WantToGo.apiName) ||
+                optionAfter.equals(AttractionFlag.Option.Liked.apiName);
         addOrRemoveGeofence(eventInfo, haveExistingGeofence, settingGeofence);
         binding.notifyPropertyChanged(BR.destinationInfo);
     }

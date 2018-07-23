@@ -28,10 +28,18 @@ import dagger.android.AndroidInjectionModule;
         PlacesListActivityModule.class,
         EventsMapsActivityModule.class,
         PlacesMapsActivityModule.class,
+        GpgPreferenceActivityModule.class,
+        OssLicensesMenuActivityModule.class,
+        OssLicensesActivityModule.class,
+        SearchActivityModule.class,
+        AppInfoActivityModule.class,
 
         // Broadcast Receivers
-        AddGeofenceBroadcastReceiverModule.class,
-        GeofenceTransitionBroadcastReceiverModule.class
+        AddRemoveGeofenceBroadcastReceiverModule.class,
+        GeofenceTransitionBroadcastReceiverModule.class,
+
+        // Content Providers
+        GoPhillyGoContentProviderModule.class
 })
 public interface AppComponent {
     @Component.Builder

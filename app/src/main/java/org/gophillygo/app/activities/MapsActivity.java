@@ -25,6 +25,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+
 import org.gophillygo.app.R;
 import org.gophillygo.app.data.models.Attraction;
 import org.gophillygo.app.data.models.AttractionFlag;
@@ -33,6 +34,7 @@ import org.gophillygo.app.data.models.DestinationLocation;
 import org.gophillygo.app.databinding.MapPopupCardBinding;
 import org.gophillygo.app.utils.FlagMenuUtils;
 import org.gophillygo.app.utils.GpgLocationUtils;
+import org.gophillygo.app.utils.UserUtils;
 
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
@@ -157,14 +159,20 @@ public abstract class MapsActivity<T extends AttractionInfo> extends FilterableL
     public void optionsButtonClick(View view, T info) {
         PopupMenu menu = FlagMenuUtils.getFlagPopupMenu(this, view, info.getFlag());
         menu.setOnMenuItemClickListener(item -> {
-            Boolean haveExistingGeofence = info.getFlag().getOption()
-                    .api_name.equals(AttractionFlag.Option.WantToGo.api_name);
+            String option = info.getFlag().getOption().apiName;
+            Boolean haveExistingGeofence = option.equals(AttractionFlag.Option.WantToGo.apiName) ||
+                    option.equals(AttractionFlag.Option.Liked.apiName);
 
             info.updateAttractionFlag(item.getItemId());
-            viewModel.updateAttractionFlag(info.getFlag(), userUuid, getString(R.string.user_flag_post_api_key));
+
+            viewModel.updateAttractionFlag(info.getFlag(), userUuid, getString(R.string.user_flag_post_api_key),
+                    UserUtils.isFlagPostingEnabled(this));
+
             popupBinding.setAttractionInfo(info);
             popupBinding.setAttraction(info.getAttraction());
-            Boolean settingGeofence = info.getFlag().getOption().api_name.equals(AttractionFlag.Option.WantToGo.api_name);
+            String optionAfter = info.getFlag().getOption().apiName;
+            Boolean settingGeofence = optionAfter.equals(AttractionFlag.Option.WantToGo.apiName) ||
+                    optionAfter.equals(AttractionFlag.Option.Liked.apiName);
             addOrRemoveGeofence(info, haveExistingGeofence, settingGeofence);
             return true;
         });

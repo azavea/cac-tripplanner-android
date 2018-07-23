@@ -2,6 +2,7 @@ package org.gophillygo.app.data.models;
 
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.TypeConverters;
+import android.content.Context;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.MenuRes;
 

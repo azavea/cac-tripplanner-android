@@ -7,11 +7,14 @@
         <!-- set up data binding to destination -->
         <variable name="destination" type="org.gophillygo.app.data.models.Destination"/>
         <variable name="destinationInfo" type="org.gophillygo.app.data.models.DestinationInfo"/>
+        <variable name="attractionInfo" type="org.gophillygo.app.data.models.AttractionInfo"/>
         <variable name="activity" type="org.gophillygo.app.activities.PlaceDetailActivity" />
+        <variable name="context" type="android.content.Context" />
         <!-- imports to allow referencing within data binding expressions -->
         <import type="android.view.View"/>
     </data>
     <ScrollView
+        android:id="@+id/place_detail_scroll_view"
         android:fillViewport="true"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -24,7 +27,7 @@
                 android:id="@+id/place_detail_carousel"
                 style="@style/Carousel"
                 android:layout_width="match_parent"
-                app:layout_constraintBottom_toTopOf="@+id/place_detail_activities_list"
+                app:layout_constraintBottom_toTopOf="@+id/place_detail_categories_list"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <android.support.constraint.ConstraintLayout
@@ -51,7 +54,7 @@
                     style="@style/ItemDetailDistance"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="@{destination.getFormattedDistance}"
+                    android:text="@{@string/distance_with_abbreviated_miles(destination.getFormattedDistance())}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"/>
@@ -64,49 +67,93 @@
                 tools:targetApi="lollipop" />
 
             <TextView
-                android:id="@+id/place_detail_activities_list"
+                android:id="@+id/place_detail_categories_list"
                 style="@style/PlaceDetailActivity"
                 android:textAlignment="center"
-                android:text="@{destination.getActivitiesString(context)}"
+                android:text="@{destination.categoriesString}"
                 android:visibility="@{destination.hasActivities ? View.VISIBLE : View.GONE}"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/place_detail_carousel" />
 
             <android.support.constraint.ConstraintLayout
-                android:id="@+id/place_detail_cycling_and_events_bar"
-                style="@style/PlaceDetailCyclingAndEventsBar"
+                android:id="@+id/place_detail_activities_and_events_bar"
+                style="@style/PlaceDetailActivitiesAndEventsBar"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:visibility="@{destination.isCycling || destinationInfo.hasEvents ? View.VISIBLE : View.GONE}"
+                android:visibility="@{destination.isCycling || destination.isHiking || destination.isWaterRecreation || destinationInfo.hasEvents ? View.VISIBLE : View.GONE}"
                 app:layout_constraintBottom_toTopOf="@+id/place_detail_description_card"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/place_detail_activities_list">
+                app:layout_constraintTop_toBottomOf="@+id/place_detail_categories_list">
 
-                <TextView
-                    android:id="@+id/place_detail_cycling_label"
-                    style="@style/PlaceDetailActivity"
+                <android.support.constraint.ConstraintLayout
+                    android:id="@+id/place_detail_activities"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:drawableStart="@drawable/ic_directions_bike_black_16dp"
-                    android:text="@string/bicycle_activity_label"
-                    android:visibility="@{destination.isCycling ? View.VISIBLE : View.GONE}"
+                    android:visibility="@{destination.isCycling || destination.isHiking || destination.isWaterRecreation ? View.VISIBLE : View.GONE}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/place_detail_upcoming_events"
-                    app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageView
+                        android:id="@+id/place_detail_cycling_label"
+                        style="@style/PlaceDetailActivity"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginStart="8dp"
+                        android:contentDescription="@string/bicycle_activity_label"
+                        android:visibility="@{destination.isCycling ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/place_detail_hiking_label"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/ic_directions_bike_black_24dp" />
+
+                    <ImageView
+                        android:id="@+id/place_detail_hiking_label"
+                        style="@style/PlaceDetailActivity"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginStart="8dp"
+                        android:contentDescription="@string/hiking_activity_label"
+                        android:visibility="@{destination.isHiking ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/place_detail_water_rec_label"
+                        app:layout_constraintStart_toEndOf="@+id/place_detail_cycling_label"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/hiking_24dp" />
+
+                    <ImageView
+                        android:id="@+id/place_detail_water_rec_label"
+                        style="@style/PlaceDetailActivity"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
+                        android:layout_marginStart="8dp"
+                        android:contentDescription="@string/water_recreation_activity_label"
+                        android:visibility="@{destination.isWaterRecreation ? View.VISIBLE : View.GONE}"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/place_detail_hiking_label"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/water_recreation_24dp" />
+                </android.support.constraint.ConstraintLayout>
 
                 <TextView
                     android:id="@+id/place_detail_upcoming_events"
                     style="@style/PlaceDetailActivity"
-                    android:drawableStart="@drawable/ic_event_black_16dp"
+                    android:layout_marginStart="8dp"
+                    android:drawableStart="@drawable/ic_event_black_24dp"
+                    android:onClick="@{activity::goToEvents}"
+                    android:text="@{@plurals/place_upcoming_activities_count(destinationInfo.getEventCount(), destinationInfo.getEventCount())}"
                     android:visibility="@{destinationInfo.hasEvents ? View.VISIBLE : View.GONE}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.5"
-                    app:layout_constraintStart_toEndOf="@+id/place_detail_cycling_label"
+                    app:layout_constraintStart_toEndOf="@+id/place_detail_activities"
                     app:layout_constraintTop_toTopOf="parent" />
             </android.support.constraint.ConstraintLayout>
 
@@ -119,7 +166,7 @@
                 app:htmlDescription="@{destination.htmlDescription}"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/place_detail_cycling_and_events_bar" />
+                app:layout_constraintTop_toBottomOf="@+id/place_detail_activities_and_events_bar" />
 
             <android.support.v7.widget.CardView
                 android:id="@+id/place_detail_flag_options_card"
@@ -136,7 +183,7 @@
                     style="@style/ItemDetailFlag"
                     android:layout_width="match_parent"
                     android:drawableEnd="@{activity.getFlagImage(destinationInfo)}"
-                    android:text="@string/place_details_been_want_to_go_label" />
+                    android:text="@{activity.getFlagLabel(attractionInfo)}" />
 
             </android.support.v7.widget.CardView>
 
@@ -165,7 +212,6 @@
                     android:drawableStart="@drawable/ic_directions_blue_24dp"
                     android:onClick="@{activity::goToDirections}"
                     android:text="@string/place_detail_directions_button"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@+id/place_detail_website_button"
                     app:layout_constraintStart_toEndOf="@+id/place_detail_map_button" />
 
@@ -188,6 +234,14 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/place_detail_button_bar" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/place_detail_events_recycler_view"
+                app:layout_constraintTop_toBottomOf="@+id/place_detail_watershed_alliance_icon"
+                android:paddingTop="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            </android.support.v7.widget.RecyclerView>
 
         </android.support.constraint.ConstraintLayout>
     </ScrollView>
