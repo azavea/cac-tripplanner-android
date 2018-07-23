@@ -158,13 +158,14 @@ PlaceCategoryGridAdapter.GridViewHolder.PlaceGridItemClickListener {
         int itemId = item.getItemId();
 
         switch (itemId) {
-            case R.id.action_place_list_search:
-                Log.d(LOG_LABEL, "Clicked search action");
-                break;
             case R.id.action_settings:
                 Log.d(LOG_LABEL, "Clicked settings action");
                 Intent intent = new Intent(this, GpgPreferenceActivity.class);
                 startActivity(intent);
+                break;
+            case R.id.action_home_search:
+                Log.d(LOG_LABEL, "Clicked search action");
+                super.onSearchRequested();
                 break;
             default:
                 Log.w(LOG_LABEL, "Unrecognized menu option selected: " + itemId);
