@@ -164,8 +164,7 @@ PlaceCategoryGridAdapter.GridViewHolder.PlaceGridItemClickListener {
                 startActivity(intent);
                 break;
             case R.id.action_home_search:
-                Log.d(LOG_LABEL, "Clicked search action");
-                super.onSearchRequested();
+                Log.d(LOG_LABEL, "searching from home view");
                 break;
             default:
                 Log.w(LOG_LABEL, "Unrecognized menu option selected: " + itemId);
