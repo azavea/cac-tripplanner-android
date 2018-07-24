@@ -8,18 +8,18 @@ import android.view.View;
 import com.synnapps.carouselview.ViewListener;
 
 import org.gophillygo.app.data.models.Destination;
-import org.gophillygo.app.databinding.CustomCarouselItemBinding;
+import org.gophillygo.app.databinding.CustomHomeCarouselItemBinding;
 
 /**
  * Set up image carousel with destination image and related information overlaid in text views.
  */
 
-public abstract class CarouselViewListener implements ViewListener {
+public abstract class HomeCarouselViewListener implements ViewListener {
 
     private final LayoutInflater inflater;
     private final Activity activity;
 
-    public CarouselViewListener(Activity activity) {
+    public HomeCarouselViewListener(Activity activity) {
         this.activity = activity;
         this.inflater = this.activity.getLayoutInflater();
     }
@@ -36,8 +36,8 @@ public abstract class CarouselViewListener implements ViewListener {
         // get destination and set up data binding
         Destination destination = getDestinationAt(position);
         // root here must be null (not the carouselView) to avoid ViewPager stack overflow
-        CustomCarouselItemBinding binding = DataBindingUtil.inflate(inflater,
-                R.layout.custom_carousel_item,
+        CustomHomeCarouselItemBinding binding = DataBindingUtil.inflate(inflater,
+                R.layout.custom_home_carousel_item,
                 null,
                 false);
         binding.setDestination(destination);
