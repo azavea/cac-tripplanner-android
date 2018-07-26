@@ -13,6 +13,11 @@
     <!-- Listen for reboot to set up geofences again -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
+    <supports-screens android:smallScreens="true"
+        android:normalScreens="true"
+        android:largeScreens="true"
+        android:xlargeScreens="false"/>
+
     <application
         android:name=".GoPhillyGoApp"
         android:allowBackup="true"
