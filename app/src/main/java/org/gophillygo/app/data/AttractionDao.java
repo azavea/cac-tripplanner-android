@@ -17,13 +17,13 @@ import java.util.List;
 
 interface AttractionDao<T> {
 
-    @Query("SELECT destination._id, destination.name AS suggest_text_1, " +
-            "'android.resource://org.gophillygo.app/2131165333' AS suggest_icon_1, " +
+    @Query("SELECT destination._id AS _id, destination.name AS suggest_text_1, " +
+            "'android.resource://org.gophillygo.app/2131165334' AS suggest_icon_1, " +
             "0 AS suggest_intent_data " +
             "FROM destination " +
             "WHERE destination.name LIKE :search " +
             "UNION " +
-            "SELECT event._id, event.name AS suggest_text_1, " +
+            "SELECT event._id AS _id, event.name AS suggest_text_1, " +
             "'android.resource://org.gophillygo.app/2131165314' AS suggest_icon_1, " +
             "1 AS suggest_intent_data " +
             "FROM event " +

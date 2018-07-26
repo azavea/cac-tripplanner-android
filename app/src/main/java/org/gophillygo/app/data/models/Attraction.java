@@ -26,7 +26,7 @@ public class Attraction {
 
     // Use _ID for the internal primary column name, to ease mapping to a Cursor.
     @PrimaryKey
-    @ColumnInfo(index = true)
+    @ColumnInfo(index = true, name = "_id")
     @SerializedName("id")
     private final int _id;
 
