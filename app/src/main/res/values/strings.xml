@@ -143,8 +143,9 @@
     <!-- About page -->
     <string name="title_activity_app_info">About GoPhillyGo</string>
     <string name="app_info_description">The Clean Air Council\'s GoPhillyGo mobile app highlights the greater Philadelphia area\'s best educational and recreational destinations and events. Browse through all the region’s options using a number of activity filters, such biking, hiking, and water recreation, and save places you’d like to go in order to be notified whenever you’re nearby. You can also find upcoming events and add them to your calendar directly from the app. Need help getting there? The app links out to our multimodal trip planner \u2014 combining biking, walking, and public transportation within one trip \u2014 to travel anywhere within the region without the use of a car. If you want to find an outdoor festival taking place this weekend or a place to learn or see something new whenever it’s convenient, we can help!</string>
-    <string name="app_info_root_site_link" translatable="false"><a href="https://gophillygo.org">GoPhillyGo website</a></string>
-    <string name="app_info_blog_link" translatable="false"><a href="https://gophillygo.org/learn">GoPhillyGo blog</a></string>
+    <string name="app_info_root_site_link"><a href="https://gophillygo.org">GoPhillyGo website</a></string>
+    <string name="app_info_blog_link"><a href="https://gophillygo.org/learn">GoPhillyGo blog</a></string>
+    <string name="app_info_cac_link"><a href="https://cleanair.org/">Clean Air Council website</a></string>
 
     <!-- First launch dialog -->
     <string name="first_launch_dialog_title">Help us improve</string>

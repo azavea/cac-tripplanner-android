@@ -37,9 +37,18 @@
             android:text="@string/app_info_description"
             app:layout_constraintTop_toBottomOf="@id/app_info_appbar" />
 
+        <ImageView
+            android:id="@+id/app_info_icon_link"
+            app:layout_constraintTop_toBottomOf="@id/app_info_description"
+            style="@style/AppInfoLink"
+            android:src="@mipmap/ic_launcher"
+            android:contentDescription="@string/app_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
         <TextView
             android:id="@+id/app_info_root_site_link"
-            app:layout_constraintTop_toBottomOf="@id/app_info_description"
+            app:layout_constraintTop_toBottomOf="@id/app_info_icon_link"
             style="@style/AppInfoLink"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -52,6 +61,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/app_info_blog_link"/>
+
+        <TextView
+            android:id="@+id/app_info_cac_link"
+            app:layout_constraintTop_toBottomOf="@+id/app_info_blog_link"
+            style="@style/AppInfoLink"
+            android:text="@string/app_info_cac_link"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
     </android.support.constraint.ConstraintLayout>
 
