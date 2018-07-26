@@ -10,7 +10,7 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:context=".activities.AppInfoActivity"
         tools:showIn="@layout/activity_app_info">
@@ -33,14 +33,14 @@
             android:id="@+id/app_info_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            style="@style/AppInfoText"
             android:text="@string/app_info_description"
-            app:layout_constraintTop_toBottomOf="@id/app_info_appbar"
-            style="@style/GpgTextAppearanceTitle"/>
+            app:layout_constraintTop_toBottomOf="@id/app_info_appbar" />
 
         <TextView
             android:id="@+id/app_info_root_site_link"
             app:layout_constraintTop_toBottomOf="@id/app_info_description"
-            style="@style/GpgTextAppearanceTitle"
+            style="@style/AppInfoLink"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/app_info_root_site_link"/>
@@ -48,7 +48,7 @@
         <TextView
             android:id="@+id/app_info_blog_link"
             app:layout_constraintTop_toBottomOf="@id/app_info_root_site_link"
-            style="@style/GpgTextAppearanceTitle"
+            style="@style/AppInfoLink"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/app_info_blog_link"/>
