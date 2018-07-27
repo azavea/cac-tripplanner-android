@@ -279,6 +279,17 @@
         <item name="android:textColorPrimary">@color/color_text_dark_grey</item>
     </style>
 
+    <style name="AppInfoText">
+        <item name="android:textAppearance">@style/GpgTextAppearanceTitle</item>
+        <item name="android:textColorPrimary">@color/color_text_dark_grey</item>
+        <item name="android:layout_margin">16dp</item>
+    </style>
+
+    <style name="AppInfoLink">
+        <item name="android:textAppearance">@style/GpgTextAppearanceTitle</item>
+        <item name="android:layout_margin">16dp</item>
+    </style>
+
     <style name="EventDetailDate" parent="GpgTextAppearanceTitle">
         <item name="android:textSize">22sp</item>
         <item name="android:textStyle">bold</item>
@@ -405,7 +416,7 @@
         <item name="android:adjustViewBounds">true</item>
         <item name="android:scaleType">centerInside</item>
         <item name="android:src">@drawable/watershed_alliance_full_icon_300x104px</item>
-        <item name="android:contentDescription">Watershed Alliance</item>
+        <item name="android:contentDescription">@string/watershed_alliance_label</item>
     </style>
 
     <style name="GpgAppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />

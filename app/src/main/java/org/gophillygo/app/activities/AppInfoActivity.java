@@ -28,9 +28,12 @@ public class AppInfoActivity extends AppCompatActivity {
         Linkify.addLinks(mainLink, Linkify.WEB_URLS);
         TextView blogLink = findViewById(R.id.app_info_blog_link);
         Linkify.addLinks(blogLink, Linkify.WEB_URLS);
+        TextView cacLink = findViewById(R.id.app_info_cac_link);
+        Linkify.addLinks(cacLink, Linkify.WEB_URLS);
         MovementMethod method = LinkMovementMethod.getInstance();
         mainLink.setMovementMethod(method);
         blogLink.setMovementMethod(method);
+        cacLink.setMovementMethod(method);
     }
 
 }
