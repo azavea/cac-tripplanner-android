@@ -32,15 +32,14 @@ public class AddGeofenceWorker extends Worker {
     // https://developer.android.com/training/location/geofencing
     // Minimum radius should be at least 100 - 150, more for outdoors areas with no WiFi.
     // Greater values reduce battery consumption.
-    private static final int GEOFENCE_RADIUS_METERS = 300;
+    private static final int GEOFENCE_RADIUS_METERS = 800;
 
     // Send alert roughly after device has been in geofence for this long.
     // When we are using the DWELL filter, this is about when we will receive notifications.
-    // In development (DEBUG build), use no delay.
-    private static final int GEOFENCE_LOITERING_DELAY = BuildConfig.DEBUG ? 60000 : 180000; // 1 or 3 minutes
+    private static final int GEOFENCE_LOITERING_DELAY = 0;
 
     // Set responsiveness high to save battery
-    private static final int GEOFENCE_RESPONSIVENESS = BuildConfig.DEBUG ? 180000 : 300000; // 3 or 5 minutes
+    private static final int GEOFENCE_RESPONSIVENESS = BuildConfig.DEBUG ? 60000 : 180000; // 1 or 3 minutes
 
     private static final String LOG_LABEL = "AddGeofenceWorker";
     private static final int TRANSITION_BROADCAST_REQUEST_CODE = 42;
