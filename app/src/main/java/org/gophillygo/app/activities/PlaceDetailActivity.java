@@ -95,15 +95,6 @@ public class PlaceDetailActivity extends AttractionDetailActivity implements Att
 
             this.destinationInfo = destinationInfo;
 
-            // Check if flag set by notification to mark event as "been" and set flag if so
-            if (getIntent().hasExtra(GeofenceTransitionWorker.MARK_BEEN_KEY)) {
-                if(getIntent().getBooleanExtra(GeofenceTransitionWorker.MARK_BEEN_KEY, false) &&
-                        !destinationInfo.getFlag().getOption().id.equals(AttractionFlag.Option.Been.id)) {
-
-                    updateFlag(AttractionFlag.Option.Been.id);
-                }
-            }
-
             // set up data binding object
             binding.setDestination(destinationInfo.getDestination());
             binding.setDestinationInfo(destinationInfo);
