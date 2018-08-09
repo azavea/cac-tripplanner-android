@@ -153,9 +153,8 @@ public class GeofenceTransitionWorker extends Worker {
                                 .setAutoCancel(true) // close notification when tapped
                                 .setGroup(GROUP_ID)
                                 // alert for all notifications
-                                .setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_SUMMARY)
-                                .setPriority(NotificationCompat.PRIORITY_HIGH)
-                                .setGroupSummary(true);
+                                .setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_ALL)
+                                .setPriority(NotificationCompat.PRIORITY_HIGH);
 
                         if (imageBitmap != null) {
                             notificationBuilder = notificationBuilder.setStyle(new NotificationCompat.BigPictureStyle()
