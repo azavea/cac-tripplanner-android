@@ -119,15 +119,6 @@ public class EventDetailActivity extends AttractionDetailActivity {
                     // Since we call `getDestination(...).observe(...)` every time the event is updated,
                     // we need to remove destination observer every time it is called
                     data.removeObservers(this);
-
-                    // Check if flag set by notification to mark event as "been" and set flag if so
-                    if (getIntent().hasExtra(GeofenceTransitionWorker.MARK_BEEN_KEY)) {
-                        if(getIntent().getBooleanExtra(GeofenceTransitionWorker.MARK_BEEN_KEY, false) &&
-                                !eventInfo.getFlag().getOption().id.equals(AttractionFlag.Option.Been.id)) {
-
-                            updateFlag(AttractionFlag.Option.Been.id);
-                        }
-                    }
                 });
             }
 
