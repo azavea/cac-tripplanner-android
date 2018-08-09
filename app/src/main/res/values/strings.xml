@@ -103,7 +103,7 @@
     <string name="user_uuid_shared_preferences_key">gophillygo_user_uuid</string>
     <string name="location_network_permission_rationale">Please set location mode to \"High Accuracy\" to receive notifications when places you like or want to go are nearby.</string>
     <string name="channel_description">Nearby GoPhillyGo destinations you like or want to go visit</string>
-    <string name="place_nearby_notification">Are you visiting %1$s now? Learn more.</string>
+    <string name="place_nearby_notification">You are near %1$s. Learn more.</string>
     <string name="place_nearby_been_button">I\'m there now</string>
     <string name="home_grid_events">Upcoming events</string>
     <string name="general_preference_category">General</string>
