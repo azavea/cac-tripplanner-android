@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.os.Build;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -95,36 +96,40 @@ public class GpgLocationUtils {
             return false; // up to the activity to start this service again when permissions granted
         }
 
-        // Check location settings
+        // Check location settings on API < 28
+        // Geofencing requires high accuracy location to be enabled in settings on API < 28.
+        // This setting no longer exists on P/28, so do not prompt on 28+.
         // https://developer.android.com/training/location/change-location-settings#get-settings
-        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
-        SettingsClient client = LocationServices.getSettingsClient(callingActivity);
-        Task<LocationSettingsResponse> task = client.checkLocationSettings(builder.build());
-        task.addOnFailureListener(e -> {
-            if (e instanceof ResolvableApiException) {
-                try {
-                    ResolvableApiException resolvable = (ResolvableApiException) e;
-                    resolvable.startResolutionForResult(callingActivity, LOCATION_SETTINGS_REQUEST_ID);
-                } catch (IntentSender.SendIntentException e1) {
-                    Log.e(LOG_LABEL, "Failed to prompt user for location settings changes");
-                    e1.printStackTrace();
+        if (Build.VERSION.SDK_INT < 28) {
+            LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
+            SettingsClient client = LocationServices.getSettingsClient(callingActivity);
+            Task<LocationSettingsResponse> task = client.checkLocationSettings(builder.build());
+            task.addOnFailureListener(e -> {
+                if (e instanceof ResolvableApiException) {
+                    try {
+                        ResolvableApiException resolvable = (ResolvableApiException) e;
+                        resolvable.startResolutionForResult(callingActivity, LOCATION_SETTINGS_REQUEST_ID);
+                    } catch (IntentSender.SendIntentException e1) {
+                        Log.e(LOG_LABEL, "Failed to prompt user for location settings changes");
+                        e1.printStackTrace();
+                    }
+                } else {
+                    Log.e(LOG_LABEL, "Received unresolvable location settings exception.");
+                    e.printStackTrace();
                 }
-            } else {
-                Log.e(LOG_LABEL, "Received unresolvable location settings exception.");
-                e.printStackTrace();
-            }
-        }).addOnSuccessListener(locationSettingsResponse -> {
-            LocationSettingsStates states = locationSettingsResponse.getLocationSettingsStates();
-            if (!states.isNetworkLocationPresent() || !states.isNetworkLocationUsable()) {
-                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                // TODO: a dialog would be easier to read
-                Toast toast = Toast.makeText(callingActivity,
-                        callingActivity.getString(R.string.location_network_permission_rationale),
-                        Toast.LENGTH_LONG);
-                toast.show();
-                callingActivity.startActivity(intent);
-            }
-        });
+            }).addOnSuccessListener(locationSettingsResponse -> {
+                LocationSettingsStates states = locationSettingsResponse.getLocationSettingsStates();
+                if (!states.isNetworkLocationPresent() || !states.isNetworkLocationUsable()) {
+                    Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                    // TODO: a dialog would be easier to read
+                    Toast toast = Toast.makeText(callingActivity,
+                            callingActivity.getString(R.string.location_network_permission_rationale),
+                            Toast.LENGTH_LONG);
+                    toast.show();
+                    callingActivity.startActivity(intent);
+                }
+            });
+        }
 
         return true;
     }
