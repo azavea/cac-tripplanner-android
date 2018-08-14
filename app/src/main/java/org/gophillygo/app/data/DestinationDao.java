@@ -130,6 +130,10 @@ public abstract class DestinationDao implements AttractionDao<Destination> {
 
         LiveData<CategoryImage> educational = getRandomExerciseImages();
         addSourceToRandomImagesLiveData(educational, CategoryAttraction.PlaceCategories.Educational, categoryAttractions, data);
+
+        LiveData<CategoryImage> been = getRandomImagesForFlag(AttractionFlag.Option.Been.code);
+        addSourceToRandomImagesLiveData(been, CategoryAttraction.PlaceCategories.Been, categoryAttractions, data);
+
         return data;
     }
 

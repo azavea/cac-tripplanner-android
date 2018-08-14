@@ -56,7 +56,8 @@ public class CategoryAttraction {
         WatershedAlliance(3, R.string.watershed_alliance_label, WATERSHED_ALLIANCE),
         Nature(4, R.string.nature_category_label, NATURE_API_NAME),
         Exercise(5, R.string.exercise_category_label, EXERCISE_API_NAME),
-        Educational(6, R.string.educational_category_label, EDUCATIONAL_API_NAME);
+        Educational(6, R.string.educational_category_label, EDUCATIONAL_API_NAME),
+        Been(7, R.string.place_been_option, AttractionFlag.Option.Been.apiName);
 
         private static final SparseArray<PlaceCategories> map = new SparseArray<>();
         static {
