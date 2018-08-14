@@ -26,8 +26,8 @@ android {
         applicationId "org.gophillygo.app"
         minSdkVersion 19
         targetSdkVersion 27
-        versionCode 13
-        versionName "1.0.10"
+        versionCode 14
+        versionName "1.1.0"
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         javaCompileOptions {
@@ -82,7 +82,6 @@ dependencies {
 
     // Room
     implementation "android.arch.persistence.room:runtime:$roomVersion"
-    implementation 'com.android.support:appcompat-v7:27.1.1'
     annotationProcessor "android.arch.persistence.room:compiler:$roomVersion"
 
     // Android UI libraries
@@ -98,7 +97,7 @@ dependencies {
     implementation "com.google.android.gms:play-services-maps:$playServicesVersion"
 
     // Android WorkManager
-    implementation 'android.arch.work:work-runtime:1.0.0-alpha04'
+    implementation 'android.arch.work:work-runtime:1.0.0-alpha06'
 
     // Carousel
     implementation 'com.synnapps:carouselview:0.1.5'

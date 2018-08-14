@@ -54,7 +54,6 @@ PlaceCategoryGridAdapter.GridViewHolder.PlaceGridItemClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        Log.d(LOG_LABEL, "onCreate");
         categories = new ArrayList<>(CategoryAttraction.PlaceCategories.size());
 
         Toolbar toolbar = findViewById(R.id.home_toolbar);
@@ -94,7 +93,6 @@ PlaceCategoryGridAdapter.GridViewHolder.PlaceGridItemClickListener {
     @Override
     protected void onResume() {
         super.onResume();
-        Log.d(LOG_LABEL, "onResume");
         addScrollListener();
     }
 
@@ -226,6 +224,9 @@ PlaceCategoryGridAdapter.GridViewHolder.PlaceGridItemClickListener {
                 break;
             case WatershedAlliance:
                 filter.setWatershedAlliance(true);
+                break;
+            case Been:
+                filter.setBeen(true);
                 break;
             default:
                 Log.e(LOG_LABEL, "Unrecognized place category " + category.displayName);
