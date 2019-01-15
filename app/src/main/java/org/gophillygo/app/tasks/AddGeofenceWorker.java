@@ -18,6 +18,7 @@ import java.util.Map;
 
 import androidx.work.Data;
 import androidx.work.Worker;
+import androidx.work.WorkerParameters;
 
 public class AddGeofenceWorker extends Worker {
 
@@ -52,6 +53,10 @@ public class AddGeofenceWorker extends Worker {
     // event identifiers used for custom Crashlytics event to note a geofence was added
     private static final String ADD_GEOFENCE_EVENT = "add_geofence";
 
+    public AddGeofenceWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
+        super(context, workerParams);
+    }
+
     @NonNull
     @Override
     public Result doWork() {
@@ -83,7 +88,7 @@ public class AddGeofenceWorker extends Worker {
             String message = "Data missing for geofences to add";
             Crashlytics.log(message);
             Log.e(LOG_LABEL, message);
-            return Result.FAILURE;
+            return Result.failure();
         }
 
         if (latitudes.length != longitudes.length || latitudes.length != geofenceLabels.length ||
@@ -91,7 +96,7 @@ public class AddGeofenceWorker extends Worker {
             String message = "Location data for geofences to add should be arrays of the same length.";
             Crashlytics.log(message);
             Log.e(LOG_LABEL, message);
-            return Result.FAILURE;
+            return Result.failure();
         }
 
         for (int i = 0; i < latitudes.length; i++) {
@@ -117,21 +122,21 @@ public class AddGeofenceWorker extends Worker {
 
         try {
             geofencingClient.addGeofences(builder.build(), pendingIntent);
-            return Result.SUCCESS;
+            return Result.success();
         } catch (SecurityException ex) {
             String message = "Missing permissions to add geofences";
             Log.e(LOG_LABEL, message);
             Crashlytics.log(message);
             Crashlytics.logException(ex);
             ex.printStackTrace();
-            return Result.FAILURE;
+            return Result.failure();
         } catch (Exception ex) {
             String message = "Failed to add geofences";
             Log.e(LOG_LABEL, message);
             Crashlytics.log(message);
             ex.printStackTrace();
             Crashlytics.logException(ex);
-            return Result.FAILURE;
+            return Result.failure();
         }
     }
 }

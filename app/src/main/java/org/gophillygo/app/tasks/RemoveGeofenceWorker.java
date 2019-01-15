@@ -1,5 +1,6 @@
 package org.gophillygo.app.tasks;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
@@ -18,6 +19,7 @@ import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 import androidx.work.WorkRequest;
 import androidx.work.Worker;
+import androidx.work.WorkerParameters;
 
 public class RemoveGeofenceWorker extends Worker {
 
@@ -27,6 +29,10 @@ public class RemoveGeofenceWorker extends Worker {
 
     // event identifier used for custom Crashlytics event to note a geofence was removed
     private static final String REMOVE_GEOFENCE_EVENT = "remove_geofence";
+
+    public RemoveGeofenceWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
+        super(context, workerParams);
+    }
 
     @NonNull
     @Override
@@ -46,12 +52,12 @@ public class RemoveGeofenceWorker extends Worker {
                 Crashlytics.log(errorMsg);
                 Crashlytics.logException(e);
             });
-            return Result.SUCCESS;
+            return Result.success();
         } else {
             String errorMsg = "Did not receive data for geofences to remove";
             Log.e(LOG_LABEL, errorMsg);
             Crashlytics.log(errorMsg);
-            return Result.FAILURE;
+            return Result.failure();
         }
     }
 
