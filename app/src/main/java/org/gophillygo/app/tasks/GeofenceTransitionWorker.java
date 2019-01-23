@@ -29,6 +29,7 @@ import java.util.concurrent.ExecutionException;
 
 import androidx.work.Data;
 import androidx.work.Worker;
+import androidx.work.WorkerParameters;
 
 import static org.gophillygo.app.tasks.GeofenceTransitionBroadcastReceiver.GEOFENCE_IMAGES_KEY;
 
@@ -54,6 +55,10 @@ public class GeofenceTransitionWorker extends Worker {
     private static final int NOTIFICATION_IMAGE_HEIGHT = 512;
 
     private static final int DETAIL_PENDING_INTENT_CODE = 102;
+
+    public GeofenceTransitionWorker(@NonNull Context context, @NonNull WorkerParameters workerParams) {
+        super(context, workerParams);
+    }
 
     @NonNull
     @Override
@@ -86,7 +91,7 @@ public class GeofenceTransitionWorker extends Worker {
         Log.d(LOG_LABEL, "Have " + geofencesCount + " geofence transitions to process");
         if (geofencePlaceNames.length != geofences.length || geofences.length != geofenceImageUrls.length) {
             Log.e(LOG_LABEL, "Got geofence worker data arrays of differing lengths");
-            return Result.FAILURE;
+            return Result.failure();
         }
 
         if (geofencesCount > 0) {
@@ -181,12 +186,12 @@ public class GeofenceTransitionWorker extends Worker {
                 }
             }
 
-            return Result.SUCCESS;
+            return Result.success();
         } else {
             String message = "Received a geofence transition event with no triggering geofences.";
             Crashlytics.log(message);
             Log.w(LOG_LABEL, message);
-            return Result.SUCCESS;
+            return Result.success();
         }
     }
 
@@ -226,7 +231,7 @@ public class GeofenceTransitionWorker extends Worker {
 
     private Result handleError(int error) {
         String message = "";
-        Result result = Result.FAILURE;
+        Result result = Result.failure();
         // https://developers.google.com/android/reference/com/google/android/gms/location/GeofenceStatusCodes
         switch (error) {
             case GeofenceStatusCodes.GEOFENCE_NOT_AVAILABLE:
@@ -242,15 +247,15 @@ public class GeofenceTransitionWorker extends Worker {
                 break;
             case GeofenceStatusCodes.TIMEOUT:
                 message = "Geofence timeout; retrying";
-                result = Result.RETRY;
+                result = Result.retry();
                 break;
             case GeofenceStatusCodes.GEOFENCE_TOO_MANY_PENDING_INTENTS:
                 message = "Too many pending intents to addGeofence. Max is 5.";
-                result =  Result.RETRY;
+                result =  Result.retry();
                 break;
             case GeofenceStatusCodes.API_NOT_CONNECTED:
                 message = "Geofencing prevented because API not connected";
-                result = Result.RETRY;
+                result = Result.retry();
                 break;
             case GeofenceStatusCodes.CANCELED:
                 message = "Geofencing cancelled";
@@ -266,7 +271,7 @@ public class GeofenceTransitionWorker extends Worker {
                 break;
             case GeofenceStatusCodes.INTERRUPTED:
                 message = "Geofencing interrupted";
-                result = Result.RETRY;
+                result = Result.retry();
                 break;
             default:
                 message = "Unrecognized GeofenceStatusCodes error value: " + error;
