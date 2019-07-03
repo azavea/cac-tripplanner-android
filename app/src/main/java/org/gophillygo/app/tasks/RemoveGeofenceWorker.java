@@ -1,7 +1,6 @@
 package org.gophillygo.app.tasks;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
@@ -14,6 +13,7 @@ import org.gophillygo.app.data.models.EventInfo;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import androidx.annotation.NonNull;
 import androidx.work.Data;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;

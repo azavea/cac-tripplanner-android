@@ -1,14 +1,15 @@
 package org.gophillygo.app.data.models;
 
-import android.arch.persistence.room.ColumnInfo;
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.Index;
-import android.arch.persistence.room.TypeConverter;
-import android.arch.persistence.room.TypeConverters;
-import android.support.annotation.DrawableRes;
-import android.support.annotation.IdRes;
-import android.support.annotation.StringRes;
 import android.util.SparseArray;
+
+import androidx.annotation.DrawableRes;
+import androidx.annotation.IdRes;
+import androidx.annotation.StringRes;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.Index;
+import androidx.room.TypeConverter;
+import androidx.room.TypeConverters;
 
 import com.google.gson.annotations.SerializedName;
 import org.gophillygo.app.R;
@@ -39,10 +40,13 @@ public class AttractionFlag {
         }
 
         public final int code;
-        public final @DrawableRes int drawable;
-        public final @IdRes Integer id;
+        public final @DrawableRes
+        int drawable;
+        public final @IdRes
+        Integer id;
         public final String apiName;
-        public final @StringRes Integer placeLabel;
+        public final @StringRes
+        Integer placeLabel;
         public final @StringRes Integer eventLabel;
 
         Option(int code, @DrawableRes int drawable, @IdRes Integer id, String apiName,

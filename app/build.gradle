@@ -1,6 +1,13 @@
 buildscript {
     repositories {
-        maven { url 'https://maven.fabric.io/public' }
+        maven {
+            name 'glide-snapshot'
+            url 'https://oss.sonatype.org/content/repositories/snapshots'
+        }
+        maven {
+            name 'fabric'
+            url 'https://maven.fabric.io/public'
+        }
     }
 
     dependencies {
@@ -14,8 +21,6 @@ repositories {
 
 apply plugin: 'com.android.application'
 apply plugin: 'io.fabric'
-apply plugin: 'com.google.android.gms.oss-licenses-plugin'
-
 
 android {
     lintOptions {
@@ -73,10 +78,6 @@ dependencies {
     implementation 'com.google.firebase:firebase-core:17.0.0'
     implementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
 
-    // Architecture Components
-    def archComponentsVersion = '1.1.1'
-    def roomVersion = '1.1.1'
-
     // ViewModel and LiveData
     implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
 
@@ -107,13 +108,13 @@ dependencies {
     implementation 'com.github.nekocode:Badge:2.0'
 
     // Glide
-    implementation('com.github.bumptech.glide:glide:4.6.1') {
+    implementation('com.github.bumptech.glide:glide:4.10.0-SNAPSHOT') {
         exclude group: "com.android.support"
     }
-    implementation("com.github.bumptech.glide:recyclerview-integration:4.7.1") {
+    implementation("com.github.bumptech.glide:recyclerview-integration:4.10.0-SNAPSHOT") {
         transitive = false
     }
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.6.1'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.10.0-SNAPSHOT'
 
     // Retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.3.0'
@@ -133,9 +134,6 @@ dependencies {
     implementation "com.google.dagger:dagger-android-support:$daggerVersion"
     annotationProcessor "com.google.dagger:dagger-android-processor:$daggerVersion"
     annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
-
-    // OSS licensing
-    implementation 'com.google.android.gms:play-services-oss-licenses:17.0.0'
 
     // testing
     testImplementation 'junit:junit:4.12'

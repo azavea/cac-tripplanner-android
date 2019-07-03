@@ -1,14 +1,16 @@
 package org.gophillygo.app.activities;
 
 import android.annotation.SuppressLint;
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+
+import androidx.appcompat.widget.PopupMenu;
 import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.PopupMenu;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;

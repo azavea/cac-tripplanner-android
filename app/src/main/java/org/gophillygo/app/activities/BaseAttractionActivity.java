@@ -1,21 +1,22 @@
 package org.gophillygo.app.activities;
 
 import android.app.SearchManager;
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.location.Location;
 import android.os.Bundle;
-import android.support.annotation.IdRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import androidx.core.widget.CursorAdapter;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
+
+import androidx.annotation.IdRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
+import androidx.cursoradapter.widget.CursorAdapter;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;

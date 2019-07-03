@@ -4,9 +4,10 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;

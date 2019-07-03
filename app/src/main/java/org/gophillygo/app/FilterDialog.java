@@ -2,13 +2,15 @@ package org.gophillygo.app;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
+
+import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomSheetDialogFragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import org.gophillygo.app.data.models.Filter;
 import org.gophillygo.app.databinding.FilterModalBinding;

@@ -1,8 +1,9 @@
 package org.gophillygo.app.data.networkresource;
 
-import android.arch.lifecycle.LiveData;
-import android.support.annotation.NonNull;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
 
 import java.lang.reflect.Type;
 import java.util.concurrent.atomic.AtomicBoolean;

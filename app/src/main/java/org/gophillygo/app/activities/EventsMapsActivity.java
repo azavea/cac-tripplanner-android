@@ -1,10 +1,11 @@
 package org.gophillygo.app.activities;
 
 import android.annotation.SuppressLint;
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModelProviders;
+
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;

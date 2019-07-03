@@ -1,13 +1,15 @@
 package org.gophillygo.app.activities;
 
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+
+import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;

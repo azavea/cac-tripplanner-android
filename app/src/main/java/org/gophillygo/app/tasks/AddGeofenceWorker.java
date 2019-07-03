@@ -3,7 +3,6 @@ package org.gophillygo.app.tasks;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
@@ -16,6 +15,7 @@ import org.gophillygo.app.BuildConfig;
 
 import java.util.Map;
 
+import androidx.annotation.NonNull;
 import androidx.work.Data;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;

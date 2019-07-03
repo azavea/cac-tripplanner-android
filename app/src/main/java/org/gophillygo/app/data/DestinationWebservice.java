@@ -1,6 +1,6 @@
 package org.gophillygo.app.data;
 
-import android.arch.lifecycle.LiveData;
+import androidx.lifecycle.LiveData;
 
 import org.gophillygo.app.data.models.DestinationQueryResponse;
 import org.gophillygo.app.data.models.UserFlagPost;

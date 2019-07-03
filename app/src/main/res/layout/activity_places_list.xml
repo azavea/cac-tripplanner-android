@@ -4,16 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="org.gophillygo.app.activities.PlacesListActivity">
 
-    <android.support.design.widget.CoordinatorLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         
-        <android.support.design.widget.AppBarLayout
+        <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/places_list_app_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <android.support.v7.widget.Toolbar
+            <androidx.appcompat.widget.Toolbar
                 android:id="@+id/places_list_toolbar"
                 style="@style/ToolbarOpaque"
                 app:title="@string/places_list_title"
@@ -26,7 +26,7 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintBottom_toTopOf="@+id/places_list_recycler_view"
                 app:layout_constraintTop_toBottomOf="@+id/places_list_filter_button_bar" />
-        </android.support.design.widget.AppBarLayout>
+        </com.google.android.material.appbar.AppBarLayout>
 
         <TextView
             android:id="@+id/empty_places_list"
@@ -42,7 +42,7 @@
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             app:layout_constraintTop_toBottomOf="@+id/places_list_app_bar" />
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/places_list_recycler_view"
             app:layout_constraintTop_toBottomOf="@id/places_list_app_bar"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -51,7 +51,7 @@
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-        </android.support.v7.widget.RecyclerView>
+        </androidx.recyclerview.widget.RecyclerView>
 
-    </android.support.design.widget.CoordinatorLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

@@ -1,12 +1,13 @@
 package org.gophillygo.app.data;
 
-import android.arch.persistence.room.Delete;
-import android.arch.persistence.room.Insert;
-import android.arch.persistence.room.OnConflictStrategy;
-import android.arch.persistence.room.Query;
-import android.arch.persistence.room.Transaction;
-import android.arch.persistence.room.Update;
 import android.database.Cursor;
+
+import androidx.room.Delete;
+import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
+import androidx.room.Query;
+import androidx.room.Transaction;
+import androidx.room.Update;
 
 import java.util.List;
 

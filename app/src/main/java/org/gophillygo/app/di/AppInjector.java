@@ -3,10 +3,11 @@ package org.gophillygo.app.di;
 import android.app.Activity;
 import android.app.Application;
 import android.os.Bundle;
-import androidx.core.app.Fragment;
-import androidx.core.app.FragmentActivity;
-import androidx.core.app.FragmentManager;
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 
 import org.gophillygo.app.GoPhillyGoApp;
 

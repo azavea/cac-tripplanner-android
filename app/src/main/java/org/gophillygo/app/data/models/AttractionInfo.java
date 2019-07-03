@@ -1,10 +1,9 @@
 package org.gophillygo.app.data.models;
 
-import android.arch.persistence.room.Ignore;
-import android.arch.persistence.room.TypeConverters;
-import android.content.Context;
-import android.support.annotation.DrawableRes;
-import android.support.annotation.MenuRes;
+import androidx.annotation.DrawableRes;
+import androidx.annotation.MenuRes;
+import androidx.room.Ignore;
+import androidx.room.TypeConverters;
 
 import org.gophillygo.app.R;
 
@@ -38,7 +37,8 @@ public abstract class AttractionInfo<T extends Attraction> {
         this.flag = flag;
     }
 
-    public @DrawableRes int getFlagImage() {
+    public @DrawableRes
+    int getFlagImage() {
         return flag == null || flag.getOption() == null ? AttractionFlag.Option.NotSelected.drawable : flag.getOption().drawable;
     }
 

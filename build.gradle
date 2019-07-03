@@ -2,9 +2,16 @@
 
 buildscript {
     repositories {
+        maven {
+            name 'glide-snapshot'
+            url 'https://oss.sonatype.org/content/repositories/snapshots'
+        }
         google()
         jcenter()
-        maven { url 'https://maven.fabric.io/public' }
+        maven {
+            name 'fabric'
+            url 'https://maven.fabric.io/public'
+        }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.4.1'
@@ -16,7 +23,6 @@ buildscript {
         // https://firebase.google.com/docs/crashlytics/get-started
         classpath 'io.fabric.tools:gradle:1.29.0'
         classpath 'com.google.gms:google-services:4.0.1'
-        classpath 'com.google.android.gms:oss-licenses-plugin:0.9.5'
     }
 }
 
@@ -24,6 +30,7 @@ allprojects {
     repositories {
         google()
         jcenter()
+        maven { url 'https://oss.sonatype.org/content/repositories/snapshots' }
         maven { url 'https://jitpack.io' }
         maven { url 'https://maven.google.com/' }
         maven { url 'https://maven.fabric.io/public' }

@@ -24,7 +24,7 @@
             android:background="@color/color_primary"
             android:weightSum="3">
 
-            <android.support.v7.widget.AppCompatButton
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/filter_modal_reset_button"
                 style="@style/BorderlessButton"
                 android:layout_width="0dp"
@@ -41,7 +41,7 @@
                 android:gravity="center"
                 android:text="@string/many_filter_button_title" />
 
-            <android.support.v7.widget.AppCompatButton
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/filter_modal_done_button"
                 style="@style/BorderlessButton"
                 android:layout_width="0dp"
@@ -50,7 +50,7 @@
                 android:text="@string/done_button" />
         </LinearLayout>
 
-        <android.support.v7.widget.ButtonBarLayout
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/filter_modal_category_button_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -79,9 +79,9 @@
                 android:checked="@{filter.educational}"
                 android:onCheckedChanged="@{(v, checked) -> filter.setEducational(checked)}"
                 android:text="@string/educational_category_label" />
-        </android.support.v7.widget.ButtonBarLayout>
+        </androidx.appcompat.widget.AppCompatButton>
 
-        <android.support.v7.widget.ButtonBarLayout
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/filter_modal_options_activities_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -110,9 +110,9 @@
                 android:checked="@{filter.waterRecreation}"
                 android:onCheckedChanged="@{(v, checked) -> filter.setWaterRecreation(checked)}"
                 android:text="@string/water_recreation_activity_label" />
-        </android.support.v7.widget.ButtonBarLayout>
+        </androidx.appcompat.widget.AppCompatButton>
 
-        <android.support.v7.widget.ButtonBarLayout
+        <androidx.appcompat.widget.ButtonBarLayout
             android:id="@+id/filter_modal_options_category_button_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -133,9 +133,9 @@
                 android:checked="@{filter.wantToGo}"
                 android:onCheckedChanged="@{(v, checked) -> filter.setWantToGo(checked)}"
                 android:text="@string/place_want_to_go_option" />
-        </android.support.v7.widget.ButtonBarLayout>
+        </androidx.appcompat.widget.ButtonBarLayout>
 
-        <android.support.v7.widget.ButtonBarLayout
+        <androidx.appcompat.widget.ButtonBarLayout
             android:id="@+id/filter_modal_options_flag_button_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -156,9 +156,9 @@
                 android:checked="@{filter.liked}"
                 android:onCheckedChanged="@{(v, checked) -> filter.setLiked(checked)}"
                 android:text="@string/place_liked_option" />
-        </android.support.v7.widget.ButtonBarLayout>
+        </androidx.appcompat.widget.ButtonBarLayout>
 
-        <android.support.v7.widget.ButtonBarLayout
+        <androidx.appcompat.widget.ButtonBarLayout
             android:id="@+id/filter_modal_options_accessible_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -173,9 +173,9 @@
                 android:checked="@{filter.accessible}"
                 android:onCheckedChanged="@{(v, checked) -> filter.setAccessible(checked)}"
                 android:text="@string/accessible_filter_button_title" />
-        </android.support.v7.widget.ButtonBarLayout>
+        </androidx.appcompat.widget.ButtonBarLayout>
 
-        <android.support.v7.widget.ButtonBarLayout
+        <androidx.appcompat.widget.ButtonBarLayout
             android:id="@+id/filter_modal_options_watershed_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -189,6 +189,6 @@
                 android:checked="@{filter.watershedAlliance}"
                 android:onCheckedChanged="@{(v, checked) -> filter.setWatershedAlliance(checked)}"
                 android:text="@string/watershed_alliance_label" />
-        </android.support.v7.widget.ButtonBarLayout>
+        </androidx.appcompat.widget.ButtonBarLayout>
     </RelativeLayout>
 </layout>

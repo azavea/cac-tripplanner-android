@@ -11,13 +11,13 @@
         <variable name="adapter" type="org.gophillygo.app.adapters.PlacesListAdapter" />
         <import type="android.view.View"/>
     </data>
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         style="@style/ListItem"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <!-- 1.7 aspect ratio of 680x400 wide image -->
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/place_list_item_image"
             style="@style/PlaceListItemImage"
             android:layout_width="match_parent"
@@ -30,20 +30,20 @@
             android:contentDescription="@{attraction.getName}"
             android:scaleType="centerCrop" />
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/place_list_cycling_activity_marker"
             style="@style/PlaceListItemBadge"
             android:contentDescription="@string/bicycle_activity_label"
-            android:src="@drawable/ic_directions_bike_white_24dp"
+            app:srcCompat="@drawable/ic_directions_bike_white_24dp"
             android:visibility="@{attraction.isCycling ? View.VISIBLE : View.GONE}"
             app:layout_constraintEnd_toStartOf="@id/place_list_watershed_alliance_marker"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
+        <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/place_list_watershed_alliance_marker"
             style="@style/PlaceListItemBadge"
             android:contentDescription="@string/watershed_alliance_label"
-            android:src="@drawable/ic_watershed_alliance"
+            app:srcCompat="@drawable/ic_watershed_alliance"
             android:visibility="@{attraction.isWatershedAlliance ? View.VISIBLE : View.GONE}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -68,7 +68,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/place_list_item_name_label" />
 
-        <android.support.v7.widget.AppCompatImageButton
+        <androidx.appcompat.widget.AppCompatImageButton
             app:backgroundTint="@color/color_white"
             android:id="@+id/place_list_item_options_button"
             style="@style/OptionsButton"
@@ -79,5 +79,5 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/place_list_item_name_label" />
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

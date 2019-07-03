@@ -1,7 +1,8 @@
 package org.gophillygo.app.data.networkresource;
 
-import android.support.annotation.Nullable;
 import android.util.Log;
+
+import androidx.annotation.Nullable;
 
 import java.io.IOException;
 

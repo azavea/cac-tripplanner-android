@@ -1,16 +1,18 @@
 package org.gophillygo.app.activities;
 
 import android.annotation.SuppressLint;
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
+
+import androidx.appcompat.widget.PopupMenu;
+import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
 import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModelProviders;
+
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.CalendarContract;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.PopupMenu;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;

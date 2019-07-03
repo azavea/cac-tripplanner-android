@@ -2,8 +2,9 @@ package org.gophillygo.app.activities;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
-import android.support.v7.widget.Toolbar;
 import android.widget.Button;
 
 import org.gophillygo.app.BR;

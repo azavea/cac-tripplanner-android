@@ -1,7 +1,7 @@
 package org.gophillygo.app.data.networkresource;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 /**
  * Expose network status in a way that encapsulates both the data and its state.
@@ -14,8 +14,10 @@ import android.support.annotation.Nullable;
 
 //a generic class that describes a data with a status
 public class Resource<T> {
-    @NonNull public final Status status;
-    @Nullable public final T data;
+    @NonNull
+    public final Status status;
+    @Nullable
+    public final T data;
     @SuppressWarnings("unused")
     @Nullable public final String message;
     private Resource(@NonNull Status status, @Nullable T data, @Nullable String message) {

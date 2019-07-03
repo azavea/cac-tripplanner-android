@@ -6,11 +6,12 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
-import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import androidx.annotation.Nullable;
 
 import com.crashlytics.android.Crashlytics;
 

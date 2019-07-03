@@ -9,7 +9,7 @@
         <import type="android.view.View"/>
     </data>
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/place_category_grid_relative_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -39,5 +39,5 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent" />
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

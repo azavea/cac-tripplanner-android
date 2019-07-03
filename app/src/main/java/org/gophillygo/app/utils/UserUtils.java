@@ -2,15 +2,14 @@ package org.gophillygo.app.utils;
 
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.support.v7.view.ContextThemeWrapper;
 import android.util.Log;
+
+import androidx.appcompat.view.ContextThemeWrapper;
 
 import org.gophillygo.app.R;
 
-import java.util.Map;
 import java.util.UUID;
 
 public class UserUtils {

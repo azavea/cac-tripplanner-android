@@ -2,15 +2,17 @@ package org.gophillygo.app.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.PopupMenu;
 import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.NonNull;
 import androidx.core.content.ContextCompat;
-import android.support.v7.recyclerview.extensions.ListAdapter;
-import android.support.v7.util.DiffUtil;
-import android.support.v7.widget.PopupMenu;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.ListAdapter;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
