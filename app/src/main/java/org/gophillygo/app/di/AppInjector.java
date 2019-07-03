@@ -3,9 +3,9 @@ package org.gophillygo.app.di;
 import android.app.Activity;
 import android.app.Application;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
+import androidx.core.app.Fragment;
+import androidx.core.app.FragmentActivity;
+import androidx.core.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 
 import org.gophillygo.app.GoPhillyGoApp;

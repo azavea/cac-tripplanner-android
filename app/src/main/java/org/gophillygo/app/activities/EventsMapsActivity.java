@@ -4,7 +4,7 @@ import android.annotation.SuppressLint;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
-import android.databinding.DataBindingUtil;
+import androidx.databinding.DataBindingUtil;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,8 +17,6 @@ import org.gophillygo.app.data.networkresource.Resource;
 import org.gophillygo.app.data.networkresource.Status;
 import org.gophillygo.app.databinding.FilterButtonBarBinding;
 import org.gophillygo.app.databinding.ActivityEventsMapsBinding;
-
-import org.gophillygo.app.data.models.EventInfo;
 
 import java.util.HashMap;
 import java.util.List;

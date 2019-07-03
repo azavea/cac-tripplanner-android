@@ -4,7 +4,7 @@ import android.annotation.SuppressLint;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
-import android.databinding.DataBindingUtil;
+import androidx.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.CalendarContract;
@@ -29,7 +29,6 @@ import org.gophillygo.app.data.models.Event;
 import org.gophillygo.app.data.models.EventInfo;
 import org.gophillygo.app.databinding.ActivityEventDetailBinding;
 import org.gophillygo.app.di.GpgViewModelFactory;
-import org.gophillygo.app.tasks.GeofenceTransitionWorker;
 import org.gophillygo.app.utils.FlagMenuUtils;
 import org.gophillygo.app.utils.UserUtils;
 

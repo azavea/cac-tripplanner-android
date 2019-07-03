@@ -2,7 +2,7 @@ package org.gophillygo.app.activities;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.databinding.DataBindingUtil;
+import androidx.databinding.DataBindingUtil;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
