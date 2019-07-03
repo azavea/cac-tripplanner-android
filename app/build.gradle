@@ -29,11 +29,11 @@ android {
     signingConfigs {
         release
     }
-    compileSdkVersion 28
+    compileSdkVersion 29
     defaultConfig {
         applicationId "org.gophillygo.app"
         minSdkVersion 19
-        targetSdkVersion 28
+        targetSdkVersion 29
         versionCode 14
         versionName "1.2.0"
         vectorDrawables.useSupportLibrary = true
