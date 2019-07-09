@@ -18,6 +18,9 @@ apply plugin: 'com.google.gms.oss.licenses.plugin'
 
 
 android {
+    lintOptions {
+        abortOnError false
+    }
     signingConfigs {
         release
     }

@@ -3,7 +3,7 @@ GoPhillyGo Android app
 
 ## Build status
 
-![CircleCI](https://circleci.com/gh/azavea/cac-tripplanner-android/tree/develop.svg?style=svg)](https://circleci.com/gh/azavea/cac-tripplanner-android/tree/develop)
+[![CircleCI](https://circleci.com/gh/azavea/cac-tripplanner-android.svg?style=svg)](https://circleci.com/gh/azavea/cac-tripplanner-android)
 
 
 ## Setup

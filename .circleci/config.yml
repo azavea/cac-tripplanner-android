@@ -26,6 +26,9 @@ jobs:
           name: Set up Google services configuration
           command: echo $GOOGLE_SERVICES | base64 -di > app/google-services.json
       - run:
+          name: Set up API keys
+          command: echo $API_KEYS | base64 -di > app/src/main/res/values/api_keys.xml
+      - run:
           name: Download Dependencies
           command: ./gradlew androidDependencies
       - save_cache:
