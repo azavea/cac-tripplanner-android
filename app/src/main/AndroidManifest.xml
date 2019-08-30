@@ -123,6 +123,26 @@
                 android:value="org.gophillygo.app.activities.HomeActivity" />
         </activity>
         <activity
+            android:name="com.google.android.gms.oss.licenses.OssLicensesMenuActivity"
+            android:theme="@style/GpgDarkTextTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="org.gophillygo.app.activities.GpgPreferenceActivity" />
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.google.android.gms.oss.licenses.OssLicensesActivity"
+            android:theme="@style/GpgDarkTextTheme">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="org.gophillygo.app.activities.GpgPreferenceActivity" />
+        </activity>
+        <activity
             android:name=".activities.GpgPreferenceActivity"
             android:label="@string/preferences">
             <meta-data

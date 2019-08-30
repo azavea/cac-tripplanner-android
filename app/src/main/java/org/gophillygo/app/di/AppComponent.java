@@ -29,6 +29,8 @@ import dagger.android.AndroidInjectionModule;
         EventsMapsActivityModule.class,
         PlacesMapsActivityModule.class,
         GpgPreferenceActivityModule.class,
+        OssLicensesMenuActivityModule.class,
+        OssLicensesActivityModule.class,
         SearchActivityModule.class,
         AppInfoActivityModule.class,
 
