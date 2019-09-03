@@ -62,6 +62,8 @@
 
             <Toolbar
                 android:id="@+id/event_detail_toolbar"
+                app:layout_constraintBottom_toTopOf="@+id/event_detail_carousel"
+                android:layout_width="match_parent"
                 style="@style/ToolbarTransparent"
                 android:minHeight="?attr/actionBarSize"
                 tools:targetApi="lollipop" />

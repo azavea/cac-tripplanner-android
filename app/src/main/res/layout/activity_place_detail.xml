@@ -62,6 +62,8 @@
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/place_detail_toolbar"
                 style="@style/ToolbarTransparent"
+                android:layout_width="match_parent"
+                app:layout_constraintBottom_toTopOf="@+id/place_detail_carousel"
                 android:minHeight="?attr/actionBarSize"
                 tools:targetApi="lollipop" />
 
@@ -211,6 +213,7 @@
                     android:drawableStart="@drawable/ic_directions_blue_24dp"
                     android:onClick="@{activity::goToDirections}"
                     android:text="@string/place_detail_directions_button"
+                    app:layout_constraintBaseline_toBaselineOf="@+id/place_detail_map_button"
                     app:layout_constraintEnd_toStartOf="@+id/place_detail_website_button"
                     app:layout_constraintStart_toEndOf="@+id/place_detail_map_button" />
 

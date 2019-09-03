@@ -25,6 +25,7 @@
             app:layout_constrainedHeight="true"
             app:layout_constraintDimensionRatio="H,17:10"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:imageUrl="@{attraction.getWideImage}"
             android:contentDescription="@{attraction.getName}"

@@ -15,6 +15,7 @@
 
         <AppBarLayout
             android:id="@+id/app_info_appbar"
+            app:layout_constraintBottom_toTopOf="@id/app_info_description"
             android:fitsSystemWindows="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
