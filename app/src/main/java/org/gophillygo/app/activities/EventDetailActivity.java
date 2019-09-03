@@ -79,7 +79,6 @@ public class EventDetailActivity extends AttractionDetailActivity {
         // disable default app name title display
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
-        //noinspection ConstantConditions
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         if (getIntent().hasExtra(EVENT_ID_KEY)) {

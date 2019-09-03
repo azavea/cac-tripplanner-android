@@ -68,7 +68,7 @@
                 android:text="@string/nature_category_label" />
 
             <org.gophillygo.app.GpgToggleButton
-                android:id="@+id/filter_modal_excercise_category_button"
+                android:id="@+id/filter_modal_exercise_category_button"
                 style="@style/ToggleFilterButton"
                 android:checked="@{filter.exercise}"
                 android:onCheckedChanged="@{(v, checked) -> filter.setExercise(checked)}"

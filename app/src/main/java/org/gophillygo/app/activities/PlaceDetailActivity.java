@@ -65,7 +65,6 @@ public class PlaceDetailActivity extends AttractionDetailActivity implements Att
         // disable default app name title display
         binding.placeDetailToolbar.setTitle("");
         setSupportActionBar(binding.placeDetailToolbar);
-        //noinspection ConstantConditions
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         if (getIntent().hasExtra(DESTINATION_ID_KEY)) {
