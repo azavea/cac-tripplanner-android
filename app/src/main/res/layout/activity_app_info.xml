@@ -13,20 +13,20 @@
         tools:context=".activities.AppInfoActivity"
         tools:showIn="@layout/activity_app_info">
 
-        <AppBarLayout
+        <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/app_info_appbar"
             app:layout_constraintBottom_toTopOf="@id/app_info_description"
             android:fitsSystemWindows="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <Toolbar
+            <androidx.appcompat.widget.Toolbar
                 android:id="@+id/app_info_toolbar"
                 style="@style/ToolbarTransparent"
                 android:background="@color/color_primary"
                 app:title="@string/title_activity_app_info"
                 tools:targetApi="lollipop" />
-        </AppBarLayout>
+        </com.google.android.material.appbar.AppBarLayout>
 
         <TextView
             android:id="@+id/app_info_description"
