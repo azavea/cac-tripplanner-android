@@ -59,7 +59,6 @@ public abstract class NetworkBoundResource<ResultType, RequestType> {
             if (shouldFetch(data)) {
                 fetchFromNetwork(dbSource);
             } else {
-                //noinspection ConstantConditions
                 result.addSource(dbSource,
                         newData -> result.setValue(Resource.success(newData)));
             }
@@ -75,7 +74,6 @@ public abstract class NetworkBoundResource<ResultType, RequestType> {
         result.addSource(apiResponse, response -> {
             result.removeSource(apiResponse);
             result.removeSource(dbSource);
-            //noinspection ConstantConditions
             if (response.isSuccessful()) {
                 saveResultAndReInit(response);
             } else {
@@ -108,7 +106,6 @@ public abstract class NetworkBoundResource<ResultType, RequestType> {
                 // we specially request a new live data,
                 // otherwise we will get immediately last cached value,
                 // which may not be updated with latest results received from network.
-                //noinspection ConstantConditions
                 result.addSource(loadFromDb(),
                         newData -> result.setValue(Resource.success(newData)));
             }

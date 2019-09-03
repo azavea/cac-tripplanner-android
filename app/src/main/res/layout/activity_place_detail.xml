@@ -232,6 +232,7 @@
             <ImageView
                 android:id="@+id/place_detail_watershed_alliance_icon"
                 style="@style/PlaceDetailWatershedAllianceLogo"
+                android:contentDescription="@string/watershed_alliance_label"
                 android:visibility="@{destination.isWatershedAlliance ? View.VISIBLE : View.GONE}"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"

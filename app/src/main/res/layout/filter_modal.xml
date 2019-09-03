@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:fillViewport="true"
     tools:context="org.gophillygo.app.FilterDialog">
     <data>
@@ -63,21 +64,21 @@
                 android:id="@+id/filter_modal_nature_category_button"
                 style="@style/ToggleFilterButton"
                 android:checked="@{filter.nature}"
-                android:onCheckedChanged="@{(v, checked) -> filter.setNature(checked)}"
+                app:onCheckedChanged="@{(v, checked) -> filter.setNature(checked)}"
                 android:text="@string/nature_category_label" />
 
             <org.gophillygo.app.GpgToggleButton
                 android:id="@+id/filter_modal_excercise_category_button"
                 style="@style/ToggleFilterButton"
                 android:checked="@{filter.exercise}"
-                android:onCheckedChanged="@{(v, checked) -> filter.setExercise(checked)}"
+                app:onCheckedChanged="@{(v, checked) -> filter.setExercise(checked)}"
                 android:text="@string/exercise_category_label" />
 
             <org.gophillygo.app.GpgToggleButton
                 android:id="@+id/filter_modal_educational_category_button"
                 style="@style/ToggleFilterButton"
                 android:checked="@{filter.educational}"
-                android:onCheckedChanged="@{(v, checked) -> filter.setEducational(checked)}"
+                app:onCheckedChanged="@{(v, checked) -> filter.setEducational(checked)}"
                 android:text="@string/educational_category_label" />
         </androidx.appcompat.widget.AppCompatButton>
 
@@ -94,21 +95,21 @@
                 android:id="@+id/filter_modal_options_cycling_button"
                 style="@style/ToggleFilterButton"
                 android:checked="@{filter.cycling}"
-                android:onCheckedChanged="@{(v, checked) -> filter.setCycling(checked)}"
+                app:onCheckedChanged="@{(v, checked) -> filter.setCycling(checked)}"
                 android:text="@string/cycling_activity_label" />
 
             <org.gophillygo.app.GpgToggleButton
                 android:id="@+id/filter_modal_options_hiking_button"
                 style="@style/ToggleFilterButton"
                 android:checked="@{filter.hiking}"
-                android:onCheckedChanged="@{(v, checked) -> filter.setHiking(checked)}"
+                app:onCheckedChanged="@{(v, checked) -> filter.setHiking(checked)}"
                 android:text="@string/hiking_activity_label" />
 
             <org.gophillygo.app.GpgToggleButton
                 android:id="@+id/filter_modal_options_water_recreation_button"
                 style="@style/ToggleFilterButton"
                 android:checked="@{filter.waterRecreation}"
-                android:onCheckedChanged="@{(v, checked) -> filter.setWaterRecreation(checked)}"
+                app:onCheckedChanged="@{(v, checked) -> filter.setWaterRecreation(checked)}"
                 android:text="@string/water_recreation_activity_label" />
         </androidx.appcompat.widget.AppCompatButton>
 
