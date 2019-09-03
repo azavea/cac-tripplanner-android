@@ -154,7 +154,6 @@ public class PlacesListActivity extends FilterableListActivity implements
                         return Collections.singletonList(destinationInfos.get(position));
                     }
 
-                    @android.support.annotation.NonNull
                     @Override
                     public RequestBuilder<?> getPreloadRequestBuilder(@NonNull DestinationInfo item) {
                         RequestOptions options = new RequestOptions().centerCrop().encodeQuality(100);

@@ -105,7 +105,6 @@ PlaceCategoryGridAdapter.GridViewHolder.PlaceGridItemClickListener {
                         return Collections.singletonList(categories.get(position));
                     }
 
-                    @android.support.annotation.NonNull
                     @Override
                     public RequestBuilder<?> getPreloadRequestBuilder(@NonNull CategoryAttraction item) {
                         RequestOptions options = new RequestOptions().centerCrop().override(IMAGE_SIZE, IMAGE_SIZE).encodeQuality(100);
