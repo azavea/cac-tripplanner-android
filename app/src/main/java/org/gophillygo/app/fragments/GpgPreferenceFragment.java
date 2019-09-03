@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
@@ -38,16 +39,6 @@ public class GpgPreferenceFragment extends PreferenceFragmentCompat implements S
             Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
             return true;
         });
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-
-        // remove dividers: https://stackoverflow.com/a/27952333
-        View rootView = getView();
-        ListView list = Objects.requireNonNull(rootView).findViewById(android.R.id.list);
-        list.setDivider(null);
     }
 
     @Override
