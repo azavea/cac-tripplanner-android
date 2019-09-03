@@ -40,6 +40,7 @@ import org.gophillygo.app.utils.UserUtils;
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public abstract class MapsActivity<T extends AttractionInfo> extends FilterableListActivity
         implements OnMapReadyCallback {
@@ -61,6 +62,7 @@ public abstract class MapsActivity<T extends AttractionInfo> extends FilterableL
     protected Map<Integer, T> attractions;
     protected MapPopupCardBinding popupBinding;
     protected @IdRes
+    final
     int mapId;
 
     public BitmapDescriptor markerIcon, selectedMarkerIcon;
@@ -86,7 +88,7 @@ public abstract class MapsActivity<T extends AttractionInfo> extends FilterableL
         } else if (getIntent().hasExtra(ATTRACTION_ID)) {
             selectedAttractionId = getIntent().getIntExtra(ATTRACTION_ID, 0);
         }
-        mapFragment.getMapAsync(this);
+        Objects.requireNonNull(mapFragment).getMapAsync(this);
 
         markerIcon = vectorToBitmap(R.drawable.ic_map_marker);
         selectedMarkerIcon = vectorToBitmap(R.drawable.ic_selected_map_marker);
@@ -263,7 +265,7 @@ public abstract class MapsActivity<T extends AttractionInfo> extends FilterableL
     private boolean selectMarker(Marker marker) {
         if (selectedAttractionId != -1) {
             Marker prevSelectedMarker = markers.get(selectedAttractionId);
-            prevSelectedMarker.setIcon(markerIcon);
+            Objects.requireNonNull(prevSelectedMarker).setIcon(markerIcon);
         }
         //noinspection ConstantConditions
         selectedAttractionId = (Integer) marker.getTag();

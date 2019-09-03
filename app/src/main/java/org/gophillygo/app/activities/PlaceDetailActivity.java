@@ -34,6 +34,8 @@ import org.gophillygo.app.di.GpgViewModelFactory;
 import org.gophillygo.app.utils.FlagMenuUtils;
 import org.gophillygo.app.utils.UserUtils;
 
+import java.util.Objects;
+
 import javax.inject.Inject;
 
 public class PlaceDetailActivity extends AttractionDetailActivity implements AttractionListAdapter.AttractionListItemClickListener {
@@ -191,7 +193,7 @@ public class PlaceDetailActivity extends AttractionDetailActivity implements Att
      */
     @Override
     public void clickedAttraction(int position) {
-        long eventId = eventsList.getAdapter().getItemId(position);
+        long eventId = Objects.requireNonNull(eventsList.getAdapter()).getItemId(position);
         Log.d(LOG_LABEL, "Clicked event with ID: " + eventId);
         Intent intent = new Intent(this, EventDetailActivity.class);
         intent.putExtra(EventDetailActivity.EVENT_ID_KEY, eventId);
@@ -207,7 +209,7 @@ public class PlaceDetailActivity extends AttractionDetailActivity implements Att
 
         eventInfo.updateAttractionFlag(item.getItemId());
         eventViewModel.updateAttractionFlag(eventInfo.getFlag(), userUuid, getString(R.string.user_flag_post_api_key), UserUtils.isFlagPostingEnabled(this));
-        eventsList.getAdapter().notifyItemChanged(position);
+        Objects.requireNonNull(eventsList.getAdapter()).notifyItemChanged(position);
 
         // do not attempt to add a geofence for an event with no location (should always exist here,
         // as we know there is an associated place)

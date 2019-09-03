@@ -52,7 +52,7 @@ public class PlaceCategoryGridAdapter extends ListAdapter<CategoryAttraction, Pl
     private PlaceCategoryGridAdapter() {
         super(new DiffUtil.ItemCallback<CategoryAttraction>() {
             @Override
-            public boolean areItemsTheSame(CategoryAttraction oldItem, CategoryAttraction newItem) {
+            public boolean areItemsTheSame(@NonNull CategoryAttraction oldItem, @NonNull CategoryAttraction newItem) {
                 if (oldItem == null) {
                     return newItem == null;
                 } else {
@@ -61,7 +61,7 @@ public class PlaceCategoryGridAdapter extends ListAdapter<CategoryAttraction, Pl
             }
 
             @Override
-            public boolean areContentsTheSame(CategoryAttraction oldItem, CategoryAttraction newItem) {
+            public boolean areContentsTheSame(@NonNull CategoryAttraction oldItem, @NonNull CategoryAttraction newItem) {
                 return Objects.equals(oldItem, newItem);
             }
         });

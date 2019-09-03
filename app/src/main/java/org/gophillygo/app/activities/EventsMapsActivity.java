@@ -81,7 +81,7 @@ public class EventsMapsActivity extends MapsActivity<EventInfo> {
                 startActivity(intent);
                 break;
             default:
-                Log.w(LOG_LABEL, "Unrecognized menu item selected: " + String.valueOf(itemId));
+                Log.w(LOG_LABEL, "Unrecognized menu item selected: " + itemId);
                 return super.onOptionsItemSelected(item);
         }
         return true;

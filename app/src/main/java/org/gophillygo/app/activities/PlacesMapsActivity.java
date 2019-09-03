@@ -59,7 +59,7 @@ public class PlacesMapsActivity extends MapsActivity<DestinationInfo> {
                 super.onSearchRequested();
                 break;
             default:
-                Log.w(LOG_LABEL, "Unrecognized menu item selected: " + String.valueOf(itemId));
+                Log.w(LOG_LABEL, "Unrecognized menu item selected: " + itemId);
                 return super.onOptionsItemSelected(item);
         }
         return true;

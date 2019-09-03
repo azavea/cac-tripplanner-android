@@ -26,6 +26,7 @@ import org.gophillygo.app.R;
 import org.gophillygo.app.activities.EventDetailActivity;
 import org.gophillygo.app.activities.PlaceDetailActivity;
 
+import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
 import androidx.work.Data;
@@ -81,16 +82,16 @@ public class GeofenceTransitionWorker extends Worker {
 
         // Get the transition type.
         int geofenceTransition = data.getInt(TRANSITION_KEY, Geofence.GEOFENCE_TRANSITION_EXIT);
-        Boolean enteredGeofence = geofenceTransition == AddGeofenceWorker.GEOFENCE_ENTER_TRIGGER;
+        boolean enteredGeofence = geofenceTransition == AddGeofenceWorker.GEOFENCE_ENTER_TRIGGER;
         String[] geofences = data.getStringArray(TRIGGERING_GEOFENCES_KEY);
         String[] geofencePlaceNames = data.getStringArray(AddGeofenceWorker.GEOFENCE_NAMES_KEY);
         String[] geofenceImageUrls = data.getStringArray(GEOFENCE_IMAGES_KEY);
 
         Log.d(LOG_LABEL, "Got geofence transition worker data");
 
-        int geofencesCount = geofences.length;
+        int geofencesCount = Objects.requireNonNull(geofences).length;
         Log.d(LOG_LABEL, "Have " + geofencesCount + " geofence transitions to process");
-        if (geofencePlaceNames.length != geofences.length || geofences.length != geofenceImageUrls.length) {
+        if (Objects.requireNonNull(geofencePlaceNames).length != geofences.length || geofences.length != Objects.requireNonNull(geofenceImageUrls).length) {
             Log.e(LOG_LABEL, "Got geofence worker data arrays of differing lengths");
             return Result.failure();
         }
@@ -230,6 +231,7 @@ public class GeofenceTransitionWorker extends Worker {
         }
     }
 
+    @SuppressWarnings("UnusedReturnValue")
     private Result handleError(int error) {
         String message = "";
         Result result = Result.failure();

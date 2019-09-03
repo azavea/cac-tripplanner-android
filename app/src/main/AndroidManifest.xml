@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     package="org.gophillygo.app">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -192,7 +191,7 @@
             android:name=".GoPhillyGoContentProvider"
             android:authorities="org.gophillygo.app.provider"
             android:enabled="true"
-            android:exported="true" />
+            android:exported="false" />
     </application>
 
 </manifest>

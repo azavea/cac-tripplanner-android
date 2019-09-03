@@ -20,6 +20,8 @@ import org.gophillygo.app.tasks.AddGeofenceWorker;
 import org.gophillygo.app.tasks.AddRemoveGeofencesBroadcastReceiver;
 import org.gophillygo.app.utils.UserUtils;
 
+import java.util.Objects;
+
 public class GpgPreferenceFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     private static final String LOG_LABEL = "PreferenceFragment";
@@ -45,7 +47,7 @@ public class GpgPreferenceFragment extends PreferenceFragment implements SharedP
 
         // remove dividers: https://stackoverflow.com/a/27952333
         View rootView = getView();
-        ListView list = rootView.findViewById(android.R.id.list);
+        ListView list = Objects.requireNonNull(rootView).findViewById(android.R.id.list);
         list.setDivider(null);
     }
 

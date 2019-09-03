@@ -47,7 +47,7 @@ abstract public class AttractionNetworkBoundResource<A extends Attraction, I ext
 
     @Override
     protected void saveCallResult(@NonNull DestinationQueryResponse response) {
-        Long timestamp = System.currentTimeMillis();
+        long timestamp = System.currentTimeMillis();
 
         // clear out existing database entries before adding new ones
         destinationDao.clear();

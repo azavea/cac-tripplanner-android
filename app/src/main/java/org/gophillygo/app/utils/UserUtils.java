@@ -131,6 +131,6 @@ public class UserUtils {
     public static boolean isFabricEnabled(Context context) {
         String key = context.getString(R.string.general_preferences_fabric_logging_key);
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        return sharedPreferences.contains(key) && sharedPreferences.getBoolean(key, false);
+        return !sharedPreferences.contains(key) || !sharedPreferences.getBoolean(key, false);
     }
 }

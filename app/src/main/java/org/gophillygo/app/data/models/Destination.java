@@ -127,7 +127,7 @@ public class Destination extends Attraction {
 
     // get a dot-separated string listing all the categories for this place (nature, exercise, etc.)
     public String getCategoriesString() {
-        StringBuilder stringBuilder = new StringBuilder("");
+        StringBuilder stringBuilder = new StringBuilder();
         // separate activities with dots
         String dot = getHtmlFromString("&nbsp;&nbsp;&#8226;&nbsp;&nbsp;").toString();
 

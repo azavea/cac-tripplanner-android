@@ -40,7 +40,7 @@ public class FilterDialog extends BottomSheetDialogFragment {
 
     @Override
     public void onDismiss(DialogInterface dialog) {
-        Log.d(LOG_LABEL, "Selected " + String.valueOf(filter.count()) + " filters.");
+        Log.d(LOG_LABEL, "Selected " + filter.count() + " filters.");
         FilterChangeListener listener = (FilterChangeListener) getActivity();
         if (listener != null) {
             listener.setFilter(filter);

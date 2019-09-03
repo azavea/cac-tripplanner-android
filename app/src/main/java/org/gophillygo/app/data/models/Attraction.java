@@ -163,7 +163,7 @@ public class Attraction {
     }
 
     public boolean hasWebsite() {
-        return websiteUrl != null && !websiteUrl.isEmpty();
+        return !websiteUrl.isEmpty();
     }
 
     public String getWideImage() {

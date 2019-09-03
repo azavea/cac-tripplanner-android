@@ -8,7 +8,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.LiveData;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -106,7 +105,7 @@ PlaceCategoryGridAdapter.GridViewHolder.PlaceGridItemClickListener {
                         return Collections.singletonList(categories.get(position));
                     }
 
-                    @Nullable
+                    @android.support.annotation.NonNull
                     @Override
                     public RequestBuilder<?> getPreloadRequestBuilder(@NonNull CategoryAttraction item) {
                         RequestOptions options = new RequestOptions().centerCrop().override(IMAGE_SIZE, IMAGE_SIZE).encodeQuality(100);
@@ -189,19 +188,15 @@ PlaceCategoryGridAdapter.GridViewHolder.PlaceGridItemClickListener {
     public void clickedGridItem(int position) {
         Log.d(LOG_LABEL, "clicked grid view item: " + position);
 
-        switch (position) {
-            case 0:
-                // go to events list
-                startActivity(new Intent(this, EventsListActivity.class));
-                break;
-            default:
-                // go to places list
-                if (categories == null || position >= categories.size()) {
-                    Log.e(LOG_LABEL, "Cannot go to filtered list because categories are missing");
-                    startActivity(new Intent(this, PlacesListActivity.class));
-                }
-                CategoryAttraction attraction = categories.get(position);
-                goToFilteredPlacesList(attraction.getCategory());
+        if (position == 0) {// go to events list
+            startActivity(new Intent(this, EventsListActivity.class));
+        } else {// go to places list
+            if (categories == null || position >= categories.size()) {
+                Log.e(LOG_LABEL, "Cannot go to filtered list because categories are missing");
+                startActivity(new Intent(this, PlacesListActivity.class));
+            }
+            CategoryAttraction attraction = categories.get(position);
+            goToFilteredPlacesList(attraction.getCategory());
         }
     }
 
@@ -240,32 +235,30 @@ PlaceCategoryGridAdapter.GridViewHolder.PlaceGridItemClickListener {
     @Override
     public void gotCategoryAttractions(LiveData<List<CategoryAttraction>> categoryAttractions) {
         Log.d(LOG_LABEL, "Getting category attractions");
-        categoryAttractions.observe(this, data -> {
-            recyclerView.post(() -> {
-                Log.d(LOG_LABEL, "Got category attractions");
-                if (data == null || data.isEmpty()) {
-                    Log.e(LOG_LABEL, "Category attractions are missing");
-                    return;
+        categoryAttractions.observe(this, data -> recyclerView.post(() -> {
+            Log.d(LOG_LABEL, "Got category attractions");
+            if (data == null || data.isEmpty()) {
+                Log.e(LOG_LABEL, "Category attractions are missing");
+                return;
+            }
+
+            // Submit `categories` list managed by this activity, rather than the `data` list
+            // owned by the DAO, in order to be able to remove categories with no entries
+            // (empty image). Do not destroy/recreate list here, so list differ will
+            // correctly recognize that the reference hasn't changed.
+
+            categories.clear();
+            categories.addAll(data);
+            gridAdapter.submitList(categories);
+            gridAdapter.notifyDataSetChanged();
+
+            for (CategoryAttraction attraction: data) {
+                if (attraction.getImage().isEmpty()) {
+                    categories.remove(attraction);
+                    gridAdapter.submitList(categories);
+                    gridAdapter.notifyItemRemoved(attraction.getCategory().code);
                 }
-
-                // Submit `categories` list managed by this activity, rather than the `data` list
-                // owned by the DAO, in order to be able to remove categories with no entries
-                // (empty image). Do not destroy/recreate list here, so list differ will
-                // correctly recognize that the reference hasn't changed.
-
-                categories.clear();
-                categories.addAll(data);
-                gridAdapter.submitList(categories);
-                gridAdapter.notifyDataSetChanged();
-
-                for (CategoryAttraction attraction: data) {
-                    if (attraction.getImage().isEmpty()) {
-                        categories.remove(attraction);
-                        gridAdapter.submitList(categories);
-                        gridAdapter.notifyItemRemoved(attraction.getCategory().code);
-                    }
-                }
-            });
-        });
+            }
+        }));
     }
 }

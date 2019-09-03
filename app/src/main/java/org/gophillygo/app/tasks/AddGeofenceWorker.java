@@ -14,6 +14,7 @@ import com.google.android.gms.location.LocationServices;
 import org.gophillygo.app.BuildConfig;
 
 import java.util.Map;
+import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.work.Data;
@@ -91,8 +92,8 @@ public class AddGeofenceWorker extends Worker {
             return Result.failure();
         }
 
-        if (latitudes.length != longitudes.length || latitudes.length != geofenceLabels.length ||
-                latitudes.length != geofenceNames.length) {
+        if (Objects.requireNonNull(latitudes).length != Objects.requireNonNull(longitudes).length || latitudes.length != Objects.requireNonNull(geofenceLabels).length ||
+                latitudes.length != Objects.requireNonNull(geofenceNames).length) {
             String message = "Location data for geofences to add should be arrays of the same length.";
             Crashlytics.log(message);
             Log.e(LOG_LABEL, message);

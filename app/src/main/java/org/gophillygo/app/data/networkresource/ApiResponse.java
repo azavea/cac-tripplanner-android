@@ -5,6 +5,7 @@ import android.util.Log;
 import androidx.annotation.Nullable;
 
 import java.io.IOException;
+import java.util.Objects;
 
 import retrofit2.Response;
 
@@ -29,7 +30,7 @@ public class ApiResponse<T> {
 
     public ApiResponse(Throwable error) {
         Log.e(LOG_LABEL, "API response error:");
-        Log.e(LOG_LABEL, error.getMessage());
+        Log.e(LOG_LABEL, Objects.requireNonNull(error.getMessage()));
         code = 500;
         body = null;
         errorMessage = error.getMessage();

@@ -12,6 +12,7 @@ import org.gophillygo.app.data.models.EventInfo;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.work.Data;
@@ -42,7 +43,7 @@ public class RemoveGeofenceWorker extends Worker {
         Data data = getInputData();
         if (data.getKeyValueMap().containsKey(REMOVE_GEOFENCES_KEY)) {
             String[] removeGeofences = data.getStringArray(REMOVE_GEOFENCES_KEY);
-            Log.d(LOG_LABEL, "Going to remove " + removeGeofences.length + " geofences");
+            Log.d(LOG_LABEL, "Going to remove " + Objects.requireNonNull(removeGeofences).length + " geofences");
             geofencingClient.removeGeofences(new ArrayList<>(Arrays.asList(removeGeofences))).addOnSuccessListener(aVoid -> {
                 Log.d(LOG_LABEL, removeGeofences.length + " geofence(s) removed successfully");
                 Crashlytics.log(REMOVE_GEOFENCE_EVENT);

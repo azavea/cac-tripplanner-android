@@ -11,6 +11,8 @@ import androidx.appcompat.widget.Toolbar;
 
 import org.gophillygo.app.R;
 
+import java.util.Objects;
+
 public class AppInfoActivity extends AppCompatActivity {
 
     @Override
@@ -19,7 +21,7 @@ public class AppInfoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_app_info);
         Toolbar toolbar = findViewById(R.id.app_info_toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
         // set up links
         TextView mainLink = findViewById(R.id.app_info_root_site_link);

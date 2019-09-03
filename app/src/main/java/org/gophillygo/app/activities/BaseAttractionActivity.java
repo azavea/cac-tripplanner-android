@@ -38,6 +38,7 @@ import org.gophillygo.app.utils.UserUtils;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -120,7 +121,7 @@ public abstract class BaseAttractionActivity extends AppCompatActivity
         // Initialize Fabric/Crashlytics crash and usage data logging.
         // Disable if user setting turned off; still must be initialized to avoid errors.
         // Based on: https://stackoverflow.com/a/31996615
-        CrashlyticsCore core = new CrashlyticsCore.Builder().disabled(!UserUtils.isFabricEnabled(this)).build();
+        CrashlyticsCore core = new CrashlyticsCore.Builder().disabled(UserUtils.isFabricEnabled(this)).build();
         Fabric.with(this, new Crashlytics.Builder().core(core).build());
 
         defaultLocation = new Location(DUMMY_LOCATION_PROVIDER);
@@ -311,12 +312,12 @@ public abstract class BaseAttractionActivity extends AppCompatActivity
         SearchManager searchManager = (SearchManager)getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) menu.findItem(searchItem).getActionView();
         // Assumes current activity is the searchable activity
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        searchView.setSearchableInfo(Objects.requireNonNull(searchManager).getSearchableInfo(getComponentName()));
 
         // handle opening detail intent from search
         // https://developer.android.com/reference/android/widget/SearchView.OnSuggestionListener
         searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
-            CursorAdapter adapter = searchView.getSuggestionsAdapter();
+            final CursorAdapter adapter = searchView.getSuggestionsAdapter();
 
             @Override
             public boolean onSuggestionSelect(int position) {

@@ -3,7 +3,6 @@ package org.gophillygo.app.activities;
 import android.content.Intent;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -35,6 +34,7 @@ import org.gophillygo.app.utils.UserUtils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 public class PlacesListActivity extends FilterableListActivity implements
         PlacesListAdapter.AttractionListItemClickListener, SearchView.OnQueryTextListener {
@@ -66,7 +66,7 @@ public class PlacesListActivity extends FilterableListActivity implements
      */
     public void clickedAttraction(int position) {
         // Get database ID for place clicked, based on positional offset, and pass it along
-        long detailId = placesListView.getAdapter().getItemId(position);
+        long detailId = Objects.requireNonNull(placesListView.getAdapter()).getItemId(position);
         goToPlace(detailId);
     }
 
@@ -154,7 +154,7 @@ public class PlacesListActivity extends FilterableListActivity implements
                         return Collections.singletonList(destinationInfos.get(position));
                     }
 
-                    @Nullable
+                    @android.support.annotation.NonNull
                     @Override
                     public RequestBuilder<?> getPreloadRequestBuilder(@NonNull DestinationInfo item) {
                         RequestOptions options = new RequestOptions().centerCrop().encodeQuality(100);
@@ -192,7 +192,7 @@ public class PlacesListActivity extends FilterableListActivity implements
                 super.onSearchRequested();
                 break;
             default:
-                Log.w(LOG_LABEL, "Unrecognized menu item selected: " + String.valueOf(itemId));
+                Log.w(LOG_LABEL, "Unrecognized menu item selected: " + itemId);
                 return super.onOptionsItemSelected(item);
         }
         return true;
