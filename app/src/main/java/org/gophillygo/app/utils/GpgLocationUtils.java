@@ -42,6 +42,7 @@ public class GpgLocationUtils {
     // identifier for device location access request, if runtime prompt necessary
     // request code must be in lower 8 bits
     public static final int PERMISSION_REQUEST_ID = 11;
+    public static final int BACKGROUND_PERMISSION_REQUEST_ID = 12;
     public static final int API_AVAILABILITY_REQUEST_ID = 22;
     public static final int LOCATION_SETTINGS_REQUEST_ID = 33;
 
@@ -81,6 +82,19 @@ public class GpgLocationUtils {
             return false;
         }
 
+        // in API 29+, extra permission for background access must be requested
+        String[] accessPermissions;
+        if (Build.VERSION.SDK_INT >= 29) {
+            accessPermissions = new String[]{
+                    Manifest.permission.ACCESS_BACKGROUND_LOCATION,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+            };
+        } else {
+            accessPermissions = new String[]{
+                    Manifest.permission.ACCESS_FINE_LOCATION
+            };
+        }
+
         // in API 23+, permission granting happens at runtime
         if (ActivityCompat.checkSelfPermission(callingActivity,
                 Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -91,9 +105,17 @@ public class GpgLocationUtils {
                 // On subsequent prompts, user will get a "never ask again" option in the dialog
             }
 
-            ActivityCompat.requestPermissions(callingActivity, new String[]{
-                    Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_REQUEST_ID);
+            ActivityCompat.requestPermissions(callingActivity, accessPermissions, PERMISSION_REQUEST_ID);
             return false; // up to the activity to start this service again when permissions granted
+        } else {
+            // in API 29+, extra permission for background access must be requested separately
+            if (Build.VERSION.SDK_INT >=29 &&
+                    ActivityCompat.checkSelfPermission(callingActivity,
+                    Manifest.permission.ACCESS_BACKGROUND_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+                ActivityCompat.requestPermissions(callingActivity, new String[]{
+                        Manifest.permission.ACCESS_BACKGROUND_LOCATION}, BACKGROUND_PERMISSION_REQUEST_ID);
+            }
         }
 
         // Check location settings on API < 28

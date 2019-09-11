@@ -89,7 +89,7 @@
     <string name="event_list_item_time_range">%s – %s</string>
     <string name="location_requires_gps">Device does not have GPS, which is needed to get location. Please use a different device.</string>
     <string name="location_gps_needed_rationale">GPS needs to be enabled to find destinations near you.</string>
-    <string name="location_fine_permission_rationale">Device location permission needed.</string>
+    <string name="location_fine_permission_rationale">Device location permissions needed to find destinations near you.</string>
     <string name="filter_no_results">No results</string>
     <string name="title_activity_maps">Map</string>
 

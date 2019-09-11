@@ -285,6 +285,15 @@ public abstract class BaseAttractionActivity extends AppCompatActivity
                     GpgLocationUtils.displayPermissionRequestRationale(getApplicationContext());
                 }
             }
+        } else if (requestCode == GpgLocationUtils.BACKGROUND_PERMISSION_REQUEST_ID) {
+            if (grantResults.length > 0) {
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Log.d(LOG_LABEL, "Re-requesting location after getting background location permissions");
+                    fetchLastLocationOrUseDefault();
+                } else if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
+                    GpgLocationUtils.displayPermissionRequestRationale(getApplicationContext());
+                }
+            }
         } else if (requestCode == GpgLocationUtils.LOCATION_SETTINGS_REQUEST_ID) {
             if (grantResults.length > 0) {
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
