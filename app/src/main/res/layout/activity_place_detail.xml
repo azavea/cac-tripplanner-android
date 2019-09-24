@@ -62,9 +62,8 @@
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/place_detail_toolbar"
                 style="@style/ToolbarTransparent"
-                android:layout_width="match_parent"
-                app:layout_constraintBottom_toTopOf="@+id/place_detail_carousel"
-                android:minHeight="?attr/actionBarSize"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 tools:targetApi="lollipop" />
 
             <TextView
