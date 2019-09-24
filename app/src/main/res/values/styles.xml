@@ -1,7 +1,7 @@
 <resources>
 
     <!-- Base application theme -->
-    <style name="GpgAppTheme" parent="Theme.MaterialComponents.Light.NoActionBar.Bridge">
+    <style name="GpgAppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="colorPrimary">@color/color_primary</item>
         <item name="colorPrimaryDark">@color/color_primary_dark</item>
 
@@ -17,7 +17,7 @@
         <item name="android:dropDownListViewStyle">@style/GpgListViewDropdownStyle</item>
     </style>
 
-    <style name="GpgAlertDialogTheme" parent="Theme.MaterialComponents.Light.Dialog.Alert.Bridge">
+    <style name="GpgAlertDialogTheme" parent="Theme.MaterialComponents.Light.Dialog.Alert">
         <item name="android:textColor">@color/color_text_dark_grey</item>
     </style>
 
@@ -31,7 +31,7 @@
         <item name="android:paddingEnd">8dp</item>
     </style>
 
-    <style name="GpgDarkTextTheme" parent="Theme.MaterialComponents.Light.DarkActionBar.Bridge">
+    <style name="GpgDarkTextTheme" parent="Theme.MaterialComponents.Light.DarkActionBar">
         <item name="colorPrimary">@color/color_primary</item>
         <item name="colorPrimaryDark">@color/color_primary_dark</item>
         <item name="colorAccent">@color/color_accent</item>
