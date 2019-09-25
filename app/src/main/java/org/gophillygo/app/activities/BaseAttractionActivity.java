@@ -121,7 +121,7 @@ public abstract class BaseAttractionActivity extends AppCompatActivity
         // Initialize Fabric/Crashlytics crash and usage data logging.
         // Disable if user setting turned off; still must be initialized to avoid errors.
         // Based on: https://stackoverflow.com/a/31996615
-        CrashlyticsCore core = new CrashlyticsCore.Builder().disabled(UserUtils.isFabricEnabled(this)).build();
+        CrashlyticsCore core = new CrashlyticsCore.Builder().disabled(UserUtils.isFabricDisabled(this)).build();
         Fabric.with(this, new Crashlytics.Builder().core(core).build());
 
         defaultLocation = new Location(DUMMY_LOCATION_PROVIDER);
