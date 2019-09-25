@@ -49,8 +49,7 @@ public class UserUtils {
         Log.d(LOG_LABEL, "show first app install dialog to ask for logging permissions");
 
         // set the theme via ContextThemeWrapper, or else the message does not show
-        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(
-                new ContextThemeWrapper(context, R.style.GpgAlertDialogTheme));
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(context);
         builder.setTitle(context.getString(R.string.first_launch_dialog_title))
                 .setMessage(context.getString(R.string.first_launch_dialog_message))
                 .setPositiveButton(context.getString(R.string.first_launch_dialog_ok_action), (dialog, which) -> {
