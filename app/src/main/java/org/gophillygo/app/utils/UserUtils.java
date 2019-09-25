@@ -4,9 +4,10 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.view.ContextThemeWrapper;
 import androidx.preference.PreferenceManager;
+
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import org.gophillygo.app.R;
 
@@ -48,7 +49,8 @@ public class UserUtils {
         Log.d(LOG_LABEL, "show first app install dialog to ask for logging permissions");
 
         // set the theme via ContextThemeWrapper, or else the message does not show
-        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.GpgAlertDialogTheme));
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(
+                new ContextThemeWrapper(context, R.style.GpgAlertDialogTheme));
         builder.setTitle(context.getString(R.string.first_launch_dialog_title))
                 .setMessage(context.getString(R.string.first_launch_dialog_message))
                 .setPositiveButton(context.getString(R.string.first_launch_dialog_ok_action), (dialog, which) -> {
