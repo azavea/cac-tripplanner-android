@@ -1,12 +1,8 @@
 package org.gophillygo.app.data.models;
 
-import android.arch.persistence.room.ColumnInfo;
-import android.arch.persistence.room.Embedded;
-import android.arch.persistence.room.Ignore;
-import android.util.Log;
-import android.content.Context;
-
-import org.gophillygo.app.R;
+import androidx.room.ColumnInfo;
+import androidx.room.Embedded;
+import androidx.room.Ignore;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;

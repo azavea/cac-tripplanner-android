@@ -12,7 +12,7 @@
         <item name="android:elevation">0dp</item>
     </style>
 
-    <style name="GpgAppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="GpgAppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="colorPrimary">@color/color_primary</item>
         <item name="colorPrimaryDark">@color/color_primary_dark</item>
 

@@ -7,14 +7,14 @@
         <variable name="listener" type="org.gophillygo.app.activities.ToolbarFilterListener" />
     </data>
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/filter_button_bar"
         style="@style/FilterButtonBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:weightSum="4">
 
-        <android.support.v7.widget.AppCompatButton
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/filter_bar_filter_button"
             style="@style/FilterBarButton"
             android:text="@{@plurals/filter_button_title(filter.count())}"
@@ -30,6 +30,9 @@
 
         <Space
             android:layout_weight="1"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/filter_bar_filter_button"
+            app:layout_constraintTop_toTopOf="parent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
 
@@ -63,5 +66,5 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:layout_conversion_absoluteHeight="32dp"
             tools:layout_conversion_absoluteWidth="102dp" />
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

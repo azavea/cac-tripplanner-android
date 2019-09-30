@@ -1,8 +1,8 @@
 package org.gophillygo.app.data.networkresource;
 
-import android.arch.lifecycle.LiveData;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.lifecycle.LiveData;
 
 import org.gophillygo.app.BuildConfig;
 import org.gophillygo.app.data.DestinationDao;
@@ -15,7 +15,6 @@ import org.gophillygo.app.data.models.Destination;
 import org.gophillygo.app.data.models.DestinationCategories;
 import org.gophillygo.app.data.models.DestinationQueryResponse;
 import org.gophillygo.app.data.models.Event;
-import org.gophillygo.app.data.models.Filter;
 
 import java.util.HashSet;
 import java.util.List;
@@ -48,7 +47,7 @@ abstract public class AttractionNetworkBoundResource<A extends Attraction, I ext
 
     @Override
     protected void saveCallResult(@NonNull DestinationQueryResponse response) {
-        Long timestamp = System.currentTimeMillis();
+        long timestamp = System.currentTimeMillis();
 
         // clear out existing database entries before adding new ones
         destinationDao.clear();

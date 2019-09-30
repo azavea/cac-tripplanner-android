@@ -3,7 +3,6 @@ package org.gophillygo.app.tasks;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
@@ -15,7 +14,9 @@ import com.google.android.gms.location.LocationServices;
 import org.gophillygo.app.BuildConfig;
 
 import java.util.Map;
+import java.util.Objects;
 
+import androidx.annotation.NonNull;
 import androidx.work.Data;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
@@ -91,8 +92,8 @@ public class AddGeofenceWorker extends Worker {
             return Result.failure();
         }
 
-        if (latitudes.length != longitudes.length || latitudes.length != geofenceLabels.length ||
-                latitudes.length != geofenceNames.length) {
+        if (Objects.requireNonNull(latitudes).length != Objects.requireNonNull(longitudes).length || latitudes.length != Objects.requireNonNull(geofenceLabels).length ||
+                latitudes.length != Objects.requireNonNull(geofenceNames).length) {
             String message = "Location data for geofences to add should be arrays of the same length.";
             Crashlytics.log(message);
             Log.e(LOG_LABEL, message);

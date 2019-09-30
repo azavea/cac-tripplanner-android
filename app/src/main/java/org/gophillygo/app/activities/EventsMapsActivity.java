@@ -1,10 +1,11 @@
 package org.gophillygo.app.activities;
 
 import android.annotation.SuppressLint;
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
-import android.databinding.DataBindingUtil;
+import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModelProviders;
+
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,8 +18,6 @@ import org.gophillygo.app.data.networkresource.Resource;
 import org.gophillygo.app.data.networkresource.Status;
 import org.gophillygo.app.databinding.FilterButtonBarBinding;
 import org.gophillygo.app.databinding.ActivityEventsMapsBinding;
-
-import org.gophillygo.app.data.models.EventInfo;
 
 import java.util.HashMap;
 import java.util.List;
@@ -82,7 +81,7 @@ public class EventsMapsActivity extends MapsActivity<EventInfo> {
                 startActivity(intent);
                 break;
             default:
-                Log.w(LOG_LABEL, "Unrecognized menu item selected: " + String.valueOf(itemId));
+                Log.w(LOG_LABEL, "Unrecognized menu item selected: " + itemId);
                 return super.onOptionsItemSelected(item);
         }
         return true;

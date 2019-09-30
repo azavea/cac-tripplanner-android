@@ -1,12 +1,14 @@
 package org.gophillygo.app.adapters;
 
 import android.content.Context;
-import android.databinding.DataBindingUtil;
-import android.databinding.ViewDataBinding;
-import android.support.annotation.NonNull;
-import android.support.v7.recyclerview.extensions.ListAdapter;
-import android.support.v7.util.DiffUtil;
-import android.support.v7.widget.RecyclerView;
+
+import androidx.annotation.NonNull;
+import androidx.databinding.DataBindingUtil;
+import androidx.databinding.ViewDataBinding;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.ListAdapter;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -50,7 +52,7 @@ public class PlaceCategoryGridAdapter extends ListAdapter<CategoryAttraction, Pl
     private PlaceCategoryGridAdapter() {
         super(new DiffUtil.ItemCallback<CategoryAttraction>() {
             @Override
-            public boolean areItemsTheSame(CategoryAttraction oldItem, CategoryAttraction newItem) {
+            public boolean areItemsTheSame(@NonNull CategoryAttraction oldItem, @NonNull CategoryAttraction newItem) {
                 if (oldItem == null) {
                     return newItem == null;
                 } else {
@@ -59,7 +61,7 @@ public class PlaceCategoryGridAdapter extends ListAdapter<CategoryAttraction, Pl
             }
 
             @Override
-            public boolean areContentsTheSame(CategoryAttraction oldItem, CategoryAttraction newItem) {
+            public boolean areContentsTheSame(@NonNull CategoryAttraction oldItem, @NonNull CategoryAttraction newItem) {
                 return Objects.equals(oldItem, newItem);
             }
         });

@@ -8,11 +8,12 @@ import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.DrawableRes;
-import android.support.annotation.IdRes;
-import android.support.v4.content.ContextCompat;
-import android.support.v4.content.res.ResourcesCompat;
-import android.support.v7.widget.PopupMenu;
+
+import androidx.annotation.DrawableRes;
+import androidx.annotation.IdRes;
+import androidx.appcompat.widget.PopupMenu;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import android.util.Log;
 import android.view.View;
 
@@ -39,6 +40,7 @@ import org.gophillygo.app.utils.UserUtils;
 import java.lang.ref.WeakReference;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public abstract class MapsActivity<T extends AttractionInfo> extends FilterableListActivity
         implements OnMapReadyCallback {
@@ -59,7 +61,9 @@ public abstract class MapsActivity<T extends AttractionInfo> extends FilterableL
     protected GoogleMap googleMap;
     protected Map<Integer, T> attractions;
     protected MapPopupCardBinding popupBinding;
-    protected @IdRes int mapId;
+    protected @IdRes
+    final
+    int mapId;
 
     public BitmapDescriptor markerIcon, selectedMarkerIcon;
 
@@ -84,7 +88,7 @@ public abstract class MapsActivity<T extends AttractionInfo> extends FilterableL
         } else if (getIntent().hasExtra(ATTRACTION_ID)) {
             selectedAttractionId = getIntent().getIntExtra(ATTRACTION_ID, 0);
         }
-        mapFragment.getMapAsync(this);
+        Objects.requireNonNull(mapFragment).getMapAsync(this);
 
         markerIcon = vectorToBitmap(R.drawable.ic_map_marker);
         selectedMarkerIcon = vectorToBitmap(R.drawable.ic_selected_map_marker);
@@ -261,7 +265,7 @@ public abstract class MapsActivity<T extends AttractionInfo> extends FilterableL
     private boolean selectMarker(Marker marker) {
         if (selectedAttractionId != -1) {
             Marker prevSelectedMarker = markers.get(selectedAttractionId);
-            prevSelectedMarker.setIcon(markerIcon);
+            Objects.requireNonNull(prevSelectedMarker).setIcon(markerIcon);
         }
         //noinspection ConstantConditions
         selectedAttractionId = (Integer) marker.getTag();

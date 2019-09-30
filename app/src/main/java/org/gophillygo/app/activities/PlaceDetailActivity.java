@@ -1,14 +1,16 @@
 package org.gophillygo.app.activities;
 
 import android.annotation.SuppressLint;
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
-import android.databinding.DataBindingUtil;
+
+import androidx.appcompat.widget.PopupMenu;
+import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.PopupMenu;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
@@ -29,9 +31,10 @@ import org.gophillygo.app.data.models.DestinationInfo;
 import org.gophillygo.app.data.models.EventInfo;
 import org.gophillygo.app.databinding.ActivityPlaceDetailBinding;
 import org.gophillygo.app.di.GpgViewModelFactory;
-import org.gophillygo.app.tasks.GeofenceTransitionWorker;
 import org.gophillygo.app.utils.FlagMenuUtils;
 import org.gophillygo.app.utils.UserUtils;
+
+import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -62,7 +65,6 @@ public class PlaceDetailActivity extends AttractionDetailActivity implements Att
         // disable default app name title display
         binding.placeDetailToolbar.setTitle("");
         setSupportActionBar(binding.placeDetailToolbar);
-        //noinspection ConstantConditions
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         if (getIntent().hasExtra(DESTINATION_ID_KEY)) {
@@ -190,7 +192,7 @@ public class PlaceDetailActivity extends AttractionDetailActivity implements Att
      */
     @Override
     public void clickedAttraction(int position) {
-        long eventId = eventsList.getAdapter().getItemId(position);
+        long eventId = Objects.requireNonNull(eventsList.getAdapter()).getItemId(position);
         Log.d(LOG_LABEL, "Clicked event with ID: " + eventId);
         Intent intent = new Intent(this, EventDetailActivity.class);
         intent.putExtra(EventDetailActivity.EVENT_ID_KEY, eventId);
@@ -206,7 +208,7 @@ public class PlaceDetailActivity extends AttractionDetailActivity implements Att
 
         eventInfo.updateAttractionFlag(item.getItemId());
         eventViewModel.updateAttractionFlag(eventInfo.getFlag(), userUuid, getString(R.string.user_flag_post_api_key), UserUtils.isFlagPostingEnabled(this));
-        eventsList.getAdapter().notifyItemChanged(position);
+        Objects.requireNonNull(eventsList.getAdapter()).notifyItemChanged(position);
 
         // do not attempt to add a geofence for an event with no location (should always exist here,
         // as we know there is an associated place)

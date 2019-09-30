@@ -19,7 +19,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <android.support.constraint.ConstraintLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -30,7 +30,7 @@
                 app:layout_constraintBottom_toTopOf="@+id/place_detail_categories_list"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <android.support.constraint.ConstraintLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintBottom_toBottomOf="@+id/place_detail_carousel"
@@ -57,12 +57,13 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"/>
-            </android.support.constraint.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <android.support.v7.widget.Toolbar
+            <androidx.appcompat.widget.Toolbar
                 android:id="@+id/place_detail_toolbar"
                 style="@style/ToolbarTransparent"
-                android:minHeight="?attr/actionBarSize"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 tools:targetApi="lollipop" />
 
             <TextView
@@ -75,7 +76,7 @@
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/place_detail_carousel" />
 
-            <android.support.constraint.ConstraintLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/place_detail_activities_and_events_bar"
                 style="@style/PlaceDetailActivitiesAndEventsBar"
                 android:layout_width="0dp"
@@ -86,7 +87,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/place_detail_categories_list">
 
-                <android.support.constraint.ConstraintLayout
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/place_detail_activities"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -140,7 +141,7 @@
                         app:layout_constraintStart_toEndOf="@+id/place_detail_hiking_label"
                         app:layout_constraintTop_toTopOf="parent"
                         app:srcCompat="@drawable/water_recreation_24dp" />
-                </android.support.constraint.ConstraintLayout>
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <TextView
                     android:id="@+id/place_detail_upcoming_events"
@@ -154,7 +155,7 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/place_detail_activities"
                     app:layout_constraintTop_toTopOf="parent" />
-            </android.support.constraint.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <include
                 android:id="@+id/place_detail_description_card"
@@ -167,7 +168,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/place_detail_activities_and_events_bar" />
 
-            <android.support.v7.widget.CardView
+            <androidx.cardview.widget.CardView
                 android:id="@+id/place_detail_flag_options_card"
                 android:onClick="@{activity::userFlagChanged}"
                 style="@style/ItemDetailOptionsCard"
@@ -184,9 +185,9 @@
                     android:drawableEnd="@{activity.getFlagImage(destinationInfo)}"
                     android:text="@{activity.getFlagLabel(attractionInfo)}" />
 
-            </android.support.v7.widget.CardView>
+            </androidx.cardview.widget.CardView>
 
-            <android.support.constraint.ConstraintLayout
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/place_detail_button_bar"
                 style="@style/ItemDetailButtonBar"
                 android:layout_width="match_parent"
@@ -195,7 +196,7 @@
                 android:weightSum="3"
                 app:layout_constraintTop_toBottomOf="@+id/place_detail_flag_options_card">
 
-                <android.support.v7.widget.AppCompatButton
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/place_detail_map_button"
                     style="@style/BorderlessDetailButton"
                     android:drawableStart="@drawable/ic_map_blue_24dp"
@@ -205,16 +206,17 @@
                     app:layout_constraintEnd_toStartOf="@+id/place_detail_directions_button"
                     app:layout_constraintStart_toStartOf="parent" />
 
-                <android.support.v7.widget.AppCompatButton
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/place_detail_directions_button"
                     style="@style/BorderlessDetailButton"
                     android:drawableStart="@drawable/ic_directions_blue_24dp"
                     android:onClick="@{activity::goToDirections}"
                     android:text="@string/place_detail_directions_button"
+                    app:layout_constraintBaseline_toBaselineOf="@+id/place_detail_map_button"
                     app:layout_constraintEnd_toStartOf="@+id/place_detail_website_button"
                     app:layout_constraintStart_toEndOf="@+id/place_detail_map_button" />
 
-                <android.support.v7.widget.AppCompatButton
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/place_detail_website_button"
                     style="@style/BorderlessDetailButton"
                     android:drawableStart="@drawable/ic_public_blue_24dp"
@@ -224,24 +226,25 @@
                     app:layout_constraintBaseline_toBaselineOf="@+id/place_detail_directions_button"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/place_detail_directions_button" />
-            </android.support.constraint.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <ImageView
                 android:id="@+id/place_detail_watershed_alliance_icon"
                 style="@style/PlaceDetailWatershedAllianceLogo"
+                android:contentDescription="@string/watershed_alliance_label"
                 android:visibility="@{destination.isWatershedAlliance ? View.VISIBLE : View.GONE}"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/place_detail_button_bar" />
 
-            <android.support.v7.widget.RecyclerView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/place_detail_events_recycler_view"
                 app:layout_constraintTop_toBottomOf="@+id/place_detail_watershed_alliance_icon"
                 android:paddingTop="16dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-            </android.support.v7.widget.RecyclerView>
+            </androidx.recyclerview.widget.RecyclerView>
 
-        </android.support.constraint.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 </layout>

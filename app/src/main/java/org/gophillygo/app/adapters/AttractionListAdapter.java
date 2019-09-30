@@ -1,17 +1,18 @@
 package org.gophillygo.app.adapters;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
-import android.databinding.DataBindingUtil;
-import android.databinding.ViewDataBinding;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.PopupMenu;
+import androidx.databinding.DataBindingUtil;
+import androidx.databinding.ViewDataBinding;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.recyclerview.extensions.ListAdapter;
-import android.support.v7.util.DiffUtil;
-import android.support.v7.widget.PopupMenu;
-import android.support.v7.widget.RecyclerView;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.ListAdapter;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -63,14 +64,14 @@ public class AttractionListAdapter<T extends AttractionInfo> extends ListAdapter
         super(new DiffUtil.ItemCallback<T>() {
 
             @Override
-            public boolean areItemsTheSame(T oldItem, T newItem) {
+            public boolean areItemsTheSame(@NonNull T oldItem, @NonNull T newItem) {
                 // Returns true if these are for the same attraction; properties may differ.
                 return oldItem.getAttraction().getId() == newItem.getAttraction().getId() &&
                         oldItem.getAttraction().isEvent() == newItem.getAttraction().isEvent();
             }
 
             @Override
-            public boolean areContentsTheSame(T oldItem, T newItem) {
+            public boolean areContentsTheSame(@NonNull T oldItem, @NonNull T newItem) {
                 return oldItem.equals(newItem);
             }
         });
@@ -128,7 +129,7 @@ public class AttractionListAdapter<T extends AttractionInfo> extends ListAdapter
         if (info != null) {
             return info.getAttraction().getId();
         } else {
-            Log.w(LOG_LABEL, "Could not find attraction at offset " + String.valueOf(position));
+            Log.w(LOG_LABEL, "Could not find attraction at offset " + position);
             return -1;
         }
     }

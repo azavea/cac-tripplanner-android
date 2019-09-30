@@ -2,7 +2,7 @@ package org.gophillygo.app.activities;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.databinding.DataBindingUtil;
+import androidx.databinding.DataBindingUtil;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -59,7 +59,7 @@ public class PlacesMapsActivity extends MapsActivity<DestinationInfo> {
                 super.onSearchRequested();
                 break;
             default:
-                Log.w(LOG_LABEL, "Unrecognized menu item selected: " + String.valueOf(itemId));
+                Log.w(LOG_LABEL, "Unrecognized menu item selected: " + itemId);
                 return super.onOptionsItemSelected(item);
         }
         return true;

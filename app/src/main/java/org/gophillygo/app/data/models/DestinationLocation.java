@@ -1,5 +1,7 @@
 package org.gophillygo.app.data.models;
 
+import androidx.annotation.NonNull;
+
 import java.util.Objects;
 
 /**
@@ -24,6 +26,7 @@ public class DestinationLocation {
         return y;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return getY() + "," + getX();

@@ -1,6 +1,6 @@
 package org.gophillygo.app.data;
 
-import android.arch.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModel;
 
 import org.gophillygo.app.data.models.AttractionFlag;
 

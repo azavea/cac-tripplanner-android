@@ -1,21 +1,22 @@
 package org.gophillygo.app.activities;
 
 import android.app.SearchManager;
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.location.Location;
 import android.os.Bundle;
-import android.support.annotation.IdRes;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.widget.CursorAdapter;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.Menu;
+
+import androidx.annotation.IdRes;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
+import androidx.cursoradapter.widget.CursorAdapter;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
@@ -37,6 +38,7 @@ import org.gophillygo.app.utils.UserUtils;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -119,7 +121,7 @@ public abstract class BaseAttractionActivity extends AppCompatActivity
         // Initialize Fabric/Crashlytics crash and usage data logging.
         // Disable if user setting turned off; still must be initialized to avoid errors.
         // Based on: https://stackoverflow.com/a/31996615
-        CrashlyticsCore core = new CrashlyticsCore.Builder().disabled(!UserUtils.isFabricEnabled(this)).build();
+        CrashlyticsCore core = new CrashlyticsCore.Builder().disabled(UserUtils.isFabricDisabled(this)).build();
         Fabric.with(this, new Crashlytics.Builder().core(core).build());
 
         defaultLocation = new Location(DUMMY_LOCATION_PROVIDER);
@@ -283,6 +285,15 @@ public abstract class BaseAttractionActivity extends AppCompatActivity
                     GpgLocationUtils.displayPermissionRequestRationale(getApplicationContext());
                 }
             }
+        } else if (requestCode == GpgLocationUtils.BACKGROUND_PERMISSION_REQUEST_ID) {
+            if (grantResults.length > 0) {
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Log.d(LOG_LABEL, "Re-requesting location after getting background location permissions");
+                    fetchLastLocationOrUseDefault();
+                } else if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
+                    GpgLocationUtils.displayPermissionRequestRationale(getApplicationContext());
+                }
+            }
         } else if (requestCode == GpgLocationUtils.LOCATION_SETTINGS_REQUEST_ID) {
             if (grantResults.length > 0) {
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -310,12 +321,12 @@ public abstract class BaseAttractionActivity extends AppCompatActivity
         SearchManager searchManager = (SearchManager)getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView = (SearchView) menu.findItem(searchItem).getActionView();
         // Assumes current activity is the searchable activity
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        searchView.setSearchableInfo(Objects.requireNonNull(searchManager).getSearchableInfo(getComponentName()));
 
         // handle opening detail intent from search
         // https://developer.android.com/reference/android/widget/SearchView.OnSuggestionListener
         searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
-            CursorAdapter adapter = searchView.getSuggestionsAdapter();
+            final CursorAdapter adapter = searchView.getSuggestionsAdapter();
 
             @Override
             public boolean onSuggestionSelect(int position) {

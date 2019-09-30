@@ -13,7 +13,7 @@
         <import type="android.view.View"/>
     </data>
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/color_background_grey"
@@ -31,7 +31,7 @@
             android:contentDescription="@{destination.getAddress}"
             android:scaleType="centerCrop" />
 
-        <android.support.constraint.ConstraintLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             style="@style/ItemDetailInfo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -58,6 +58,6 @@
                 android:text="@{@string/distance_with_abbreviated_miles(destination.getFormattedDistance())}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintLeft_toLeftOf="parent" />
-        </android.support.constraint.ConstraintLayout>
-    </android.support.constraint.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
