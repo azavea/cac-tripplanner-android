@@ -31,7 +31,7 @@ public class Attraction {
     private final int _id;
 
     @ColumnInfo(index = true)
-    private final int placeID;
+    private int placeID;
 
     @ColumnInfo(index = true)
     private final String name;
@@ -128,6 +128,10 @@ public class Attraction {
 
     public int getPlaceID() {
         return placeID;
+    }
+
+    public void setPlaceID(int placeID) {
+        this.placeID = placeID;
     }
 
     public String getName() {

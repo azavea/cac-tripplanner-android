@@ -1,5 +1,7 @@
 package org.gophillygo.app.data.models;
 
+import android.util.Log;
+
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
@@ -40,6 +42,8 @@ public class Event extends Attraction {
     @ColumnInfo(index = true)
     private Integer destination;
 
+    private final ArrayList<Destination> destinations;
+
     @ColumnInfo(name = "start_date", index = true)
     @SerializedName("start_date")
     private final String startDate;
@@ -58,15 +62,24 @@ public class Event extends Attraction {
     public Event(int _id, int placeID, String name, boolean accessible, String image,
                  boolean cycling, String description, int priority, String websiteUrl,
                  String wideImage, boolean isEvent, ArrayList<String> activities,
-                 Integer destination, String startDate, String endDate, ArrayList<String> extraWideImages) {
+                 Integer destination, String startDate, String endDate, ArrayList<String> extraWideImages, ArrayList<Destination> destinations) {
 
         // initialize Attraction
         super(_id, placeID, name, accessible, image, cycling, description, priority, websiteUrl,
               wideImage, isEvent, activities, extraWideImages);
 
-        this.destination = destination;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.destinations = destinations;
+
+        // Hide (first) destination for events with multiple destinations
+        if (this.destinations != null && this.destinations.size() > 1) {
+            Log.d(LOG_LABEL, "Set no destination for event " + name);
+            this.destination = null;
+            setPlaceID(-1);
+        } else {
+            this.destination = destination;
+        }
 
         try {
             this.start = isoDateFormat.parse(startDate);
@@ -88,8 +101,17 @@ public class Event extends Attraction {
         return destination;
     }
 
+    public ArrayList<Destination> getDestinations() { return destinations; }
+
     public void setDestination(Integer id) {
-        destination = id;
+        // Hide destination if there is more than one
+        if (this.destinations == null || this.destinations.size() == 1) {
+            destination = id;
+            setPlaceID(id);
+        } else {
+            destination = null;
+            setPlaceID(-1);
+        }
     }
 
     public String getStartDate() {
@@ -142,6 +164,7 @@ public class Event extends Attraction {
         Event event = (Event) o;
         return isSingleDay == event.isSingleDay &&
                 Objects.equals(destination, event.destination) &&
+                Objects.equals(destinations, event.destinations) &&
                 Objects.equals(startDate, event.startDate) &&
                 Objects.equals(endDate, event.endDate) &&
                 Objects.equals(start, event.start) &&
@@ -151,6 +174,7 @@ public class Event extends Attraction {
     @Override
     public int hashCode() {
 
-        return Objects.hash(super.hashCode(), destination, startDate, endDate, start, end, isSingleDay);
+        return Objects.hash(super.hashCode(), destination, destinations, startDate, endDate, start,
+                end, isSingleDay);
     }
 }

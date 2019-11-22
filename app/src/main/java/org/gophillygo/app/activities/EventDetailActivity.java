@@ -104,6 +104,7 @@ public class EventDetailActivity extends AttractionDetailActivity {
             }
 
             this.eventInfo = eventInfo;
+
             Integer destinationId = eventInfo.getEvent().getDestination();
             if (destinationId != null) {
                 LiveData<DestinationInfo> data = destinationViewModel.getDestination(destinationId);
