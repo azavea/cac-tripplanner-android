@@ -9,6 +9,7 @@
         <variable name="event" type="org.gophillygo.app.data.models.Event"/>
         <variable name="eventInfo" type="org.gophillygo.app.data.models.EventInfo"/>
         <variable name="destination" type="org.gophillygo.app.data.models.Destination"/>
+        <variable name="multipleDestinations" type="boolean"/>
         <variable name="attractionInfo" type="org.gophillygo.app.data.models.AttractionInfo"/>
         <variable name="activity" type="org.gophillygo.app.activities.EventDetailActivity" />
         <variable name="context" type="android.content.Context" />
@@ -54,7 +55,7 @@
                     android:layout_height="wrap_content"
                     android:text='@{@string/distance_with_abbreviated_miles(eventInfo.getFormattedDistance())}'
                     android:visibility="@{eventInfo.distance != null ? View.VISIBLE : View.GONE}"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintBottom_toTopOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
@@ -90,7 +91,6 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/event_detail_date_label" />
 
-
             <include
                 android:id="@+id/event_detail_description_card"
                 layout="@layout/detail_description"
@@ -104,6 +104,30 @@
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/event_detail_destination_name" />
 
+            <TextView
+                android:id="@+id/event_detail_multiple_destinations_label"
+                style="@style/EventDetailLocation"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/event_detail_multiple_locations_label"
+                android:visibility="@{multipleDestinations ? View.VISIBLE : View.GONE}"
+                app:layout_constraintBottom_toTopOf="@id/event_detail_multiple_destinations_link"
+                app:layout_constraintTop_toBottomOf="@id/event_detail_description_card"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/event_detail_multiple_destinations_link"
+                style="@style/BorderlessDetailButton"
+                android:drawableStart="@drawable/ic_public_blue_24dp"
+                android:onClick="@{activity::goToDetailsPage}"
+                android:text="@string/event_detail_multiple_locations_link"
+                android:visibility="@{multipleDestinations ? View.VISIBLE : View.GONE}"
+                app:layout_constraintBottom_toTopOf="@id/event_detail_flag_options_card"
+                app:layout_constraintTop_toBottomOf="@id/event_detail_multiple_destinations_label"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
             <androidx.cardview.widget.CardView
                 android:id="@+id/event_detail_flag_options_card"
                 style="@style/ItemDetailOptionsCard"
@@ -111,7 +135,7 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/event_detail_description_card">
+                app:layout_constraintTop_toBottomOf="@+id/event_detail_multiple_destinations_link">
 
                 <TextView
                     android:id="@+id/event_options_flag_text"
