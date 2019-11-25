@@ -78,6 +78,21 @@
                 app:layout_constraintTop_toBottomOf="@+id/event_detail_carousel" />
 
             <TextView
+                android:id="@+id/event_detail_multiple_destinations_link"
+                style="@style/EventDetailMultipleLocations"
+                android:onClick="@{activity::goToDetailsPage}"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@string/event_multiple_locations_label"
+                android:visibility="@{multipleDestinations ? View.VISIBLE : View.GONE}"
+                app:layout_constraintBottom_toTopOf="@id/event_detail_destination_name"
+                app:layout_constraintTop_toBottomOf="@id/event_detail_date_label"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <TextView
                 android:id="@+id/event_detail_destination_name"
                 style="@style/EventDetailLocation"
                 android:layout_width="0dp"
@@ -89,7 +104,7 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/event_detail_date_label" />
+                app:layout_constraintTop_toBottomOf="@+id/event_detail_multiple_destinations_link" />
 
             <include
                 android:id="@+id/event_detail_description_card"
@@ -104,30 +119,6 @@
                 app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/event_detail_destination_name" />
 
-            <TextView
-                android:id="@+id/event_detail_multiple_destinations_label"
-                style="@style/EventDetailLocation"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:text="@string/event_detail_multiple_locations_label"
-                android:visibility="@{multipleDestinations ? View.VISIBLE : View.GONE}"
-                app:layout_constraintBottom_toTopOf="@id/event_detail_multiple_destinations_link"
-                app:layout_constraintTop_toBottomOf="@id/event_detail_description_card"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/event_detail_multiple_destinations_link"
-                style="@style/BorderlessDetailButton"
-                android:drawableStart="@drawable/ic_public_blue_24dp"
-                android:onClick="@{activity::goToDetailsPage}"
-                android:text="@string/event_detail_multiple_locations_link"
-                android:visibility="@{multipleDestinations ? View.VISIBLE : View.GONE}"
-                app:layout_constraintBottom_toTopOf="@id/event_detail_flag_options_card"
-                app:layout_constraintTop_toBottomOf="@id/event_detail_multiple_destinations_label"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
-
             <androidx.cardview.widget.CardView
                 android:id="@+id/event_detail_flag_options_card"
                 style="@style/ItemDetailOptionsCard"
@@ -135,7 +126,7 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/event_detail_multiple_destinations_link">
+                app:layout_constraintTop_toBottomOf="@+id/event_detail_description_card">
 
                 <TextView
                     android:id="@+id/event_options_flag_text"
