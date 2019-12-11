@@ -304,6 +304,10 @@
         <item name="android:padding">0dp</item>
     </style>
 
+    <style name="EventDetailMultipleLocations" parent="EventDetailLocation">
+        <item name="android:textColor">@color/color_primary</item>
+    </style>
+
     <style name="PlaceListItemName" parent="GpgTextAppearanceTitle">
         <item name="android:layout_marginStart">8dp</item>
         <item name="android:layout_marginEnd">8dp</item>

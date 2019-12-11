@@ -104,6 +104,7 @@ public class EventDetailActivity extends AttractionDetailActivity {
             }
 
             this.eventInfo = eventInfo;
+
             Integer destinationId = eventInfo.getEvent().getDestination();
             if (destinationId != null) {
                 LiveData<DestinationInfo> data = destinationViewModel.getDestination(destinationId);
@@ -120,6 +121,9 @@ public class EventDetailActivity extends AttractionDetailActivity {
                     // we need to remove destination observer every time it is called
                     data.removeObservers(this);
                 });
+            } else if (eventInfo.getEvent().getDestinations().size() > 1) {
+                // show message that their are multiple destinations
+                binding.setMultipleDestinations(true);
             }
 
             // set up data binding object
@@ -135,6 +139,13 @@ public class EventDetailActivity extends AttractionDetailActivity {
     // open website for event in browser
     public void goToWebsite(View view) {
         Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(eventInfo.getEvent().getWebsiteUrl()));
+        startActivity(intent);
+    }
+
+    // Go to the GoPhillyGo details page for the event
+    public void goToDetailsPage(View view) {
+        String url = getString(R.string.website_host) + "/event/" + eventId + "/";
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
         startActivity(intent);
     }
 
