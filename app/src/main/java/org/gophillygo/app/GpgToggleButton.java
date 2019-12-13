@@ -8,8 +8,6 @@ import android.widget.CompoundButton;
 
 import androidx.databinding.BindingAdapter;
 
-import com.google.android.material.button.MaterialButton;
-
 /**
  * Custom toggle button that changes colors with state.
  */
