@@ -66,8 +66,8 @@
             style="@style/EventListItemDestination"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="@{attractionInfo.destinationName}"
-            android:visibility="@{attractionInfo.hasDestinationName ? View.VISIBLE : View.INVISIBLE}"
+            android:text="@{adapter.hasMultipleDestinations(attraction) ? @string/event_multiple_locations_label : attractionInfo.destinationName}"
+            android:visibility="@{attractionInfo.hasDestinationName || adapter.hasMultipleDestinations(attraction) ? View.VISIBLE : View.INVISIBLE}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/event_list_item_name_label" />

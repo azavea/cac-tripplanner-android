@@ -16,6 +16,7 @@ import org.gophillygo.app.data.models.DestinationCategories;
 import org.gophillygo.app.data.models.DestinationQueryResponse;
 import org.gophillygo.app.data.models.Event;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -74,6 +75,11 @@ abstract public class AttractionNetworkBoundResource<A extends Attraction, I ext
         for (Event item: response.getEvents()) {
             // Work-around for published event with unpublished destination
             if (item.getDestination() != null && !destinationIds.contains(item.getDestination())) {
+                item.setDestination(null);
+            }
+            // Hide (first) destination for events with multiple destinations
+            ArrayList<Destination> eventDestinations = item.getDestinations();
+            if (eventDestinations != null && eventDestinations.size() > 1) {
                 item.setDestination(null);
             }
             item.setTimestamp(timestamp);

@@ -3,11 +3,13 @@ package org.gophillygo.app.adapters;
 import android.content.Context;
 
 import org.gophillygo.app.R;
+import org.gophillygo.app.data.models.Destination;
 import org.gophillygo.app.data.models.Event;
 import org.gophillygo.app.data.models.EventInfo;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -34,6 +36,11 @@ public class EventsListAdapter extends AttractionListAdapter<EventInfo> {
         super(context, attractions, R.layout.event_list_item, listener);
         this.context = context;
         now = new Date();
+    }
+
+    public boolean hasMultipleDestinations(Event event) {
+        ArrayList<Destination> destinations = event.getDestinations();
+        return destinations != null && destinations.size() > 1;
     }
 
     public boolean isCurrentlyOngoingEvent(Event event) {
