@@ -1,16 +1,18 @@
 package org.gophillygo.app.activities;
 
 import android.annotation.SuppressLint;
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
-import android.databinding.DataBindingUtil;
+
+import androidx.appcompat.widget.PopupMenu;
+import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
+import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModelProviders;
+
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.CalendarContract;
-import android.support.v7.widget.CardView;
-import android.support.v7.widget.PopupMenu;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -29,7 +31,6 @@ import org.gophillygo.app.data.models.Event;
 import org.gophillygo.app.data.models.EventInfo;
 import org.gophillygo.app.databinding.ActivityEventDetailBinding;
 import org.gophillygo.app.di.GpgViewModelFactory;
-import org.gophillygo.app.tasks.GeofenceTransitionWorker;
 import org.gophillygo.app.utils.FlagMenuUtils;
 import org.gophillygo.app.utils.UserUtils;
 
@@ -78,7 +79,6 @@ public class EventDetailActivity extends AttractionDetailActivity {
         // disable default app name title display
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
-        //noinspection ConstantConditions
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         if (getIntent().hasExtra(EVENT_ID_KEY)) {

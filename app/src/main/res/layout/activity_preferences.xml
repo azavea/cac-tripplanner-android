@@ -5,23 +5,23 @@
     tools:context=".activities.GpgPreferenceActivity"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <android.support.design.widget.CoordinatorLayout
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <android.support.design.widget.AppBarLayout
+        <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/preferences_app_bar"
             android:fitsSystemWindows="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <android.support.v7.widget.Toolbar
+            <androidx.appcompat.widget.Toolbar
                 android:id="@+id/preferences_toolbar"
                 style="@style/ToolbarTransparent"
                 android:background="@color/color_primary"
                 app:title="@string/preferences"
                 tools:targetApi="lollipop" />
-        </android.support.design.widget.AppBarLayout>
+        </com.google.android.material.appbar.AppBarLayout>
 
         <fragment
             android:name="org.gophillygo.app.fragments.GpgPreferenceFragment"
@@ -31,5 +31,5 @@
             android:id="@+id/preferences_fragment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
-    </android.support.design.widget.CoordinatorLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

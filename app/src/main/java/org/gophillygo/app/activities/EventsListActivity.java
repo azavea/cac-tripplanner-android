@@ -1,13 +1,15 @@
 package org.gophillygo.app.activities;
 
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
-import android.databinding.DataBindingUtil;
+
+import androidx.annotation.NonNull;
+import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -29,6 +31,7 @@ import org.gophillygo.app.utils.UserUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -59,7 +62,7 @@ public class EventsListActivity extends FilterableListActivity
      */
     public void clickedAttraction(int position) {
         // Get database ID for event clicked, based on positional offset, and pass it along
-        long eventId = eventsListView.getAdapter().getItemId(position);
+        long eventId = Objects.requireNonNull(eventsListView.getAdapter()).getItemId(position);
         Log.d(LOG_LABEL, "Clicked event with ID: " + eventId);
         goToEvent(eventId);
     }
@@ -167,7 +170,7 @@ public class EventsListActivity extends FilterableListActivity
                 super.onSearchRequested();
                 break;
             default:
-                Log.w(LOG_LABEL, "Unrecognized menu item selected: " + String.valueOf(itemId));
+                Log.w(LOG_LABEL, "Unrecognized menu item selected: " + itemId);
                 return super.onOptionsItemSelected(item);
         }
         return true;

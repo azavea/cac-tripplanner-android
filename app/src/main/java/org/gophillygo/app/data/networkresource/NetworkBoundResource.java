@@ -1,14 +1,15 @@
 package org.gophillygo.app.data.networkresource;
 
 import android.annotation.SuppressLint;
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MediatorLiveData;
 import android.os.AsyncTask;
-import android.support.annotation.MainThread;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.WorkerThread;
 import android.util.Log;
+
+import androidx.annotation.MainThread;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.WorkerThread;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MediatorLiveData;
 
 
 /**
@@ -58,7 +59,6 @@ public abstract class NetworkBoundResource<ResultType, RequestType> {
             if (shouldFetch(data)) {
                 fetchFromNetwork(dbSource);
             } else {
-                //noinspection ConstantConditions
                 result.addSource(dbSource,
                         newData -> result.setValue(Resource.success(newData)));
             }
@@ -74,7 +74,6 @@ public abstract class NetworkBoundResource<ResultType, RequestType> {
         result.addSource(apiResponse, response -> {
             result.removeSource(apiResponse);
             result.removeSource(dbSource);
-            //noinspection ConstantConditions
             if (response.isSuccessful()) {
                 saveResultAndReInit(response);
             } else {
@@ -107,7 +106,6 @@ public abstract class NetworkBoundResource<ResultType, RequestType> {
                 // we specially request a new live data,
                 // otherwise we will get immediately last cached value,
                 // which may not be updated with latest results received from network.
-                //noinspection ConstantConditions
                 result.addSource(loadFromDb(),
                         newData -> result.setValue(Resource.success(newData)));
             }

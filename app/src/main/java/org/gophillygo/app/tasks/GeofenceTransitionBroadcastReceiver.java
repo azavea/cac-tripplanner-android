@@ -51,7 +51,7 @@ public class GeofenceTransitionBroadcastReceiver extends BroadcastReceiver {
         GeofencingEvent geofencingEvent = GeofencingEvent.fromIntent(intent);
         Data.Builder builder = new Data.Builder();
 
-        Boolean hasError = geofencingEvent.hasError();
+        boolean hasError = geofencingEvent.hasError();
         builder.putBoolean(GeofenceTransitionWorker.HAS_ERROR_KEY, hasError);
 
         if (!geofencingEvent.hasError()) {
@@ -104,7 +104,7 @@ public class GeofenceTransitionBroadcastReceiver extends BroadcastReceiver {
                                     Log.e(LOG_LABEL, "Could not find event for geofence " + geofenceId);
                                     continue;
                                 }
-                                labels[i] = GeofenceTransitionWorker.EVENT_PREFIX + String.valueOf(eventInfo.getAttraction().getId());
+                                labels[i] = GeofenceTransitionWorker.EVENT_PREFIX + eventInfo.getAttraction().getId();
                                 names[i] = eventInfo.getEvent().getName();
                                 images[i] = eventInfo.getEvent().getWideImage();
                             } else {
@@ -114,7 +114,7 @@ public class GeofenceTransitionBroadcastReceiver extends BroadcastReceiver {
                                     Log.e(LOG_LABEL, message);
                                     Crashlytics.log(message);
                                 } else {
-                                    labels[i] = GeofenceTransitionWorker.DESTINATION_PREFIX + String.valueOf(destination.getId());
+                                    labels[i] = GeofenceTransitionWorker.DESTINATION_PREFIX + destination.getId();
                                     names[i] = destination.getName();
                                     images[i] = destination.getWideImage();
                                 }

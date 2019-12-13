@@ -1,11 +1,12 @@
 package org.gophillygo.app.data;
 
-import android.arch.lifecycle.LiveData;
-import android.arch.lifecycle.MediatorLiveData;
-import android.arch.persistence.room.Dao;
-import android.arch.persistence.room.Query;
-import android.arch.persistence.room.Transaction;
 import android.util.Log;
+
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MediatorLiveData;
+import androidx.room.Dao;
+import androidx.room.Query;
+import androidx.room.Transaction;
 
 import org.gophillygo.app.data.models.Attraction;
 import org.gophillygo.app.data.models.AttractionFlag;
@@ -26,7 +27,6 @@ public abstract class DestinationDao implements AttractionDao<Destination> {
 
     private static final String LOG_LABEL = "DestinationDao";
 
-    @Transaction
     @Query("SELECT destination.*, COUNT(event._id) AS eventCount, attractionflag.option " +
             "FROM destination " +
             "LEFT JOIN event ON destination._id = event.destination " +
@@ -100,7 +100,6 @@ public abstract class DestinationDao implements AttractionDao<Destination> {
      *
      * @return One randomized image for each of the home page grid of filter categories
      */
-    @Transaction
     public LiveData<List<CategoryAttraction>> getCategoryImages() {
         ArrayList<CategoryAttraction> categoryAttractions = new ArrayList<>(CategoryAttraction.PlaceCategories.size());
         for (CategoryAttraction.PlaceCategories placeCategory : CategoryAttraction.PlaceCategories.values()) {

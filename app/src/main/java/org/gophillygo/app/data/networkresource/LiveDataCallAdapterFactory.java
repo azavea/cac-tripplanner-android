@@ -1,8 +1,9 @@
 package org.gophillygo.app.data.networkresource;
 
-import android.arch.lifecycle.LiveData;
-import android.support.annotation.NonNull;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.ParameterizedType;
@@ -28,7 +29,7 @@ public class LiveDataCallAdapterFactory extends CallAdapter.Factory {
         }
         Type observableType = getParameterUpperBound(0, (ParameterizedType) returnType);
         Class<?> rawObservableType = getRawType(observableType);
-        if (rawObservableType != ApiResponse.class) {
+        if (!rawObservableType.equals(ApiResponse.class)) {
             throw new IllegalArgumentException("type must be a resource");
         }
         if (!(observableType instanceof ParameterizedType)) {

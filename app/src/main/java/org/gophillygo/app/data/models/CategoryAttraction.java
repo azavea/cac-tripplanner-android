@@ -1,7 +1,8 @@
 package org.gophillygo.app.data.models;
 
-import android.support.annotation.IdRes;
 import android.util.SparseArray;
+
+import androidx.annotation.IdRes;
 
 import org.gophillygo.app.R;
 
@@ -29,7 +30,8 @@ public class CategoryAttraction {
         Hiking(HIKING_API_NAME, R.string.hiking_activity_label),
         WaterRecreation(WATER_REC_API_NAME, R.string.water_recreation_activity_label);
 
-        private final @IdRes Integer displayName;
+        private final @IdRes
+        Integer displayName;
         private final String apiName;
 
         Activities(String apiName, Integer displayName) {

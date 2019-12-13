@@ -1,14 +1,11 @@
 package org.gophillygo.app.data.models;
 
-import android.arch.persistence.room.ColumnInfo;
-import android.arch.persistence.room.Embedded;
-import android.arch.persistence.room.Entity;
-import android.arch.persistence.room.Index;
-import android.content.Context;
+import androidx.room.ColumnInfo;
+import androidx.room.Embedded;
+import androidx.room.Entity;
+import androidx.room.Index;
 
 import com.google.gson.annotations.SerializedName;
-
-import org.gophillygo.app.R;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -130,7 +127,7 @@ public class Destination extends Attraction {
 
     // get a dot-separated string listing all the categories for this place (nature, exercise, etc.)
     public String getCategoriesString() {
-        StringBuilder stringBuilder = new StringBuilder("");
+        StringBuilder stringBuilder = new StringBuilder();
         // separate activities with dots
         String dot = getHtmlFromString("&nbsp;&nbsp;&#8226;&nbsp;&nbsp;").toString();
 

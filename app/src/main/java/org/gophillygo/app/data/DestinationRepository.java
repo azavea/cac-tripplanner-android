@@ -1,10 +1,11 @@
 package org.gophillygo.app.data;
 
 import android.annotation.SuppressLint;
-import android.arch.lifecycle.LiveData;
 import android.os.AsyncTask;
-import android.support.annotation.NonNull;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
 
 import org.gophillygo.app.data.models.AttractionFlag;
 import org.gophillygo.app.data.models.CategoryAttraction;

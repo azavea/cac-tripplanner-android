@@ -1,8 +1,6 @@
 package org.gophillygo.app.data.models;
 
-import android.arch.persistence.room.ColumnInfo;
-
-import com.google.gson.annotations.SerializedName;
+import androidx.room.ColumnInfo;
 
 /**
  * Minimal model for representative images chosen from a filter category.

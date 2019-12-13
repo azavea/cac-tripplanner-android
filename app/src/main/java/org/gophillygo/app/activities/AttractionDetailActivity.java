@@ -4,16 +4,16 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.v4.app.NotificationManagerCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
 import com.synnapps.carouselview.CarouselView;
@@ -74,7 +74,7 @@ public abstract class AttractionDetailActivity extends AppCompatActivity {
         // Initialize Fabric/Crashlytics crash and usage data logging.
         // Disable if user setting turned off; still must be initialized to avoid errors.
         // Based on: https://stackoverflow.com/a/31996615
-        CrashlyticsCore core = new CrashlyticsCore.Builder().disabled(!UserUtils.isFabricEnabled(this)).build();
+        CrashlyticsCore core = new CrashlyticsCore.Builder().disabled(UserUtils.isFabricDisabled(this)).build();
         Fabric.with(this, new Crashlytics.Builder().core(core).build());
 
         // Get or create unique, random UUID for app install for posting user flags

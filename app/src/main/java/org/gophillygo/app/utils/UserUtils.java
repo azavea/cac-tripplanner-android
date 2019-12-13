@@ -1,16 +1,15 @@
 package org.gophillygo.app.utils;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
-import android.support.v7.view.ContextThemeWrapper;
 import android.util.Log;
+
+import androidx.preference.PreferenceManager;
+
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import org.gophillygo.app.R;
 
-import java.util.Map;
 import java.util.UUID;
 
 public class UserUtils {
@@ -49,7 +48,7 @@ public class UserUtils {
         Log.d(LOG_LABEL, "show first app install dialog to ask for logging permissions");
 
         // set the theme via ContextThemeWrapper, or else the message does not show
-        AlertDialog.Builder builder = new AlertDialog.Builder(new ContextThemeWrapper(context, R.style.GpgAlertDialogTheme));
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(context);
         builder.setTitle(context.getString(R.string.first_launch_dialog_title))
                 .setMessage(context.getString(R.string.first_launch_dialog_message))
                 .setPositiveButton(context.getString(R.string.first_launch_dialog_ok_action), (dialog, which) -> {
@@ -127,11 +126,11 @@ public class UserUtils {
      * Check if user allows for posting anonymized crash and usage data to Fabric.
      *
      * @param context For getting strings and preferences
-     * @return True if Fabric may be enabled
+     * @return False if Fabric may be enabled, True if it should be disabled
      */
-    public static boolean isFabricEnabled(Context context) {
+    public static boolean isFabricDisabled(Context context) {
         String key = context.getString(R.string.general_preferences_fabric_logging_key);
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        return sharedPreferences.contains(key) && sharedPreferences.getBoolean(key, false);
+        return !sharedPreferences.contains(key) || !sharedPreferences.getBoolean(key, false);
     }
 }

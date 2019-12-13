@@ -6,8 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
-import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
@@ -23,9 +21,12 @@ import org.gophillygo.app.data.models.EventInfo;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import javax.inject.Inject;
 
+import androidx.annotation.NonNull;
+import androidx.preference.PreferenceManager;
 import androidx.work.Data;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
@@ -65,6 +66,15 @@ public class AddRemoveGeofencesBroadcastReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         AndroidInjection.inject(this, context);
 
+        String action = intent.getAction();
+
+        // Do not allow invoking broadcast receiver with unexpected action types
+        if (!Intent.ACTION_BOOT_COMPLETED.equals(action) &&
+                !action.equals("org.gophillygo.app.tasks.ACTION_GEOFENCE_TRANSITION")) {
+            Log.e(LOG_LABEL, "FIXME: Need to handle intent action type: " + intent.getAction());
+            throw new UnsupportedOperationException("Unrecognized broadcast action type " + action);
+        }
+
         // Before adding geofence, check user settings to see if geofence notifications are enabled.
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         String key = context.getString(R.string.general_preferences_allow_notifications_key);
@@ -86,8 +96,8 @@ public class AddRemoveGeofencesBroadcastReceiver extends BroadcastReceiver {
             names = intent.getStringArrayExtra(AddGeofenceWorker.GEOFENCE_NAMES_KEY);
 
             // Sanity check the data before starting the worker
-            if (latitudes.length == 0 || latitudes.length != longitudes.length ||
-                    latitudes.length != labels.length || latitudes.length != names.length) {
+            if (Objects.requireNonNull(latitudes).length == 0 || latitudes.length != Objects.requireNonNull(longitudes).length ||
+                    latitudes.length != Objects.requireNonNull(labels).length || latitudes.length != Objects.requireNonNull(names).length) {
                 String message = "Extras data of zero or mismatched length found";
                 Log.e(LOG_LABEL, message);
                 Crashlytics.log(message);
@@ -163,7 +173,7 @@ public class AddRemoveGeofencesBroadcastReceiver extends BroadcastReceiver {
                     // add destinations to the beginning
                     for (int i = 0; i < destinationsCount; i++) {
                         Destination destination = destinations.get(i);
-                        labels[i] = GeofenceTransitionWorker.DESTINATION_PREFIX + String.valueOf(destination.getId());
+                        labels[i] = GeofenceTransitionWorker.DESTINATION_PREFIX + destination.getId();
                         names[i] = destination.getName();
                         DestinationLocation location = destination.getLocation();
                         latitudes[i] = location.getY();
@@ -174,7 +184,7 @@ public class AddRemoveGeofencesBroadcastReceiver extends BroadcastReceiver {
                     for (int i = 0; i < events.size(); i++) {
                         int combinedIndex = i + destinationsCount;
                         EventInfo eventInfo = events.get(i);
-                        labels[combinedIndex] = GeofenceTransitionWorker.EVENT_PREFIX + String.valueOf(eventInfo.getAttraction().getId());
+                        labels[combinedIndex] = GeofenceTransitionWorker.EVENT_PREFIX + eventInfo.getAttraction().getId();
                         names[combinedIndex] = eventInfo.getEvent().getName();
                         DestinationLocation location = eventInfo.getLocation();
                         latitudes[combinedIndex] = location.getY();
@@ -216,7 +226,7 @@ public class AddRemoveGeofencesBroadcastReceiver extends BroadcastReceiver {
      */
     public static void addOneGeofence(@NonNull Destination destination) {
         addOneGeofence(destination.getLocation().getX(), destination.getLocation().getY(),
-                GeofenceTransitionWorker.DESTINATION_PREFIX + String.valueOf(destination.getId()), String.valueOf(destination.getName()));
+                GeofenceTransitionWorker.DESTINATION_PREFIX + destination.getId(), String.valueOf(destination.getName()));
     }
 
     public static void addOneGeofence(@NonNull EventInfo eventInfo) {
@@ -224,7 +234,7 @@ public class AddRemoveGeofencesBroadcastReceiver extends BroadcastReceiver {
         if (location != null) {
             Event event = eventInfo.getEvent();
             addOneGeofence(location.getX(), location.getY(),
-                    GeofenceTransitionWorker.EVENT_PREFIX + String.valueOf(event.getId()), event.getName());
+                    GeofenceTransitionWorker.EVENT_PREFIX + event.getId(), event.getName());
         } else {
             Log.e(LOG_LABEL, "Cannot add geofence for event without associated location.");
         }
