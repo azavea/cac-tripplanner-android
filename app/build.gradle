@@ -36,8 +36,8 @@ android {
         applicationId "org.gophillygo.app"
         minSdkVersion 19
         targetSdkVersion 29
-        versionCode 18
-        versionName "1.2.4"
+        versionCode 19
+        versionName "1.2.5"
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         javaCompileOptions {
