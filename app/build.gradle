@@ -77,14 +77,14 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
     // Firebase
-    implementation 'com.google.firebase:firebase-core:17.2.1'
+    implementation 'com.google.firebase:firebase-core:17.2.2'
     implementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
 
     // ViewModel and LiveData
-    implementation 'androidx.lifecycle:lifecycle-extensions:2.1.0'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
 
     // Java8 support for Lifecycles
-    implementation 'androidx.lifecycle:lifecycle-common-java8:2.1.0'
+    implementation 'androidx.lifecycle:lifecycle-common-java8:2.2.0'
 
     // Room
     implementation 'androidx.room:room-runtime:2.2.3'
@@ -93,7 +93,7 @@ dependencies {
     // Android UI libraries
     implementation 'androidx.appcompat:appcompat:1.1.0'
     implementation 'androidx.cardview:cardview:1.0.0'
-    implementation 'com.google.android.material:material:1.2.0-alpha03'
+    implementation 'com.google.android.material:material:1.1.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     implementation "androidx.preference:preference:1.1.0"
 
