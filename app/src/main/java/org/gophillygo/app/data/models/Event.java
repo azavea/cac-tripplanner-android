@@ -104,8 +104,8 @@ public class Event extends Attraction {
     public ArrayList<Destination> getDestinations() { return destinations; }
 
     public void setDestination(Integer id) {
-        // Hide destination if there is more than one
-        if (this.destinations == null || this.destinations.size() == 1) {
+        // Hide destination if there are none, or if there is more than one
+        if (id != null && (this.destinations == null || this.destinations.size() == 1)) {
             destination = id;
             setPlaceID(id);
         } else {
