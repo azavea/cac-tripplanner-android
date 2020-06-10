@@ -28,7 +28,7 @@ public class GpgToggleButton extends CompoundButton {
     }
 
 
-    @BindingAdapter("app:onCheckedChanged")
+    @BindingAdapter("onCheckedChanged")
     public static void setOnCheckedChanged(CompoundButton button, OnCheckedChangeListener listener) {
         Log.d(LOG_LABEL, "setOnCheckedChanged is setting the listener");
         button.setOnCheckedChangeListener(listener);
