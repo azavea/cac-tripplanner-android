@@ -128,9 +128,9 @@ public class UserUtils {
      * @param context For getting strings and preferences
      * @return False if Fabric may be enabled, True if it should be disabled
      */
-    public static boolean isFabricDisabled(Context context) {
+    public static boolean isCrashlyticsEnabled(Context context) {
         String key = context.getString(R.string.general_preferences_fabric_logging_key);
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        return !sharedPreferences.contains(key) || !sharedPreferences.getBoolean(key, false);
+        return sharedPreferences.contains(key) && sharedPreferences.getBoolean(key, false);
     }
 }

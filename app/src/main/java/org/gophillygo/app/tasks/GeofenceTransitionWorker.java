@@ -188,13 +188,12 @@ public class GeofenceTransitionWorker extends Worker {
                 }
             }
 
-            return Result.success();
         } else {
             String message = "Received a geofence transition event with no triggering geofences.";
             FirebaseCrashlytics.getInstance().log(message);
             Log.w(LOG_LABEL, message);
-            return Result.success();
         }
+        return Result.success();
     }
 
     /**

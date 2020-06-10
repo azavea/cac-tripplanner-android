@@ -70,7 +70,7 @@ public abstract class AttractionDetailActivity extends AppCompatActivity {
 
         // Initialize Firebase Crashlytics crash and usage data logging.
         // Disable if user setting turned off
-        boolean enableAnalytics = !UserUtils.isFabricDisabled(this);
+        boolean enableAnalytics = UserUtils.isCrashlyticsEnabled(this);
         FirebaseCrashlytics crashlytics = FirebaseCrashlytics.getInstance();
         crashlytics.setCrashlyticsCollectionEnabled(enableAnalytics);
 

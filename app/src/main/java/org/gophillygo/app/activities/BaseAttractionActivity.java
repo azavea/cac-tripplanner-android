@@ -117,7 +117,7 @@ public abstract class BaseAttractionActivity extends AppCompatActivity
 
         // Initialize Firebase Crashlytics crash and usage data logging.
         // Disable if user setting turned off
-        boolean enableAnalytics = !UserUtils.isFabricDisabled(this);
+        boolean enableAnalytics = UserUtils.isCrashlyticsEnabled(this);
         FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(enableAnalytics);
 
         defaultLocation = new Location(DUMMY_LOCATION_PROVIDER);
