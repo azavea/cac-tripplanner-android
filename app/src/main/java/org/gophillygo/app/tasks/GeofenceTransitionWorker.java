@@ -107,7 +107,7 @@ public class GeofenceTransitionWorker extends Worker {
 
                 // Geofence string ID is "d" for destination or "e" for event, followed by the
                 // destination or event integer ID.
-                int geofenceId = Integer.valueOf(geofenceLabel.substring(1));
+                int geofenceId = Integer.parseInt(geofenceLabel.substring(1));
                 boolean isEvent = geofenceLabel.startsWith(EVENT_PREFIX);
                 String notificationTag = isEvent ? EVENT_PREFIX : DESTINATION_PREFIX;
 

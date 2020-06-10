@@ -1,9 +1,6 @@
 package org.gophillygo.app;
 
-import android.app.Activity;
 import android.app.Application;
-import android.content.BroadcastReceiver;
-import android.content.ContentProvider;
 import android.util.Log;
 
 import com.google.firebase.crashlytics.FirebaseCrashlytics;

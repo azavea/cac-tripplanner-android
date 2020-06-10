@@ -30,7 +30,7 @@ public class GpgPreferenceFragment extends PreferenceFragmentCompat implements S
         // reset user ID and show message when setting for that is clicked
         Preference reset = findPreference(getString(R.string.general_preferences_reset_uuid_key));
         Objects.requireNonNull(reset).setOnPreferenceClickListener(preference -> {
-            String uuid = UserUtils.resetUuid(Objects.requireNonNull(getActivity()));
+            String uuid = UserUtils.resetUuid(requireActivity());
             String message = getString(R.string.general_preferences_reset_uuid_message, uuid);
             Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
             return true;

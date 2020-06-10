@@ -94,7 +94,7 @@ public class GeofenceTransitionBroadcastReceiver extends BroadcastReceiver {
                             Log.d(LOG_LABEL, "Handling transition for geofence " + fenceId);
                             // Geofence string ID is "d" for destination or "e" for event, followed by the
                             // destination or event integer ID.
-                            int geofenceId = Integer.valueOf(fenceId.substring(1));
+                            int geofenceId = Integer.parseInt(fenceId.substring(1));
                             boolean isEvent = fenceId.startsWith(GeofenceTransitionWorker.EVENT_PREFIX);
 
                             // query for each event or destination synchronously from the database
