@@ -6,7 +6,7 @@ import android.content.Intent;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -80,11 +80,11 @@ public class PlaceDetailActivity extends AttractionDetailActivity implements Att
         binding.placeDetailCarousel.setImageClickListener(position ->
                 Log.d(LOG_LABEL, "Clicked item: "+ position));
 
-        destinationViewModel = ViewModelProviders.of(this, viewModelFactory)
+        destinationViewModel = new ViewModelProvider(this, viewModelFactory)
                 .get(DestinationViewModel.class);
         LiveData<DestinationInfo> data = destinationViewModel.getDestination(placeId);
 
-        eventViewModel = ViewModelProviders.of(this, viewModelFactory).get(EventViewModel.class);
+        eventViewModel = new ViewModelProvider(this, viewModelFactory).get(EventViewModel.class);
 
         data.observe(this, destinationInfo -> {
             // TODO: #61 handle if destination not found (go to list of destinations?)

@@ -4,7 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.util.Log;
 import android.view.Menu;
@@ -38,7 +38,7 @@ public class EventsMapsActivity extends MapsActivity<EventInfo> {
     public void onMapReady(GoogleMap googleMap) {
         super.onMapReady(googleMap);
 
-        viewModel = ViewModelProviders.of(this, viewModelFactory)
+        viewModel = new ViewModelProvider(this, viewModelFactory)
                 .get(EventViewModel.class);
         LiveData<Resource<List<EventInfo>>> data = viewModel.getEvents();
         data.observe(this, eventsResource -> {

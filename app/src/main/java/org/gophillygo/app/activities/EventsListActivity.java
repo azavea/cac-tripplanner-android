@@ -5,7 +5,7 @@ import android.content.Intent;
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -103,7 +103,7 @@ public class EventsListActivity extends FilterableListActivity
 
         // In addition to the destination data loaded by the BaseAttraction, get the full
         // events data here.
-        viewModel = ViewModelProviders.of(this, viewModelFactory)
+        viewModel = new ViewModelProvider(this, viewModelFactory)
                 .get(EventViewModel.class);
         LiveData<Resource<List<EventInfo>>> data = viewModel.getEvents();
         data.observe(this, destinationResource -> {

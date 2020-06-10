@@ -16,7 +16,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.cursoradapter.widget.CursorAdapter;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
@@ -126,7 +126,7 @@ public abstract class BaseAttractionActivity extends AppCompatActivity
 
         fetchLastLocationOrUseDefault();
 
-        viewModel = ViewModelProviders.of(this, viewModelFactory)
+        viewModel = new ViewModelProvider(this, viewModelFactory)
                 .get(DestinationViewModel.class);
         viewModel.getDestinations().observe(this, destinationResource -> {
             // shouldn't happen

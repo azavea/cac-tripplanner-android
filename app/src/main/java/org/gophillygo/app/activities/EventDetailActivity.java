@@ -2,14 +2,6 @@ package org.gophillygo.app.activities;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-
-import androidx.appcompat.widget.PopupMenu;
-import androidx.appcompat.widget.Toolbar;
-import androidx.cardview.widget.CardView;
-import androidx.databinding.DataBindingUtil;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.ViewModelProviders;
-
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.CalendarContract;
@@ -17,6 +9,13 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Toast;
+
+import androidx.appcompat.widget.PopupMenu;
+import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
+import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.synnapps.carouselview.CarouselView;
@@ -92,8 +91,8 @@ public class EventDetailActivity extends AttractionDetailActivity {
 
         carouselView = findViewById(R.id.event_detail_carousel);
         carouselView.setIndicatorGravity(Gravity.CENTER_HORIZONTAL|Gravity.BOTTOM);
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(EventViewModel.class);
-        destinationViewModel = ViewModelProviders.of(this, viewModelFactory).get(DestinationViewModel.class);
+        viewModel = new ViewModelProvider(this, viewModelFactory).get(EventViewModel.class);
+        destinationViewModel = new ViewModelProvider(this, viewModelFactory).get(DestinationViewModel.class);
         viewModel.getEvent(eventId).observe(this, eventInfo -> {
             // TODO: #61 handle if event not found (go to list of events?)
             if (eventInfo == null || eventInfo.getEvent() == null) {
