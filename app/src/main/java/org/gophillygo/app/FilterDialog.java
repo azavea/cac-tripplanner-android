@@ -14,6 +14,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import org.gophillygo.app.data.models.Filter;
 import org.gophillygo.app.databinding.FilterModalBinding;
+import org.jetbrains.annotations.NotNull;
 
 
 public class FilterDialog extends BottomSheetDialogFragment {
@@ -39,7 +40,7 @@ public class FilterDialog extends BottomSheetDialogFragment {
     }
 
     @Override
-    public void onDismiss(DialogInterface dialog) {
+    public void onDismiss(@NotNull DialogInterface dialog) {
         Log.d(LOG_LABEL, "Selected " + filter.count() + " filters.");
         FilterChangeListener listener = (FilterChangeListener) getActivity();
         if (listener != null) {

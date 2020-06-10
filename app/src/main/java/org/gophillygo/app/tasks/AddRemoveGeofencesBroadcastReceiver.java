@@ -71,7 +71,7 @@ public class AddRemoveGeofencesBroadcastReceiver extends BroadcastReceiver {
 
         // Do not allow invoking broadcast receiver with unexpected action types
         if (!Intent.ACTION_BOOT_COMPLETED.equals(action) &&
-                !action.equals("org.gophillygo.app.tasks.ACTION_GEOFENCE_TRANSITION")) {
+                !Objects.equals(action, "org.gophillygo.app.tasks.ACTION_GEOFENCE_TRANSITION")) {
             Log.e(LOG_LABEL, "FIXME: Need to handle intent action type: " + intent.getAction());
             throw new UnsupportedOperationException("Unrecognized broadcast action type " + action);
         }

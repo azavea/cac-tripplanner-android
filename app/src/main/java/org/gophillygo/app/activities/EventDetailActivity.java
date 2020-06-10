@@ -38,6 +38,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -78,7 +79,7 @@ public class EventDetailActivity extends AttractionDetailActivity {
         // disable default app name title display
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
         if (getIntent().hasExtra(EVENT_ID_KEY)) {
             eventId = getIntent().getLongExtra(EVENT_ID_KEY, -1);
