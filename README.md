@@ -16,12 +16,6 @@ Edit each to set the Android Maps key for both build flavors. See the comments i
 
 Also edit to set the server API key for posting user flags.
 
-Copy the example file for the Crashlytics/Fabric configuration and set the API key and secret.
-These can be found under the [organization settings](https://www.fabric.io/settings/organizations).
-
- - `cp example/fabric.properties app/fabric.properties`
-
-
 Configure Firebase for the crash reporting plugin to function. The Firebase configuration file can be found under the [Firebase console](https://console.firebase.google.com). Copy the `google-services.json` Firebase configuration file to the `app` directory.
 
 
