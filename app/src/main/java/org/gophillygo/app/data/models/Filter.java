@@ -145,6 +145,7 @@ public class Filter extends BaseObservable implements Serializable {
         for (AttractionFlag.Option option : flags()) {
             if (flag.getOption() == option) {
                 flagMatches = true;
+                break;
             }
         }
         return flagMatches;
