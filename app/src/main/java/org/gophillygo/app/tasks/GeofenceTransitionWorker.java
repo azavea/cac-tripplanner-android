@@ -18,9 +18,9 @@ import androidx.core.app.TaskStackBuilder;
 import android.util.Log;
 
 import com.bumptech.glide.Glide;
-import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofenceStatusCodes;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import org.gophillygo.app.R;
 import org.gophillygo.app.activities.EventDetailActivity;
@@ -113,7 +113,7 @@ public class GeofenceTransitionWorker extends Worker {
 
                 if (enteredGeofence) {
                     String message = "Entered geofence ID " + geofenceLabel + " for " + placeName;
-                    Crashlytics.log(message);
+                    FirebaseCrashlytics.getInstance().log(message);
                     Log.d(LOG_LABEL, message);
 
                     final Bitmap imageBitmap;
@@ -123,7 +123,7 @@ public class GeofenceTransitionWorker extends Worker {
                                 .submit(NOTIFICATION_IMAGE_WIDTH, NOTIFICATION_IMAGE_HEIGHT).get();
                     } catch (InterruptedException | ExecutionException e) {
                         e.printStackTrace();
-                        Crashlytics.logException(e);
+                        FirebaseCrashlytics.getInstance().recordException(e);
                     } finally {
                         imageBitmap = tmpBitmap; // initialize nullable final variable
                     }
@@ -178,7 +178,7 @@ public class GeofenceTransitionWorker extends Worker {
 
                 } else {
                     String message = "Exited geofence ID " + geofenceLabel;
-                    Crashlytics.log(message);
+                    FirebaseCrashlytics.getInstance().log(message);
                     Log.d(LOG_LABEL, message);
                     handler.post(() -> {
                         Log.d(LOG_LABEL, "Removing notification for geofence");
@@ -191,7 +191,7 @@ public class GeofenceTransitionWorker extends Worker {
             return Result.success();
         } else {
             String message = "Received a geofence transition event with no triggering geofences.";
-            Crashlytics.log(message);
+            FirebaseCrashlytics.getInstance().log(message);
             Log.w(LOG_LABEL, message);
             return Result.success();
         }
@@ -220,12 +220,12 @@ public class GeofenceTransitionWorker extends Worker {
                     notificationManager.createNotificationChannel(channel);
                 } else {
                     String message = "Have notification channel set up already";
-                    Crashlytics.log(message);
+                    FirebaseCrashlytics.getInstance().log(message);
                     Log.d(LOG_LABEL, message);
                 }
             } else {
                 String message = "Failed to get notification manager";
-                Crashlytics.log(message);
+                FirebaseCrashlytics.getInstance().log(message);
                 Log.e(LOG_LABEL, message);
             }
         }
@@ -280,7 +280,7 @@ public class GeofenceTransitionWorker extends Worker {
                 message = "Unrecognized GeofenceStatusCodes error value: " + error;
         }
         Log.e(LOG_LABEL, message);
-        Crashlytics.log(message);
+        FirebaseCrashlytics.getInstance().log(message);
         return result;
     }
 

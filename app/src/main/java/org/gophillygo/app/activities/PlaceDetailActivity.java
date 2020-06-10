@@ -17,7 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ScrollView;
 
-import com.crashlytics.android.Crashlytics;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import org.gophillygo.app.BR;
 import org.gophillygo.app.R;
@@ -91,7 +91,7 @@ public class PlaceDetailActivity extends AttractionDetailActivity implements Att
             if (destinationInfo == null || destinationInfo.getDestination() == null) {
                 String message = "No matching destination found for ID " + placeId;
                 Log.e(LOG_LABEL, message);
-                Crashlytics.log(message);
+                FirebaseCrashlytics.getInstance().log(message);
                 return;
             }
 
@@ -149,7 +149,7 @@ public class PlaceDetailActivity extends AttractionDetailActivity implements Att
         if (destinationInfo == null) {
             String message = "Cannot update flag because destination is not set";
             Log.e(LOG_LABEL, message);
-            Crashlytics.log(message);
+            FirebaseCrashlytics.getInstance().log(message);
             return;
         }
         String option = destinationInfo.getFlag().getOption().apiName;

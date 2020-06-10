@@ -14,7 +14,8 @@ import org.gophillygo.app.GoPhillyGoApp;
 
 import dagger.android.AndroidInjection;
 import dagger.android.support.AndroidSupportInjection;
-import dagger.android.support.HasSupportFragmentInjector;
+import dagger.android.HasAndroidInjector;
+
 
 /**
  * Based on:
@@ -65,7 +66,7 @@ public class AppInjector {
     }
 
     private static void handleActivity(Activity activity) {
-        if (activity instanceof HasSupportFragmentInjector) {
+        if (activity instanceof HasAndroidInjector) {
             AndroidInjection.inject(activity);
         }
         if (activity instanceof FragmentActivity) {

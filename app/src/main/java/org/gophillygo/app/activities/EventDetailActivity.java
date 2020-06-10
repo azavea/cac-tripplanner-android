@@ -18,7 +18,7 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.Toast;
 
-import com.crashlytics.android.Crashlytics;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.synnapps.carouselview.CarouselView;
 
 import org.gophillygo.app.BR;
@@ -99,7 +99,7 @@ public class EventDetailActivity extends AttractionDetailActivity {
             if (eventInfo == null || eventInfo.getEvent() == null) {
                 String message = "No matching event found for ID " + eventId;
                 Log.e(LOG_LABEL, message);
-                Crashlytics.log(message);
+                FirebaseCrashlytics.getInstance().log(message);
                 return;
             }
 
@@ -114,7 +114,7 @@ public class EventDetailActivity extends AttractionDetailActivity {
                         binding.setDestination(destinationInfo.getDestination());
                     } else {
                         String message = "No matching destination found for ID " + destinationId;
-                        Crashlytics.log(message);
+                        FirebaseCrashlytics.getInstance().log(message);
                         Log.e(LOG_LABEL, message);
                     }
                     // Since we call `getDestination(...).observe(...)` every time the event is updated,

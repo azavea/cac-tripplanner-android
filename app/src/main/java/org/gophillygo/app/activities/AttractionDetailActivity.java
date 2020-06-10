@@ -14,8 +14,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import com.crashlytics.android.Crashlytics;
-import com.crashlytics.android.core.CrashlyticsCore;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.synnapps.carouselview.CarouselView;
 
 import org.gophillygo.app.DetailCarouselViewListener;
@@ -29,8 +28,6 @@ import org.gophillygo.app.data.models.EventInfo;
 import org.gophillygo.app.tasks.AddRemoveGeofencesBroadcastReceiver;
 import org.gophillygo.app.tasks.RemoveGeofenceWorker;
 import org.gophillygo.app.utils.UserUtils;
-
-import io.fabric.sdk.android.Fabric;
 
 public abstract class AttractionDetailActivity extends AppCompatActivity {
 
@@ -71,15 +68,15 @@ public abstract class AttractionDetailActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Initialize Fabric/Crashlytics crash and usage data logging.
-        // Disable if user setting turned off; still must be initialized to avoid errors.
-        // Based on: https://stackoverflow.com/a/31996615
-        CrashlyticsCore core = new CrashlyticsCore.Builder().disabled(UserUtils.isFabricDisabled(this)).build();
-        Fabric.with(this, new Crashlytics.Builder().core(core).build());
+        // Initialize Firebase Crashlytics crash and usage data logging.
+        // Disable if user setting turned off
+        boolean enableAnalytics = !UserUtils.isFabricDisabled(this);
+        FirebaseCrashlytics crashlytics = FirebaseCrashlytics.getInstance();
+        crashlytics.setCrashlyticsCollectionEnabled(enableAnalytics);
 
         // Get or create unique, random UUID for app install for posting user flags
         userUuid = UserUtils.getUserUuid(getApplicationContext());
-        Crashlytics.setUserIdentifier(userUuid);
+        crashlytics.setUserId(userUuid);
         toggleClickListener = v -> {
             // click handler for toggling expanding/collapsing description card
             TextView descriptionView = findViewById(R.id.detail_description_text);
@@ -149,7 +146,7 @@ public abstract class AttractionDetailActivity extends AppCompatActivity {
         } else {
             String message = "Not opening website for attraction because it is missing a link";
             Log.e(LOG_LABEL, message);
-            Crashlytics.log(message);
+            FirebaseCrashlytics.getInstance().log(message);
         }
 
     }

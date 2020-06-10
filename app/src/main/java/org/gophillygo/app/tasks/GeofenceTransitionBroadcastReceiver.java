@@ -7,9 +7,9 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingEvent;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import org.gophillygo.app.data.DestinationDao;
 import org.gophillygo.app.data.EventDao;
@@ -112,7 +112,7 @@ public class GeofenceTransitionBroadcastReceiver extends BroadcastReceiver {
                                 if (destination == null) {
                                     String message = "Could not find destination for geofence " + geofenceId;
                                     Log.e(LOG_LABEL, message);
-                                    Crashlytics.log(message);
+                                    FirebaseCrashlytics.getInstance().log(message);
                                 } else {
                                     labels[i] = GeofenceTransitionWorker.DESTINATION_PREFIX + destination.getId();
                                     names[i] = destination.getName();

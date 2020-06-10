@@ -5,23 +5,17 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.ListView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
-import com.crashlytics.android.Crashlytics;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import org.gophillygo.app.R;
 import org.gophillygo.app.tasks.AddGeofenceWorker;
 import org.gophillygo.app.tasks.AddRemoveGeofencesBroadcastReceiver;
 import org.gophillygo.app.utils.UserUtils;
-
-import java.util.Objects;
 
 public class GpgPreferenceFragment extends PreferenceFragmentCompat implements SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -78,7 +72,7 @@ public class GpgPreferenceFragment extends PreferenceFragmentCompat implements S
         } else {
             String message = "Unrecognized user preference changed: " + key;
             Log.w(LOG_LABEL, message);
-            Crashlytics.log(message);
+            FirebaseCrashlytics.getInstance().log(message);
         }
     }
 }

@@ -8,8 +8,6 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.crashlytics.android.Crashlytics;
-
 import org.gophillygo.app.R;
 import org.gophillygo.app.data.DestinationDao;
 import org.gophillygo.app.data.EventDao;
@@ -31,6 +29,9 @@ import androidx.work.Data;
 import androidx.work.OneTimeWorkRequest;
 import androidx.work.WorkManager;
 import androidx.work.WorkRequest;
+
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
+
 import dagger.android.AndroidInjection;
 
 import static org.gophillygo.app.tasks.RemoveGeofenceWorker.REMOVE_GEOFENCES_KEY;
@@ -100,7 +101,7 @@ public class AddRemoveGeofencesBroadcastReceiver extends BroadcastReceiver {
                     latitudes.length != Objects.requireNonNull(labels).length || latitudes.length != Objects.requireNonNull(names).length) {
                 String message = "Extras data of zero or mismatched length found";
                 Log.e(LOG_LABEL, message);
-                Crashlytics.log(message);
+                FirebaseCrashlytics.getInstance().log(message);
                 return;
             }
 
@@ -145,7 +146,7 @@ public class AddRemoveGeofencesBroadcastReceiver extends BroadcastReceiver {
                     if ((events == null || events.isEmpty()) &&
                             (destinations == null || destinations.isEmpty())) {
                         String message = "Have no destinations or events with geofences to add.";
-                        Crashlytics.log(message);
+                        FirebaseCrashlytics.getInstance().log(message);
                         Log.d(LOG_LABEL, message);
                         return null;
                     } else if (events == null) {
@@ -160,7 +161,7 @@ public class AddRemoveGeofencesBroadcastReceiver extends BroadcastReceiver {
                         // FIXME: handle having too many geofences
                         String message = "Too many destinations with geofences to add.";
                         Log.e(LOG_LABEL, message);
-                        Crashlytics.log(message);
+                        FirebaseCrashlytics.getInstance().log(message);
                         return null;
                     }
 

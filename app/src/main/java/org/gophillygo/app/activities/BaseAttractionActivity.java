@@ -18,8 +18,7 @@ import androidx.appcompat.widget.SearchView;
 import androidx.cursoradapter.widget.CursorAdapter;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.crashlytics.android.Crashlytics;
-import com.crashlytics.android.core.CrashlyticsCore;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import org.gophillygo.app.data.DestinationViewModel;
 import org.gophillygo.app.data.models.AttractionInfo;
@@ -41,8 +40,6 @@ import java.util.List;
 import java.util.Objects;
 
 import javax.inject.Inject;
-
-import io.fabric.sdk.android.Fabric;
 
 /**
  * Base activity that requests last known location and destination data when opened;
@@ -118,11 +115,10 @@ public abstract class BaseAttractionActivity extends AppCompatActivity
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Initialize Fabric/Crashlytics crash and usage data logging.
-        // Disable if user setting turned off; still must be initialized to avoid errors.
-        // Based on: https://stackoverflow.com/a/31996615
-        CrashlyticsCore core = new CrashlyticsCore.Builder().disabled(UserUtils.isFabricDisabled(this)).build();
-        Fabric.with(this, new Crashlytics.Builder().core(core).build());
+        // Initialize Firebase Crashlytics crash and usage data logging.
+        // Disable if user setting turned off
+        boolean enableAnalytics = !UserUtils.isFabricDisabled(this);
+        FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(enableAnalytics);
 
         defaultLocation = new Location(DUMMY_LOCATION_PROVIDER);
         defaultLocation.setLatitude(DEFAULT_LATITUDE);
@@ -156,7 +152,7 @@ public abstract class BaseAttractionActivity extends AppCompatActivity
 
             // Get or create unique, random UUID for app install for posting user flags
             userUuid = UserUtils.getUserUuid(this);
-            Crashlytics.setUserIdentifier(userUuid);
+            FirebaseCrashlytics.getInstance().setUserId(userUuid);
         });
     }
 
