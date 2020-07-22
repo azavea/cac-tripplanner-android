@@ -8,14 +8,14 @@ import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
+import android.view.View;
 
 import androidx.annotation.DrawableRes;
 import androidx.annotation.IdRes;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
-import android.util.Log;
-import android.view.View;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;

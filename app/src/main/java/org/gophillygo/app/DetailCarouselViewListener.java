@@ -1,9 +1,10 @@
 package org.gophillygo.app;
 
 import android.app.Activity;
-import androidx.databinding.DataBindingUtil;
 import android.view.LayoutInflater;
 import android.view.View;
+
+import androidx.databinding.DataBindingUtil;
 
 import com.synnapps.carouselview.ViewListener;
 

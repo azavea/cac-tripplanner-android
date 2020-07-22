@@ -10,12 +10,15 @@ import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.app.TaskStackBuilder;
-import android.util.Log;
+import androidx.work.Data;
+import androidx.work.Worker;
+import androidx.work.WorkerParameters;
 
 import com.bumptech.glide.Glide;
 import com.google.android.gms.location.Geofence;
@@ -28,10 +31,6 @@ import org.gophillygo.app.activities.PlaceDetailActivity;
 
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
-
-import androidx.work.Data;
-import androidx.work.Worker;
-import androidx.work.WorkerParameters;
 
 import static org.gophillygo.app.tasks.GeofenceTransitionBroadcastReceiver.GEOFENCE_IMAGES_KEY;
 

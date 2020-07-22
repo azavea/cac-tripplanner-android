@@ -3,6 +3,14 @@ package org.gophillygo.app.tasks;
 import android.content.Context;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+import androidx.work.Data;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
+import androidx.work.WorkRequest;
+import androidx.work.Worker;
+import androidx.work.WorkerParameters;
+
 import com.google.android.gms.location.GeofencingClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
@@ -13,14 +21,6 @@ import org.gophillygo.app.data.models.EventInfo;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
-
-import androidx.annotation.NonNull;
-import androidx.work.Data;
-import androidx.work.OneTimeWorkRequest;
-import androidx.work.WorkManager;
-import androidx.work.WorkRequest;
-import androidx.work.Worker;
-import androidx.work.WorkerParameters;
 
 public class RemoveGeofenceWorker extends Worker {
 

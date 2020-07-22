@@ -2,6 +2,12 @@ package org.gophillygo.app.activities;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.Gravity;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.ScrollView;
 
 import androidx.appcompat.widget.PopupMenu;
 import androidx.databinding.DataBindingUtil;
@@ -9,13 +15,6 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.os.Bundle;
-import android.util.Log;
-import android.view.Gravity;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.ScrollView;
 
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 

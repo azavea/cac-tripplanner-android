@@ -4,15 +4,15 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NotificationManagerCompat;
-import androidx.core.content.ContextCompat;
 import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
 
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.synnapps.carouselview.CarouselView;

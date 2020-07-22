@@ -1,6 +1,12 @@
 package org.gophillygo.app.activities;
 
 import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
@@ -8,13 +14,6 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.TextView;
 
 import org.gophillygo.app.R;
 import org.gophillygo.app.adapters.EventsListAdapter;

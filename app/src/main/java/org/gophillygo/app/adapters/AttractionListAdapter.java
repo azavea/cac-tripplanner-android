@@ -2,22 +2,21 @@ package org.gophillygo.app.adapters;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.widget.PopupMenu;
-import androidx.databinding.DataBindingUtil;
-import androidx.databinding.ViewDataBinding;
 import android.graphics.drawable.Drawable;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.DiffUtil;
-import androidx.recyclerview.widget.ListAdapter;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.PopupMenu;
+import androidx.core.content.ContextCompat;
+import androidx.databinding.DataBindingUtil;
+import androidx.databinding.ViewDataBinding;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.ListAdapter;
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.gophillygo.app.BR;
 import org.gophillygo.app.data.models.AttractionInfo;

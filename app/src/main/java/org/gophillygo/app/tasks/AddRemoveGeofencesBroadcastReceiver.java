@@ -8,6 +8,15 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+import androidx.preference.PreferenceManager;
+import androidx.work.Data;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
+import androidx.work.WorkRequest;
+
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
+
 import org.gophillygo.app.R;
 import org.gophillygo.app.data.DestinationDao;
 import org.gophillygo.app.data.EventDao;
@@ -22,15 +31,6 @@ import java.util.List;
 import java.util.Objects;
 
 import javax.inject.Inject;
-
-import androidx.annotation.NonNull;
-import androidx.preference.PreferenceManager;
-import androidx.work.Data;
-import androidx.work.OneTimeWorkRequest;
-import androidx.work.WorkManager;
-import androidx.work.WorkRequest;
-
-import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import dagger.android.AndroidInjection;
 

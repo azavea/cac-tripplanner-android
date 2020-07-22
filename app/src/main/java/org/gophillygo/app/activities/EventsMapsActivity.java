@@ -2,22 +2,23 @@ package org.gophillygo.app.activities;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import androidx.databinding.DataBindingUtil;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.ViewModelProvider;
-
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModelProvider;
+
 import com.google.android.gms.maps.GoogleMap;
+
 import org.gophillygo.app.R;
 import org.gophillygo.app.data.EventViewModel;
 import org.gophillygo.app.data.models.EventInfo;
 import org.gophillygo.app.data.networkresource.Resource;
 import org.gophillygo.app.data.networkresource.Status;
-import org.gophillygo.app.databinding.FilterButtonBarBinding;
 import org.gophillygo.app.databinding.ActivityEventsMapsBinding;
+import org.gophillygo.app.databinding.FilterButtonBarBinding;
 
 import java.util.HashMap;
 import java.util.List;

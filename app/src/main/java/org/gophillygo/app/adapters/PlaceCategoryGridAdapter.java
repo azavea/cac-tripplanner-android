@@ -1,6 +1,9 @@
 package org.gophillygo.app.adapters;
 
 import android.content.Context;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
@@ -8,10 +11,6 @@ import androidx.databinding.ViewDataBinding;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.ViewGroup;
 
 import org.gophillygo.app.BR;
 import org.gophillygo.app.R;

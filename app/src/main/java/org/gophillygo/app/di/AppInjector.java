@@ -13,8 +13,8 @@ import androidx.fragment.app.FragmentManager;
 import org.gophillygo.app.GoPhillyGoApp;
 
 import dagger.android.AndroidInjection;
-import dagger.android.support.AndroidSupportInjection;
 import dagger.android.HasAndroidInjector;
+import dagger.android.support.AndroidSupportInjection;
 
 
 /**

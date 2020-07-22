@@ -5,6 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
+import androidx.work.Data;
+import androidx.work.Worker;
+import androidx.work.WorkerParameters;
+
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingClient;
 import com.google.android.gms.location.GeofencingRequest;
@@ -15,11 +20,6 @@ import org.gophillygo.app.BuildConfig;
 
 import java.util.Map;
 import java.util.Objects;
-
-import androidx.annotation.NonNull;
-import androidx.work.Data;
-import androidx.work.Worker;
-import androidx.work.WorkerParameters;
 
 public class AddGeofenceWorker extends Worker {
 

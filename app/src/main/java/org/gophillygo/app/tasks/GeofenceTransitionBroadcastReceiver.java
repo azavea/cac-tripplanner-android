@@ -7,6 +7,11 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import androidx.work.Data;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
+import androidx.work.WorkRequest;
+
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingEvent;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
@@ -21,10 +26,6 @@ import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
-import androidx.work.Data;
-import androidx.work.OneTimeWorkRequest;
-import androidx.work.WorkManager;
-import androidx.work.WorkRequest;
 import dagger.android.AndroidInjection;
 
 public class GeofenceTransitionBroadcastReceiver extends BroadcastReceiver {

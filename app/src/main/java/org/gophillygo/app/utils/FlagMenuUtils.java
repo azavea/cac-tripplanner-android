@@ -3,6 +3,11 @@ package org.gophillygo.app.utils;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
+import android.view.Gravity;
+import android.view.MenuItem;
+import android.view.View;
 
 import androidx.annotation.ColorRes;
 import androidx.appcompat.view.menu.MenuBuilder;
@@ -10,11 +15,6 @@ import androidx.appcompat.view.menu.MenuPopupHelper;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
-import android.text.SpannableString;
-import android.text.style.ForegroundColorSpan;
-import android.view.Gravity;
-import android.view.MenuItem;
-import android.view.View;
 
 import org.gophillygo.app.R;
 import org.gophillygo.app.data.models.AttractionFlag;

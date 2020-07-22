@@ -1,8 +1,9 @@
 package org.gophillygo.app.data.models;
 
+import android.util.Log;
+
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
-import android.util.Log;
 
 import org.gophillygo.app.BR;
 
