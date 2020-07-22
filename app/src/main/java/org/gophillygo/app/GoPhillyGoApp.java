@@ -55,13 +55,16 @@ public class GoPhillyGoApp extends Application implements HasAndroidInjector {
             Log.d(LOG_LABEL, "++++++++++++++++++++++++++++++++++++++++++++");
             Log.d(LOG_LABEL, "Crashlytics reporting is enabled");
             Log.d(LOG_LABEL, "++++++++++++++++++++++++++++++++++++++++++++");
+
+            // Only initialize Firebase if crash logging is enabled,
+            // so crash logs do not accumulate on the device instead.
+            FirebaseApp.initializeApp(this);
         } else {
             Log.d(LOG_LABEL, "----------------------------------------------");
             Log.d(LOG_LABEL, "Crashlytics reporting is disabled");
             Log.d(LOG_LABEL, "----------------------------------------------");
         }
 
-        FirebaseApp.initializeApp(this);
         FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(enableAnalytics);
     }
 
