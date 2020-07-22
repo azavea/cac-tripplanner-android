@@ -3,6 +3,7 @@ package org.gophillygo.app;
 import android.app.Application;
 import android.util.Log;
 
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import org.gophillygo.app.di.AppInjector;
@@ -41,14 +42,27 @@ public class GoPhillyGoApp extends Application implements HasAndroidInjector {
             Log.d(LOG_LABEL, "Running in debug mode");
         }
 
-        // Initialize Firebase Crashlytics crash and usage data logging.
-        // Disable if user setting turned off
-        boolean enableAnalytics = UserUtils.isCrashlyticsEnabled(this);
-        FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(enableAnalytics);
 
         // Lazy initialization to support injection for content provider. See:
         // https://github.com/google/dagger/blob/master/java/dagger/android/DaggerApplication.java
         injectIfNecessary();
+
+        // Initialize Firebase Crashlytics crash and usage data logging.
+        // Disable if user setting turned off
+        boolean enableAnalytics = UserUtils.isCrashlyticsEnabled(this);
+
+        if (enableAnalytics) {
+            Log.d(LOG_LABEL, "++++++++++++++++++++++++++++++++++++++++++++");
+            Log.d(LOG_LABEL, "Crashlytics reporting is enabled");
+            Log.d(LOG_LABEL, "++++++++++++++++++++++++++++++++++++++++++++");
+        } else {
+            Log.d(LOG_LABEL, "----------------------------------------------");
+            Log.d(LOG_LABEL, "Crashlytics reporting is disabled");
+            Log.d(LOG_LABEL, "----------------------------------------------");
+        }
+
+        FirebaseApp.initializeApp(this);
+        FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(enableAnalytics);
     }
 
     /**

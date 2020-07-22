@@ -49,8 +49,8 @@ public class GpgPreferenceFragment extends PreferenceFragmentCompat implements S
         if (!isAdded() || getActivity() == null) {
             return;
         }
-        Log.d(LOG_LABEL, "shared preference changed");
 
+        Log.d(LOG_LABEL, "shared preference changed");
         final String notificationsKey = getString(R.string.general_preferences_allow_notifications_key);
         final String userFlagsKey = getString(R.string.general_preferences_send_flags_key);
         final String fabricKey = getString(R.string.general_preferences_fabric_logging_key);
@@ -68,9 +68,11 @@ public class GpgPreferenceFragment extends PreferenceFragmentCompat implements S
         } else if (key.equals(fabricKey)) {
             Log.d(LOG_LABEL, "toggled user setting for Fabric logging");
             // notify user to restart app for Fabric to stop logging, if setting changed to disable it
-            if (!sharedPreferences.getBoolean(fabricKey, false)) {
-                Toast.makeText(getActivity(), getString(R.string.general_preferences_fabric_logging_disabled_notification), Toast.LENGTH_LONG).show();
-            }
+            Toast.makeText(getActivity(), getString(R.string.general_preferences_fabric_logging_disabled_notification), Toast.LENGTH_LONG).show();
+            // Delete any unsent crash reports collected while logging was disabled,
+            // or else they will send on next app start.
+            Log.d(LOG_LABEL, "Delete any unsent crash reports (logging opt-in setting changed)");
+            FirebaseCrashlytics.getInstance().deleteUnsentReports();
         } else {
             String message = "Unrecognized user preference changed: " + key;
             Log.w(LOG_LABEL, message);
