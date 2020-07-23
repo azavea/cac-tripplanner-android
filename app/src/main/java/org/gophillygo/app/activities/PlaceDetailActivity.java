@@ -2,14 +2,6 @@ package org.gophillygo.app.activities;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-
-import androidx.appcompat.widget.PopupMenu;
-import androidx.databinding.DataBindingUtil;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -17,7 +9,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ScrollView;
 
-import com.crashlytics.android.Crashlytics;
+import androidx.appcompat.widget.PopupMenu;
+import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import org.gophillygo.app.BR;
 import org.gophillygo.app.R;
@@ -65,7 +64,7 @@ public class PlaceDetailActivity extends AttractionDetailActivity implements Att
         // disable default app name title display
         binding.placeDetailToolbar.setTitle("");
         setSupportActionBar(binding.placeDetailToolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
         if (getIntent().hasExtra(DESTINATION_ID_KEY)) {
             placeId = getIntent().getLongExtra(DESTINATION_ID_KEY, -1);
@@ -80,18 +79,18 @@ public class PlaceDetailActivity extends AttractionDetailActivity implements Att
         binding.placeDetailCarousel.setImageClickListener(position ->
                 Log.d(LOG_LABEL, "Clicked item: "+ position));
 
-        destinationViewModel = ViewModelProviders.of(this, viewModelFactory)
+        destinationViewModel = new ViewModelProvider(this, viewModelFactory)
                 .get(DestinationViewModel.class);
         LiveData<DestinationInfo> data = destinationViewModel.getDestination(placeId);
 
-        eventViewModel = ViewModelProviders.of(this, viewModelFactory).get(EventViewModel.class);
+        eventViewModel = new ViewModelProvider(this, viewModelFactory).get(EventViewModel.class);
 
         data.observe(this, destinationInfo -> {
             // TODO: #61 handle if destination not found (go to list of destinations?)
             if (destinationInfo == null || destinationInfo.getDestination() == null) {
                 String message = "No matching destination found for ID " + placeId;
                 Log.e(LOG_LABEL, message);
-                Crashlytics.log(message);
+                FirebaseCrashlytics.getInstance().log(message);
                 return;
             }
 
@@ -149,7 +148,7 @@ public class PlaceDetailActivity extends AttractionDetailActivity implements Att
         if (destinationInfo == null) {
             String message = "Cannot update flag because destination is not set";
             Log.e(LOG_LABEL, message);
-            Crashlytics.log(message);
+            FirebaseCrashlytics.getInstance().log(message);
             return;
         }
         String option = destinationInfo.getFlag().getOption().apiName;

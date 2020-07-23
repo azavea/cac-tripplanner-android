@@ -16,6 +16,11 @@
     <!-- Listen for reboot to set up geofences again -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
+    <!-- Disable Crashlytics reporting here so it can be enabled in code as an opt-in -->
+    <meta-data
+        android:name="firebase_crashlytics_collection_enabled"
+        android:value="false" />
+
     <supports-screens android:smallScreens="true"
         android:normalScreens="true"
         android:largeScreens="true"

@@ -3,17 +3,6 @@ package org.gophillygo.app.tasks;
 import android.content.Context;
 import android.util.Log;
 
-import com.crashlytics.android.Crashlytics;
-import com.google.android.gms.location.GeofencingClient;
-import com.google.android.gms.location.LocationServices;
-
-import org.gophillygo.app.data.models.AttractionInfo;
-import org.gophillygo.app.data.models.EventInfo;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Objects;
-
 import androidx.annotation.NonNull;
 import androidx.work.Data;
 import androidx.work.OneTimeWorkRequest;
@@ -21,6 +10,17 @@ import androidx.work.WorkManager;
 import androidx.work.WorkRequest;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
+
+import com.google.android.gms.location.GeofencingClient;
+import com.google.android.gms.location.LocationServices;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
+
+import org.gophillygo.app.data.models.AttractionInfo;
+import org.gophillygo.app.data.models.EventInfo;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Objects;
 
 public class RemoveGeofenceWorker extends Worker {
 
@@ -46,18 +46,18 @@ public class RemoveGeofenceWorker extends Worker {
             Log.d(LOG_LABEL, "Going to remove " + Objects.requireNonNull(removeGeofences).length + " geofences");
             geofencingClient.removeGeofences(new ArrayList<>(Arrays.asList(removeGeofences))).addOnSuccessListener(aVoid -> {
                 Log.d(LOG_LABEL, removeGeofences.length + " geofence(s) removed successfully");
-                Crashlytics.log(REMOVE_GEOFENCE_EVENT);
+                FirebaseCrashlytics.getInstance().log(REMOVE_GEOFENCE_EVENT);
             }).addOnFailureListener(e -> {
                 String errorMsg = "Failed to remove " + removeGeofences.length + " geofences.";
                 Log.d(LOG_LABEL, errorMsg);
-                Crashlytics.log(errorMsg);
-                Crashlytics.logException(e);
+                FirebaseCrashlytics.getInstance().log(errorMsg);
+                FirebaseCrashlytics.getInstance().recordException(e);
             });
             return Result.success();
         } else {
             String errorMsg = "Did not receive data for geofences to remove";
             Log.e(LOG_LABEL, errorMsg);
-            Crashlytics.log(errorMsg);
+            FirebaseCrashlytics.getInstance().log(errorMsg);
             return Result.failure();
         }
     }

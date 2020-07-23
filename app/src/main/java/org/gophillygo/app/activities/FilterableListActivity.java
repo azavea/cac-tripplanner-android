@@ -2,10 +2,10 @@ package org.gophillygo.app.activities;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.widget.Button;
 
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
-import android.widget.Button;
 
 import org.gophillygo.app.BR;
 import org.gophillygo.app.FilterDialog;

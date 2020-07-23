@@ -2,18 +2,19 @@ package org.gophillygo.app;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
-
-import androidx.annotation.NonNull;
-import androidx.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import androidx.annotation.NonNull;
+import androidx.databinding.DataBindingUtil;
+
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import org.gophillygo.app.data.models.Filter;
 import org.gophillygo.app.databinding.FilterModalBinding;
+import org.jetbrains.annotations.NotNull;
 
 
 public class FilterDialog extends BottomSheetDialogFragment {
@@ -39,7 +40,7 @@ public class FilterDialog extends BottomSheetDialogFragment {
     }
 
     @Override
-    public void onDismiss(DialogInterface dialog) {
+    public void onDismiss(@NotNull DialogInterface dialog) {
         Log.d(LOG_LABEL, "Selected " + filter.count() + " filters.");
         FilterChangeListener listener = (FilterChangeListener) getActivity();
         if (listener != null) {

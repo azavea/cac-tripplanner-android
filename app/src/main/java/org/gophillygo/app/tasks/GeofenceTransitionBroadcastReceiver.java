@@ -7,9 +7,14 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.crashlytics.android.Crashlytics;
+import androidx.work.Data;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
+import androidx.work.WorkRequest;
+
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingEvent;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import org.gophillygo.app.data.DestinationDao;
 import org.gophillygo.app.data.EventDao;
@@ -21,10 +26,6 @@ import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
-import androidx.work.Data;
-import androidx.work.OneTimeWorkRequest;
-import androidx.work.WorkManager;
-import androidx.work.WorkRequest;
 import dagger.android.AndroidInjection;
 
 public class GeofenceTransitionBroadcastReceiver extends BroadcastReceiver {
@@ -94,7 +95,7 @@ public class GeofenceTransitionBroadcastReceiver extends BroadcastReceiver {
                             Log.d(LOG_LABEL, "Handling transition for geofence " + fenceId);
                             // Geofence string ID is "d" for destination or "e" for event, followed by the
                             // destination or event integer ID.
-                            int geofenceId = Integer.valueOf(fenceId.substring(1));
+                            int geofenceId = Integer.parseInt(fenceId.substring(1));
                             boolean isEvent = fenceId.startsWith(GeofenceTransitionWorker.EVENT_PREFIX);
 
                             // query for each event or destination synchronously from the database
@@ -112,7 +113,7 @@ public class GeofenceTransitionBroadcastReceiver extends BroadcastReceiver {
                                 if (destination == null) {
                                     String message = "Could not find destination for geofence " + geofenceId;
                                     Log.e(LOG_LABEL, message);
-                                    Crashlytics.log(message);
+                                    FirebaseCrashlytics.getInstance().log(message);
                                 } else {
                                     labels[i] = GeofenceTransitionWorker.DESTINATION_PREFIX + destination.getId();
                                     names[i] = destination.getName();

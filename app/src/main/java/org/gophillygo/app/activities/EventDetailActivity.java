@@ -2,14 +2,6 @@ package org.gophillygo.app.activities;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-
-import androidx.appcompat.widget.PopupMenu;
-import androidx.appcompat.widget.Toolbar;
-import androidx.cardview.widget.CardView;
-import androidx.databinding.DataBindingUtil;
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.ViewModelProviders;
-
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.CalendarContract;
@@ -18,7 +10,14 @@ import android.view.Gravity;
 import android.view.View;
 import android.widget.Toast;
 
-import com.crashlytics.android.Crashlytics;
+import androidx.appcompat.widget.PopupMenu;
+import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
+import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.ViewModelProvider;
+
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 import com.synnapps.carouselview.CarouselView;
 
 import org.gophillygo.app.BR;
@@ -39,6 +38,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -79,7 +79,7 @@ public class EventDetailActivity extends AttractionDetailActivity {
         // disable default app name title display
         toolbar.setTitle("");
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
         if (getIntent().hasExtra(EVENT_ID_KEY)) {
             eventId = getIntent().getLongExtra(EVENT_ID_KEY, -1);
@@ -92,14 +92,14 @@ public class EventDetailActivity extends AttractionDetailActivity {
 
         carouselView = findViewById(R.id.event_detail_carousel);
         carouselView.setIndicatorGravity(Gravity.CENTER_HORIZONTAL|Gravity.BOTTOM);
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(EventViewModel.class);
-        destinationViewModel = ViewModelProviders.of(this, viewModelFactory).get(DestinationViewModel.class);
+        viewModel = new ViewModelProvider(this, viewModelFactory).get(EventViewModel.class);
+        destinationViewModel = new ViewModelProvider(this, viewModelFactory).get(DestinationViewModel.class);
         viewModel.getEvent(eventId).observe(this, eventInfo -> {
             // TODO: #61 handle if event not found (go to list of events?)
             if (eventInfo == null || eventInfo.getEvent() == null) {
                 String message = "No matching event found for ID " + eventId;
                 Log.e(LOG_LABEL, message);
-                Crashlytics.log(message);
+                FirebaseCrashlytics.getInstance().log(message);
                 return;
             }
 
@@ -114,7 +114,7 @@ public class EventDetailActivity extends AttractionDetailActivity {
                         binding.setDestination(destinationInfo.getDestination());
                     } else {
                         String message = "No matching destination found for ID " + destinationId;
-                        Crashlytics.log(message);
+                        FirebaseCrashlytics.getInstance().log(message);
                         Log.e(LOG_LABEL, message);
                     }
                     // Since we call `getDestination(...).observe(...)` every time the event is updated,

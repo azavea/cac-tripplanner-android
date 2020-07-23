@@ -8,7 +8,14 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.crashlytics.android.Crashlytics;
+import androidx.annotation.NonNull;
+import androidx.preference.PreferenceManager;
+import androidx.work.Data;
+import androidx.work.OneTimeWorkRequest;
+import androidx.work.WorkManager;
+import androidx.work.WorkRequest;
+
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import org.gophillygo.app.R;
 import org.gophillygo.app.data.DestinationDao;
@@ -25,12 +32,6 @@ import java.util.Objects;
 
 import javax.inject.Inject;
 
-import androidx.annotation.NonNull;
-import androidx.preference.PreferenceManager;
-import androidx.work.Data;
-import androidx.work.OneTimeWorkRequest;
-import androidx.work.WorkManager;
-import androidx.work.WorkRequest;
 import dagger.android.AndroidInjection;
 
 import static org.gophillygo.app.tasks.RemoveGeofenceWorker.REMOVE_GEOFENCES_KEY;
@@ -70,7 +71,7 @@ public class AddRemoveGeofencesBroadcastReceiver extends BroadcastReceiver {
 
         // Do not allow invoking broadcast receiver with unexpected action types
         if (!Intent.ACTION_BOOT_COMPLETED.equals(action) &&
-                !action.equals("org.gophillygo.app.tasks.ACTION_GEOFENCE_TRANSITION")) {
+                !Objects.equals(action, "org.gophillygo.app.tasks.ACTION_GEOFENCE_TRANSITION")) {
             Log.e(LOG_LABEL, "FIXME: Need to handle intent action type: " + intent.getAction());
             throw new UnsupportedOperationException("Unrecognized broadcast action type " + action);
         }
@@ -100,7 +101,7 @@ public class AddRemoveGeofencesBroadcastReceiver extends BroadcastReceiver {
                     latitudes.length != Objects.requireNonNull(labels).length || latitudes.length != Objects.requireNonNull(names).length) {
                 String message = "Extras data of zero or mismatched length found";
                 Log.e(LOG_LABEL, message);
-                Crashlytics.log(message);
+                FirebaseCrashlytics.getInstance().log(message);
                 return;
             }
 
@@ -145,7 +146,7 @@ public class AddRemoveGeofencesBroadcastReceiver extends BroadcastReceiver {
                     if ((events == null || events.isEmpty()) &&
                             (destinations == null || destinations.isEmpty())) {
                         String message = "Have no destinations or events with geofences to add.";
-                        Crashlytics.log(message);
+                        FirebaseCrashlytics.getInstance().log(message);
                         Log.d(LOG_LABEL, message);
                         return null;
                     } else if (events == null) {
@@ -160,7 +161,7 @@ public class AddRemoveGeofencesBroadcastReceiver extends BroadcastReceiver {
                         // FIXME: handle having too many geofences
                         String message = "Too many destinations with geofences to add.";
                         Log.e(LOG_LABEL, message);
-                        Crashlytics.log(message);
+                        FirebaseCrashlytics.getInstance().log(message);
                         return null;
                     }
 

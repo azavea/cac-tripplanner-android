@@ -5,21 +5,21 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import com.crashlytics.android.Crashlytics;
+import androidx.annotation.NonNull;
+import androidx.work.Data;
+import androidx.work.Worker;
+import androidx.work.WorkerParameters;
+
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingClient;
 import com.google.android.gms.location.GeofencingRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import org.gophillygo.app.BuildConfig;
 
 import java.util.Map;
 import java.util.Objects;
-
-import androidx.annotation.NonNull;
-import androidx.work.Data;
-import androidx.work.Worker;
-import androidx.work.WorkerParameters;
 
 public class AddGeofenceWorker extends Worker {
 
@@ -87,7 +87,7 @@ public class AddGeofenceWorker extends Worker {
             geofenceNames = data.getStringArray(GEOFENCE_NAMES_KEY);
         } else {
             String message = "Data missing for geofences to add";
-            Crashlytics.log(message);
+            FirebaseCrashlytics.getInstance().log(message);
             Log.e(LOG_LABEL, message);
             return Result.failure();
         }
@@ -95,7 +95,7 @@ public class AddGeofenceWorker extends Worker {
         if (Objects.requireNonNull(latitudes).length != Objects.requireNonNull(longitudes).length || latitudes.length != Objects.requireNonNull(geofenceLabels).length ||
                 latitudes.length != Objects.requireNonNull(geofenceNames).length) {
             String message = "Location data for geofences to add should be arrays of the same length.";
-            Crashlytics.log(message);
+            FirebaseCrashlytics.getInstance().log(message);
             Log.e(LOG_LABEL, message);
             return Result.failure();
         }
@@ -111,7 +111,7 @@ public class AddGeofenceWorker extends Worker {
                     .setTransitionTypes(GEOFENCE_ENTER_TRIGGER | Geofence.GEOFENCE_TRANSITION_EXIT)
                     .build());
 
-            Crashlytics.log(ADD_GEOFENCE_EVENT);
+            FirebaseCrashlytics.getInstance().log(ADD_GEOFENCE_EVENT);
         }
 
         // Location access permissions prompting is handled by `GpgLocationUtils`.
@@ -127,16 +127,16 @@ public class AddGeofenceWorker extends Worker {
         } catch (SecurityException ex) {
             String message = "Missing permissions to add geofences";
             Log.e(LOG_LABEL, message);
-            Crashlytics.log(message);
-            Crashlytics.logException(ex);
+            FirebaseCrashlytics.getInstance().log(message);
+            FirebaseCrashlytics.getInstance().recordException(ex);
             ex.printStackTrace();
             return Result.failure();
         } catch (Exception ex) {
             String message = "Failed to add geofences";
             Log.e(LOG_LABEL, message);
-            Crashlytics.log(message);
+            FirebaseCrashlytics.getInstance().log(message);
             ex.printStackTrace();
-            Crashlytics.logException(ex);
+            FirebaseCrashlytics.getInstance().recordException(ex);
             return Result.failure();
         }
     }

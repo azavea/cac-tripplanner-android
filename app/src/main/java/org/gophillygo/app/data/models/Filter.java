@@ -1,8 +1,9 @@
 package org.gophillygo.app.data.models;
 
+import android.util.Log;
+
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
-import android.util.Log;
 
 import org.gophillygo.app.BR;
 
@@ -145,6 +146,7 @@ public class Filter extends BaseObservable implements Serializable {
         for (AttractionFlag.Option option : flags()) {
             if (flag.getOption() == option) {
                 flagMatches = true;
+                break;
             }
         }
         return flagMatches;

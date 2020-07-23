@@ -24,7 +24,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/places_map_toolbar" />
 
-            <fragment
+            <androidx.fragment.app.FragmentContainerView
                 android:id="@+id/places_map"
                 android:name="com.google.android.gms.maps.SupportMapFragment"
                 android:layout_below="@+id/places_map_filter_button_bar"

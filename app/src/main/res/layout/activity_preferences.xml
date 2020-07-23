@@ -23,7 +23,7 @@
                 tools:targetApi="lollipop" />
         </com.google.android.material.appbar.AppBarLayout>
 
-        <fragment
+        <androidx.fragment.app.FragmentContainerView
             android:name="org.gophillygo.app.fragments.GpgPreferenceFragment"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             app:layout_constraintTop_toBottomOf="@id/preferences_app_bar"

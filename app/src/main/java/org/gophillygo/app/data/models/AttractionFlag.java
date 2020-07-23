@@ -12,6 +12,7 @@ import androidx.room.TypeConverter;
 import androidx.room.TypeConverters;
 
 import com.google.gson.annotations.SerializedName;
+
 import org.gophillygo.app.R;
 
 import java.util.Objects;
