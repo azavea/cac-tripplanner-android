@@ -89,9 +89,6 @@ public abstract class MapsActivity<T extends AttractionInfo> extends FilterableL
             selectedAttractionId = getIntent().getIntExtra(ATTRACTION_ID, 0);
         }
         Objects.requireNonNull(mapFragment).getMapAsync(this);
-
-        markerIcon = vectorToBitmap(R.drawable.ic_map_marker);
-        selectedMarkerIcon = vectorToBitmap(R.drawable.ic_selected_map_marker);
     }
 
     @Override
@@ -115,6 +112,9 @@ public abstract class MapsActivity<T extends AttractionInfo> extends FilterableL
         this.googleMap = googleMap;
         googleMap.getUiSettings().setMapToolbarEnabled(false);
         googleMap.setOnMarkerClickListener(this::selectMarker);
+
+        markerIcon = vectorToBitmap(R.drawable.ic_map_marker);
+        selectedMarkerIcon = vectorToBitmap(R.drawable.ic_selected_map_marker);
 
         loadMarkers();
         panToLocation();
