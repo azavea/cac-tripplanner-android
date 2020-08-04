@@ -1,8 +1,9 @@
 package org.gophillygo.app.utils;
 
 import android.content.Context;
-import androidx.databinding.BindingAdapter;
 import android.widget.ImageView;
+
+import androidx.databinding.BindingAdapter;
 
 import com.bumptech.glide.Glide;
 

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="org.gophillygo.app">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -15,6 +16,15 @@
 
     <!-- Listen for reboot to set up geofences again -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
+    <!-- Disable Crashlytics reporting here so it can be enabled in code as an opt-in -->
+    <meta-data
+        android:name="firebase_crashlytics_collection_enabled"
+        android:value="false" />
+
+    <!-- Remove phone state and external storage permissions added by library import -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" tools:node="remove" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" tools:node="remove" />
 
     <supports-screens android:smallScreens="true"
         android:normalScreens="true"

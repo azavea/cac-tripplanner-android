@@ -5,16 +5,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.ListView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
-import com.crashlytics.android.Crashlytics;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import org.gophillygo.app.R;
 import org.gophillygo.app.tasks.AddGeofenceWorker;
@@ -33,8 +29,8 @@ public class GpgPreferenceFragment extends PreferenceFragmentCompat implements S
 
         // reset user ID and show message when setting for that is clicked
         Preference reset = findPreference(getString(R.string.general_preferences_reset_uuid_key));
-        reset.setOnPreferenceClickListener(preference -> {
-            String uuid = UserUtils.resetUuid(getActivity());
+        Objects.requireNonNull(reset).setOnPreferenceClickListener(preference -> {
+            String uuid = UserUtils.resetUuid(requireActivity());
             String message = getString(R.string.general_preferences_reset_uuid_message, uuid);
             Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
             return true;
@@ -53,8 +49,8 @@ public class GpgPreferenceFragment extends PreferenceFragmentCompat implements S
         if (!isAdded() || getActivity() == null) {
             return;
         }
-        Log.d(LOG_LABEL, "shared preference changed");
 
+        Log.d(LOG_LABEL, "shared preference changed");
         final String notificationsKey = getString(R.string.general_preferences_allow_notifications_key);
         final String userFlagsKey = getString(R.string.general_preferences_send_flags_key);
         final String fabricKey = getString(R.string.general_preferences_fabric_logging_key);
@@ -72,13 +68,15 @@ public class GpgPreferenceFragment extends PreferenceFragmentCompat implements S
         } else if (key.equals(fabricKey)) {
             Log.d(LOG_LABEL, "toggled user setting for Fabric logging");
             // notify user to restart app for Fabric to stop logging, if setting changed to disable it
-            if (!sharedPreferences.getBoolean(fabricKey, false)) {
-                Toast.makeText(getActivity(), getString(R.string.general_preferences_fabric_logging_disabled_notification), Toast.LENGTH_LONG).show();
-            }
+            Toast.makeText(getActivity(), getString(R.string.general_preferences_fabric_logging_disabled_notification), Toast.LENGTH_LONG).show();
+            // Delete any unsent crash reports collected while logging was disabled,
+            // or else they will send on next app start.
+            Log.d(LOG_LABEL, "Delete any unsent crash reports (logging opt-in setting changed)");
+            FirebaseCrashlytics.getInstance().deleteUnsentReports();
         } else {
             String message = "Unrecognized user preference changed: " + key;
             Log.w(LOG_LABEL, message);
-            Crashlytics.log(message);
+            FirebaseCrashlytics.getInstance().log(message);
         }
     }
 }

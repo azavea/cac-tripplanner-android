@@ -126,11 +126,11 @@ public class UserUtils {
      * Check if user allows for posting anonymized crash and usage data to Fabric.
      *
      * @param context For getting strings and preferences
-     * @return False if Fabric may be enabled, True if it should be disabled
+     * @return True if Crashlytics should be enabled, False if it should be disabled
      */
-    public static boolean isFabricDisabled(Context context) {
+    public static boolean isCrashlyticsEnabled(Context context) {
         String key = context.getString(R.string.general_preferences_fabric_logging_key);
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        return !sharedPreferences.contains(key) || !sharedPreferences.getBoolean(key, false);
+        return sharedPreferences.contains(key) && sharedPreferences.getBoolean(key, false);
     }
 }

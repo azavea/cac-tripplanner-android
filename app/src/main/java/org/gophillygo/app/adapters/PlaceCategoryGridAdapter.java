@@ -1,6 +1,9 @@
 package org.gophillygo.app.adapters;
 
 import android.content.Context;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
@@ -8,10 +11,6 @@ import androidx.databinding.ViewDataBinding;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.ViewGroup;
 
 import org.gophillygo.app.BR;
 import org.gophillygo.app.R;
@@ -53,11 +52,7 @@ public class PlaceCategoryGridAdapter extends ListAdapter<CategoryAttraction, Pl
         super(new DiffUtil.ItemCallback<CategoryAttraction>() {
             @Override
             public boolean areItemsTheSame(@NonNull CategoryAttraction oldItem, @NonNull CategoryAttraction newItem) {
-                if (oldItem == null) {
-                    return newItem == null;
-                } else {
-                    return newItem != null && oldItem.getCategory().equals(newItem.getCategory());
-                }
+                return oldItem.getCategory().equals(newItem.getCategory());
             }
 
             @Override

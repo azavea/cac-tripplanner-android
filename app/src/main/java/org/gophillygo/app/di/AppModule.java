@@ -4,6 +4,7 @@ import android.app.Application;
 
 import androidx.room.Room;
 
+import org.gophillygo.app.BuildConfig;
 import org.gophillygo.app.data.AttractionFlagDao;
 import org.gophillygo.app.data.DestinationDao;
 import org.gophillygo.app.data.DestinationWebservice;
@@ -39,14 +40,15 @@ class AppModule {
     DestinationWebservice provideDestinationWebservice() {
         // add network query logging by setting client on Retrofit
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
-        HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
 
         // Can be Level.BASIC, Level.HEADERS, or Level.BODY
         // See http://square.github.io/okhttp/3.x/logging-interceptor/ to see the options.
-        httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-        builder.networkInterceptors().add(httpLoggingInterceptor);
+        if (BuildConfig.DEBUG) {
+            HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
+            httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+            builder.networkInterceptors().add(httpLoggingInterceptor);
+        }
         OkHttpClient client = builder.build();
-
         return new Retrofit.Builder()
                 .client(client)
                 .baseUrl(DestinationWebservice.WEBSERVICE_URL)

@@ -1,13 +1,10 @@
 package org.gophillygo.app;
 
-import android.app.Activity;
 import android.app.Application;
-import android.content.BroadcastReceiver;
-import android.content.ContentProvider;
 import android.util.Log;
 
-import com.crashlytics.android.Crashlytics;
-import com.crashlytics.android.core.CrashlyticsCore;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import org.gophillygo.app.di.AppInjector;
 import org.gophillygo.app.utils.UserUtils;
@@ -16,11 +13,8 @@ import javax.inject.Inject;
 
 import dagger.android.AndroidInjector;
 import dagger.android.DispatchingAndroidInjector;
-import dagger.android.HasActivityInjector;
-import dagger.android.HasBroadcastReceiverInjector;
-import dagger.android.HasContentProviderInjector;
+import dagger.android.HasAndroidInjector;
 import dagger.android.support.DaggerApplication;
-import io.fabric.sdk.android.Fabric;
 
 /**
  * Based on:
@@ -28,21 +22,15 @@ import io.fabric.sdk.android.Fabric;
  */
 
 
-public class GoPhillyGoApp extends Application implements HasActivityInjector, HasBroadcastReceiverInjector, HasContentProviderInjector {
+public class GoPhillyGoApp extends Application implements HasAndroidInjector {
+
+
 
     private static final String LOG_LABEL = "GPGApp";
 
     @SuppressWarnings("WeakerAccess")
     @Inject
-    DispatchingAndroidInjector<Activity> dispatchingAndroidInjector;
-
-    @SuppressWarnings("WeakerAccess")
-    @Inject
-    DispatchingAndroidInjector<BroadcastReceiver> broadcastReceiverInjector;
-
-    @SuppressWarnings("WeakerAccess")
-    @Inject
-    DispatchingAndroidInjector<ContentProvider> contentProviderInjector;
+    DispatchingAndroidInjector<Object> dispatchingInjector;
 
     private volatile boolean needToInject = true;
 
@@ -54,16 +42,30 @@ public class GoPhillyGoApp extends Application implements HasActivityInjector, H
             Log.d(LOG_LABEL, "Running in debug mode");
         }
 
-        // Initialize Fabric/Crashlytics crash and usage data logging.
-        // Disable if user setting turned off; still must be initialized to avoid errors.
-        // Based on: https://stackoverflow.com/a/31996615
-        CrashlyticsCore core = new CrashlyticsCore.Builder()
-                .disabled(UserUtils.isFabricDisabled(this)).build();
-        Fabric.with(this, new Crashlytics.Builder().core(core).build());
 
         // Lazy initialization to support injection for content provider. See:
         // https://github.com/google/dagger/blob/master/java/dagger/android/DaggerApplication.java
         injectIfNecessary();
+
+        // Initialize Firebase Crashlytics crash and usage data logging.
+        // Disable if user setting turned off
+        boolean enableAnalytics = UserUtils.isCrashlyticsEnabled(this);
+
+        if (enableAnalytics) {
+            Log.d(LOG_LABEL, "++++++++++++++++++++++++++++++++++++++++++++");
+            Log.d(LOG_LABEL, "Crashlytics reporting is enabled");
+            Log.d(LOG_LABEL, "++++++++++++++++++++++++++++++++++++++++++++");
+
+            // Only initialize Firebase if crash logging is enabled,
+            // so crash logs do not accumulate on the device instead.
+            FirebaseApp.initializeApp(this);
+        } else {
+            Log.d(LOG_LABEL, "----------------------------------------------");
+            Log.d(LOG_LABEL, "Crashlytics reporting is disabled");
+            Log.d(LOG_LABEL, "----------------------------------------------");
+        }
+
+        FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(enableAnalytics);
     }
 
     /**
@@ -95,18 +97,8 @@ public class GoPhillyGoApp extends Application implements HasActivityInjector, H
     }
 
     @Override
-    public DispatchingAndroidInjector<Activity> activityInjector() {
-        return dispatchingAndroidInjector;
-    }
-
-    @Override
-    public AndroidInjector<BroadcastReceiver> broadcastReceiverInjector() {
-        return broadcastReceiverInjector;
-    }
-
-    @Override
-    public AndroidInjector<ContentProvider> contentProviderInjector() {
+    public AndroidInjector<Object> androidInjector() {
         injectIfNecessary();
-        return contentProviderInjector;
+        return dispatchingInjector;
     }
 }
