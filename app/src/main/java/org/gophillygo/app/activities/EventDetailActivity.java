@@ -24,7 +24,6 @@ import org.gophillygo.app.BR;
 import org.gophillygo.app.R;
 import org.gophillygo.app.data.DestinationViewModel;
 import org.gophillygo.app.data.EventViewModel;
-import org.gophillygo.app.data.models.AttractionFlag;
 import org.gophillygo.app.data.models.DestinationInfo;
 import org.gophillygo.app.data.models.Event;
 import org.gophillygo.app.data.models.EventInfo;
@@ -207,20 +206,12 @@ public class EventDetailActivity extends AttractionDetailActivity {
     }
 
     private void updateFlag(int itemId) {
-        String option = eventInfo.getFlag().getOption().apiName;
-        boolean haveExistingGeofence = option.equals(AttractionFlag.Option.WantToGo.apiName) ||
-                option.equals(AttractionFlag.Option.Liked.apiName);
         eventInfo.updateAttractionFlag(itemId);
 
         viewModel.updateAttractionFlag(eventInfo.getFlag(),
                 userUuid,
                 getString(R.string.user_flag_post_api_key),
                 UserUtils.isFlagPostingEnabled(this));
-
-        String optionAfter = eventInfo.getFlag().getOption().apiName;
-        Boolean settingGeofence = optionAfter.equals(AttractionFlag.Option.WantToGo.apiName) ||
-                optionAfter.equals(AttractionFlag.Option.Liked.apiName);
-        addOrRemoveGeofence(eventInfo, haveExistingGeofence, settingGeofence);
         binding.notifyPropertyChanged(BR.destinationInfo);
     }
 
