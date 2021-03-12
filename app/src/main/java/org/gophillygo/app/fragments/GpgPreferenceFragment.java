@@ -1,7 +1,5 @@
 package org.gophillygo.app.fragments;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,8 +11,6 @@ import androidx.preference.PreferenceFragmentCompat;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import org.gophillygo.app.R;
-import org.gophillygo.app.tasks.AddGeofenceWorker;
-import org.gophillygo.app.tasks.AddRemoveGeofencesBroadcastReceiver;
 import org.gophillygo.app.utils.UserUtils;
 
 import java.util.Objects;
@@ -55,15 +51,7 @@ public class GpgPreferenceFragment extends PreferenceFragmentCompat implements S
         final String userFlagsKey = getString(R.string.general_preferences_send_flags_key);
         final String fabricKey = getString(R.string.general_preferences_fabric_logging_key);
 
-        if (key.equals(notificationsKey)) {
-            // Whether notifications have been enabled or disabled, we do the same thing:
-            // kick off a worker that will check the setting before adding back or removing all
-            // geofences for the places and events flagged 'want to go'.
-            Activity activity = getActivity();
-            Intent intent = new Intent(activity.getApplicationContext(), AddRemoveGeofencesBroadcastReceiver.class);
-            intent.setAction(AddGeofenceWorker.ACTION_GEOFENCE_TRANSITION);
-            activity.sendBroadcast(intent);
-        } else if (key.equals(userFlagsKey)) {
+        if (key.equals(userFlagsKey)) {
             Log.d(LOG_LABEL, "toggled user flags upload user setting");
         } else if (key.equals(fabricKey)) {
             Log.d(LOG_LABEL, "toggled user setting for Fabric logging");

@@ -160,28 +160,4 @@ public abstract class DestinationDao implements AttractionDao<Destination> {
             data.removeSource(source);
         });
     }
-
-    /**
-     * Find those destinations with a given flag set, which are those that should be geofenced.
-     *
-     * Must be accessed on a background thread.
-     *
-     * @return Destination objects, without related event info
-     */
-
-    @Query(value = "SELECT destination.* FROM destination INNER JOIN attractionflag " +
-            "ON destination._id = attractionflag.attraction_id AND attractionflag.is_event = 0 " +
-            "WHERE attractionflag.option = :wantToGoCode OR attractionflag.option = :likedCode")
-    public abstract List<Destination> getGeofenceDestinations(int wantToGoCode, int likedCode);
-
-    /**
-     * Get a single destination.
-     *
-     * Must be accessed from a background thread.
-     *
-     * @param destinationId ID of place to fetch
-     * @return Matching destination, with related event count and user flag.
-     */
-    @Query("SELECT * FROM destination WHERE destination._id = :destinationId")
-    public abstract Destination getDestinationInBackground(long destinationId);
 }
