@@ -127,7 +127,7 @@
     <string name="general_preference_notifications">Notifications</string>
     <string name="general_preference_notifications_summary">Due to changes in Play Store policies, receiving notifications of nearby places is currently disabled.</string>
     <string name="general_preference_fabric_logging">Share crash and usage data</string>
-    <string name="general_preference_fabric_logging_summary">Send anonymous reports about how I\'m using the app and when the app crashes.</string>
+    <string name="general_preference_fabric_logging_summary">Send anonymous reports about app usage and crashes.</string>
     <string name="general_preferences_fabric_logging_disabled_notification">Please restart app for setting change to take effect.</string>
     <string name="general_preferences_send_flags">Share selections</string>
     <string name="general_preferences_send_flags_summary">Send us anonymous reports of which destinations and events you have marked as <i>been, liked, want to go,</i> or <i>not interested</i> so we can improve our listings.</string>
