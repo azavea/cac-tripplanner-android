@@ -34,10 +34,6 @@ import dagger.android.AndroidInjectionModule;
         SearchActivityModule.class,
         AppInfoActivityModule.class,
 
-        // Broadcast Receivers
-        AddRemoveGeofenceBroadcastReceiverModule.class,
-        GeofenceTransitionBroadcastReceiverModule.class,
-
         // Content Providers
         GoPhillyGoContentProviderModule.class
 })

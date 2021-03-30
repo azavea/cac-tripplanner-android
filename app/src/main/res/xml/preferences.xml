@@ -36,9 +36,10 @@
         app:key="@string/general_preferences_key">
         <SwitchPreferenceCompat
             app:key="@string/general_preferences_allow_notifications_key"
-            app:defaultValue="true"
+            app:defaultValue="false"
             app:summary="@string/general_preference_notifications_summary"
-            app:title="@string/general_preference_notifications" />
+            app:title="@string/general_preference_notifications"
+            android:enabled="false" />
         <SwitchPreferenceCompat
             app:key="@string/general_preferences_fabric_logging_key"
             app:title="@string/general_preference_fabric_logging"

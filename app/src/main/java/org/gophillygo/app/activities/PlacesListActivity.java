@@ -23,7 +23,6 @@ import com.bumptech.glide.util.ViewPreloadSizeProvider;
 
 import org.gophillygo.app.R;
 import org.gophillygo.app.adapters.PlacesListAdapter;
-import org.gophillygo.app.data.models.AttractionFlag;
 import org.gophillygo.app.data.models.AttractionInfo;
 import org.gophillygo.app.data.models.DestinationInfo;
 import org.gophillygo.app.databinding.ActivityPlacesListBinding;
@@ -70,10 +69,6 @@ public class PlacesListActivity extends FilterableListActivity implements
     }
 
     public boolean clickedFlagOption(MenuItem item, AttractionInfo destinationInfo, Integer position) {
-        String option = destinationInfo.getFlag().getOption().apiName;
-        boolean haveExistingGeofence = option.equals(AttractionFlag.Option.WantToGo.apiName) ||
-                option.equals(AttractionFlag.Option.Liked.apiName);
-
         destinationInfo.updateAttractionFlag(item.getItemId());
 
         viewModel.updateAttractionFlag(destinationInfo.getFlag(),
@@ -82,10 +77,6 @@ public class PlacesListActivity extends FilterableListActivity implements
                 UserUtils.isFlagPostingEnabled(this));
 
         placesListAdapter.notifyItemChanged(position);
-        String optionAfter = destinationInfo.getFlag().getOption().apiName;
-        boolean settingGeofence = optionAfter.equals(AttractionFlag.Option.WantToGo.apiName) ||
-                optionAfter.equals(AttractionFlag.Option.Liked.apiName);
-        addOrRemoveGeofence(destinationInfo, haveExistingGeofence, settingGeofence);
 	    return true;
     }
 

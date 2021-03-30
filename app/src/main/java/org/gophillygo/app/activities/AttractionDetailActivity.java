@@ -24,15 +24,11 @@ import org.gophillygo.app.data.models.AttractionFlag;
 import org.gophillygo.app.data.models.AttractionInfo;
 import org.gophillygo.app.data.models.DestinationInfo;
 import org.gophillygo.app.data.models.DestinationLocation;
-import org.gophillygo.app.data.models.EventInfo;
-import org.gophillygo.app.tasks.AddRemoveGeofencesBroadcastReceiver;
-import org.gophillygo.app.tasks.RemoveGeofenceWorker;
 import org.gophillygo.app.utils.UserUtils;
 
 public abstract class AttractionDetailActivity extends AppCompatActivity {
 
     public static final String NOTIFICATION_ID_KEY = "launching_notification_id";
-    public static final String GEOFENCE_ID_KEY = "launching_geofence_id";
 
     protected static final int COLLAPSED_LINE_COUNT = 4;
     protected static final int EXPANDED_MAX_LINES = 50;
@@ -44,25 +40,6 @@ public abstract class AttractionDetailActivity extends AppCompatActivity {
 
     protected abstract Class getMapActivity();
     protected abstract int getAttractionId();
-
-    protected void addOrRemoveGeofence(AttractionInfo info, Boolean haveExistingGeofence, Boolean settingGeofence) {
-        if (settingGeofence) {
-            if (haveExistingGeofence) {
-                Log.d(LOG_LABEL, "No change to geofence");
-                return;
-            }
-            // add geofence
-            Log.d(LOG_LABEL, "Add attraction geofence");
-            if (info instanceof EventInfo) {
-                AddRemoveGeofencesBroadcastReceiver.addOneGeofence((EventInfo)info);
-            } else if (info instanceof DestinationInfo) {
-                AddRemoveGeofencesBroadcastReceiver.addOneGeofence(((DestinationInfo) info).getDestination());
-            }
-        } else if (haveExistingGeofence) {
-            Log.d(LOG_LABEL, "Removing attraction geofence");
-            RemoveGeofenceWorker.removeOneGeofence(info);
-        }
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,19 +77,6 @@ public abstract class AttractionDetailActivity extends AppCompatActivity {
                 view.setText(R.string.detail_description_expand);
             }
         };
-
-        // cancel launching notification, if any
-        if (getIntent().hasExtra(NOTIFICATION_ID_KEY)) {
-            String notificationId = getIntent().getStringExtra(NOTIFICATION_ID_KEY);
-            int geofenceId = getIntent().getIntExtra(GEOFENCE_ID_KEY, -1);
-            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-
-            if (notificationId != null && !notificationId.isEmpty() && geofenceId > -1) {
-                notificationManager.cancel(notificationId, geofenceId);
-                Log.d(LOG_LABEL, "Closing notification after launching detail view");
-            }
-        }
-
     }
 
     // open map when user clicks map button

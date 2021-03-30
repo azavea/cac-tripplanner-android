@@ -24,10 +24,8 @@ import org.gophillygo.app.adapters.AttractionListAdapter;
 import org.gophillygo.app.adapters.EventsListAdapter;
 import org.gophillygo.app.data.DestinationViewModel;
 import org.gophillygo.app.data.EventViewModel;
-import org.gophillygo.app.data.models.AttractionFlag;
 import org.gophillygo.app.data.models.AttractionInfo;
 import org.gophillygo.app.data.models.DestinationInfo;
-import org.gophillygo.app.data.models.EventInfo;
 import org.gophillygo.app.databinding.ActivityPlaceDetailBinding;
 import org.gophillygo.app.di.GpgViewModelFactory;
 import org.gophillygo.app.utils.FlagMenuUtils;
@@ -151,15 +149,8 @@ public class PlaceDetailActivity extends AttractionDetailActivity implements Att
             FirebaseCrashlytics.getInstance().log(message);
             return;
         }
-        String option = destinationInfo.getFlag().getOption().apiName;
-        boolean haveExistingGeofence = option.equals(AttractionFlag.Option.WantToGo.apiName) ||
-                option.equals(AttractionFlag.Option.Liked.apiName);
         destinationInfo.updateAttractionFlag(itemId);
         destinationViewModel.updateAttractionFlag(destinationInfo.getFlag(), userUuid, getString(R.string.user_flag_post_api_key), UserUtils.isFlagPostingEnabled(this));
-        String optionAfter = destinationInfo.getFlag().getOption().apiName;
-        boolean settingGeofence = optionAfter.equals(AttractionFlag.Option.WantToGo.apiName) ||
-                optionAfter.equals(AttractionFlag.Option.Liked.apiName);
-        addOrRemoveGeofence(destinationInfo, haveExistingGeofence, settingGeofence);
         binding.notifyPropertyChanged(BR.destinationInfo);
     }
 
@@ -202,21 +193,9 @@ public class PlaceDetailActivity extends AttractionDetailActivity implements Att
     public boolean clickedFlagOption(MenuItem item, AttractionInfo eventInfo, Integer position) {
         Log.d(LOG_LABEL, "clicked flag option on event at " + position);
         String option = eventInfo.getFlag().getOption().apiName;
-        boolean haveExistingGeofence = option.equals(AttractionFlag.Option.WantToGo.apiName) ||
-                option.equals(AttractionFlag.Option.Liked.apiName);
-
         eventInfo.updateAttractionFlag(item.getItemId());
         eventViewModel.updateAttractionFlag(eventInfo.getFlag(), userUuid, getString(R.string.user_flag_post_api_key), UserUtils.isFlagPostingEnabled(this));
         Objects.requireNonNull(eventsList.getAdapter()).notifyItemChanged(position);
-
-        // do not attempt to add a geofence for an event with no location (should always exist here,
-        // as we know there is an associated place)
-        if (((EventInfo)eventInfo).hasDestinationName()) {
-            String optionAfter = eventInfo.getFlag().getOption().apiName;
-            boolean settingGeofence = optionAfter.equals(AttractionFlag.Option.WantToGo.apiName) ||
-                    optionAfter.equals(AttractionFlag.Option.Liked.apiName);
-            addOrRemoveGeofence(eventInfo, haveExistingGeofence, settingGeofence);
-        }
 
         return true;
     }
