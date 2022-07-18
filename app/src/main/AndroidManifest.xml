@@ -40,6 +40,7 @@
             android:name=".activities.SearchActivity"
             android:label="@string/title_activity_search"
             android:launchMode="singleTop"
+            android:exported="false"
             android:theme="@style/GpgAppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
@@ -51,7 +52,8 @@
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
         </activity>
-        <activity android:name=".activities.HomeActivity">
+        <activity android:name=".activities.HomeActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -131,7 +133,8 @@
         </activity>
         <activity
             android:name="com.google.android.gms.oss.licenses.OssLicensesMenuActivity"
-            android:theme="@style/GpgDarkTextTheme">
+            android:theme="@style/GpgDarkTextTheme"
+            android:exported="true">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="org.gophillygo.app.activities.GpgPreferenceActivity" />
