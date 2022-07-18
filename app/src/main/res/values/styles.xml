@@ -51,6 +51,7 @@
 
     <style name="ToolbarOpaque" parent="ToolbarTransparent">
         <item name="android:background">@color/color_primary</item>
+        <item name="android:elevation">0dp</item>
     </style>
 
     <style name="Carousel">
@@ -114,8 +115,8 @@
     <style name="ListItem">
         <item name="android:layout_margin">8dp</item>
         <item name="android:background">@color/color_white</item>
+        <item name="android:elevation">2dp</item>
     </style>
-
 
     <!-- buttons -->
     <style name="BorderlessButton" parent="Base.Widget.AppCompat.Button.Borderless">

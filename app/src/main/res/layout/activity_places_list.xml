@@ -16,8 +16,7 @@
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/places_list_toolbar"
                 style="@style/ToolbarOpaque"
-                app:title="@string/places_list_title"
-                tools:targetApi="lollipop" />
+                app:title="@string/places_list_title" />
 
             <include
                 android:id="@+id/places_list_filter_button_bar"

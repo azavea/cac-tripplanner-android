@@ -23,7 +23,6 @@
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/home_toolbar"
                 style="@style/ToolbarTransparent"
-                tools:targetApi="lollipop"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent" />
 
