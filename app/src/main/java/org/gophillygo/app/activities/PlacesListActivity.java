@@ -163,26 +163,22 @@ public class PlacesListActivity extends FilterableListActivity implements
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
         Intent intent;
-        switch (itemId) {
-            case R.id.action_place_list_events:
-                Log.d(LOG_LABEL, "Selected events menu item");
-                intent = new Intent(this, EventsListActivity.class);
-                intent.putExtra(FILTER_KEY, filter);
-                startActivity(intent);
-                break;
-            case R.id.action_place_list_map:
-                Log.d(LOG_LABEL, "Selected map menu item");
-                intent = new Intent(this, PlacesMapsActivity.class);
-                intent.putExtra(FILTER_KEY, filter);
-                startActivity(intent);
-                break;
-            case R.id.action_place_list_search:
-                Log.d(LOG_LABEL, "Selected search menu item");
-                super.onSearchRequested();
-                break;
-            default:
-                Log.w(LOG_LABEL, "Unrecognized menu item selected: " + itemId);
-                return super.onOptionsItemSelected(item);
+        if (itemId == R.id.action_place_list_events) {
+            Log.d(LOG_LABEL, "Selected events menu item");
+            intent = new Intent(this, EventsListActivity.class);
+            intent.putExtra(FILTER_KEY, filter);
+            startActivity(intent);
+        } else if (itemId == R.id.action_place_list_map) {
+            Log.d(LOG_LABEL, "Selected map menu item");
+            intent = new Intent(this, PlacesMapsActivity.class);
+            intent.putExtra(FILTER_KEY, filter);
+            startActivity(intent);
+        } else if(itemId == R.id.action_place_list_search) {
+            Log.d(LOG_LABEL, "Selected search menu item");
+            super.onSearchRequested();
+        } else {
+            Log.w(LOG_LABEL, "Unrecognized menu item selected: " + itemId);
+            return super.onOptionsItemSelected(item);
         }
         return true;
     }

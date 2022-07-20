@@ -54,6 +54,9 @@ captures/
 .idea/caches/
 .idea/assetWizardSettings.xml
 
+# Android Studio
+.idea/deploymentTargetDropDown.xml
+
 # Keystore files
 *.jks
 *.keystore
@@ -68,3 +71,6 @@ google-services.json
 freeline.py
 freeline/
 freeline_project_description.json
+
+# macos
+.DS_Store

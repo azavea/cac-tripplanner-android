@@ -64,8 +64,7 @@
                 android:id="@+id/event_detail_toolbar"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                style="@style/ToolbarTransparent"
-                tools:targetApi="lollipop" />
+                style="@style/ToolbarTransparent" />
 
             <TextView
                 android:id="@+id/event_detail_date_label"

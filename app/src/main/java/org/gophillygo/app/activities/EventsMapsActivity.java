@@ -65,25 +65,21 @@ public class EventsMapsActivity extends MapsActivity<EventInfo> {
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent intent;
         int itemId = item.getItemId();
-        switch (itemId) {
-            case R.id.events_map_action_view_places:
-                Log.d(LOG_LABEL, "Selected map events menu item");
-                intent = new Intent(this, PlacesMapsActivity.class);
-                intent.putExtra(FILTER_KEY, filter);
-                startActivity(intent);
-                break;
-            case R.id.events_map_action_map_search:
-                Log.d(LOG_LABEL, "Selected map search menu item");
-                break;
-            case R.id.events_map_action_view_list:
-                Log.d(LOG_LABEL, "Selected to go back to list view from map");
-                intent = new Intent(this, EventsListActivity.class);
-                intent.putExtra(FILTER_KEY, filter);
-                startActivity(intent);
-                break;
-            default:
-                Log.w(LOG_LABEL, "Unrecognized menu item selected: " + itemId);
-                return super.onOptionsItemSelected(item);
+        if (itemId == R.id.events_map_action_view_places) {
+            Log.d(LOG_LABEL, "Selected map events menu item");
+            intent = new Intent(this, PlacesMapsActivity.class);
+            intent.putExtra(FILTER_KEY, filter);
+            startActivity(intent);
+        } else if (itemId == R.id.events_map_action_map_search) {
+            Log.d(LOG_LABEL, "Selected map search menu item");
+        } else if (itemId == R.id.events_map_action_view_list) {
+            Log.d(LOG_LABEL, "Selected to go back to list view from map");
+            intent = new Intent(this, EventsListActivity.class);
+            intent.putExtra(FILTER_KEY, filter);
+            startActivity(intent);
+        } else {
+            Log.w(LOG_LABEL, "Unrecognized menu item selected: " + itemId);
+            return super.onOptionsItemSelected(item);
         }
         return true;
     }

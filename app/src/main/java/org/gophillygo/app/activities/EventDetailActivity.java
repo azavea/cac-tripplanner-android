@@ -182,9 +182,9 @@ public class EventDetailActivity extends AttractionDetailActivity {
                 .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, startTime)
                 .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, endTime)
                 .putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, !event.isSingleDayEvent());
-        if (intent.resolveActivity(getPackageManager()) != null) {
+        try {
             startActivity(intent);
-        } else {
+        } catch(Exception ex) {
             Toast.makeText(this, R.string.event_detail_no_calendar, Toast.LENGTH_SHORT).show();
         }
     }

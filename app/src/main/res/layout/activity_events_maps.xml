@@ -15,8 +15,7 @@
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/events_map_toolbar"
                 style="@style/ToolbarOpaque"
-                app:title="@string/title_activity_events_maps"
-                tools:targetApi="lollipop" />
+                app:title="@string/title_activity_events_maps" />
 
             <include layout="@layout/filter_button_bar"
                 android:id="@+id/events_map_filter_button_bar"

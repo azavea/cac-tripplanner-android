@@ -12,14 +12,10 @@
     -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
-    <!-- Disable Crashlytics reporting here so it can be enabled in code as an opt-in -->
-    <meta-data
-        android:name="firebase_crashlytics_collection_enabled"
-        android:value="false" />
-
     <!-- Remove phone state and external storage permissions added by library import -->
     <uses-permission android:name="android.permission.READ_PHONE_STATE" tools:node="remove" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" tools:node="remove" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" android:maxSdkVersion="29" tools:node="remove"
+        tools:ignore="ScopedStorage" />
 
     <supports-screens android:smallScreens="true"
         android:normalScreens="true"
@@ -40,6 +36,7 @@
             android:name=".activities.SearchActivity"
             android:label="@string/title_activity_search"
             android:launchMode="singleTop"
+            android:exported="false"
             android:theme="@style/GpgAppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH" />
@@ -51,7 +48,8 @@
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable" />
         </activity>
-        <activity android:name=".activities.HomeActivity">
+        <activity android:name=".activities.HomeActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -131,7 +129,8 @@
         </activity>
         <activity
             android:name="com.google.android.gms.oss.licenses.OssLicensesMenuActivity"
-            android:theme="@style/GpgDarkTextTheme">
+            android:theme="@style/GpgDarkTextTheme"
+            android:exported="true">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="org.gophillygo.app.activities.GpgPreferenceActivity" />
@@ -183,6 +182,11 @@
             android:authorities="org.gophillygo.app.provider"
             android:enabled="true"
             android:exported="false" />
+
+        <!-- Disable Crashlytics reporting here so it can be enabled in code as an opt-in -->
+        <meta-data
+            android:name="firebase_crashlytics_collection_enabled"
+            android:value="false" />
     </application>
 
 </manifest>

@@ -138,7 +138,7 @@ PlaceCategoryGridAdapter.GridViewHolder.PlaceGridItemClickListener {
             Log.d(LOG_LABEL, "Clicked item at " + position);
             Destination destination = getNearestDestination(position);
             if (destination != null) {
-                goToPlace((long)destination.getId());
+                goToPlace(destination.getId());
             }
         });
     }
@@ -153,19 +153,15 @@ PlaceCategoryGridAdapter.GridViewHolder.PlaceGridItemClickListener {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int itemId = item.getItemId();
-
-        switch (itemId) {
-            case R.id.action_settings:
-                Log.d(LOG_LABEL, "Clicked settings action");
-                Intent intent = new Intent(this, GpgPreferenceActivity.class);
-                startActivity(intent);
-                break;
-            case R.id.action_home_search:
-                Log.d(LOG_LABEL, "searching from home view");
-                break;
-            default:
-                Log.w(LOG_LABEL, "Unrecognized menu option selected: " + itemId);
-                return super.onOptionsItemSelected(item);
+        if (itemId == R.id.action_settings) {
+            Log.d(LOG_LABEL, "Clicked settings action");
+            Intent intent = new Intent(this, GpgPreferenceActivity.class);
+            startActivity(intent);
+        } else if (itemId == R.id.action_home_search) {
+            Log.d(LOG_LABEL, "searching from home view");
+        } else {
+            Log.w(LOG_LABEL, "Unrecognized menu option selected: " + itemId);
+            return super.onOptionsItemSelected(item);
         }
 
         return true;

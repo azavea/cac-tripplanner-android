@@ -19,8 +19,7 @@
                 android:id="@+id/preferences_toolbar"
                 style="@style/ToolbarTransparent"
                 android:background="@color/color_primary"
-                app:title="@string/preferences"
-                tools:targetApi="lollipop" />
+                app:title="@string/preferences" />
         </com.google.android.material.appbar.AppBarLayout>
 
         <androidx.fragment.app.FragmentContainerView
