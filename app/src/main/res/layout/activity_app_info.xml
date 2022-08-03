@@ -24,8 +24,7 @@
                 android:id="@+id/app_info_toolbar"
                 style="@style/ToolbarTransparent"
                 android:background="@color/color_primary"
-                app:title="@string/title_activity_app_info"
-                tools:targetApi="lollipop" />
+                app:title="@string/title_activity_app_info" />
         </com.google.android.material.appbar.AppBarLayout>
 
         <TextView

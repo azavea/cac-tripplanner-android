@@ -21,8 +21,7 @@
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/search_toolbar"
                 style="@style/ToolbarOpaque"
-                app:title="@string/title_activity_search"
-                tools:targetApi="lollipop" />
+                app:title="@string/title_activity_search" />
 
             <ListView
                 android:id="@android:id/list"

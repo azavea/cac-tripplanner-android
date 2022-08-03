@@ -63,8 +63,7 @@
                 android:id="@+id/place_detail_toolbar"
                 style="@style/ToolbarTransparent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                tools:targetApi="lollipop" />
+                app:layout_constraintStart_toStartOf="parent" />
 
             <TextView
                 android:id="@+id/place_detail_categories_list"

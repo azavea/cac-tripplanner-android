@@ -14,8 +14,7 @@
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/events_list_toolbar"
                 style="@style/ToolbarOpaque"
-                app:title="@string/events_list_title"
-                tools:targetApi="lollipop" />
+                app:title="@string/events_list_title" />
 
             <include layout="@layout/filter_button_bar"
                 android:id="@+id/events_list_filter_button_bar"

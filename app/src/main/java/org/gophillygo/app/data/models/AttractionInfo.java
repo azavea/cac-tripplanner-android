@@ -44,21 +44,16 @@ public abstract class AttractionInfo<T extends Attraction> {
 
     public void updateAttractionFlag(@MenuRes int menuId) {
         AttractionFlag.Option option;
-        switch (menuId) {
-            case R.id.place_option_not_interested:
-                option = AttractionFlag.Option.NotInterested;
-                break;
-            case R.id.place_option_liked:
-                option = AttractionFlag.Option.Liked;
-                break;
-            case R.id.place_option_been:
-                option = AttractionFlag.Option.Been;
-                break;
-            case R.id.place_option_want_to_go:
-                option = AttractionFlag.Option.WantToGo;
-                break;
-            default:
-                option = AttractionFlag.Option.NotSelected;
+        if (menuId == R.id.place_option_not_interested) {
+            option = AttractionFlag.Option.NotInterested;
+        } else if (menuId == R.id.place_option_liked) {
+            option = AttractionFlag.Option.Liked;
+        } else if (menuId == R.id.place_option_been) {
+            option = AttractionFlag.Option.Been;
+        } else if (menuId == R.id.place_option_want_to_go) {
+            option = AttractionFlag.Option.WantToGo;
+        } else {
+            option = AttractionFlag.Option.NotSelected;
         }
         // When selecting the option already selected, toggle it off
         if (flag != null && flag.getOption() == option) {
