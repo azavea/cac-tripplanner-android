@@ -46,6 +46,10 @@ Configure at least 3 emulators for the target, lowest supported, and most recent
 - You can view linting errors by selecting Code&#8594;Inspect Code and selecting the desire scope of inspection. The output from this inspection will appear in the "Problems" log in the bottom lefthand corner of the screen.
 - After making changes to the code, you can select "Apply Code Changes and Restart Activity" (the icon with an arrow arching over the letter A) in the upper right menu
 
+Test the both the debug and release builds of the app and make sure it works as expected, including exploring the map, saving an event to your calendar, getting directions to a place or event, and liking an event.
+
+- _Note:_ To switch between builds on an emulator, you'll need to uninstall the previous version of the app on the emulator before you can run the other version. Otherwise, you'll see "inconsistent certificates" errors.
+
 ## Release
 
 **Starting a Release**
@@ -60,26 +64,21 @@ Configure at least 3 emulators for the target, lowest supported, and most recent
 
 **Signing the App Bundle**
 
-- From inside Android Studio, select Build&#8594;Generate Signed Bundle/APK
-- Select that you'd like to generate an Android App Bundle, then click next
-- For the keystore path, select "Choose existing" and select the downloaded keystore file. Set the keystore password, key alias, and key (alias) password with the values from `release.properties`
-- Uncheck "export encrypted key for enrolling published apps in Google Play App Signing" if necessary
-- Select release for the destination folder, then select finish
-- You can view the output of this process via the Event Log, which you can toggle in the bottom righthand corner
+We use the `release.properties` file to automatically sign the app bundle during building.
 
-**Testing**
-
-- Once the App Bundle has finished building, in Android Studio select Build&#8594;Select Build Variant
-- Change the Active Build Variant in the left panel from debug to release and then click run
-  - _Note:_ If you followed the Debugging instructions above, you'll need to uninstall the debug version of the app on the emulator before you can run the release version. Otherwise, you'll see "inconsistent certificates" errors.
-- Test the app and make sure it works as expected, including exploring the map, saving an event to your calendar, getting directions to a place or event, and liking an event
+- From inside Android Studio, select Build&#8594;Select Build Variant
+- Change the Active Build Variant in the left panel from debug to release
+- Select Build&#8594;Build Bundle(s)/APKs&#8594;Build Bundle(s)
+  - You can view the output of this process via the Event Log, which you can toggle in the bottom righthand corner
+- Find the signed bundle in `app/build/outputs/bundle/release`
 
 **Releasing to Google Play for Testing**
 
-- View the Google Play console from the AzaveaDev Google account and select Testing&#8594;Open testing from the left menu, then create a new release
+- View the Google Play console from the AzaveaDev Google account and select Testing&#8594;Open testing or Closed testing from the left menu, then create a new release
+  - Whether you should use open or closed testing comes down to who you want to have access to the test; if don't mind having it open to the public, choose open testing
 - Upload the signed App Bundle and add the reason for the release in the release notes field, then click review
 - Review to make sure everything looks good, then select start roll out. It will take a while (about 3-4 hours) for the test version to be ready; this will be reflected when the release status switches from "In review" to "Available to unlimited testers"
-- Invite users to test by sending them one of the links from Open testing&#8594;Testers&#8594;How testers join your test. They should open the link with the Google Account of their phone's Google Play account.
+- The release should be automatically available to your chosen testers for closed testing or all users for open testing
 
 **Finishing the Release**
 

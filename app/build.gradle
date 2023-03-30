@@ -24,9 +24,18 @@ apply plugin: 'com.google.gms.google-services'
 apply plugin: 'com.google.android.gms.oss-licenses-plugin'
 apply plugin: 'com.google.firebase.crashlytics'
 
+def keystorePropertiesFile = project.file("release.properties")
+def keystoreProperties = new Properties()
+keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
 android {
     signingConfigs {
-        release
+        release {
+            keyAlias keystoreProperties['keyAlias']
+            keyPassword keystoreProperties['keyAliasPassword']
+            storeFile file(keystoreProperties['keyStore'])
+            storePassword keystoreProperties['keyStorePassword']
+        }
     }
     buildFeatures {
         dataBinding = true
@@ -153,16 +162,5 @@ dependencies {
 
     // Test helpers for Room
     testImplementation 'androidx.room:room-testing:2.2.5'
-}
-
-if (project.file("release.properties").exists()) {
-    def props = new Properties()
-    props.load(new FileInputStream(project.file("release.properties")))
-    android.signingConfigs.release.storeFile project.file(props.keyStore)
-    android.signingConfigs.release.storePassword props.keyStorePassword
-    android.signingConfigs.release.keyAlias props.keyAlias
-    android.signingConfigs.release.keyPassword props.keyAliasPassword
-} else {
-    logger.info("release.properties signing configuration file not found in app directory")
 }
 
