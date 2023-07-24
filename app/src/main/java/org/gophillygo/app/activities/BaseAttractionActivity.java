@@ -181,7 +181,8 @@ public abstract class BaseAttractionActivity extends AppCompatActivity
     /**
      * Override to listen to changes to data: either location or destinations source data.
      */
-    public void locationOrDestinationsChanged() { }
+    public void locationOrDestinationsChanged() {
+    }
 
     /**
      * Callback for {@link GpgLocationUtils.LocationUpdateListener}
@@ -249,10 +250,12 @@ public abstract class BaseAttractionActivity extends AppCompatActivity
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == GpgLocationUtils.PERMISSION_REQUEST_ID) {
             if (grantResults.length > 0) {
-                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    Log.d(LOG_LABEL, "Re-requesting location after getting fine location permissions");
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED ||
+                        grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+                    Log.d(LOG_LABEL, "Re-requesting location after getting location permissions");
                     fetchLastLocationOrUseDefault();
-                } else if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
+                } else if (grantResults[0] == PackageManager.PERMISSION_DENIED &&
+                        grantResults[1] == PackageManager.PERMISSION_DENIED) {
                     GpgLocationUtils.displayPermissionRequestRationale(getApplicationContext());
                 }
             }
@@ -262,7 +265,7 @@ public abstract class BaseAttractionActivity extends AppCompatActivity
     /**
      * Set up a search widget in the activity app bar.
      *
-     * @param menu Options menu
+     * @param menu       Options menu
      * @param searchItem Item in the options menu for searching
      */
     protected void setupSearch(Menu menu, @IdRes int searchItem) {
