@@ -269,31 +269,39 @@ public abstract class BaseAttractionActivity extends AppCompatActivity
      * @param searchItem Item in the options menu for searching
      */
     protected void setupSearch(Menu menu, @IdRes int searchItem) {
-        // Get the SearchView and set the searchable configuration
-        SearchManager searchManager = (SearchManager)getSystemService(Context.SEARCH_SERVICE);
-        SearchView searchView = (SearchView) menu.findItem(searchItem).getActionView();
-        // Assumes current activity is the searchable activity
-        searchView.setSearchableInfo(Objects.requireNonNull(searchManager).getSearchableInfo(getComponentName()));
+        try {
+            // Get the SearchView and set the searchable configuration
+            SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+            SearchView searchView = (SearchView) menu.findItem(searchItem).getActionView();
+            // Assumes current activity is the searchable activity
+            searchView.setSearchableInfo(Objects.requireNonNull(searchManager).getSearchableInfo(getComponentName()));
 
-        // handle opening detail intent from search
-        // https://developer.android.com/reference/android/widget/SearchView.OnSuggestionListener
-        searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
-            final CursorAdapter adapter = searchView.getSuggestionsAdapter();
+            // handle opening detail intent from search
+            // https://developer.android.com/reference/android/widget/SearchView.OnSuggestionListener
+            searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
+                final CursorAdapter adapter = searchView.getSuggestionsAdapter();
 
-            @Override
-            public boolean onSuggestionSelect(int position) {
-                Log.d(LOG_LABEL, "onSuggestionSelect " + position);
-                goToAttractionForPosition(adapter, position);
-                return true;
-            }
+                @Override
+                public boolean onSuggestionSelect(int position) {
+                    Log.d(LOG_LABEL, "onSuggestionSelect " + position);
+                    goToAttractionForPosition(adapter, position);
+                    return true;
+                }
 
-            @Override
-            public boolean onSuggestionClick(int position) {
-                Log.d(LOG_LABEL, "onSuggestionClick " + position);
-                goToAttractionForPosition(adapter, position);
-                return true;
-            }
-        });
+                @Override
+                public boolean onSuggestionClick(int position) {
+                    Log.d(LOG_LABEL, "onSuggestionClick " + position);
+                    goToAttractionForPosition(adapter, position);
+                    return true;
+                }
+            });
+        } catch (Exception ex) {
+            // Sometimes, the getSystemService() call will throw a
+            // ServiceManager.ServiceNotFoundException . It's not clear why this happens (most of
+            // the time it doesn't) or how we could reasonably recover, so if we ignore the error
+            // then the search will fail to initialize but the rest of the screen should continue to
+            // work.
+        }
     }
 
     protected void goToAttractionForPosition(CursorAdapter adapter, int position) {
