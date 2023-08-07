@@ -83,12 +83,15 @@ public class GpgLocationUtils {
         }
 
         String[] accessPermissions = new String[]{
-                Manifest.permission.ACCESS_FINE_LOCATION
+                Manifest.permission.ACCESS_FINE_LOCATION,
+                Manifest.permission.ACCESS_COARSE_LOCATION
         };
 
         // in API 23+, permission granting happens at runtime
         if (ActivityCompat.checkSelfPermission(callingActivity,
-                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(callingActivity,
+                        Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
             // in case user has denied location permissions to app previously, tell them why it's needed, then prompt again
             if (ActivityCompat.shouldShowRequestPermissionRationale(callingActivity, Manifest.permission.ACCESS_FINE_LOCATION)) {
@@ -141,12 +144,11 @@ public class GpgLocationUtils {
     /**
      * Get the last known device location, without requesting to update it or prompting the user
      * for permissions if they haven't been granted.
-     *
+     * <p>
      * Intended for use by background tasks that do not have an Activity.
      *
-     * @param context Calling context
+     * @param context  Calling context
      * @param listener Callback for when location found. Must implement {@link LocationUpdateListener}
-     *
      * @return True if permissions have been already granted
      */
     public static boolean getLastKnownLocation(Context context, LocationUpdateListener listener) {
@@ -205,7 +207,7 @@ public class GpgLocationUtils {
                         client.getLastLocation().addOnCompleteListener(callingActivity, lastLocationTask -> {
                             if (lastLocationTask.isSuccessful() && lastLocationTask.getResult() != null) {
                                 Log.d(LOG_LABEL, "Got result " + lastLocationTask.getResult());
-                                ((LocationUpdateListener)callingActivity).locationFound(lastLocationTask.getResult());
+                                ((LocationUpdateListener) callingActivity).locationFound(lastLocationTask.getResult());
                             }
                         });
                     });

@@ -77,7 +77,7 @@ public class PlacesListActivity extends FilterableListActivity implements
                 UserUtils.isFlagPostingEnabled(this));
 
         placesListAdapter.notifyItemChanged(position);
-	    return true;
+        return true;
     }
 
     @Override
