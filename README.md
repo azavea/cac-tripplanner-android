@@ -76,7 +76,8 @@ Configure at least 3 emulators for the target, lowest supported, and most recent
 
 **Releasing to Google Play for Testing**
 
-- View the Google Play console from the AzaveaDev Google account and select Testing&#8594;Open testing from the left menu, then create a new release
+- View the Google Play console from the AzaveaDev Google account and select Testing&#8594;Open testing from the left menu
+- If the testing track is marked paused, start it, and then create a new release, otherwise just create a new release
 - Upload the signed App Bundle and add the reason for the release in the release notes field, then click review
 - Review to make sure everything looks good, then select start roll out. It will take a while (about 3-4 hours) for the test version to be ready; this will be reflected when the release status switches from "In review" to "Available to unlimited testers"
 - Invite users to test by sending them one of the links from Open testing&#8594;Testers&#8594;How testers join your test. They should open the link with the Google Account of their phone's Google Play account.
