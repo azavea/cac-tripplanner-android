@@ -31,13 +31,13 @@ android {
     buildFeatures {
         dataBinding = true
     }
-    compileSdkVersion 30
+    compileSdkVersion 31
     defaultConfig {
         applicationId "org.gophillygo.app"
         minSdkVersion 21
-        targetSdkVersion 30
-        versionCode 25
-        versionName "1.4.0"
+        targetSdkVersion 31
+        versionCode 32
+        versionName "1.4.2"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled = true
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -104,7 +104,7 @@ dependencies {
     implementation "com.google.android.gms:play-services-maps:17.0.0"
 
     // Android WorkManager
-    implementation 'android.arch.work:work-runtime:1.0.1'
+    implementation 'androidx.work:work-runtime:2.7.1'
 
     // Carousel
     implementation 'com.synnapps:carouselview:0.1.5'
