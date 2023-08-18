@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.View;
 
@@ -275,7 +276,7 @@ public abstract class MapsActivity<T extends AttractionInfo> extends FilterableL
 
         // Need to set map padding so "Google" logo is above popup, but we need to wait until the
         // popup is visible in order to measure it's height.
-        final Handler handler = new Handler();
+        final Handler handler = new Handler(Looper.getMainLooper());
         handler.postDelayed(() -> googleMap.setPadding(0, 0, 0,
                 25 + popupBinding.mapPopupCard.getHeight()), 30);
     }
