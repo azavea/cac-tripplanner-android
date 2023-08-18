@@ -1,7 +1,10 @@
 package org.gophillygo.app.di;
 
 import android.app.Application;
+import android.os.Handler;
+import android.os.Looper;
 
+import androidx.core.os.HandlerCompat;
 import androidx.room.Room;
 
 import org.gophillygo.app.BuildConfig;
@@ -11,6 +14,10 @@ import org.gophillygo.app.data.DestinationWebservice;
 import org.gophillygo.app.data.EventDao;
 import org.gophillygo.app.data.GpgDatabase;
 import org.gophillygo.app.data.networkresource.LiveDataCallAdapterFactory;
+
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import javax.inject.Singleton;
 
@@ -83,4 +90,12 @@ class AppModule {
     AttractionFlagDao provideAttractionFlagDao(GpgDatabase db) {
         return db.attractionFlagDao();
     }
+
+    @Singleton
+    @Provides
+    ExecutorService provideBackgroundExecutor() { return Executors.newFixedThreadPool(1); }
+
+    @Singleton
+    @Provides
+    Handler provideMainThreadHandler() { return HandlerCompat.createAsync(Looper.getMainLooper());}
 }
