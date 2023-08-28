@@ -1,7 +1,7 @@
 package org.gophillygo.app.data;
 
 import android.annotation.SuppressLint;
-import android.os.AsyncTask;
+import android.os.Handler;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -19,6 +19,8 @@ import org.gophillygo.app.data.networkresource.AttractionNetworkBoundResource;
 import org.gophillygo.app.data.networkresource.Resource;
 
 import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
 
 import javax.inject.Inject;
 
@@ -47,15 +49,22 @@ public class DestinationRepository {
     private final DestinationDao destinationDao;
     private final EventDao eventDao;
 
+    private final Executor backgroundExecutor;
+    private final Handler mainThreadHandler;
+
     @Inject
     public DestinationRepository(DestinationWebservice webservice,
                                  AttractionFlagDao attractionFlagDao,
                                  DestinationDao destinationDao,
-                                 EventDao eventDao) {
+                                 EventDao eventDao,
+                                 ExecutorService backgroundExecutor,
+                                 Handler mainThreadHandler) {
         this.webservice = webservice;
         this.attractionFlagDao = attractionFlagDao;
         this.destinationDao = destinationDao;
         this.eventDao = eventDao;
+        this.backgroundExecutor = backgroundExecutor;
+        this.mainThreadHandler = mainThreadHandler;
     }
 
     public LiveData<DestinationInfo> getDestination(long destinationId) {
@@ -73,24 +82,22 @@ public class DestinationRepository {
 
     @SuppressLint("StaticFieldLeak")
     public void updateDestination(Destination destination) {
-        new AsyncTask<Void, Void, Void>() {
+        backgroundExecutor.execute(new Runnable() {
             @Override
-            protected Void doInBackground(Void... voids) {
+            public void run() {
                 destinationDao.update(destination);
-                return null;
             }
-        }.execute();
+        });
     }
 
     @SuppressLint("StaticFieldLeak")
     public void updateEvent(Event event) {
-        new AsyncTask<Void, Void, Void>() {
+        backgroundExecutor.execute(new Runnable() {
             @Override
-            protected Void doInBackground(Void... voids) {
+            public void run() {
                 eventDao.update(event);
-                return null;
             }
-        }.execute();
+        });
     }
 
     /**
@@ -104,13 +111,12 @@ public class DestinationRepository {
      */
     @SuppressLint("StaticFieldLeak")
     public void updateAttractionFlag(AttractionFlag flag, String userUuid, String apiKey, boolean postToServer) {
-        new AsyncTask<Void, Void, Void>() {
+        backgroundExecutor.execute(new Runnable() {
             @Override
-            protected Void doInBackground(Void... voids) {
+            public void run() {
                 attractionFlagDao.save(flag);
-                return null;
             }
-        }.execute();
+        });
 
         if (!postToServer) {
             Log.d(LOG_LABEL, "Posting user flags to server disabled; not sending");
@@ -136,28 +142,26 @@ public class DestinationRepository {
 
     @SuppressLint("StaticFieldLeak")
     public void updateMultipleDestinations(List<Destination> destinations) {
-        new AsyncTask<Void, Void, Void>() {
+        backgroundExecutor.execute(new Runnable() {
             @Override
-            protected Void doInBackground(Void... voids) {
+            public void run() {
                 destinationDao.bulkUpdate(destinations);
-                return null;
             }
-        }.execute();
+        });
     }
 
     @SuppressLint("StaticFieldLeak")
     public void updateMultipleEvents(List<Event> events) {
-        new AsyncTask<Void, Void, Void>() {
+        backgroundExecutor.execute(new Runnable() {
             @Override
-            protected Void doInBackground(Void... voids) {
+            public void run() {
                 eventDao.bulkUpdate(events);
-                return null;
             }
-        }.execute();
+        });
     }
 
     public LiveData<Resource<List<DestinationInfo>>> loadDestinations() {
-        return new AttractionNetworkBoundResource<Destination, DestinationInfo>(webservice, destinationDao, eventDao) {
+        return new AttractionNetworkBoundResource<Destination, DestinationInfo>(webservice, destinationDao, eventDao, backgroundExecutor, mainThreadHandler) {
             @NonNull
             @Override
             protected LiveData<List<DestinationInfo>> loadFromDb() {
@@ -167,7 +171,7 @@ public class DestinationRepository {
     }
 
     public LiveData<Resource<List<EventInfo>>> loadEvents() {
-        return new AttractionNetworkBoundResource<Event, EventInfo>(webservice, destinationDao, eventDao) {
+        return new AttractionNetworkBoundResource<Event, EventInfo>(webservice, destinationDao, eventDao, backgroundExecutor, mainThreadHandler) {
             @NonNull @Override
             protected LiveData<List<EventInfo>> loadFromDb() {
                 return eventDao.getAll();
@@ -178,17 +182,18 @@ public class DestinationRepository {
     @SuppressLint("StaticFieldLeak")
     public void loadCategoryAttractions(CategoryAttractionCallback callback) {
         Log.d(LOG_LABEL, "going to load category attractions");
-        new AsyncTask<Void, Void, LiveData<List<CategoryAttraction>>>() {
+        backgroundExecutor.execute(new Runnable() {
             @Override
-            protected void onPostExecute(LiveData<List<CategoryAttraction>> categories) {
-                Log.d(LOG_LABEL, "finished loading category attractions");
-                callback.gotCategoryAttractions(categories);
+            public void run() {
+                LiveData<List<CategoryAttraction>> categories = destinationDao.getCategoryImages();
+                mainThreadHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        Log.d(LOG_LABEL, "finished loading category attractions");
+                        callback.gotCategoryAttractions(categories);
+                    }
+                });
             }
-
-            @Override
-            protected LiveData<List<CategoryAttraction>> doInBackground(Void... voids) {
-                return destinationDao.getCategoryImages();
-            }
-        }.execute();
+        });
     }
 }

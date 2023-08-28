@@ -31,11 +31,11 @@ android {
     buildFeatures {
         dataBinding = true
     }
-    compileSdkVersion 31
+    compileSdkVersion 33
     defaultConfig {
         applicationId "org.gophillygo.app"
         minSdkVersion 21
-        targetSdkVersion 31
+        targetSdkVersion 33
         versionCode 32
         versionName "1.4.2"
         vectorDrawables.useSupportLibrary = true

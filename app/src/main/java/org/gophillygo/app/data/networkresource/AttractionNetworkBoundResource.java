@@ -1,5 +1,7 @@
 package org.gophillygo.app.data.networkresource;
 
+import android.os.Handler;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LiveData;
@@ -20,6 +22,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.Executor;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -40,7 +43,8 @@ abstract public class AttractionNetworkBoundResource<A extends Attraction, I ext
 
     public AttractionNetworkBoundResource(DestinationWebservice webservice,
                                           DestinationDao destinationDao,
-                                          EventDao eventDao) {
+                                          EventDao eventDao, Executor executor, Handler handler) {
+        super(executor, handler);
         this.webservice = webservice;
         this.destinationDao = destinationDao;
         this.eventDao = eventDao;

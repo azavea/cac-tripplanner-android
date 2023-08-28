@@ -1,7 +1,7 @@
 package org.gophillygo.app.data.networkresource;
 
 import android.annotation.SuppressLint;
-import android.os.AsyncTask;
+import android.os.Handler;
 import android.util.Log;
 
 import androidx.annotation.MainThread;
@@ -10,6 +10,8 @@ import androidx.annotation.Nullable;
 import androidx.annotation.WorkerThread;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MediatorLiveData;
+
+import java.util.concurrent.Executor;
 
 
 /**
@@ -23,6 +25,9 @@ public abstract class NetworkBoundResource<ResultType, RequestType> {
     private static final String LOG_LABEL = "NetworkBound";
 
     private final MediatorLiveData<Resource<ResultType>> result = new MediatorLiveData<>();
+
+    private final Executor executor;
+    private final Handler resultHandler;
 
     // Called to save the result of the API response into the database
     @WorkerThread
@@ -51,7 +56,9 @@ public abstract class NetworkBoundResource<ResultType, RequestType> {
     }
 
     @MainThread
-    protected NetworkBoundResource() {
+    protected NetworkBoundResource(Executor executor, Handler resultHandler) {
+        this.executor = executor;
+        this.resultHandler = resultHandler;
         result.setValue(Resource.loading(null));
         LiveData<ResultType> dbSource = loadFromDb();
         result.addSource(dbSource, data -> {
@@ -88,28 +95,29 @@ public abstract class NetworkBoundResource<ResultType, RequestType> {
     @SuppressLint("StaticFieldLeak")
     @MainThread
     private void saveResultAndReInit(ApiResponse<RequestType> response) {
-        new AsyncTask<Void, Void, Void>() {
+        executor.execute(new Runnable() {
 
             @Override
-            protected Void doInBackground(Void... voids) {
+            public void run() {
                 if (response.body != null) {
                     saveCallResult(response.body);
                 } else {
                     Log.w(LOG_LABEL, "Received null API response");
                 }
-
-                return null;
+                reInit();
             }
+        });
+    }
 
+    @WorkerThread
+    private void reInit(){
+        resultHandler.post(new Runnable() {
             @Override
-            protected void onPostExecute(Void aVoid) {
-                // we specially request a new live data,
-                // otherwise we will get immediately last cached value,
-                // which may not be updated with latest results received from network.
+            public void run() {
                 result.addSource(loadFromDb(),
                         newData -> result.setValue(Resource.success(newData)));
             }
-        }.execute();
+        });
     }
 
     public final LiveData<Resource<ResultType>> getAsLiveData() {
