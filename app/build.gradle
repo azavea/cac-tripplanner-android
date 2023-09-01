@@ -90,6 +90,7 @@ dependencies {
 
     // Room
     implementation 'androidx.room:room-runtime:2.2.5'
+    implementation project(path: ':carouselview')
     annotationProcessor 'androidx.room:room-compiler:2.2.5'
 
     // Android UI libraries
@@ -107,7 +108,6 @@ dependencies {
     implementation 'androidx.work:work-runtime:2.7.1'
 
     // Carousel
-    implementation 'com.synnapps:carouselview:0.1.5'
 
     // Badges
     implementation 'com.github.nekocode:Badge:2.1'
