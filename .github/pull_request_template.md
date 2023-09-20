@@ -10,6 +10,11 @@ Optional. Screenshots, examples, etc.
 
 Optional. Ancillary topics, caveats, alternative strategies that didn't work out, anything else.
 
+### Checklist
+
+- [ ] All TODOs have an accompanying link to an issue
+
+
 ## Testing Instructions
 
 - How to test this PR
